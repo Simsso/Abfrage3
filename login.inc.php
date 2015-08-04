@@ -30,24 +30,52 @@
     	
     		<div class="left">
 		    	<?php
+		    	
+		    	$infobox_green_red = NULL;
+				$infobox_header = NULL;
+				$infobox_body = NULL;
+				
+		    		// sign up
 		    		if($_GET['signup_success'] == "true") {
-		    			echo '
-		        <div class="box">
-		        	<div class="box-head green">Successfully signed up</div>
-		        	<div class="box-body">
-		        		<p>Hello ' . $_GET['firstname'] . '!</p>
-		        		<p>Your account has been created. Check your emails and click on the link to confirm your email address (' . $_GET['email'] . ') and activate your account.</p> 
-		        	</div>
+		    			$infobox_header = "Successfully signed up";
+						$infobox_green_red = "green";
+						$infobox_body = '<p>Hello ' . $_GET['firstname'] . '!</p><p>Your account has been created. Check your emails and click on the link to confirm your email address (' . $_GET['email'] . ') and activate your account.</p>';
+		    		} else if ($_GET['signup_success'] == "false") {
+		    			$infobox_header = "Could not sign up";
+		    			$infobox_green_red = "red"; 
+		    			$infobox_body = '<p>An error occured while creating your account.</p><p>' . $_GET['signup_message'] . '</p>';	
+					}
+					
+					
+					// login
+		    		if($_GET['login_message']) {
+		    			$infobox_header = "Could not login";
+		    			$infobox_green_red = "red"; 
+		    			$infobox_body = '<p>An error occured while logging in.</p><p>' . $_GET['login_message'] . '</p>';			
+					}
+
+
+					// email confirmation
+					if($_GET['email_confirmation_key'] && $_GET['email']) {
+						require('database.php');
+						if (Database::confirm_email($_GET['email'], $_GET['email_confirmation_key'])) {
+			    			$infobox_header = "Email address confirmed";
+			    			$infobox_green_red = "green"; 
+			    			$infobox_body = '<p>The email address ' . $_GET['email'] . ' is now confirmed and can be used to login.</p>';
+						} else {
+	
+			    			$infobox_header = "Email address not confirmed";
+			    			$infobox_green_red = "red"; 
+			    			$infobox_body = '<p>The email address ' . $_GET['email'] . ' is not confirmed.</p>';
+						}
+					}
+					
+					if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox_header)) {
+						echo '
+				<div class="box">
+		        	<div class="box-head ' . $infobox_green_red . '">' . $infobox_header . '</div>
+		        	<div class="box-body">' . $infobox_body . '</div>
 		        </div>';
-		    		} else {
-		    			echo '
-		        <div class="box">
-		        	<div class="box-head red">Could not sign up</div>
-		        	<div class="box-body">
-		        		<p>An error occured while creating your account.</p>
-		        		<p>' . $_GET['signup_message'] . '</p>
-		        	</div>
-		        </div>';					
 					}
 		    	?>
 		        <div class="box">
@@ -67,7 +95,7 @@
 		        			<table>
 		        				<tr>
 		        					<td>Email-Address</td>
-		        					<td><input type="text" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "true") echo($_GET['email']); ?>"/></td>
+		        					<td><input type="text" name="email" placeholder="" required="required" value="<? if(!$_GET['signup_success'] == "false") echo($_GET['email']); ?>"/></td>
 		        				</tr>
 		        				<tr>
 		        					<td>Password</td>
@@ -76,6 +104,9 @@
 		        				<tr>
 		        					<td><input type="submit" value="Login"/></td>
 		        					<td></td>
+		        				</tr>
+		        				<tr>
+		        					<td colspan="2"><a href="#"><small>Forgot your password?</small></a></td>
 		        				</tr>
 		        			</table>
 		        		</form>

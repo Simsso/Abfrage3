@@ -1,6 +1,6 @@
 <?php
 	require('database.php');
-	//require('mail.php');
+	require('mail.php');
 	
 	$firstname = $_POST['firstname'];
 	$lastname = $_POST['lastname'];
