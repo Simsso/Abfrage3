@@ -223,22 +223,9 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
         	var updatePageContent = function() {
         		$('#main').children().hide();
         		$('li').removeClass('visited');
-        		var pageName = location.hash.slice(1);
-        		$('#nav_' + ((pageName.length == 0)?"home":pageName)).addClass('visited');
-        		switch(pageName) {
-        			case "imprint":
-        				$('#content-imprint').show();
-        				break;
-        			case "about":
-        				$('#content-about').show();
-        				break;
-        			case "contact":
-        				$('#content-contact').show();
-        				break;
-        			default:
-        				$('#content-home').show();
-        				break;
-        		}
+        		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
+        		$('#nav_' + pageName).addClass('visited');
+        		$('#content-' + pageName).show();
         	}
         	
             $(window).on('hashchange',function() {

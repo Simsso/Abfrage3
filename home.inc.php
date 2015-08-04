@@ -1,40 +1,103 @@
+<?php
+	require('database.php');
+	require('mail.php');
+	
+	$user = Database::get_user_by_id($_SESSION['id']);
+	$next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
+?>
+
 <!DOCTYPE html>
 <html>
 <? require('html-include/head.html'); ?>
     <body>
     	<nav id="head-nav" class="navbar">
     		<div class="navbar-inner content-width">
-    			<a href="/./">
-    				<img class="logo" src="img/logo-56.png" />
+    			<a href="#home">
+    				<img class="logo" src="img/logo-46.png" />
     			</a>
     			<ul class="nav left">
-    				<li><a href="#">Query</a></li>
-    				<li><a href="#">Word lists</a></li>
-    				<li><a href="#">Share</a></li>
+    				<li id="nav_home"><a href="#home">Home</a></li>
+    				<li id="nav_query"><a href="#query">Query</a></li>
+    				<li id="nav_word-lists"><a href="#word-lists">Word lists</a></li>
+    				<li id="nav_share"><a href="#share">Share</a></li>
+    				<li id="nav_user"><a href="#user">User</a></li>
     			</ul>
     			<ul class="nav right">
-    				<li><a href="#">Settings</a></li>
+    				<li id="nav_settings"><a href="#settings">Settings</a></li>
     				<li><a href="/./logout.php">Logout</a></li>
     			</ul>
     		</div>
     	</nav>
-    	<div class="main content-width">
-	        <div class="box">
-	        	<div class="box-head">What is Abfrage3?</div>
-	        	<div class="box-body">
-	        		<p>Abfrage3 is a web tool allowing users to enter vocabulary, share word lists and learn another language.</p>
-	        		<p>The website is still under heavy development and therefore not fully functional.</p>
-	        	</div>
-	        </div>
+    	
+    	<div class="main content-width" id="main">
+    		<div id="content-home">
+    			<div class="left-column">
+    				<div class="box">
+    					<div class="box-head">
+    						Hey <? echo $user->firstname; ?>!
+    					</div>
+    					<div class="box-body">
+    						<p>Last login at <? echo date("r", $next_to_last_login->time); ?> from IP-address <? echo $next_to_last_login->ip; ?></p>
+    					</div>
+    				</div>
+    			</div>
+    			<div class="right-column">
+    				<div class="box">
+    					<div class="box-head">
+    						Recently used
+    					</div>
+    					<div class="box-body">
+    						coming soon...
+    					</div>
+    				</div>
+    				
+    			</div>
+    		</div>
+    		
+    		
+    		<div id="content-query">
+    			
+    		</div>
+    		
+    		
+    		<div id="content-word-lists">
+    			
+    		</div>
+    		
+    		
+    		<div id="content-share">
+    			
+    		</div>
+    		
+    		
+    		<div id="content-user">
+    			
+    		</div>
+    		
+    		
+    		<div id="content-settings">
+    			
+    		</div>
         </div>
         
         
         <!-- jquery -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
         <script type="text/javascript">
-            (function() {
-                
-            })();
+        	
+        	var updatePageContent = function() {
+        		$('#main').children().hide();
+        		$('li').removeClass('visited');
+        		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
+        		$('#nav_' + pageName).addClass('visited');
+        		$('#content-' + pageName).show();
+        	}
+        	
+            $(window).on('hashchange',function() {
+            	updatePageContent();
+            }); 
+            
+			updatePageContent(); 
         </script>
         
         <?php 

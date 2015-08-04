@@ -115,8 +115,30 @@
 			global $con;
 			$ip = $_SERVER['REMOTE_ADDR']; 
 			$time = time();
-			$sql = "UPDATE `user` SET `user` = '$id', `ip` = '$ip', `time` = `$time` WHERE id = '$id'";
-			$update = mysqli_query($con, $sql);
+			
+			$sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES ('$id', '$time', '$ip')";
+			$query = mysqli_query($con, $sql);
+		}
+		
+		static function first_login_of_user($id) {
+			global $con; 
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `id` = '$id'";
+			$query = mysqli_query($con, $sql);
+			$count = mysqli_fetch_object($query)->count;
+			if ($count == 1) {
+				return TRUE;
+			}
+			return FALSE;
+		}
+		
+		static function get_next_to_last_login_of_user($id) {
+			global $con;
+			$sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1,2";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  return new Login($row['id'], $row['user'], $row['time'], $row['ip']);
+			}
+			return NULL;
 		}
 	}
 		
@@ -148,6 +170,20 @@
 			  $this->email_confirmed = $row['email_confirmed'];
 			  $this->email_confirmation_key = $row['email_confirmation_key'];
 			}
+		}
+	}
+	
+	class Login {
+		public $id;
+		public $user_id;
+		public $date;
+		public $ip;
+		
+		public function __construct($id, $user_id, $date, $ip) {
+			$this->id = $id;
+			$this->user_id = $user_id;
+			$this->date = $date;
+			$this->ip = $ip;
 		}
 	}
 ?>
