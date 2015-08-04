@@ -99,3 +99,7 @@ form table {
 form table input {
 	width: calc(100% - 16px);
 }
+
+p:not(:last-child) {
+	margin-bottom: 24px;
+}
