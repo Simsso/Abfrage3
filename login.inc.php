@@ -9,83 +9,9 @@
         <meta name="keywords" content="Timo, Denk, Abfrage3" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
+        <link rel="stylesheet" type="text/css" href="css/basic.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="css/other.css" media="all" />
         <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
-        
-        <style type="text/css">
-        	* {
-				margin: 0;
-				padding: 0;
-				font-family: Helvetica, Arial, sans-serif;        		
-        	}
-        	
-        	body {
-				background-color: #ECEFF1;
-        	}
-        	
-        	.content-width {
-				width: 1170px;
-				margin: auto;
-        	}
-        	
-            .navbar {
-				position: relative;
-				
-				height: 56px;
-				width: 100%;
-				
-				padding: 5px;
-				
-				background-color: #8892BF;
-				border-style: solid;
-				border-width: 0 0 6px 0;
-				border-color: #4F5B93;            	
-            }
-            .navbar .navbar-inner {
-				position: relative;
-            }
-            .navbar .navbar-inner a {
-				color: #E2E4EF;
-				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-				text-decoration: none;
-			}
-            .navbar .navbar-inner img {
-				float: left;
-				height: 56px;
-				margin: 0 10px;
-            }
-            .navbar .navbar-inner .nav {
-				position: relative;
-				left: 0;
-				float: left;
-				margin: 0 10px 0 0;
-				list-style: none;
-            }
-            .navbar .navbar-inner .nav li {
-				float: left;
-				margin: 22px 10px;
-				line-height: 16px;
-				font-size: 16px;
-            }
-            
-            body > .main {
-				position: relative
-            }
-            
-            .box {
-				margin: 25px 0;
-				color: #263238;
-				box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
-            }
-            .box .box-head {
-				padding: 15px;
-				background-color: #F3F5F6;
-				border-bottom: 1px solid #ECEFF1;
-            }
-            .box .box-body {
-				padding: 15px;
-				background-color: #FFFFFF;
-            }
-        </style>
     </head>
     <body>
     	<nav id="head-nav" class="navbar">
@@ -102,9 +28,64 @@
     	</nav>
     	
     	<div class="main content-width">
-	        <div class="box">
-	        	<div class="box-head">What is Abfrage3?</div>
-	        	<div class="box-body">Abfrage3 is a web tool allowing users to enter vocabulary, share word lists and learn another language.</div>
+    		<div class="left">
+		        <div class="box">
+		        	<div class="box-head">What is Abfrage3?</div>
+		        	<div class="box-body">Abfrage3 is a web tool allowing users to enter vocabulary, share word lists and learn another language.</div>
+		        </div>
+	        </div>
+	        
+	        <div class="right">
+	        	<div class="box">
+		        	<div class="box-head">Login</div>
+		        	<div class="box-body">
+		        		<form method="post" action="login.php">
+		        			<table>
+		        				<tr>
+		        					<td>Email-Address</td>
+		        					<td><input type="text" name="email" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td>Password</td>
+		        					<td><input type="password" name="password" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td><input type="submit" value="Login"/></td>
+		        					<td></td>
+		        				</tr>
+		        			</table>
+		        		</form>
+					</div>
+		        </div>
+		        <div class="box right">
+		        	<div class="box-head">Sign up</div>
+		        	<div class="box-body">
+		        		<form method="post" action="signup.php">
+		        			<table>
+		        				<tr>
+		        					<td>First name</td>
+		        					<td><input type="text" name="firstname" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td>Last name</td>
+		        					<td><input type="text" name="lastname" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td>Email-Address</td>
+		        					<td><input type="text" name="email" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td>Password</td>
+		        					<td><input type="password" name="password" placeholder="" required="required"/></td>
+		        				</tr>
+		        				<tr>
+		        					<td><input type="submit" value="Sign up"/></td>
+		        					<td></td>
+		        				</tr>
+		        			</table>
+		        		</form>
+					</div>
+		        </div>
 	        </div>
         </div>
         
