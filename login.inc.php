@@ -1,3 +1,7 @@
+<?php
+	require('database.php');
+?>
+
 <!DOCTYPE html>
 <html>
 <? require('html-include/head.html'); ?>
@@ -75,6 +79,14 @@
 			        	<div class="box-body">
 			        		<p>Abfrage3 is a web tool allowing users to enter vocabulary, share word lists and learn another language.</p>
 			        		<p>The website is still under heavy development and therefore not fully functional.</p>
+			        	</div>
+			        </div>
+			        
+			        <div class="box">
+			        	<div class="box-head">Stats</div>
+			        	<div class="box-body">
+			        		<p>Number of registered users: <? echo Database::get_number_of_registered_users(); ?></p>
+			        		<p>Number of logins during the last 24 hours: <? echo Database::get_number_of_logins_during_last_time(24 * 60 * 60); ?></p>
 			        	</div>
 			        </div>
 		        </div>
@@ -165,7 +177,7 @@
     			<div class="box">
     				<div class="box-head">Security</div>
     				<div class="box-body">
-    					<p>Entering your data on my website is at your own risk. I can't guarantee for the security of the entered information. Your account's password is not being stored in plain text. Before it is being safed to the database the <a href="http://php.net/manual/de/function.sha1.php" target="_blank">SHA1-hash</a> is applied to it and a randomly generated salt.</p>
+    					<p>Entering your data on my website is at your own risk. I can't guarantee for the security of the entered information. Your account's password is not being stored in plain text. Before it is being safed to the database the <a href="http://php.net/manual/de/function.sha1.php" target="_blank">SHA1-hash</a> is applied to it together with a randomly generated salt.</p>
 					</div>
     			</div>
     			
@@ -329,7 +341,7 @@
 			
 			
 			// screenshot
-			$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; " src="http://www.simsso.de/img/development/shapemodgen-subdivisions.jpg"><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
+			$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
 			$('.screenshot').on('click', function() {
 				$('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
 				$('#screenshot-description').html($(this).data('description'));
