@@ -12,7 +12,9 @@
 	
 	// correct combination
 	if ($result == 1) {
+  		session_start();
 		$_SESSION['id'] = $id;
+		Database::add_login($id);
 		header("Location: /./");
 		exit();
 	} else if ($result == 2) { // correct combination but email not comfirmed yet

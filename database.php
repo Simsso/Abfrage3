@@ -76,7 +76,7 @@
 		static function get_salt_by_email($email) {
 			global $con;
 			
-			$sql = "SELECT `salt` FROM `user` WHERE `email` = '" . $email . "'";
+			$sql = "SELECT `salt` FROM `user` WHERE `email` = '$email'";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) { 
 			  return $row['salt'];
@@ -87,7 +87,7 @@
 		static function email2id($email) {
 			global $con;
 			
-			$sql = "SELECT `id` FROM `user` WHERE `email` = '" . $email . "'";
+			$sql = "SELECT `id` FROM `user` WHERE `email` = '$email'";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) { 
 			  return $row['id'];
@@ -100,7 +100,7 @@
 		
 		static function confirm_email($email, $key) {
 			global $con; 
-			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "' AND `email_confirmation_key` = '" . $key . "'";
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '$email' AND `email_confirmation_key` = '$key'";
 			$query = mysqli_query($con, $sql);
 			$count = mysqli_fetch_object($query)->count;
 			if ($count == 1) {
@@ -109,6 +109,14 @@
 				return TRUE;
 			}
 			return FALSE;
+		}
+		
+		static function add_login($id) {
+			global $con;
+			$ip = $_SERVER['REMOTE_ADDR']; 
+			$time = time();
+			$sql = "UPDATE `user` SET `user` = '$id', `ip` = '$ip', `time` = `$time` WHERE id = '$id'";
+			$update = mysqli_query($con, $sql);
 		}
 	}
 		
