@@ -14,7 +14,7 @@
     		<div class="navbar-inner content-width">
     			<a href="#home">
     				<img class="logo" src="img/logo-46.png" />
-    			</a>
+    			</a><br class="clear-both smaller-800">
     			<ul class="nav left">
     				<li id="nav_home"><a href="#home">Home</a></li>
     				<li id="nav_query"><a href="#query">Query</a></li>
@@ -25,7 +25,7 @@
     			<ul class="nav right">
     				<li id="nav_settings"><a href="#settings">Settings</a></li>
     				<li><a href="/./logout.php">Logout</a></li>
-    			</ul>
+    			</ul><br class="clear-both">
     		</div>
     	</nav>
     	
@@ -77,13 +77,13 @@
     						People you've added
     					</div>
     					<div class="box-body">
-    						/*<?php
-    							$added_users = Database::get_list_of_added_users_of_user($_SESSION['id']);
+    						<?php
+    							/*$added_users = Database::get_list_of_added_users_of_user($_SESSION['id']);
     							$number_of_added_users = array_count_values($added_users);
     							for ($i = 0; $i < $number_of_added_users; $i ++) { 
 									
-								}
-    						?>*/
+								}*/
+    						?>
     					</div>
     				</div>
     			</div>
@@ -97,6 +97,10 @@
     			
     		</div>
         </div>
+        
+        <?php
+        	require('html-include/footer.html');
+        ?>
         
         
         <!-- jquery -->

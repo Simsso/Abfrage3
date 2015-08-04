@@ -6,7 +6,7 @@
     		<div class="navbar-inner content-width">
     			<a href="#home">
     				<img class="logo" src="img/logo-46.png" />
-    			</a>
+    			</a><br class="clear-both smaller-800">
     			<ul class="nav left">
     				<li id="nav_home"><a href="#home">Home</a></li>
     			</ul>
@@ -15,7 +15,7 @@
     				<li id="nav_about"><a href="#about">About</a></li>
     				<li id="nav_contact"><a href="#contact">Contact</a></li>
     				<li id="nav_imprint"><a href="#imprint">Imprint</a></li>
-    			</ul>
+    			</ul><br class="clear-both">
     		</div>
     	</nav>
     	<div class="main content-width" id="main">
@@ -205,8 +205,10 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 					<div class="box">
 						<div class="box-head">About me</div>
 						<div class="box-body">
+								<div style="max-width: 315px; margin: auto; ">
+									<img src="img/timo-denk.jpg" class="width100"/>
+								</div>
 							<p>
-								<img src="img/timo-denk.jpg"/>
 								My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.
 							</p>
 						</div>
@@ -214,6 +216,10 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 				</div>
     		</div>
         </div>
+        
+        <?php
+        	require('html-include/footer.html');
+        ?>
         
         
         <!-- jquery -->
