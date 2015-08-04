@@ -96,6 +96,8 @@
     		<div id="content-settings">
     			
     		</div>
+    		
+    		<br class="clear-both">
         </div>
         
         <?php
@@ -108,7 +110,7 @@
         <script type="text/javascript">
         	
         	var updatePageContent = function() {
-        		$('#main').children().hide();
+        		$('#main').children('div').hide();
         		$('li').removeClass('visited');
         		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
         		$('#nav_' + pageName).addClass('visited');

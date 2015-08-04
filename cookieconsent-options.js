@@ -3,5 +3,5 @@ window.cookieconsent_options = {
     "dismiss": "Got it!",
     "learnMore": "Learn more.",
     "link": "https://en.wikipedia.org/wiki/HTTP_cookie",
-    "theme": "dark-bottom"
+    "theme": "dark-top"
 };

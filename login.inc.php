@@ -14,7 +14,7 @@
     			<ul class="nav right">
     				<li id="nav_about"><a href="#about">About</a></li>
     				<li id="nav_contact"><a href="#contact">Contact</a></li>
-    				<li id="nav_imprint"><a href="#imprint">Imprint</a></li>
+    				<li id="nav_legal-info"><a href="#legal-info">Legal info</a></li>
     			</ul><br class="clear-both">
     		</div>
     	</nav>
@@ -141,25 +141,85 @@
 	        </div>
 	        
 	        
-    		<div id="content-imprint">
+    		<div id="content-legal-info">
     			<div class="box">
-    				<div class="box-head">Imprint</div>
-    				<div class="box-body">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like). 
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-There are many variatios of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even
-    				</div>
+    				<div class="box-head">Terms and conditions template for website usage</div>
+    				<div class="box-body">
+    					<p>Welcome to my website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with my privacy policy govern Timo Denk's relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use my website.</p>
+    					<p>The term 'Timo Denk' or 'me' or 'I' refers to the owner of the website. The term 'you' refers to the user or viewer of our website.</p>
+    					<p>The use of this website is subject to the following terms of use:</p>
+    					<ul class="normal">
+    						<li>The content of the pages of this website is for your general information and use only. It is subject to change without notice.</li>
+    						<li>This website uses cookies to monitor browsing preferences.</li>
+    						<li>Neither I nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and I expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.</li>
+    						<li>Your use of any information or materials on this website is entirely at your own risk, for which I shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.</li>
+    						<li>This website contains material which is owned by or licensed to me. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.</li>
+    						<li>All trade marks reproduced in this website which are not the property of, or licensed to, the operator are acknowledged on the website.</li>
+    						<li>Unauthorised use of this website may give rise to a claim for damages and/or be a criminal offence.</li>
+    						<li>From time to time this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that I endorse the website(s). I have no responsibility for the content of the linked website(s).</li>
+    						<li>Your use of this website and any dispute arising out of such use of the website is subject to the laws of Germans.</li>
+    					</ul>
+					</div>
+    			</div>
+    			
+    			<div class="box">
+    				<div class="box-head">Security</div>
+    				<div class="box-body">
+    					<p>Entering your data on my website is at your own risk. I can't guarantee for the security of the entered information. Your account's password is not being stored in plain text. Before it is being safed to the database the <a href="http://php.net/manual/de/function.sha1.php" target="_blank">SHA1-hash</a> is applied to it and a randomly generated salt.</p>
+					</div>
+    			</div>
+    			
+    			<div class="box">
+    				<div class="box-head">Disclaimer</div>
+    				<div class="box-body">
+    					<p>The information contained in this website is for general information purposes only. The information is provided by Timo Denk and while I endeavour to keep the information up to date and correct, I make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+						<p>In no event will I be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.</p>
+						<p>Through this website you are able to link to other websites which are not under the control of Timo Denk. I have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
+						<p>Every effort is made to keep the website up and running smoothly. However, Timo Denk takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.</p>
+					</div>
+    			</div>
+    			
+    			<div class="box">
+    				<div class="box-head">Copyright</div>
+    				<div class="box-body">
+    					<p>This website and its content is copyright of Timo Denk. All rights reserved.</p>
+    					<p>Any redistribution or reproduction of part or all of the contents in any form is prohibited other than the following:</p>
+						<ul class="normal">
+							<li>You may print or download to a local hard disk extracts for your personal and non-commercial use only.</li>
+							<li>You may copy the content to individual third parties for their personal use, but only if you acknowledge the website as the source of the material.</li>
+							<li>You may not, except with our express written permission, distribute or commercially exploit the content. Nor may you transmit it or store it in any other website or other form of electronic retrieval system.</li>
+						</ul>
+					</div>
     			</div>
     		</div>
 	        
 	        
     		<div id="content-about">
-    			<div class="box">
-    				<div class="box-head">About</div>
-    				<div class="box-body">coming soon...
-    				</div>
-    			</div>
+    			<div class="left-column">
+	    			<div class="box">
+	    				<div class="box-head">About Abfrage3</div>
+	    				<div class="box-body">
+	    					<h4>Earlier versions</h4>
+	    					<p>Abfrage3 has a long history: The first version, "Abfrage", was written in Java and looked very awful (Screenshot 1). It was developed in October 2013. Abfrage2 was not really successful though, it was just an attempt to create a nice WPF layout which totally failed. In Summer 2014 the third version Abfrage3 (Screenshot 2), a C# WPF application, became the first version in this series of the vocabulary learning software with advanced features like uploading and sharing lists, auto translation and a lot more. Unfortunately it was only executable on Windows which leaded in August 2015 to the development of Abfrage3Web - the website you are currently visiting. </p>
+	    					<h4>Naming</h4>
+	    					<p>The name Abfrage3 is german and means something like <i>Query3</i>. For traditinal reasons the English version was also named in german.</p>
+	    					<h4>Ambition</h4>
+	    					<p>The big idea of Abfrage3Web was to create a fully functional vocabulary trainer which is fun to use. An important specification was the possibility to comfortably share word lists with other users. </p>
+	    				</div>
+	    			</div>
+	    		</div>
+	    		<div class="right-column">
+	    			<div class="box">
+	    				<div class="box-body">
+	    					<div class="right-column-img-wrapper"><img src="img/abfrage-screenshot.min.jpg" class="screenshot right-column-img" data-description="The first version - Abfrage"/></div>
+	    				</div>
+	    			</div>
+	    			<div class="box">
+	    				<div class="box-body">
+	    					<div class="right-column-img-wrapper"><img src="img/abfrage3-screenshot.min.jpg" class="screenshot right-column-img" data-description="Abfrage3 - a C# WPF application"/></div>
+	    				</div>
+	    			</div>
+	    		</div>
     		</div>
 	        
 	        
@@ -205,8 +265,8 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 					<div class="box">
 						<div class="box-head">About me</div>
 						<div class="box-body">
-								<div style="max-width: 315px; margin: auto; ">
-									<img src="img/timo-denk.jpg" class="width100"/>
+								<div class="right-column-img-wrapper">
+									<img src="img/timo-denk.jpg" class="right-column-img"/>
 								</div>
 							<p>
 								My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.
@@ -215,6 +275,8 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 					</div>
 				</div>
     		</div>
+    		
+    		<br class="clear-both">
         </div>
         
         <?php
@@ -227,7 +289,7 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
         <script type="text/javascript">
         	
         	var updatePageContent = function() {
-        		$('#main').children().hide();
+        		$('#main').children('div').hide();
         		$('li').removeClass('visited');
         		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
         		$('#nav_' + pageName).addClass('visited');
@@ -264,6 +326,25 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 					message: $('#contact-message').val()
 				}).done(function(data) { $('#contact-body').html(data); });
 			});       
+			
+			
+			// screenshot
+			$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; " src="http://www.simsso.de/img/development/shapemodgen-subdivisions.jpg"><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
+			$('.screenshot').on('click', function() {
+				$('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
+				$('#screenshot-description').html($(this).data('description'));
+				$('#screenshot-popup-wrapper').show();
+			});
+			$('#screenshot-popup-wrapper').on('click', function() {
+				$(this).hide();
+			});
+			$(document).keyup(function(e) {
+				if (e.keyCode == 27) { // escape key maps to keycode '27'
+					$('#screenshot-popup-wrapper').fadeOut();
+				}
+			});
+			
+			
         </script>
         
         <?php 
