@@ -24,14 +24,16 @@
 				$email_confirmation_key = sha1($salt . $email . $password);
 				$reg_time = time();
 				
+				global $con;
 				$sql = "INSERT INTO `user` (`firstname`, `lastname`, `email`, `password`, `salt`, `reg_time`, `email_confirmation_key`) 
 					VALUES ('" . $firstname . "', '" . $lastname . "', '" . $email . "', '" . $password . "', '" . $salt . "', '" . $reg_time . "', '" . $email_confirmation_key . "')";
-				$query = mysqli_query($con, $insert);
+				$query = mysqli_query($con, $sql);
 				return TRUE;
 			}
 		}
 		
 		static function email_available($email) {
+			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "'";
 			$query = mysqli_query($con, $sql);
 			$count = mysqli_fetch_object($query)->count;

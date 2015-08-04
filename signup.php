@@ -1,6 +1,6 @@
 <?php
 	require('database.php');
-	require('mail.php');
+	//require('mail.php');
 	
 	$firstname = $_POST['firstname'];
 	$lastname = $_POST['lastname'];
@@ -20,10 +20,10 @@
 	}
 	
 	if ($signup_success) {
-			header("Location: /./?email=" . $email . "&signup_success=" . $signup_success);
+			header("Location: /./?signup_success=" . (($signup_success)?"true":"false") . "&email=" . $email . "&firstname=" . $firstname);
 			exit();
 	} else {
-			header("Location: /./?firstname=" . $firstname . "&lastname=" . $lastname . "&email=" . $email . "&signup_success=" . $signup_success . "&signup_message=" . $message);
+			header("Location: /./?signup_success=" . (($signup_success)?"true":"false") . "&firstname=" . $firstname . "&lastname=" . $lastname . "&email=" . $email . "&signup_message=" . $message);
 			exit();
 	}
 ?>
