@@ -161,6 +161,21 @@
 			}
 			return $result;
 		}
+		
+		static function get_number_of_registered_users() {
+			global $con; 
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `user`";
+			$query = mysqli_query($con, $sql);
+			return mysqli_fetch_object($query)->count;
+		}
+		
+		static function get_number_of_logins_during_last_time($time_in_seconds) {
+			$time_min = time() - $time_in_seconds;
+			global $con; 
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `login` WHERE `time` > '$time_min'";
+			$query = mysqli_query($con, $sql);
+			return mysqli_fetch_object($query)->count;
+		}
 	}
 
 	class SimpleUser {
