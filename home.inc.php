@@ -5,12 +5,16 @@
     	<nav id="head-nav" class="navbar">
     		<div class="navbar-inner content-width">
     			<a href="/./">
-    				<img src="img/logo-56.png" />
+    				<img class="logo" src="img/logo-56.png" />
     			</a>
-    			<ul class="nav">
-    				<li><a href="#">About</a></li>
-    				<li><a href="#">Contact</a></li>
-    				<li><a href="#">Imprint</a></li>
+    			<ul class="nav left">
+    				<li><a href="#">Query</a></li>
+    				<li><a href="#">Word lists</a></li>
+    				<li><a href="#">Share</a></li>
+    			</ul>
+    			<ul class="nav right">
+    				<li><a href="#">Settings</a></li>
+    				<li><a href="/./logout.php">Logout</a></li>
     			</ul>
     		</div>
     	</nav>
