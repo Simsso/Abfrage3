@@ -17,6 +17,8 @@ textarea {
 	width: calc(100% - 16px);
 	resize: vertical;
 	height: 300px;
+	
+    transition: height 0s;
 }
 
 input[type=button], input[type=submit] {
