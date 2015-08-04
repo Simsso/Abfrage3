@@ -15,7 +15,7 @@
   		session_start();
 		$_SESSION['id'] = $id;
 		Database::add_login($id);
-		header("Location: /./");
+		header("Location: /./#home");
 		exit();
 	} else if ($result == 2) { // correct combination but email not comfirmed yet
 		$user = Database::get_user_by_id($id);
