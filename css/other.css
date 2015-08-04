@@ -20,7 +20,7 @@ body {
 	height: 56px;
 	width: 100%;
 	
-	padding: 5px 0;
+	padding: 0;
 	
 	background-color: #8892BF;
 	border-style: solid;
@@ -42,25 +42,35 @@ body {
 	color: #FFFFFF;
 }
 
-.navbar .navbar-inner img {
+.navbar .navbar-inner .logo {
 	float: left;
-	height: 56px;
-	margin: 0 10px;
+	height: 46px;
+	margin: 5px 30px 5px 0;
 }
 
 .navbar .navbar-inner .nav {
 	position: relative;
-	left: 0;
-	float: left;
 	margin: 0 10px 0 0;
 	list-style: none;
 }
-
-.navbar .navbar-inner .nav li {
+.navbar .navbar-inner .nav.left {
+	left: 0;
 	float: left;
-	margin: 22px 10px;
+}
+.navbar .navbar-inner .nav.right {
+	right: 0;
+	float: right;
+}
+.navbar .navbar-inner .nav li {
+	padding: 23px 10px;
 	line-height: 16px;
 	font-size: 16px;
+	float: left;
+}
+.navbar .navbar-inner .nav li.visited {
+	background: #4F5B93;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6F7BB3), to(#4F5B93));
+	background: -moz-linear-gradient(top,  #6F7BB3,  #4F5B93); 
 }
 
 body > .main {
@@ -90,11 +100,11 @@ body > .main {
 	padding: 15px;
 	background-color: #FFFFFF;
 }
-.left {
+.left-column {
 	float: left;
 	width: 800px;
 }
-.right {
+.right-column {
 	float: right;
 	width: 345px;
 }
@@ -109,4 +119,8 @@ form table input {
 
 p:not(:last-child) {
 	margin-bottom: 24px;
+}
+
+.main > div {
+	display: none;
 }
