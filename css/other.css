@@ -79,6 +79,13 @@ body > .main {
 	background-color: #F3F5F6;
 	border-bottom: 1px solid #ECEFF1;
 }
+.box .box-head.green {
+	background-color: #5DCC57;
+}
+.box .box-head.red {
+	background-color: #EF3939;
+}
+
 .box .box-body {
 	padding: 15px;
 	background-color: #FFFFFF;

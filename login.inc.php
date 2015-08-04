@@ -26,9 +26,30 @@
     			</ul>
     		</div>
     	</nav>
-    	
     	<div class="main content-width">
+    	
     		<div class="left">
+		    	<?php
+		    		if($_GET['signup_success'] == "true") {
+		    			echo '
+		        <div class="box">
+		        	<div class="box-head green">Successfully signed up</div>
+		        	<div class="box-body">
+		        		<p>Hello ' . $_GET['firstname'] . '!</p>
+		        		<p>Your account has been created. Check your emails and click on the link to confirm your email address (' . $_GET['email'] . ') and activate your account.</p> 
+		        	</div>
+		        </div>';
+		    		} else {
+		    			echo '
+		        <div class="box">
+		        	<div class="box-head red">Could not sign up</div>
+		        	<div class="box-body">
+		        		<p>An error occured while creating your account.</p>
+		        		<p>' . $_GET['signup_message'] . '</p>
+		        	</div>
+		        </div>';					
+					}
+		    	?>
 		        <div class="box">
 		        	<div class="box-head">What is Abfrage3?</div>
 		        	<div class="box-body">
@@ -46,7 +67,7 @@
 		        			<table>
 		        				<tr>
 		        					<td>Email-Address</td>
-		        					<td><input type="text" name="email" placeholder="" required="required"/></td>
+		        					<td><input type="text" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "true") echo($_GET['email']); ?>"/></td>
 		        				</tr>
 		        				<tr>
 		        					<td>Password</td>
@@ -67,15 +88,15 @@
 		        			<table>
 		        				<tr>
 		        					<td>First name</td>
-		        					<td><input type="text" name="firstname" placeholder="" required="required"/></td>
+		        					<td><input type="text" name="firstname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['firstname']; ?>"/></td>
 		        				</tr>
 		        				<tr>
 		        					<td>Last name</td>
-		        					<td><input type="text" name="lastname" placeholder="" required="required"/></td>
+		        					<td><input type="text" name="lastname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['lastname']; ?>"/></td>
 		        				</tr>
 		        				<tr>
 		        					<td>Email-Address</td>
-		        					<td><input type="text" name="email" placeholder="" required="required"/></td>
+		        					<td><input type="text" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
 		        				</tr>
 		        				<tr>
 		        					<td>Password</td>
