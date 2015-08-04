@@ -86,8 +86,8 @@
 			        		<form method="post" action="login.php">
 			        			<table>
 			        				<tr>
-			        					<td>Email-Address</td>
-			        					<td><input type="text" name="email" placeholder="" required="required" value="<? if(!$_GET['signup_success'] == "false") echo($_GET['email']); ?>"/></td>
+			        					<td>Email-address</td>
+			        					<td><input type="email" name="email" placeholder="" required="required" value="<? if(!$_GET['signup_success'] == "false") echo($_GET['email']); ?>"/></td>
 			        				</tr>
 			        				<tr>
 			        					<td>Password</td>
@@ -118,8 +118,8 @@
 			        					<td><input type="text" name="lastname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['lastname']; ?>"/></td>
 			        				</tr>
 			        				<tr>
-			        					<td>Email-Address</td>
-			        					<td><input type="text" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
+			        					<td>Email-address</td>
+			        					<td><input type="email" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
 			        				</tr>
 			        				<tr>
 			        					<td>Password</td>
@@ -167,7 +167,36 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 				<div class="left-column">
 					<div class="box">
 	    				<div class="box-head">Contact</div>
-	    				<div class="box-body">coming soon...
+	    				<div class="box-body" id="contact-body">
+	    					<p>Feel free to send me your ideas, feedback, questions and critique!</p>
+	    					<form id="contact-form">
+		    					<table>
+		    						<tr>
+		    							<td>Name</td>
+		    							<td><input type="text" id="contact-name" required="required"/></td>
+		    						</tr>
+		    						<tr>
+		    							<td>Email-address</td>
+		    							<td><input type="email" id="contact-email" required="required"/></td>
+		    						</tr>
+		    						<tr>
+		    							<td>Subject</td>
+		    							<td><input type="text" id="contact-subject" required="required"/></td>
+		    						</tr>
+		    						<tr>
+		    							<td>Message</td>
+		    							<td><textarea id="contact-message" required="required"></textarea></td>
+		    						</tr>
+		    						<tr>
+		    							<td>Bot protection</td>
+		    							<td><span id="contact-bot-question"><? echo rand(0, 10) . " + " . rand(0, 1) . "</span> = "; ?><input type="number" id="contact-bot-protection" style="width: 100px; " required="required"/></td>
+		    						</tr>
+		    						<tr>
+		    							<td><input type="submit" value="Senden" id="contact-submit"/></td>
+		    							<td></td>
+		    						</tr>
+		    					</table>
+	    					</form>
 	    				</div>
 	    			</div>
 				</div>
@@ -176,8 +205,10 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
 					<div class="box">
 						<div class="box-head">About me</div>
 						<div class="box-body">
-							<p><img src="img/timo-denk.jpg"/></p>
-							<p>My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.</p>
+							<p>
+								<img src="img/timo-denk.jpg"/>
+								My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -214,7 +245,32 @@ There are many variatios of passages of Lorem Ipsum available, but the majority 
             	updatePageContent();
             }); 
             
-			updatePageContent();           
+			updatePageContent(); 
+			
+			
+			// contact
+			$('#contact-form').on('submit', function(e) {
+				// dont visit action="..." page
+				e.preventDefault();
+				
+				var botQuestion = $('#contact-bot-question').html().split(' + ');
+				if (parseInt(botQuestion[0]) + parseInt(botQuestion[1]) != $('#contact-bot-protection').val())
+				{
+					alert("You haven't answered the bot question correctly.");
+					return;
+				}
+				
+				// prevent multiple submissions
+				$('#contact-submit').prop('disabled', true);
+				$('#contact-submit').attr('value', 'Sending...');
+				
+				$.post('contact.php', { 
+					name: $('#contact-name').val(), 
+					email: $('#contact-email').val(),
+					subject: $('#contact-subject').val(),
+					message: $('#contact-message').val()
+				}).done(function(data) { $('#contact-body').html(data); });
+			});       
         </script>
         
         <?php 
