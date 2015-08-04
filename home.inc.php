@@ -37,7 +37,7 @@
     						Hey <? echo $user->firstname; ?>!
     					</div>
     					<div class="box-body">
-    						<p>Last login at <? echo date("r", $next_to_last_login->time); ?> from IP-address <? echo $next_to_last_login->ip; ?></p>
+    						<p>Last login at <? echo $next_to_last_login->get_date_string(); ?> from IP-address <? echo $next_to_last_login->ip; ?></p>
     					</div>
     				</div>
     			</div>
@@ -71,7 +71,25 @@
     		
     		
     		<div id="content-user">
-    			
+    			<div class="left-column">
+    				<div class="box">
+    					<div class="box-head">
+    						People you've added
+    					</div>
+    					<div class="box-body">
+    						/*<?php
+    							$added_users = Database::get_list_of_added_users_of_user($_SESSION['id']);
+    							$number_of_added_users = array_count_values($added_users);
+    							for ($i = 0; $i < $number_of_added_users; $i ++) { 
+									
+								}
+    						?>*/
+    					</div>
+    				</div>
+    			</div>
+    			<div class="right-column">
+    				
+    			</div>
     		</div>
     		
     		
