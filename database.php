@@ -131,6 +131,16 @@
 			return FALSE;
 		}
 		
+		static function get_last_login_of_user($id) {
+			global $con;
+			$sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  return new Login($row['id'], $row['user'], $row['time'], $row['ip']);
+			}
+			return NULL;
+		}
+		
 		static function get_next_to_last_login_of_user($id) {
 			global $con;
 			$sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1,2";
@@ -140,13 +150,41 @@
 			}
 			return NULL;
 		}
+		
+		static function get_list_of_added_users_of_user($id) {
+			global $con;
+			$sql = "SELECT * FROM `relationship` WHERE `user1` = '$id'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  array_push($result, new Login($row['id'], $row['user'], $row['time'], $row['ip']));
+			}
+			return $result;
+		}
 	}
-		
-		
-	class User {
+
+	class SimpleUser {
 		public $id;
 		public $firstname;
 		public $lastname;
+		
+		public function __construct($id, $firstname, $lastname) {
+			$this->id = $id;
+			$this->firstname = $firstname;
+			$this->lastname = $lastname;
+		}
+		
+		public function get_last_login() {
+			return Database::get_last_login_of_user($this->id);
+		}
+		
+		public function get_next_to_last_login() {
+			return Database::get_next_to_last_login_of_user($this->id);
+		}
+	}
+		
+		
+	class User extends SimpleUser {
 		public $email;
 		public $password;
 		public $salt;
@@ -184,6 +222,10 @@
 			$this->user_id = $user_id;
 			$this->date = $date;
 			$this->ip = $ip;
+		}
+		
+		public function get_date_string() {
+			return date("r", $this->date);
 		}
 	}
 ?>
