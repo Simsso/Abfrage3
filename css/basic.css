@@ -1,4 +1,4 @@
-input[type=text], input[type=password], input[type=textarea] {
+input[type=text], input[type=password], input[type=textarea], input[type=email], input[type=number], textarea {
 	padding: 8px;
 	font-size: 11pt;
 	background-color: #FFFFFF;
@@ -6,11 +6,17 @@ input[type=text], input[type=password], input[type=textarea] {
 	box-shadow: inset 0 0 3px #DDDDDD, 1px 1px 2px #DDDDDD;
 	margin-bottom: 5px;
 }
-input[type=text]:hover, input[type=password]:hover, input[type=textarea]:hover {
+input[type=text]:hover, input[type=password]:hover, input[type=textarea]:hover, input[type=email]:hover, input[type=number]:hover, textarea:hover {
 	border-color: #AAAAAA;
 }
-input[type=text]:focus, input[type=password]:focus, input[type=textarea]:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=textarea]:focus, input[type=email]:focus, input[type=number]:focus, textarea:focus {
 	border-color: #888888;
+}
+
+textarea {
+	width: calc(100% - 16px);
+	resize: vertical;
+	height: 300px;
 }
 
 input[type=button], input[type=submit] {
@@ -24,8 +30,6 @@ input[type=button], input[type=submit] {
 	box-shadow: 0 1px 1px #C3C7CD, inset 0 1px 1px #FEECBB;
 }
 input[type=button]:hover, input[type=submit]:hover {
-	padding: 8px;
-	color: black;
 	border: 1px solid #C17909;
 	background: #F9C64C;
 	background: -webkit-gradient(linear, left top, left bottom, from(#FCDB80), to(#F6B217));
@@ -33,11 +37,16 @@ input[type=button]:hover, input[type=submit]:hover {
 	box-shadow: 0 2x 2px #C3C7CD, inset 0 1px 1px #FEF1CD;
 }
 input[type=button]:active, input[type=submit]:active {
-	padding: 8px;
-	color: black;
 	border: 1px solid #AB7519;
 	background: #DA9E1E;
 	background: -webkit-gradient(linear, left top, left bottom, from(#DDAA38), to(#D89003));
 	background: -moz-linear-gradient(top,  #DDAA38,  #D89003); 
 	box-shadow: inset 0 1px 1px #BA9032;
+}
+input[type=button]:disabled, input[type=submit]:disabled {
+	border: 1px solid #D7D7D7;
+	background: #E3E3E3;
+	background: -webkit-gradient(linear, left top, left bottom, from(#E9E9E9), to(#DEDEDE));
+	background: -moz-linear-gradient(top,  #E9E9E9,  #DEDEDE); 
+	box-shadow: inset 0 1px 1px #F6F6F6;
 }
