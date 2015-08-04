@@ -13,78 +13,77 @@
         
         <style type="text/css">
         	* {
-        		margin: 0;
-        		padding: 0;
-        		font-family: Helvetica, Arial, sans-serif;        		
+				margin: 0;
+				padding: 0;
+				font-family: Helvetica, Arial, sans-serif;        		
         	}
         	
         	body {
-        		background-color: #ECEFF1;
+				background-color: #ECEFF1;
         	}
         	
         	.content-width {
-            	width: 1170px;
-            	margin: auto;
-        		
+				width: 1170px;
+				margin: auto;
         	}
         	
             .navbar {
-            	position: relative;
-            	
-            	height: 56px;
-            	width: 100%;
-            	
-            	padding: 5px;
-            	
-    			background-color: #8892BF;
-    			border-style: solid;
-    			border-width: 0 0 6px 0;
-            	border-color: #4F5B93;            	
+				position: relative;
+				
+				height: 56px;
+				width: 100%;
+				
+				padding: 5px;
+				
+				background-color: #8892BF;
+				border-style: solid;
+				border-width: 0 0 6px 0;
+				border-color: #4F5B93;            	
             }
             .navbar .navbar-inner {
-            	position: relative;
+				position: relative;
             }
             .navbar .navbar-inner a {
-            	color: #E2E4EF;
-			    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-			    text-decoration: none;
-            }
+				color: #E2E4EF;
+				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+				text-decoration: none;
+			}
             .navbar .navbar-inner img {
-            	float: left;
-            	height: 56px;
-            	margin: 0 10px;
+				float: left;
+				height: 56px;
+				margin: 0 10px;
             }
             .navbar .navbar-inner .nav {
-            	position: relative;
-			    left: 0;
-			    float: left;
-			    margin: 0 10px 0 0;
-			    list-style: none;
+				position: relative;
+				left: 0;
+				float: left;
+				margin: 0 10px 0 0;
+				list-style: none;
             }
             .navbar .navbar-inner .nav li {
-            	float: left;
-			    margin: 22px 10px;
-			    line-height: 16px;
-			    font-size: 16px;
+				float: left;
+				margin: 22px 10px;
+				line-height: 16px;
+				font-size: 16px;
             }
             
             body > .main {
-            	position: relative
+				position: relative
             }
             
             .box {
-            	margin: 25px 0;
-            	color: #263238;
-            	box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+				margin: 25px 0;
+				color: #263238;
+				box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
             }
             .box .box-head {
-            	padding: 15px;
-            	background-color: #F3F5F6;
-    			border-bottom: 1px solid #ECEFF1;
+				padding: 15px;
+				background-color: #F3F5F6;
+				border-bottom: 1px solid #ECEFF1;
             }
             .box .box-body {
-            	padding: 15px;
-            	background-color: #FFFFFF;
+				padding: 15px;
+				background-color: #FFFFFF;
             }
         </style>
     </head>
