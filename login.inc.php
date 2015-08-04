@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Abfrage3</title>
-        
-        <meta charset="utf-8">
-        <meta name="author" content="Timo Denk" />
-        <meta name="description" content="Abfrage3 is a online vocabulary trainer." />
-        <meta name="keywords" content="Timo, Denk, Abfrage3" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <link rel="stylesheet" type="text/css" href="css/basic.css" media="all" />
-        <link rel="stylesheet" type="text/css" href="css/other.css" media="all" />
-        <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
-    </head>
+<? require('html-include/head.html'); ?>
     <body>
     	<nav id="head-nav" class="navbar">
     		<div class="navbar-inner content-width">
@@ -157,8 +145,8 @@
             })();
         </script>
         
-        <!--<script type="text/javascript" src="analytics.js"></script>-->
-        
-        <script type="text/javascript" src="cookieconsent-options.js"></script>
-        <script type="text/javascript" src="//s3.amazonaws.com/cc.silktide.com/cookieconsent.latest.min.js"></script>
+        <?php 
+        	require('html-include/scripts.html');
+		?>
     </body>
+</html>
