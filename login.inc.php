@@ -12,7 +12,9 @@
     				<img class="logo" src="img/logo-46.png" />
     			</a><br class="clear-both smaller-800">
     			<ul class="nav left">
-    				<li id="nav_home"><a href="#home">Home</a></li>
+    				<li id="nav_home" class="nav-img-li">
+                        <a href="#home"><img src="img/home.png" class="nav-image" alt="Home" title="Home"/></a>
+                    </li>
     			</ul>
     				
     			<ul class="nav right">
