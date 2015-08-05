@@ -10,4 +10,4 @@ $(window).on('hashchange',function() {
     updatePageContent();
 }); 
 
-updatePageContent(); 
+updatePageContent();

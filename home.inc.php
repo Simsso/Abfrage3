@@ -35,7 +35,13 @@
     		</div>
     	</nav>
     	
-    	<div class="main content-width" id="main">
+    	<div class="main content-width" id="main">			
+            <div class="sk-three-bounce">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+            </div>
+            
     		<div id="content-home">
     			<div class="left-column">
     				<div class="box">
@@ -63,44 +69,120 @@
     		
     		<div id="content-query">
     			
+    			<div class="left-column">
+                    
+                </div>
+    			<div class="right-column">
+                    
+                </div>
     		</div>
     		
     		
     		<div id="content-word-lists">
-    			
+    			<div class="left-column">
+                    
+                </div>
+    			<div class="right-column">
+                    
+                </div>
     		</div>
     		
     		
     		<div id="content-share">
-    			
+    			<div class="left-column">
+                    
+                </div>
+    			<div class="right-column">
+                    
+                </div>
     		</div>
     		
     		
     		<div id="content-user">
-    			<div class="left-column">
+    			<div class="left-column width-50">
     				<div class="box">
     					<div class="box-head">
     						People you've added
     					</div>
     					<div class="box-body">
-    						<?php
-    							/*$added_users = Database::get_list_of_added_users_of_user($_SESSION['id']);
-    							$number_of_added_users = array_count_values($added_users);
-    							for ($i = 0; $i < $number_of_added_users; $i ++) { 
-									
-								}*/
-    						?>
+                            coming soon...
     					</div>
     				</div>
     			</div>
-    			<div class="right-column">
-    				
+                
+    			<div class="right-column width-50">
+    				<div class="box">
+    					<div class="box-head">
+    						People who have added you
+    					</div>
+    					<div class="box-body">
+                            coming soon...
+    					</div>
+    				</div>
     			</div>
     		</div>
     		
     		
     		<div id="content-settings">
-    			
+                <div class="left-column width-30">
+                    <div class="box">
+                        <div class="box-head">Settings</div>
+                        <div class="box-body">
+                            <table class="box-table">
+                                <tr><td>Profile</td></tr>
+                                <tr><td>Email notifications</td></tr>
+                                <tr><td>Account</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-column width-70">
+                    <div class="box">
+                        <div class="box-head">
+                            Change name
+                        </div>
+                        <div class="box-body">
+                            coming soon...
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-head">
+                            Change password
+                        </div>
+                        <div class="box-body">
+                            coming soon...
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-head">
+                            Change email-address
+                        </div>
+                        <div class="box-body">
+                            coming soon...
+                        </div>
+                    </div>
+                
+                
+                    <div class="box">
+                        <div class="box-head">
+                            Email notifications
+                        </div>
+                        <div class="box-body">
+                            coming soon...
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-head">
+                            Delete account
+                        </div>
+                        <div class="box-body">
+                            coming soon...
+                        </div>
+                    </div>
+                </div>
     		</div>
     		
     		<br class="clear-both hide-below-700">
