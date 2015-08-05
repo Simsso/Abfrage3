@@ -27,9 +27,9 @@
 				<div class="left-column">
 			    	<?php
 			    	
-			    	$infobox_green_red = NULL;
-					$infobox_header = NULL;
-					$infobox_body = NULL;
+                        $infobox_green_red = NULL;
+                        $infobox_header = NULL;
+                        $infobox_body = NULL;
 					
 			    		// sign up
 			    		if($_GET['signup_success'] == "true") {
@@ -203,6 +203,15 @@
 						</ul>
 					</div>
     			</div>
+                
+                <div class="box">
+                    <div class="box-head">Icon Source</div>
+                    <div class="box-body">
+                        <div>
+                            Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
+                        </div>
+                    </div>
+                </div>
     		</div>
 	        
 	        
@@ -217,6 +226,13 @@
 	    					<p>The name Abfrage3 is german and means something like <i>Query3</i>. For traditinal reasons the English version was also named in german.</p>
 	    					<h4>Ambition</h4>
 	    					<p>The big idea of Abfrage3Web was to create a fully functional vocabulary trainer which is fun to use. An important specification was the possibility to comfortably share word lists with other users. </p>
+	    				</div>
+	    			</div>
+	    			<div class="box">
+	    				<div class="box-head">Source code</div>
+	    				<div class="box-body">
+	    					<p>Abfrage3 is open source! The whole code can be found on GitHub.</p>
+                            <p><a href="https://github.com/Simsso/Abfrage3Web" target="_blank"><img src="img/github.png" /></a></p>
 	    				</div>
 	    			</div>
 	    		</div>
@@ -264,13 +280,37 @@
 		    							<td><span id="contact-bot-question"><? echo rand(0, 10) . " + " . rand(0, 1) . "</span> = "; ?><input type="number" id="contact-bot-protection" style="width: 100px; " required="required"/></td>
 		    						</tr>
 		    						<tr>
-		    							<td><input type="submit" value="Senden" id="contact-submit"/></td>
+		    							<td><input type="submit" value="Send" id="contact-submit"/></td>
 		    							<td></td>
 		    						</tr>
 		    					</table>
 	    					</form>
 	    				</div>
-	    			</div>
+                    </div>
+                        
+                    <div class="box">
+                        <div class="box-head">Social</div>
+                        <div class="box-body" id="contact-body">
+                            <ul class="social-icons">
+                                <li>
+                                    <a href="https://plus.google.com/106647445778912368795/posts" target="_blank">
+                                        <img src="img/google+.png" alt="Google+" width="100px">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://www.youtube.com/user/Simssos" target="_blank">
+                                        <img src="img/youtube.png" alt="YouTube" width="100px">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/Simsso" target="_blank">
+                                        <img src="img/github.png" alt="GitHub" width="100px">
+                                    </a>
+                                </li>
+                            </ul>
+                            <br class="clear-both">
+                        </div>
+                    </div>
 				</div>
 				
 				<div class="right-column">
@@ -288,7 +328,7 @@
 				</div>
     		</div>
     		
-    		<br class="clear-both">
+    		<br class="clear-both hide-below-700">
         </div>
         
         <?php
@@ -298,22 +338,9 @@
         
         <!-- jquery -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
+        <script src="single-page-app.js" type="text/javascript"></script>
+
         <script type="text/javascript">
-        	
-        	var updatePageContent = function() {
-        		$('#main').children('div').hide();
-        		$('li').removeClass('visited');
-        		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
-        		$('#nav_' + pageName).addClass('visited');
-        		$('#content-' + pageName).show();
-        	}
-        	
-            $(window).on('hashchange',function() {
-            	updatePageContent();
-            }); 
-            
-			updatePageContent(); 
-			
 			
 			// contact
 			$('#contact-form').on('submit', function(e) {
@@ -340,7 +367,7 @@
 			});       
 			
 			
-			// screenshot
+			// screenshots
 			$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
 			$('.screenshot').on('click', function() {
 				$('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
