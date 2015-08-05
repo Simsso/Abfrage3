@@ -16,15 +16,21 @@
     				<img class="logo" src="img/logo-46.png" />
     			</a><br class="clear-both smaller-800">
     			<ul class="nav left">
-    				<li id="nav_home"><a href="#home">Home</a></li>
+    				<li id="nav_home" class="nav-img-li">
+                        <a href="#home"><img src="img/home.png" class="nav-image" alt="Home" title="Home"/></a>
+                    </li>
     				<li id="nav_query"><a href="#query">Query</a></li>
     				<li id="nav_word-lists"><a href="#word-lists">Word lists</a></li>
     				<li id="nav_share"><a href="#share">Share</a></li>
     				<li id="nav_user"><a href="#user">User</a></li>
     			</ul>
     			<ul class="nav right">
-    				<li id="nav_settings"><a href="#settings">Settings</a></li>
-    				<li><a href="/./logout.php">Logout</a></li>
+    				<li id="nav_settings" class="nav-img-li">
+                        <a href="#settings"><img src="img/settings.png" class="nav-image" alt="Settings" title="Settings"/></a>
+                    </li>
+    				<li id="nav_logout" class="nav-img-li">
+                        <a href="/./logout.php"><img src="img/logout.png" class="nav-image" alt="Logout" title="Logout"/></a>
+                    </li>
     			</ul><br class="clear-both">
     		</div>
     	</nav>
@@ -97,7 +103,7 @@
     			
     		</div>
     		
-    		<br class="clear-both">
+    		<br class="clear-both hide-below-700">
         </div>
         
         <?php
@@ -107,22 +113,7 @@
         
         <!-- jquery -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
-        	
-        	var updatePageContent = function() {
-        		$('#main').children('div').hide();
-        		$('li').removeClass('visited');
-        		var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
-        		$('#nav_' + pageName).addClass('visited');
-        		$('#content-' + pageName).show();
-        	}
-        	
-            $(window).on('hashchange',function() {
-            	updatePageContent();
-            }); 
-            
-			updatePageContent(); 
-        </script>
+        <script src="single-page-app.js" type="text/javascript"></script>
         
         <?php 
         	require('html-include/scripts.html');
