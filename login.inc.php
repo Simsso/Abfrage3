@@ -24,7 +24,12 @@
     			</ul><br class="clear-both">
     		</div>
     	</nav>
-    	<div class="main content-width" id="main">
+    	<div class="main content-width" id="main">		
+            <div class="sk-three-bounce">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+            </div>
     		<div id="content-home">
 				<div class="left-column">
 			    	<?php
@@ -207,7 +212,7 @@
     			</div>
                 
                 <div class="box">
-                    <div class="box-head">Icon Source</div>
+                    <div class="box-head">Icon source</div>
                     <div class="box-body">
                         <div>
                             Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
