@@ -80,10 +80,29 @@
     		
     		<div id="content-word-lists">
     			<div class="left-column">
-                    
+                    <div class="box" id="word-list-info">
+                        <div class="box-head">
+                            
+                        </div>
+                        <div class="box-body">
+                        </div>
+                    </div>
                 </div>
     			<div class="right-column">
-                    
+                    <div class="box">
+                        <div class="box-head">
+                            Your word lists
+                        </div>
+                        <div class="box-body">
+                            <form id="word-list-add-form">
+                                <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
+                                <input id="word-list-add-button" type="submit" value="Create list"/>
+                            </form>
+                            <hr class="spacer-top-15 spacer-bottom-5">
+                            <div id="list-of-word-lists">
+                            </div>
+                        </div>
+                    </div>
                 </div>
     		</div>
     		
@@ -200,158 +219,159 @@
         ?>
         
         
-        <!-- jquery -->
-        <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-        <script src="single-page-app.js" type="text/javascript"></script>
+        <script src="jquery-1.11.3.min.js" type="text/javascript"></script><!-- jquery -->
+        
         <script type="text/javascript">
-            var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
+            var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'            
+        </script>
+        
+        <script src="home/word-lists.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
+            var shownListId = -1;
             
-            
-            // add user
-            var noUsersAddedOutput = '<p>You have not added other users yet.</p>';
-            var noUsersHaveAddedYouOutput = '<p>No users have added you yet.</p>';
-            function addUser(email, callback) {
-                jQuery.ajax('server.php', {
-                    data: {
-                        action: 'add-user',
-                        email: email
-                    },
-                    type: 'GET',
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        
-                    }
-                }).done(function(data) {
-                    if (data == 1) {
-                        refreshListOfAddedUsers(false);
-                    }
-                    
-                    callback(data);
-                });
-            };
-            
-            $('#user-add-form').on('submit', function(e) {
-				// dont visit action="..." page
-				e.preventDefault();
+            $('#word-list-add-form').on('submit', function(e) {
+                // dont visit action="..." page
+                e.preventDefault();
                 
-                $('#user-add-email').prop('disabled', true);
-                $('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
-                addUser($('#user-add-email').val(), function(data) {
-                    $('#user-add-email').prop('disabled', false).val('');
-                    $('#user-add-button').prop('disabled', false).attr('value', 'Add user');
-                    var responseString; 
-                    if (data == -1) responseString = "Email-address does not exist.";
-                    else if (data == 0) responseString =  "You have already added this user.";
-                    else if (data == 1) responseString =  "User has been added.";
-                    else if (data == 2) responseString =  "You can not add yourself.";
-                    else responseString = "An unknown error occured.";
-
-                    $('#user-add-message').html(responseString);
+                $('#word-list-add-name').prop('disabled', true);
+                $('#word-list-add-button').prop('disabled', true).attr('value', 'Creating list...');
+                addWordList($('#word-list-add-name').val(), function(data) {
+                    // finished callback
+                    $('#word-list-add-name').prop('disabled', false).val('');
+                    $('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
+                    
+                    refreshListOfWordLists(false);
+                    loadWordList(data.id, true, function() { });
                 });
             });
             
-            function removeUser(id) {
-                $('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
+            function addWordList(name, callback) {
                 jQuery.ajax('server.php', {
                     data: {
-                        action: 'remove-user',
-                        id: id
+                        action: 'add-word-list',
+                        name: name
                     },
                     type: 'GET',
                     error: function(jqXHR, textStatus, errorThrown) {
-                        
-                    }
-                }).done(function(data) {
-                    console.log(data);
-                    $('#added-users-row-' + id).hide();
-                    
-                    // set text to 
-                    if ($('#people-you-have-added tr').length == 1) {
-                        $('#people-you-have-added').html(noUsersAddedOutput);
-                    }
-                    
-                    refreshListOfUsersWhoHaveAddedYou(false);
-                });
-            }
-            
-            
-            // list of added users
-            function refreshListOfAddedUsers(hideLoadingInformation) {
-                if (hideLoadingInformation)
-                    $('#people-you-have-added').html(loading);
-                
-                jQuery.ajax('server.php', {
-                    data: {
-                        action: 'list-of-added-users'
-                    },
-                    type: 'GET',
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        
+
                     }
                 }).done(function(data) {
                     console.log(data);
                     data = jQuery.parseJSON(data);
-                    console.log(data);
-                    var output = "";
-                    for (var i = 0; i < data.length; i++) {
-                        output += '<tr id="added-users-row-' + data[i].id + '"><td>' + data[i].firstname + ' ' + data[i].lastname + '</td><td>' + data[i].email + '</td><td><input id="added-users-remove-' + data[i].id + '" type="button" class="inline" value="Remove" onclick="removeUser(' + data[i].id + ')"/></td></tr>';
+                    if (data.status == 1) {
+                        loadWordList(data.id, true, function() { });
                     }
-                    if (output.length == 0) {
-                        output = noUsersAddedOutput;
-                    }
-                    else {
-                        output = '<table class="box-table"><tr class="bold"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
-                    }
-                    console.log(output);
-                    $('#people-you-have-added').html(output);
+
+                    callback(data);
                 });
             }
             
-            function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
+            function refreshListOfWordLists(showLoadingInformation) {
                 if (showLoadingInformation)
-                    $('#people-who-have-added-you').html(loading);
+                    $('#list-of-word-lists').html(loading);
                 
                 jQuery.ajax('server.php', {
                     data: {
-                        action: 'list-of-users-who-have-added-you'
+                        action: 'list-of-word-lists'
                     },
                     type: 'GET',
                     error: function(jqXHR, textStatus, errorThrown) {
-                        
+
                     }
                 }).done(function(data) {
                     console.log(data);
                     data = jQuery.parseJSON(data);
+
                     var output = "";
                     for (var i = 0; i < data.length; i++) {
-                        output += '<tr><td>' + data[i].firstname + ' ' + data[i].lastname + '</td><td>' + data[i].email + '</td><td>' + ((data[i].bidirectional)?'':'<input type="button" class="inline" value="Add user" data-email="' + data[i].email + '"/>') + '</td></tr>';
+                        output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/></td><td><input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
                     }
                     if (output.length == 0) {
-                        output = noUsersHaveAddedYouOutput;
+                        output = noWordListOutput;
                     }
                     else {
-                        output = '<table class="box-table"><tr class="bold"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
+                        output = '<table class="box-table"><tr class="bold"><td>Name</td><td></td><td></td></tr>' + output + '</table>';
                     }
-                    console.log(output);
-                    $('#people-who-have-added-you').html(output);
-                    
-                    $('#people-who-have-added-you input[type=button]').on('click', function() {
+                    $('#list-of-word-lists').html(output);
+                    $('#list-of-word-lists input[type=button]').on('click', function() {
                         $button = $(this);
-                        $button.prop('disabled', true).val('Adding...');
-                        addUser($button.data('email'), function() {
-                            $button.fadeOut();
-                        });
+                        
+                        if ($button.data('action') == 'delete') { // delete list button click
+                            $button.prop('disabled', true).attr('value', 'Deleting...');
+                            deleteWordList($button.data('list-id'), true, function() { });
+                        }
+                        else if ($button.data('action') == 'edit') { // edit / show list button click
+                            $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                            $button.prop('disabled', true);
+                            loadWordList($button.data('list-id'), true, function() { });
+                        }
                     });
                 });
             }
             
+            function showNoListSelectedInfo() {
+                $('#word-list-info .box-head').html("Word lists");
+                $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to start editing.</p>');
+            }
+                    
+            function loadWordList(id, showLoadingInformation, callback) {
+                if (showLoadingInformation) {
+                    $('#word-list-info .box-head').html("Loading...");
+                    $('#word-list-info .box-body').html(loading);
+                }
+                
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'get-word-list',
+                        word_list_id: id
+                    },
+                    type: 'GET',
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).done(function(data) {
+                    console.log(data);
+                    data = jQuery.parseJSON(data);
+                    
+                    shownListId = id;
+                    
+                        
+                    $('#word-list-info .box-head').html("Word list: " + data.name);
+                        
+                    $('#word-list-info .box-body').html("Information coming soon...");
+
+                });
+            }
             
+            function deleteWordList(id) {
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'delete-word-list',
+                        word_list_id: id
+                    },
+                    type: 'GET',
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).done(function(data) {
+                    // set text to 
+                    if ($('#list-of-word-lists tr').length == 1) {
+                        $('#list-of-word-lists').html(noWordListOutput);
+                    }
+                    
+                    $('#list-of-word-lists-row-' + id).remove();
+                });
+            }
             
-            
-            // load methods
-            refreshListOfAddedUsers(true);
-            refreshListOfUsersWhoHaveAddedYou(true);
-            
+            // refresh functions
+            showNoListSelectedInfo();
+            refreshListOfWordLists(true);
         </script>
+        <script src="home/user.js" type="text/javascript"></script>
+        
+        <script src="single-page-app.js" type="text/javascript"></script>
+        
         
         <?php 
         	require('html-include/scripts.html');
