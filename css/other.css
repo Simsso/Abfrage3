@@ -22,6 +22,13 @@ body {
 	
 }
 
+.float-right {
+    float: right;
+}
+.float-left {
+    float: left;
+}
+
 .icon-button {
     width: 32px;
     height: 32px;
@@ -61,6 +68,8 @@ ul.social-icons li {
 	width: 100%;
 	
 	padding: 0;
+    
+    font-size: 12pt;
 	
 	background-color: #8892BF;
 	border-style: solid;
@@ -184,6 +193,11 @@ body > .main {
     border-bottom: 1px solid #38426F;
 }
 
+.box-table.button-right-column td:last-child {
+    text-align: right;
+    padding-right: 5px;
+}
+
 
 .left-column {
 	float: left;
@@ -244,6 +258,26 @@ div.right-column-img-wrapper {
 	margin: auto;
 }
 
+.cookie-header {
+    color: #FFFFFF;
+    background: #222222;
+    border-bottom: 1px solid #000000;
+    padding: 25px;
+}
+.cookie-header * {
+    display: inline;
+}
+.cookie-header a, .cookie-header a:visited {
+    color: #31A8F0;
+    text-decoration: none;
+}
+.cookie-header a:hover {
+    color: #DDDDDD;
+}
+.cookie-header a:active {
+    color: #FFFFFF;
+}
+
 
 
 
@@ -284,6 +318,14 @@ div.center {
 .spacer-30 {
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.width-150 {
+    width: 150px;
+}
+
+.no-box-shadow {
+    box-shadow: none !important;
 }
     
 .height-hidden {

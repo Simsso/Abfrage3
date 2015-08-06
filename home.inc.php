@@ -302,13 +302,13 @@
 
                     var output = "";
                     for (var i = 0; i < data.length; i++) {
-                        output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/></td><td><input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
+                        output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
                     }
                     if (output.length == 0) {
                         output = noWordListOutput;
                     }
                     else {
-                        output = '<table class="box-table"><tr class="bold"><td>Name</td><td></td><td></td></tr>' + output + '</table>';
+                        output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
                     }
                     $('#list-of-word-lists').html(output);
                     $('#list-of-word-lists input[type=button]').on('click', function() {
@@ -341,6 +341,7 @@
                 if (showLoadingInformation) {
                     $('#word-list-info .box-head').html("Loading...");
                     $('#word-list-info .box-body').html(loading);
+                    $('#word-list-info-words').hide();
                 }
                 
                 jQuery.ajax('server.php', {
@@ -367,16 +368,23 @@
                         $('#words-in-list').html(noWordsInList);
                     }
                     else {
-                        var wordListHTML;
+                        var wordListHTML = "";
                         for (var i = 0; i < data.words.length; i++) {
-                            wordListHTML += '<tr><td>' + data.words[i].language1 + '</td><td>' + data.words[i].language2 + '</td><td><input type="button" value="Edit"/></td><td><input type="button" value="Remove"/></td></tr>';
+                            wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2);
                         }
-                        wordListHTML = '<table class="box-table"><tr class="bold"><td>First language</td><td>Second language</td><td></td><td></td></tr>' + wordListHTML + '</table>';
+                        wordListHTML = getTableOfWordList(wordListHTML);
                         $('#words-in-list').html(wordListHTML);
                     }
                     $('#word-list-info-words').show();
                 });
             }
+            
+            function getTableRowOfWord(id, lang1, lang2) {
+                return '<tr><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="button" class="inline" value="Edit"/> <input type="button" class="inline" value="Remove"/></td></tr>';
+            }
+            function getTableOfWordList(content) {
+                return '<table id="word-list-table" class="box-table button-right-column"><tr class="bold"><td>First language</td><td>Second language</td><td></td></tr>' + content + '</table>';
+            } 
             
             function deleteWordList(id) {
                 jQuery.ajax('server.php', {
@@ -407,8 +415,33 @@
             $('#words-add-form').on('submit', function(e) {
                 e.preventDefault();
                 
+                var lang1 = $('#words-add-language1').val(), lang2 = $('#words-add-language2').val();
+                $('#words-add-language1').val('').focus();
+                $('#words-add-language2').val('');
                 
+                addWord(lang1, lang2);
             });
+            
+            function addWord(lang1, lang2) {
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'add-word',
+                        word_list_id: shownListId,
+                        lang1: lang1,
+                        lang2: lang2
+                    },
+                    type: 'GET',
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).done(function(data) {
+                    if ($('#word-list-table').length == 0) { // no words added
+                        var wordListHTML = getTableOfWordList("");
+                        $('#words-in-list').html(wordListHTML);
+                    }
+                    $('#word-list-table').append(getTableRowOfWord(data, lang1, lang2));
+                });
+            }
             
             // refresh functions
             showNoListSelectedInfo();

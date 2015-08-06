@@ -27,6 +27,8 @@
             case 'delete-word-list':
                 echo Database::delete_word_list($_SESSION['id'], $_GET['word_list_id']);
                 break;
+            case 'add-word':
+                echo Database::add_word($_SESSION['id'], $_GET['word_list_id'], $_GET['lang1'], $_GET['lang2']);
         }
     }
     exit();

@@ -313,7 +313,7 @@
 			$query = mysqli_query($con, $sql);
             $output = array();
 			while ($row = mysqli_fetch_assoc($query)) { 
-                push_array(output, new Word($id, $row['list'], $row['language1'], $row['language2']));
+                array_push($output, new Word($id, $row['list'], $row['language1'], $row['language2']));
             }
             return $output;
         }
@@ -324,6 +324,14 @@
             $sql = "UPDATE `list` SET `active` = '0' WHERE `id` = '$word_list_id' AND `creator` = '$user_id'";
             $query = mysqli_query($con, $sql);
             return 1;
+        }
+        
+        static function add_word($user_id, $word_list_id, $lang1, $lang2) {
+            global $con;
+            $sql = "INSERT INTO `word` (`list`, `language1`, `language2`)
+                VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "')";
+            $query = mysqli_query($con, $sql);
+            return mysqli_insert_id($con);
         }
 	}
 
@@ -431,9 +439,9 @@
         
         public function __construct($id, $list, $language1, $language2) {
                 $this->id = $id;
-                $this->list = $row['list'];
-                $this->language1 = $row['language1'];
-                $this->language2 = $row['language2'];
+                $this->list = $list;
+                $this->language1 = $language1;
+                $this->language2 = $language2;
         }
         
         static function get_by_id($id) {
