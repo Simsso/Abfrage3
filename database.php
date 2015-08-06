@@ -157,14 +157,46 @@
 			$sql = "
             SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email` 
             FROM `user`, `relationship` 
-            WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '$id' AND `relationship`.`type` = 1";
+            WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '" . $id . "' AND `relationship`.`type` = 1";
 			$query = mysqli_query($con, $sql);
 			$result = array();
 			while ($row = mysqli_fetch_assoc($query)) { 
-			  array_push($result, new SimpleUser($row['id'], $row['firstname'], $row['lastname'], $row['email']));
+                $user = new SimpleUser($row['id'], $row['firstname'], $row['lastname'], $row['email']);
+                $user->bidirectional = self::users_have_added_them_both($id, $row['id']);
+                array_push($result, $user);
 			}
 			return $result;
 		}
+        
+        static function get_list_of_users_who_have_added_user($id) {
+			global $con;
+			$sql = "
+            SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email` 
+            FROM `user`, `relationship` 
+            WHERE `user`.`id` = `relationship`.`user1` AND `relationship`.`user2` = '$id' AND `relationship`.`type` = 1";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                $user = new SimpleUser($row['id'], $row['firstname'], $row['lastname'], $row['email']);
+                $user->bidirectional = self::users_have_added_them_both($id, $row['id']);
+                array_push($result, $user);
+			}
+			return $result;
+        }
+        
+        static function users_have_added_them_both($user1, $user2) {
+			global $con; 
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user1` = '$user1' AND `user2` = '$user2' AND `relationship`.`type` = 1";
+			$query = mysqli_query($con, $sql);
+            if (mysqli_fetch_object($query)->count == 1) {
+                $sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user2` = '$user1' AND `user1` = '$user2' AND `relationship`.`type` = 1";
+                $query = mysqli_query($con, $sql);
+                if (mysqli_fetch_object($query)->count == 1) {
+                    return true;
+                }
+            }
+            return false;
+        }
 		
 		static function get_number_of_registered_users() {
 			global $con; 

@@ -22,6 +22,11 @@ body {
 	
 }
 
+.icon-button {
+    width: 32px;
+    height: 32px;
+}
+
 hr {
     background: #38426F;
     width: 100%;

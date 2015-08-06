@@ -12,6 +12,9 @@
             case 'remove-user':
                 echo Database::remove_user($_SESSION['id'], $_GET['id']);
                 break;
+            case 'list-of-users-who-have-added-you':
+                echo json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id']));
+                break;
         }
     }
     exit();
