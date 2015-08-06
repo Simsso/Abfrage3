@@ -87,6 +87,22 @@
                         <div class="box-body">
                         </div>
                     </div>
+                    <div class="box" id="word-list-info-words">
+                        <div class="box-head">
+                            Words
+                        </div>
+    					<div class="box-body">
+                            <div id="words-add-message"></div>
+                            <form id="words-add-form">
+                                <input id="words-add-language1" type="text" placeholder="Language 1" required="true"/>
+                                <input id="words-add-language2" type="text" placeholder="Language 2" required="true"/>
+                                <input id="words-add-button" type="submit" value="Add word"/>
+                            </form>
+                            <hr class="spacer-top-15 spacer-bottom-5">
+                            <div id="words-in-list">
+                            </div>
+    					</div>
+                    </div>
                 </div>
     			<div class="right-column">
                     <div class="box">
@@ -228,6 +244,7 @@
         <script src="home/word-lists.js" type="text/javascript"></script>
         <script type="text/javascript">
             var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
+            var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
             var shownListId = -1;
             
             $('#word-list-add-form').on('submit', function(e) {
@@ -300,6 +317,10 @@
                         if ($button.data('action') == 'delete') { // delete list button click
                             $button.prop('disabled', true).attr('value', 'Deleting...');
                             deleteWordList($button.data('list-id'), true, function() { });
+                            
+                            if ($button.data('list-id') == shownListId) {
+                                showNoListSelectedInfo();
+                            }
                         }
                         else if ($button.data('action') == 'edit') { // edit / show list button click
                             $('#list-of-word-lists input[type=button]').prop('disabled', false);
@@ -313,6 +334,7 @@
             function showNoListSelectedInfo() {
                 $('#word-list-info .box-head').html("Word lists");
                 $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to start editing.</p>');
+                $('#word-list-info-words').hide();
             }
                     
             function loadWordList(id, showLoadingInformation, callback) {
@@ -340,7 +362,19 @@
                     $('#word-list-info .box-head').html("Word list: " + data.name);
                         
                     $('#word-list-info .box-body').html("Information coming soon...");
-
+                    
+                    if (data.words.length == 0) { // no words added yet
+                        $('#words-in-list').html(noWordsInList);
+                    }
+                    else {
+                        var wordListHTML;
+                        for (var i = 0; i < data.words.length; i++) {
+                            wordListHTML += '<tr><td>' + data.words[i].language1 + '</td><td>' + data.words[i].language2 + '</td><td><input type="button" value="Edit"/></td><td><input type="button" value="Remove"/></td></tr>';
+                        }
+                        wordListHTML = '<table class="box-table"><tr class="bold"><td>First language</td><td>Second language</td><td></td><td></td></tr>' + wordListHTML + '</table>';
+                        $('#words-in-list').html(wordListHTML);
+                    }
+                    $('#word-list-info-words').show();
                 });
             }
             
@@ -363,6 +397,18 @@
                     $('#list-of-word-lists-row-' + id).remove();
                 });
             }
+            
+            function saveListEdits() {
+                if (shownListId == -1) 
+                    return;
+                
+            }
+            
+            $('#words-add-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                
+            });
             
             // refresh functions
             showNoListSelectedInfo();

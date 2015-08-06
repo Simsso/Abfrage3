@@ -281,7 +281,7 @@
 			$query = mysqli_query($con, $sql);
 			$result = array();
 			while ($row = mysqli_fetch_assoc($query)) {  
-                $list = new WordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+                $list = new BasicWordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
                 array_push($result, $list);
 			}
 			return $result;
@@ -292,12 +292,30 @@
 			$sql = "
             SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time` 
             FROM `list`
-            WHERE `creator` = '$user_id' AND `id` = '$word_list_id'";
+            WHERE `creator` = '" . $user_id . "' AND `id` = '" . $word_list_id . "'";
 			$query = mysqli_query($con, $sql);
-			$result = array();
 			while ($row = mysqli_fetch_assoc($query)) {  
-                return new WordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+                return new WordList(
+                    $row['id'], 
+                    $row['name'], 
+                    $row['creator'], 
+                    $row['comment'], 
+                    $row['language1'], 
+                    $row['language2'], 
+                    $row['creation_time'],
+                    self::get_words_of_list($row['id']));
 			}
+        }
+        
+        static function get_words_of_list($list_id) {
+            global $con;
+			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id'";
+			$query = mysqli_query($con, $sql);
+            $output = array();
+			while ($row = mysqli_fetch_assoc($query)) { 
+                push_array(output, new Word($id, $row['list'], $row['language1'], $row['language2']));
+            }
+            return $output;
         }
         
         static function delete_word_list($user_id, $word_list_id) {
@@ -376,7 +394,7 @@
 		}
 	}
 
-    class WordList {
+    class BasicWordList {
         public $id;
         public $name;
         public $creator;
@@ -393,6 +411,38 @@
             $this->language1 = $language1;
             $this->language2 = $language2;
             $this->creation_time = $creation_time;
+        }
+    }
+
+    class WordList extends BasicWordList {
+        public $words;
+        
+        public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time, $words) {
+            $this->words = $words;
+            parent::__construct($id, $name, $creator, $comment, $language1, $language2, $creation_time);
+        }
+    }
+
+    class Word {
+        public $id;
+        public $list;
+        public $language1;
+        public $language2;
+        
+        public function __construct($id, $list, $language1, $language2) {
+                $this->id = $id;
+                $this->list = $row['list'];
+                $this->language1 = $row['language1'];
+                $this->language2 = $row['language2'];
+        }
+        
+        static function get_by_id($id) {
+            global $con;
+			$sql = "SELECT * FROM `word` WHERE `id` = '$id'";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) { 
+                return new Word($id, $row['list'], $row['language1'], $row['language2']);
+            }
         }
     }
 ?>
