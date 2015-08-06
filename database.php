@@ -256,6 +256,57 @@
             }
             return true;
         }
+        
+        
+        // word lists
+        
+        static function add_word_list($id, $name) {
+            // returns id and state
+            global $con;
+            $time = time();
+            $sql = "INSERT INTO `list` (`name`, `creator`, `creation_time`) VALUES ('$name', '$id', '$time')";
+            $query = mysqli_query($con, $sql);
+            
+            $result->state = 1;
+            $result->id = mysqli_insert_id($con);
+            return $result;
+        }
+        
+        static function get_word_lists_of_user($id) {
+			global $con;
+			$sql = "
+            SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time` 
+            FROM `list`
+            WHERE `creator` = '$id' AND `active` = '1'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                $list = new WordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+                array_push($result, $list);
+			}
+			return $result;
+        }
+        
+        static function get_word_list($user_id, $word_list_id) {
+			global $con;
+			$sql = "
+            SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time` 
+            FROM `list`
+            WHERE `creator` = '$user_id' AND `id` = '$word_list_id'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                return new WordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+			}
+        }
+        
+        static function delete_word_list($user_id, $word_list_id) {
+            global $con;
+
+            $sql = "UPDATE `list` SET `active` = '0' WHERE `id` = '$word_list_id' AND `creator` = '$user_id'";
+            $query = mysqli_query($con, $sql);
+            return 1;
+        }
 	}
 
 	class SimpleUser {
@@ -324,4 +375,24 @@
 			return date("r", $this->date);
 		}
 	}
+
+    class WordList {
+        public $id;
+        public $name;
+        public $creator;
+        public $comment;
+        public $language1;
+        public $language2;
+        public $creation_time;
+        
+        public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time) {
+            $this->id = $id;
+            $this->name = $name;
+            $this->creator = $creator;
+            $this->comment = $comment;
+            $this->language1 = $language1;
+            $this->language2 = $language2;
+            $this->creation_time = $creation_time;
+        }
+    }
 ?>
