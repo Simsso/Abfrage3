@@ -92,6 +92,7 @@
 			while ($row = mysqli_fetch_assoc($query)) { 
 			  return $row['id'];
 			}
+            return NULL;
 		}
 		
 		static function get_user_by_id($id) {
@@ -104,7 +105,7 @@
 			$query = mysqli_query($con, $sql);
 			$count = mysqli_fetch_object($query)->count;
 			if ($count == 1) {
-				$sql = "UPDATE `user` Set `email_confirmed` = '1' WHERE `id` = '" . self::email2id($email) . "'";
+				$sql = "UPDATE `user` SET `email_confirmed` = '1' WHERE `id` = '" . self::email2id($email) . "'";
 				$query = mysqli_query($con, $sql);
 				return TRUE;
 			}
@@ -153,11 +154,14 @@
 		
 		static function get_list_of_added_users_of_user($id) {
 			global $con;
-			$sql = "SELECT * FROM `relationship` WHERE `user1` = '$id'";
+			$sql = "
+            SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email` 
+            FROM `user`, `relationship` 
+            WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '$id' AND `relationship`.`type` = 1";
 			$query = mysqli_query($con, $sql);
 			$result = array();
 			while ($row = mysqli_fetch_assoc($query)) { 
-			  array_push($result, new Login($row['id'], $row['user'], $row['time'], $row['ip']));
+			  array_push($result, new SimpleUser($row['id'], $row['firstname'], $row['lastname'], $row['email']));
 			}
 			return $result;
 		}
@@ -176,17 +180,63 @@
 			$query = mysqli_query($con, $sql);
 			return mysqli_fetch_object($query)->count;
 		}
+        
+        static function add_user($id, $email) {
+            global $con;
+            $added_user_id = self::email2id($email);
+            
+            if (is_null($added_user_id))
+                return -1;
+            
+            if ($added_user_id == $id) 
+                return 2;
+            
+            $time = time();
+            // check if the user is already added
+            if (!self::user_already_have_relationship($id, $added_user_id)) {
+                $sql = "INSERT INTO `relationship` (`user1`, `user2`, `time`, `type`) VALUES ('$id', '$added_user_id', '$time', '1')";
+                $query = mysqli_query($con, $sql);
+                return 1;
+            }
+            else {
+				$sql = "UPDATE `relationship` SET `type` = '1', `time`= '$time' WHERE `user1` = '$id' AND `user2` = '$added_user_id'";
+				$query = mysqli_query($con, $sql);
+				return 1;
+            }
+            return 0;
+        }
+        
+        static function remove_user($user1, $user2) {
+                global $con;
+            
+				$sql = "UPDATE `relationship` SET `type` = '0' WHERE `user1` = '$user1' AND `user2` = '$user2'";
+				$query = mysqli_query($con, $sql);
+				return 1;
+        }
+        
+        static function user_already_have_relationship($user1, $user2) {
+            global $con;
+            
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user1` = '$user1' AND `user2` = '$user2'";
+			$query = mysqli_query($con, $sql);
+			if (mysqli_fetch_object($query)->count == 0) {
+                return false;
+            }
+            return true;
+        }
 	}
 
 	class SimpleUser {
 		public $id;
 		public $firstname;
 		public $lastname;
+		public $email;
 		
-		public function __construct($id, $firstname, $lastname) {
+		public function __construct($id, $firstname, $lastname, $email) {
 			$this->id = $id;
 			$this->firstname = $firstname;
 			$this->lastname = $lastname;
+            $this->email = $email;
 		}
 		
 		public function get_last_login() {
@@ -200,7 +250,6 @@
 		
 		
 	class User extends SimpleUser {
-		public $email;
 		public $password;
 		public $salt;
 		public $reg_time;

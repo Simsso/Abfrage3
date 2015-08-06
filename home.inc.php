@@ -35,7 +35,7 @@
     		</div>
     	</nav>
     	
-    	<div class="main content-width" id="main">			
+    	<div class="main content-width" id="main">
             <div class="sk-three-bounce">
                 <div class="sk-child sk-bounce1"></div>
                 <div class="sk-child sk-bounce2"></div>
@@ -105,7 +105,14 @@
     						People you've added
     					</div>
     					<div class="box-body">
-                            coming soon...
+                            <div id="user-add-message"></div>
+                            <form id="user-add-form">
+                                <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
+                                <input id="user-add-button" type="submit" value="Add user"/>
+                            </form>
+                            <hr class="spacer-top-15 spacer-bottom-5">
+                            <div id="people-you-have-added">
+                            </div>
     					</div>
     				</div>
     			</div>
@@ -196,6 +203,105 @@
         <!-- jquery -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
         <script src="single-page-app.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
+            
+            
+            // add user
+            var noUsersAddedOutput = '<p>You have not added other users yet.</p>';
+            var addUser = function(email) {
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'add-user',
+                        email: email
+                    },
+                    type: 'GET'
+                }).done(function(data) {
+                    $('#user-add-email').prop('disabled', false).val('');
+                    $('#user-add-button').prop('disabled', false).attr('value', 'Add user');
+                    var responseString; 
+
+                    console.log("data: " + data);
+                    console.log((data == -1));
+                    if (data == -1) responseString = "Email-address does not exist.";
+                    else if (data == 0) responseString =  "You have already added this user.";
+                    else if (data == 1) responseString =  "User has been added.";
+                    else if (data == 2) responseString =  "You can not add yourself.";
+                    else responseString = "An unknown error occured.";
+
+                    $('#user-add-message').html(responseString);
+                    
+                    if (data == 1) {
+                        refreshListOfAddedUsers();
+                    }
+                });
+            };
+            
+            $('#user-add-form').on('submit', function(e) {
+				// dont visit action="..." page
+				e.preventDefault();
+                
+                $('#user-add-email').prop('disabled', true);
+                $('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
+                addUser($('#user-add-email').val());
+            });
+            
+            function removeUser(id) {
+                $('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'remove-user',
+                        id: id
+                    },
+                    type: 'GET'
+                }).done(function(data) {
+                    console.log(data);
+                    $('#added-users-row-' + id).hide();
+                    
+                    // set text to 
+                    if ($('#people-you-have-added tr').length == 1) {
+                        $('#people-you-have-added').html(noUsersAddedOutput);
+                    }
+                });
+            }
+            
+            
+            // list of added users
+            function refreshListOfAddedUsers() {
+                $('#people-you-have-added').html(loading);
+                
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'list-of-added-users'
+                    },
+                    type: 'GET'
+                }).done(function(data) {
+                    console.log(data);
+                    data = jQuery.parseJSON(data);
+                    console.log(data);
+                    var output = "";
+                    for (var i = 0; i < data.length; i++) {
+                        output += '<tr id="added-users-row-' + data[i].id + '"><td>' + data[i].firstname + ' ' + data[i].lastname + '</td><td>' + data[i].email + '</td><td><input id="added-users-remove-' + data[i].id + '" type="button" class="inline" value="Remove" onclick="removeUser(' + data[i].id + ')"/></td></tr>';
+                    }
+                    if (output.length == 0) {
+                        output = noUsersAddedOutput;
+                    }
+                    else {
+                        output = '<table class="box-table"><tr class="bold"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
+                    }
+                    console.log(output);
+                    $('#people-you-have-added').html(output);
+                });
+            }
+            
+            
+            
+            
+            // load methods
+            
+            refreshListOfAddedUsers();
+            
+        </script>
         
         <?php 
         	require('html-include/scripts.html');
