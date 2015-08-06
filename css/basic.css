@@ -31,6 +31,10 @@ input[type=button], input[type=submit] {
 	background: -moz-linear-gradient(top,  #FCCF52,  #F5A904); 
 	box-shadow: 0 1px 1px #C3C7CD, inset 0 1px 1px #FEECBB;
 }
+input[type=button].inline, input[type=submit].inline {
+    margin-top: -8px;
+    margin-bottom: -8px;
+}
 input[type=button]:hover, input[type=submit]:hover {
 	border: 1px solid #C17909;
 	background: #F9C64C;
