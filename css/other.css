@@ -2,7 +2,8 @@
 	margin: 0;
 	padding: 0;
 	font-family: Helvetica, Arial, sans-serif;
-	outline: none;        		
+	outline: none;     
+    word-wrap: break-word;
                 
     /* Firefox */
     -moz-transition: all .2s ease-in;
@@ -262,11 +263,11 @@ div.right-column-img-wrapper {
     color: #FFFFFF;
     background: #222222;
     border-bottom: 1px solid #000000;
-    padding: 25px;
-    position: fixed; /* test*/
-    width: calc(100% - 50px);
+    padding: 25px 0 30px;
+    position: fixed;
+    width: 100%;
     z-index: 100;
-    bottom: 0;
+    bottom: -5px;
     left: 0;
     right: 0;
     box-shadow: 0 0 5px #000000;
@@ -276,9 +277,10 @@ div.right-column-img-wrapper {
 .cookie-header table {
     width: 100%;
 }
+
 .cookie-header td:last-child {
     padding-left: 25px;
-    float: right;
+    text-align: right;
 }
 .cookie-header a, .cookie-header a:visited {
     color: #31A8F0;
@@ -335,6 +337,10 @@ div.center {
 
 .width-150 {
     width: 150px;
+}
+
+.width-110 {
+    width: 110px;
 }
 
 .no-box-shadow {
