@@ -370,6 +370,7 @@
                     else {
                         var wordListHTML = "";
                         for (var i = 0; i < data.words.length; i++) {
+                            console.log(data.words[i]);
                             wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2);
                         }
                         wordListHTML = getTableOfWordList(wordListHTML);
@@ -380,11 +381,72 @@
             }
             
             function getTableRowOfWord(id, lang1, lang2) {
-                return '<tr><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="button" class="inline" value="Edit"/> <input type="button" class="inline" value="Remove"/></td></tr>';
+                return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" onclick="editSaveWord(' + id + ')"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/></td></tr>';
             }
             function getTableOfWordList(content) {
                 return '<table id="word-list-table" class="box-table button-right-column"><tr class="bold"><td>First language</td><td>Second language</td><td></td></tr>' + content + '</table>';
             } 
+            
+            function editSaveWord(id) {
+                var $row = $('#word-row-' + id);
+                var $editSaveButton = $row.find('input[type=button]:first-child');
+                var $cell1 = $row.children().eq(0), $cell2 = $row.children().eq(1);
+                
+                if ($editSaveButton.data('action') == 'edit') { // edit mode
+                    $editSaveButton.data('action', 'save').attr('value', 'Save');
+                    
+                    $cell1.html('<input type="text" class="inline" id="word-edit-input-language1-' + id + '" value="' + $cell1.html() + '" />');
+                    $cell2.html('<input type="text" class="inline" id="word-edit-input-language2-' + id + '" value="' + $cell2.html() + '" />');
+                }
+                else { // save
+                    var $lang1Input = $('#word-edit-input-language1-' + id), $lang2Input = $('#word-edit-input-language2-' + id);
+                    $lang1Input.prop('disabled', true);
+                    $lang2Input.prop('disabled', true);
+                    $editSaveButton.prop('disabled', true).attr('value', 'Saving...');
+                    
+                    saveWord(id, $lang1Input.val(), $lang2Input.val(), function() {
+                        $editSaveButton.prop('disabled', false).attr('value', 'Edit').data('action', 'edit');
+                        $cell1.html($lang1Input.val());
+                        $cell2.html($lang2Input.val());
+                    });
+                }
+            }
+            
+            function saveWord(id, lang1, lang2, callback) {
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'update-word',
+                        word_id: id,
+                        lang1: lang1,
+                        lang2: lang2
+                    },
+                    type: 'GET',
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).done(function(data) {
+                    callback();
+                });
+            }
+            
+            function removeWord(id) {
+                var $row = $('#word-row-' + id);
+                var $removeButton = $row.find('* input[type=button]:last-child');
+                $removeButton.prop('disabled', true).attr('value', 'Removing...');
+                
+                jQuery.ajax('server.php', {
+                    data: {
+                        action: 'remove-word',
+                        word_id: id
+                    },
+                    type: 'GET',
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).done(function(data) {
+                    $row.remove();
+                });
+            }
             
             function deleteWordList(id) {
                 jQuery.ajax('server.php', {
@@ -439,7 +501,7 @@
                         var wordListHTML = getTableOfWordList("");
                         $('#words-in-list').html(wordListHTML);
                     }
-                    $('#word-list-table').append(getTableRowOfWord(data, lang1, lang2));
+                    $('#word-list-table').prepend(getTableRowOfWord(data, lang1, lang2));
                 });
             }
             

@@ -90,7 +90,7 @@ function refreshListOfAddedUsers(hideLoadingInformation) {
             output = noUsersAddedOutput;
         }
         else {
-            output = '<table class="box-table button-right-column "><tr class="bold"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
+            output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
         }
         console.log(output);
         $('#people-you-have-added').html(output);

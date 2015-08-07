@@ -29,6 +29,13 @@
                 break;
             case 'add-word':
                 echo Database::add_word($_SESSION['id'], $_GET['word_list_id'], $_GET['lang1'], $_GET['lang2']);
+                break;
+            case 'update-word':
+                echo Database::update_word($_SESSION['id'], $_GET['word_id'], $_GET['lang1'], $_GET['lang2']);
+                break;
+            case 'remove-word':
+                echo Database::remove_word($_SESSION['id'], $_GET['word_id']);
+                break;
         }
     }
     exit();
