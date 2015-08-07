@@ -117,7 +117,7 @@
 			$ip = $_SERVER['REMOTE_ADDR']; 
 			$time = time();
 			
-			$sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES ('$id', '$time', '$ip')";
+			$sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES ('" . $id . "', '" . $time . "', '" . $ip . "')";
 			$query = mysqli_query($con, $sql);
 		}
 		
@@ -309,11 +309,11 @@
         
         static function get_words_of_list($list_id) {
             global $con;
-			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id'";
+			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1'";
 			$query = mysqli_query($con, $sql);
             $output = array();
 			while ($row = mysqli_fetch_assoc($query)) { 
-                array_push($output, new Word($id, $row['list'], $row['language1'], $row['language2']));
+                array_push($output, new Word($row['id'], $row['list'], $row['language1'], $row['language2']));
             }
             return $output;
         }
@@ -332,6 +332,22 @@
                 VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "')";
             $query = mysqli_query($con, $sql);
             return mysqli_insert_id($con);
+        }
+        
+        static function update_word($user_id, $word_id, $lang1, $lang2) {
+            global $con;
+            // TODO: add check if word is owned by $user_id
+            $sql = "UPDATE `word` SET `language1` = '$lang1', `language2` = '$lang2' WHERE `id` = '$word_id'";
+            $query = mysqli_query($con, $sql);
+            return 1;
+        }
+        
+        static function remove_word($user_id, $word_id) {
+            global $con;
+            // TODO: add check if word is owned by $user_id
+            $sql = "UPDATE `word` SET `status` = '0' WHERE `id` = '$word_id'";
+            $query = mysqli_query($con, $sql);
+            return 1;
         }
 	}
 
@@ -446,7 +462,7 @@
         
         static function get_by_id($id) {
             global $con;
-			$sql = "SELECT * FROM `word` WHERE `id` = '$id'";
+			$sql = "SELECT * FROM `word` WHERE `id` = '$id' ORDER BY `id` DESC";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) { 
                 return new Word($id, $row['list'], $row['language1'], $row['language2']);
