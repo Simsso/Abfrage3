@@ -15,8 +15,18 @@
     transition: all .2s ease-in;
 }
 
-body {
+html, body {
 	background-color: #ECEFF1;
+}
+
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    overflow: auto;
 }
 
 .footer {
@@ -126,6 +136,15 @@ ul.social-icons li {
 .navbar .navbar-inner .nav li.visited a, .navbar .navbar-inner .nav li.visited .nav-image {
     cursor: default;
     opacity: 1;
+}
+
+.navbar .menu-button {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    display: none;
+    background: url('img/menu.png');
+    cursor: pointer;
 }
 
 
@@ -346,6 +365,10 @@ div.center {
 .no-box-shadow {
     box-shadow: none !important;
 }
+
+input:first-child:last-child {
+    width: 100%;
+}
     
 .height-hidden {
     height: 0;
@@ -372,7 +395,7 @@ div.center {
 	}
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 700px) { 
 	.left-column, .right-column {
 		float: none;
 		width: 100% !important;
@@ -386,7 +409,22 @@ div.center {
 		padding: 10px 10px;
     }*/
 }
-
+@media screen and (min-width: 550px) {
+    .smaller-800, ul.nav {
+        display: block !important;
+    }
+}
+@media screen and (max-width: 550px) {
+    .smaller-800, ul.nav {
+        display: none;
+    }
+    .navbar .menu-button {
+        display: block;
+    }
+    .nav, .nav li {
+        float: none !important;
+    }
+}
 @-webkit-keyframes slideDown {
     0% { -webkit-transform: translateY(-50px); }
     100% { -webkit-transform: translateY(0); }

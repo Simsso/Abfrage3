@@ -343,9 +343,8 @@
         ?>
         
         
-        <!-- jquery -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-        <script src="single-page-app.js" type="text/javascript"></script>
+        <script src="scripts.js" type="text/javascript"></script>
 
         <script type="text/javascript">
 			
@@ -374,27 +373,6 @@
 			});       
 			
 			
-			// screenshots
-			$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
-			$('.screenshot').on('click', function() {
-				$('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
-				$('#screenshot-description').html($(this).data('description'));
-				$('#screenshot-popup-wrapper').show();
-			});
-			$('#screenshot-popup-wrapper').on('click', function() {
-				$(this).hide();
-			});
-			$(document).keyup(function(e) {
-				if (e.keyCode == 27) { // escape key maps to keycode '27'
-					$('#screenshot-popup-wrapper').fadeOut();
-				}
-			});
-			
-			
         </script>
-        
-        <?php 
-        	require('html-include/scripts.html');
-		?>
     </body>
 </html>

@@ -309,7 +309,7 @@
         
         static function get_words_of_list($list_id) {
             global $con;
-			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1'";
+			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1' ORDER BY `id` DESC";
 			$query = mysqli_query($con, $sql);
             $output = array();
 			while ($row = mysqli_fetch_assoc($query)) { 
