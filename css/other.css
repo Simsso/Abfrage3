@@ -263,9 +263,22 @@ div.right-column-img-wrapper {
     background: #222222;
     border-bottom: 1px solid #000000;
     padding: 25px;
+    position: fixed; /* test*/
+    width: calc(100% - 50px);
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 0 5px #000000;
+    transition: opacity 1s;
 }
-.cookie-header * {
-    display: inline;
+
+.cookie-header table {
+    width: 100%;
+}
+.cookie-header td:last-child {
+    padding-left: 25px;
+    float: right;
 }
 .cookie-header a, .cookie-header a:visited {
     color: #31A8F0;
@@ -366,4 +379,14 @@ div.center {
 	/*.navbar .navbar-inner .nav li {
 		padding: 10px 10px;
     }*/
+}
+
+@-webkit-keyframes slideDown {
+    0% { -webkit-transform: translateY(-50px); }
+    100% { -webkit-transform: translateY(0); }
+}
+
+@-moz-keyframes slideDown {
+    0% { -moz-transform: translateY(-50px); }
+    100% { -moz-transform: translateY(0); }
 }
