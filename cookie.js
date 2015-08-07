@@ -12,7 +12,7 @@ function readCookie(key)
 
 setTimeout(function() {
     if (readCookie('accepted_cookies') != 'true') {
-        $('body').prepend('<div id="cookie-header" class="cookie-header" style="display: none; opacity: 0"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience on my website. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-150 no-box-shadow" value="Got it!"/></td></tr></table></div></div>');
+        $('body').prepend('<div id="cookie-header" class="cookie-header" style="display: none; opacity: 0"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience on my website. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></div>');
         
         setTimeout(function() {
             $('#cookie-header').css('display', 'block');
