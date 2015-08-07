@@ -235,17 +235,19 @@
         ?>
         
         
-        <script src="jquery-1.11.3.min.js" type="text/javascript"></script><!-- jquery -->
-        
-        <script type="text/javascript">
-            var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'            
-        </script>
+        <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
+        <script src="scripts.js" type="text/javascript"></script>
         
         <script src="home/word-lists.js" type="text/javascript"></script>
         <script type="text/javascript">
             var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
             var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
             var shownListId = -1;
+            
+            var ajaxRequests = {
+                loadWordList: new AjaxRequestsManager(true),
+                loadListOfWordLists: new AjaxRequestsManager(true)
+            };
             
             $('#word-list-add-form').on('submit', function(e) {
                 // dont visit action="..." page
@@ -288,47 +290,49 @@
                 if (showLoadingInformation)
                     $('#list-of-word-lists').html(loading);
                 
-                jQuery.ajax('server.php', {
-                    data: {
-                        action: 'list-of-word-lists'
-                    },
-                    type: 'GET',
-                    error: function(jqXHR, textStatus, errorThrown) {
+                ajaxRequests.loadListOfWordLists.add(
+                    jQuery.ajax('server.php', {
+                        data: {
+                            action: 'list-of-word-lists'
+                        },
+                        type: 'GET',
+                        error: function(jqXHR, textStatus, errorThrown) {
 
-                    }
-                }).done(function(data) {
-                    console.log(data);
-                    data = jQuery.parseJSON(data);
+                        }
+                    }).done(function(data) {
+                        console.log(data);
+                        data = jQuery.parseJSON(data);
 
-                    var output = "";
-                    for (var i = 0; i < data.length; i++) {
-                        output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
-                    }
-                    if (output.length == 0) {
-                        output = noWordListOutput;
-                    }
-                    else {
-                        output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
-                    }
-                    $('#list-of-word-lists').html(output);
-                    $('#list-of-word-lists input[type=button]').on('click', function() {
-                        $button = $(this);
-                        
-                        if ($button.data('action') == 'delete') { // delete list button click
-                            $button.prop('disabled', true).attr('value', 'Deleting...');
-                            deleteWordList($button.data('list-id'), true, function() { });
-                            
-                            if ($button.data('list-id') == shownListId) {
-                                showNoListSelectedInfo();
+                        var output = "";
+                        for (var i = 0; i < data.length; i++) {
+                            output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
+                        }
+                        if (output.length == 0) {
+                            output = noWordListOutput;
+                        }
+                        else {
+                            output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
+                        }
+                        $('#list-of-word-lists').html(output);
+                        $('#list-of-word-lists input[type=button]').on('click', function() {
+                            $button = $(this);
+
+                            if ($button.data('action') == 'delete') { // delete list button click
+                                $button.prop('disabled', true).attr('value', 'Deleting...');
+                                deleteWordList($button.data('list-id'), true, function() { });
+
+                                if ($button.data('list-id') == shownListId) {
+                                    showNoListSelectedInfo();
+                                }
                             }
-                        }
-                        else if ($button.data('action') == 'edit') { // edit / show list button click
-                            $('#list-of-word-lists input[type=button]').prop('disabled', false);
-                            $button.prop('disabled', true);
-                            loadWordList($button.data('list-id'), true, function() { });
-                        }
-                    });
-                });
+                            else if ($button.data('action') == 'edit') { // edit / show list button click
+                                $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                                $button.prop('disabled', true);
+                                loadWordList($button.data('list-id'), true, function() { });
+                            }
+                        });
+                    })
+                );
             }
             
             function showNoListSelectedInfo() {
@@ -343,60 +347,62 @@
                     $('#word-list-info .box-body').html(loading);
                     $('#word-list-info-words').hide();
                 }
-                
-                jQuery.ajax('server.php', {
-                    data: {
-                        action: 'get-word-list',
-                        word_list_id: id
-                    },
-                    type: 'GET',
-                    error: function(jqXHR, textStatus, errorThrown) {
+                ajaxRequests.loadWordList.add(
+                    jQuery.ajax('server.php', {
+                        data: {
+                            action: 'get-word-list',
+                            word_list_id: id
+                        },
+                        type: 'GET',
+                        error: function(jqXHR, textStatus, errorThrown) {
 
-                    }
-                }).done(function(data) {
-                    console.log(data);
-                    data = jQuery.parseJSON(data);
-                    
-                    shownListId = id;
-                    
-                        
-                    $('#word-list-info .box-head').html("Word list: " + data.name);
-                        
-                    $('#word-list-info .box-body').html("Information coming soon...");
-                    
-                    if (data.words.length == 0) { // no words added yet
-                        $('#words-in-list').html(noWordsInList);
-                    }
-                    else {
-                        var wordListHTML = "";
-                        for (var i = 0; i < data.words.length; i++) {
-                            console.log(data.words[i]);
-                            wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2);
                         }
-                        wordListHTML = getTableOfWordList(wordListHTML);
-                        $('#words-in-list').html(wordListHTML);
-                    }
-                    $('#word-list-info-words').show();
-                });
+                    }).done(function(data) {
+                        console.log(data);
+                        data = jQuery.parseJSON(data);
+
+                        shownListId = id;
+
+
+                        $('#word-list-info .box-head').html("Word list: " + data.name);
+
+                        $('#word-list-info .box-body').html('<select name="carlist" form="carform"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="opel">Opel</option><option value="audi">Audi</option></select>');
+
+                        if (data.words.length == 0) { // no words added yet
+                            $('#words-in-list').html(noWordsInList);
+                        }
+                        else {
+                            var wordListHTML = "";
+                            for (var i = 0; i < data.words.length; i++) {
+                                console.log(data.words[i]);
+                                wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2);
+                            }
+                            wordListHTML = getTableOfWordList(wordListHTML);
+                            $('#words-in-list').html(wordListHTML);
+                        }
+                        $('#word-list-info-words').show();
+                    })
+                );
             }
             
             function getTableRowOfWord(id, lang1, lang2) {
-                return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" onclick="editSaveWord(' + id + ')"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/></td></tr>';
+                return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td></tr>';
             }
             function getTableOfWordList(content) {
                 return '<table id="word-list-table" class="box-table button-right-column"><tr class="bold"><td>First language</td><td>Second language</td><td></td></tr>' + content + '</table>';
             } 
             
-            function editSaveWord(id) {
+            function editSaveWord(event, id) {
+                event.preventDefault();
                 var $row = $('#word-row-' + id);
-                var $editSaveButton = $row.find('input[type=button]:first-child');
+                var $editSaveButton = $row.find('input[type=submit]');
                 var $cell1 = $row.children().eq(0), $cell2 = $row.children().eq(1);
                 
                 if ($editSaveButton.data('action') == 'edit') { // edit mode
                     $editSaveButton.data('action', 'save').attr('value', 'Save');
                     
-                    $cell1.html('<input type="text" class="inline" id="word-edit-input-language1-' + id + '" value="' + $cell1.html() + '" />');
-                    $cell2.html('<input type="text" class="inline" id="word-edit-input-language2-' + id + '" value="' + $cell2.html() + '" />');
+                    $cell1.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language1-' + id + '" value="' + $cell1.html() + '" />');
+                    $cell2.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language2-' + id + '" value="' + $cell2.html() + '" />');
                 }
                 else { // save
                     var $lang1Input = $('#word-edit-input-language1-' + id), $lang2Input = $('#word-edit-input-language2-' + id);
@@ -431,7 +437,7 @@
             
             function removeWord(id) {
                 var $row = $('#word-row-' + id);
-                var $removeButton = $row.find('* input[type=button]:last-child');
+                var $removeButton = $row.find('* input[type=button]');
                 $removeButton.prop('disabled', true).attr('value', 'Removing...');
                 
                 jQuery.ajax('server.php', {
@@ -501,7 +507,9 @@
                         var wordListHTML = getTableOfWordList("");
                         $('#words-in-list').html(wordListHTML);
                     }
-                    $('#word-list-table').prepend(getTableRowOfWord(data, lang1, lang2));
+                    $('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2));
+                    
+                    new Toast('The word "' + lang1 + '" - "' + lang2 + '" has been added successfully.');
                 });
             }
             
@@ -509,13 +517,5 @@
             showNoListSelectedInfo();
             refreshListOfWordLists(true);
         </script>
-        <script src="home/user.js" type="text/javascript"></script>
-        
-        <script src="single-page-app.js" type="text/javascript"></script>
-        
-        
-        <?php 
-        	require('html-include/scripts.html');
-		?>
     </body>
 </html>
