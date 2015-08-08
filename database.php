@@ -349,6 +349,90 @@
             $query = mysqli_query($con, $sql);
             return 1;
         }
+        
+        static function get_list_of_shared_word_lists_of_user($id) {
+            global $con;
+			$sql = "SELECT `share`.`id` AS 'share_id', `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` FROM `share`, `list` WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = '$id' AND `list`.`active` = '1'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                $list = new BasicWordList($row['list_id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+                $list->sharing_id = $row['share_id'];
+                array_push($result, $list);
+			}
+			return $result;
+        }
+        
+        static function get_list_of_shared_word_lists_with_user($id) {
+            global $con;
+            $sql = "
+                SELECT `share`.`id` AS 'share_id', `share`.`permissions`, `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
+                FROM `share`, `list` 
+                WHERE `share`.`user` = '$id' AND `share`.`list` = `list`.`id` AND `list`.`active` = '1' AND `share`.`permissions` <> '0'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                $list = new BasicWordList($row['list_id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+                $list->permissions = $row['permissions'];
+                $list->sharing_id = $row['share_id'];
+                array_push($result, $list);
+			}
+			return $result;
+        }
+        
+        static function set_sharing_permissions($user_id, $word_list_id, $email, $permissions) {
+            $share_with_id = self::email2id($email);
+			global $con; 
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE `user` = '" . $share_with_id . "' AND `list` = '" . $word_list_id . "'";
+			$query = mysqli_query($con, $sql);
+			$count = mysqli_fetch_object($query)->count;
+			if ($count == 0) {
+				$sql = "INSERT INTO `share` (`user`, `list`, `permissions`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "')";
+				$query = mysqli_query($con, $sql);
+            }
+            else {
+				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND `user` = '$share_with_id'";
+				$query = mysqli_query($con, $sql);
+            }
+            return 1;
+        }
+        
+        static function set_sharing_permissions_by_sharing_id($user_id, $id, $permissions) {
+            global $con;
+            
+            $sql = "
+                UPDATE `share`, `list`
+                SET `share`.`permissions` = '$permissions' 
+                WHERE `share`.`id` = '$id' AND `list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "'";
+            $query = mysqli_query($con, $sql);
+            return 1;
+        }
+        
+        static function get_sharing_perimssions_of_list_with_user($list_owner, $word_list_id, $email) {
+            $share_with_id = self::email2id($email);
+            
+            global $con;
+			$sql = "SELECT `share`.`id`, `share`.`permissions` FROM `share`, `list` WHERE `list`.`id` = '$word_list_id' AND `share`.`list` = `list`.`id` AND `list`.`creator` = '$list_owner' AND `list`.`active` = '1' AND `list`.`user` = '$share_with_id'";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) {  
+                return new SharingInformation($row['id'], new SimpleUser($share_with_id, null, null, $email), $row['permissions']);
+			}
+        }
+        
+        static function get_sharing_info_of_list($user_id, $word_list_id) {
+            global $con;
+			$sql = "
+                SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email` 
+                FROM `share`, `list`, `user` 
+                WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND 
+                    `list`.`id` = '$word_list_id' AND `list`.`creator` = '$user_id' AND `list`.`active` = '1' AND `share`.`permissions` <> '0'";
+			$query = mysqli_query($con, $sql);
+			$result = array();
+			while ($row = mysqli_fetch_assoc($query)) {  
+                array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['permissions']));
+			}
+            return $result;
+        }
 	}
 
 	class SimpleUser {
@@ -467,6 +551,18 @@
 			while ($row = mysqli_fetch_assoc($query)) { 
                 return new Word($id, $row['list'], $row['language1'], $row['language2']);
             }
+        }
+    }
+
+    class SharingInformation {
+        public $id;
+        public $user;
+        public $permissions;
+        
+        public function __construct($id, SimpleUser $user, $permissions) {
+            $this->id = $id;
+            $this->user = $user;
+            $this->permissions = $permissions;
         }
     }
 ?>

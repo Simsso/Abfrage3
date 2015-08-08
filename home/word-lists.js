@@ -1,10 +1,14 @@
 var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
+var noSharedWordListOutput = '<p>There are no shared lists to show.</p>';
+var listNotShared = '<p class="spacer-top-15">The selected list isn\'t shared with anyone. Only you can see it.</p>';
 var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
 var shownListId = -1;
 
 var ajaxRequests = {
     loadWordList: new AjaxRequestsManager(true),
-    loadListOfWordLists: new AjaxRequestsManager(true)
+    loadListOfWordLists: new AjaxRequestsManager(true),
+    loadListOfSharedWordLists: new AjaxRequestsManager(true),
+    refreshListSharings: new AjaxRequestsManager(true)
 };
 
 $('#word-list-add-form').on('submit', function(e) {
@@ -19,7 +23,7 @@ $('#word-list-add-form').on('submit', function(e) {
         $('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
 
         refreshListOfWordLists(false);
-        loadWordList(data.id, true, function() { });
+        loadWordList(data.id, true, function() { }, true, true);
     });
 });
 
@@ -36,9 +40,6 @@ function addWordList(name, callback) {
     }).done(function(data) {
         console.log(data);
         data = jQuery.parseJSON(data);
-        if (data.status == 1) {
-            loadWordList(data.id, true, function() { });
-        }
 
         callback(data);
     });
@@ -85,8 +86,73 @@ function refreshListOfWordLists(showLoadingInformation) {
                 }
                 else if ($button.data('action') == 'edit') { // edit / show list button click
                     $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
                     $button.prop('disabled', true);
-                    loadWordList($button.data('list-id'), true, function() { });
+                    loadWordList($button.data('list-id'), true, function() { }, true, true);
+                }
+            });
+        })
+    );
+}
+
+function refreshListOfSharedWordLists(showLoadingInformation) {
+    if (showLoadingInformation)
+        $('#list-of-shared-word-lists').html(loading);
+
+    ajaxRequests.loadListOfSharedWordLists.add(
+        jQuery.ajax('server.php', {
+            data: {
+                action: 'list-of-shared-word-lists-with-user'
+            },
+            type: 'GET',
+            error: function(jqXHR, textStatus, errorThrown) {
+
+            }
+        }).done(function(data) {
+            console.log(data);
+            data = jQuery.parseJSON(data);
+
+            var output = "";
+            for (var i = 0; i < data.length; i++) {
+                output += '<tr id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
+                output += '<td>' + data[i].name + '</td>';
+                output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Hide" data-action="delete-sharing" data-sharing-id="' + data[i].sharing_id + '"/></td></tr>';
+            }
+            if (output.length == 0) {
+                output = noSharedWordListOutput;
+            }
+            else {
+                output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
+            }
+            $('#list-of-shared-word-lists').html(output);
+            $('#list-of-shared-word-lists input[type=button]').on('click', function() {
+                $button = $(this);
+
+                if ($button.data('action') == 'delete-sharing') { // delete list button click
+                    $button.prop('disabled', true).attr('value', 'Hiding...');
+                    setSharingPermissionsBySharingId($button.data('sharing-id'), 0, function() { 
+                        $('#list-of-shared-word-lists-row-' + $button.data('sharing-id')).remove();
+                        // still rows left
+                        if ($('#list-of-shared-word-lists tr').length == 1) {
+                            $('#list-of-shared-word-lists').html(noSharedWordListOutput);
+                        }
+                    });
+
+                    if ($button.data('list-id') == shownListId) {
+                        showNoListSelectedInfo();
+                    }
+                }
+                else if ($button.data('action') == 'edit') { // edit / show list button click
+                    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
+                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    $button.prop('disabled', true);
+                    loadWordList($button.data('list-id'), true, function() { }, true, false);
+                }
+                else if ($button.data('action') == 'view') { // edit / show list button click
+                    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
+                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    $button.prop('disabled', true);
+                    loadWordList($button.data('list-id'), true, function() { }, false, false);
                 }
             });
         })
@@ -97,13 +163,15 @@ function showNoListSelectedInfo() {
     $('#word-list-info .box-head').html("Word lists");
     $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to start editing.</p>');
     $('#word-list-info-words').hide();
+    $('#word-list-sharing').hide();
 }
 
-function loadWordList(id, showLoadingInformation, callback) {
+function loadWordList(id, showLoadingInformation, callback, allowEdit, allowSharing) {
     if (showLoadingInformation) {
         $('#word-list-info .box-head').html("Loading...");
         $('#word-list-info .box-body').html(loading);
         $('#word-list-info-words').hide();
+        $('#word-list-sharing').hide();
     }
     ajaxRequests.loadWordList.add(
         jQuery.ajax('server.php', {
@@ -121,11 +189,29 @@ function loadWordList(id, showLoadingInformation, callback) {
 
             shownListId = id;
 
-
+            // info box head
             $('#word-list-info .box-head').html("Word list: " + data.name);
+            
+            // info box body
+            var wordListInfoBoxBody = '';
+            if (allowEdit) {
+                
+            }
+            else {
+                
+            }
+            
+            $('#word-list-info .box-body').html(wordListInfoBoxBody);
 
-            $('#word-list-info .box-body').html('<select name="carlist" form="carform"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="opel">Opel</option><option value="audi">Audi</option></select>');
-
+            // sharing box
+            if (allowSharing) {
+                refreshListSharings(true, data.id);
+            }
+            else {
+                $('#word-list-sharing').hide();
+            }
+            
+            // list of words
             if (data.words.length == 0) { // no words added yet
                 $('#words-in-list').html(noWordsInList);
             }
@@ -133,21 +219,24 @@ function loadWordList(id, showLoadingInformation, callback) {
                 var wordListHTML = "";
                 for (var i = 0; i < data.words.length; i++) {
                     console.log(data.words[i]);
-                    wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2);
+                    wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2, allowEdit);
                 }
-                wordListHTML = getTableOfWordList(wordListHTML);
+                wordListHTML = getTableOfWordList(wordListHTML, allowEdit);
                 $('#words-in-list').html(wordListHTML);
             }
             $('#word-list-info-words').show();
+            if (!allowEdit) 
+                $('#words-add').hide();
         })
     );
 }
 
-function getTableRowOfWord(id, lang1, lang2) {
-    return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td></tr>';
+function getTableRowOfWord(id, lang1, lang2, allowEdit) {
+    return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td>':'') + '</tr>';
 }
-function getTableOfWordList(content) {
-    return '<table id="word-list-table" class="box-table button-right-column"><tr class="bold"><td>First language</td><td>Second language</td><td></td></tr>' + content + '</table>';
+                                                                                          
+function getTableOfWordList(content, allowEdit) {
+    return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold"><td>First language</td><td>Second language</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
 } 
 
 function editSaveWord(event, id) {
@@ -223,12 +312,12 @@ function deleteWordList(id) {
 
         }
     }).done(function(data) {
-        // set text to 
+
+        $('#list-of-word-lists-row-' + id).remove();
+        // no list table row anymore (except from the th)
         if ($('#list-of-word-lists tr').length == 1) {
             $('#list-of-word-lists').html(noWordListOutput);
         }
-
-        $('#list-of-word-lists-row-' + id).remove();
     });
 }
 
@@ -245,10 +334,10 @@ $('#words-add-form').on('submit', function(e) {
     $('#words-add-language1').val('').focus();
     $('#words-add-language2').val('');
 
-    addWord(lang1, lang2);
+    addWord(lang1, lang2, true);
 });
 
-function addWord(lang1, lang2) {
+function addWord(lang1, lang2, allowEdit) {
     jQuery.ajax('server.php', {
         data: {
             action: 'add-word',
@@ -262,15 +351,125 @@ function addWord(lang1, lang2) {
         }
     }).done(function(data) {
         if ($('#word-list-table').length == 0) { // no words added
-            var wordListHTML = getTableOfWordList("");
+            var wordListHTML = getTableOfWordList("", allowEdit);
             $('#words-in-list').html(wordListHTML);
         }
-        $('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2));
+        $('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2, allowEdit));
 
         new Toast('The word "' + lang1 + '" - "' + lang2 + '" has been added successfully.');
     });
 }
 
+function refreshListSharings(showLoadingInformation, wordListId) { 
+    $('#word-list-sharing').show();
+    if (showLoadingInformation) {
+        $('#list-sharings').html(loading);
+    }
+    
+    ajaxRequests.refreshListSharings.add(
+        jQuery.ajax('server.php', {
+            data: {
+                'action': 'get-sharing-info-of-list',
+                'word_list_id': wordListId
+            },
+            type: 'GET',
+            error: function(jqXHR, textStatus, errorThrown) {
+
+            }
+        }).done(function(data) {
+            console.log(data);
+            data = jQuery.parseJSON(data);
+
+            if (data.length == 0) { // list not shared yet
+                $('#list-sharings').html(listNotShared);
+            }
+            else { // list shared with at least one user
+                var output = "";
+                for (var i = 0; i < data.length; i++) {
+                    output += '<tr id="list-shared-with-row-' + data[i].id + '">';
+                    output += '<td>' + data[i].user.firstname + ' ' + data[i].user.lastname + '</td>';
+                    output += '<td>' + ((data[i].permissions == 1)?'Can edit':'Can view') + '</td>';
+                    output += '<td><input type="button" class="inline" value="Stop sharing" data-action="delete-sharing" data-sharing-id="' + data[i].id + '"/></td></tr>';
+                }
+                output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td>Permissions</td><td></td></tr>' + output + '</table>';
+
+                $('#list-sharings').html(output);
+                $('#list-sharings input[type=button]').on('click', function() {
+                    $button = $(this);
+                    $button.prop('disabled', true).attr('value', 'Stopping sharing...');
+                    
+                    setSharingPermissionsBySharingId($button.data('sharing-id'), 0, function() {
+                        $('#list-shared-with-row-' + $button.data('sharing-id')).remove();
+                        // still rows left
+                        if ($('#list-sharings tr').length == 1) {
+                            $('#list-sharings').html(listNotShared);
+                        }
+                    });
+                });
+            }
+        })
+    );
+}
+
+$('#share-list-form').on('submit', function(e) {
+    // dont visit action="..." page
+    e.preventDefault();
+
+    $('#share-list-other-user-email').prop('disabled', true);
+    $('#share-list-permissions').prop('disabled', true);
+    $('#share-list-submit').prop('disabled', true).attr('value', 'Sharing...');
+    
+    setSharingPermissions(shownListId, $('#share-list-other-user-email').val(), $('#share-list-permissions').val(), function() {
+        // finished callback
+        $('#share-list-other-user-email').prop('disabled', false).val('');
+        $('#share-list-permissions').prop('disabled', false);
+        $('#share-list-submit').prop('disabled', false).attr('value', 'Share');
+
+        refreshListSharings(false, shownListId);
+    });
+});
+            
+function setSharingPermissionsBySharingId(sharingId, permissions, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'set-sharing-permissions-by-sharing-id',
+            sharing_id: sharingId,
+            permissions: permissions
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        data = jQuery.parseJSON(data);
+
+        callback(data);
+    });
+}
+
+function setSharingPermissions(listId, email, permissions, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'set-sharing-permissions',
+            word_list_id: listId,
+            email: email,
+            permissions: permissions
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        data = jQuery.parseJSON(data);
+
+        callback(data);
+    });
+}
+
+
 // refresh functions
 showNoListSelectedInfo();
 refreshListOfWordLists(true);
+refreshListOfSharedWordLists(true);
