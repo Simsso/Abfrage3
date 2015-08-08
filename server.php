@@ -21,6 +21,9 @@
             case 'list-of-word-lists':
                 echo json_encode(Database::get_word_lists_of_user($_SESSION['id']));
                 break;
+            case 'list-of-shared-word-lists-with-user':
+                echo json_encode(Database::get_list_of_shared_word_lists_with_user($_SESSION['id']));
+                break;
             case 'get-word-list':
                 echo json_encode(Database::get_word_list($_SESSION['id'], $_GET['word_list_id']));
                 break;
@@ -35,6 +38,21 @@
                 break;
             case 'remove-word':
                 echo Database::remove_word($_SESSION['id'], $_GET['word_id']);
+                break;
+            case 'share-list':
+                echo Database::share_list($_SESSION['id'], $_GET['word_list_id'], $_GET['email']);
+                break;
+            case 'set-sharing-permissions':
+                echo Database::set_sharing_permissions($_SESSION['id'], $_GET['word_list_id'], $_GET['email'], $_GET['permissions']);
+                break;
+            case 'set-sharing-permissions-by-sharing-id':
+                echo Database::set_sharing_permissions_by_sharing_id($_SESSION['id'], $_GET['sharing_id'], $_GET['permissions']);
+                break;
+            case 'get-sharing-perimssions-of-list-with_user':
+                echo json_encode(Database::get_sharing_perimssions_of_list_with_user($_SESSION['id'], $_GET['word_list_id'], $_GET['email']));
+                break;
+            case 'get-sharing-info-of-list':
+                echo json_encode(Database::get_sharing_info_of_list($_SESSION['id'], $_GET['word_list_id']));
                 break;
         }
     }

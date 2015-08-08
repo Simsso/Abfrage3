@@ -21,7 +21,6 @@
                     </li>
     				<li id="nav_query"><a href="#query">Query</a></li>
     				<li id="nav_word-lists"><a href="#word-lists">Word lists</a></li>
-    				<li id="nav_share"><a href="#share">Share</a></li>
     				<li id="nav_user"><a href="#user">User</a></li>
     			</ul>
     			<ul class="nav right">
@@ -87,18 +86,39 @@
                         <div class="box-body">
                         </div>
                     </div>
+                    <div class="box" id="word-list-sharing">
+                        <div class="box-head">
+                            Sharing
+                        </div>
+                        <div class="box-body">
+                            <form id="share-list-form">
+                                <input id="share-list-other-user-email" type="text" placeholder="Email-address" required="true"/>
+                                <select id="share-list-permissions" required="true">
+                                    <option value="2">Can view</option>
+                                    <option value="1">Can edit</option>
+                                </select>
+                                <input id="share-list-submit" type="submit" value="Share"/>
+                            </form>
+                            <hr class="spacer-top-15 spacer-bottom-5">
+                            <div id="list-sharings">
+                                
+                            </div>
+                        </div>
+                    </div>
                     <div class="box" id="word-list-info-words">
                         <div class="box-head">
                             Words
                         </div>
     					<div class="box-body">
-                            <div id="words-add-message"></div>
-                            <form id="words-add-form">
-                                <input id="words-add-language1" type="text" placeholder="Language 1" required="true"/>
-                                <input id="words-add-language2" type="text" placeholder="Language 2" required="true"/>
-                                <input id="words-add-button" type="submit" value="Add word"/>
-                            </form>
-                            <hr class="spacer-top-15 spacer-bottom-5">
+                            <div id="words-add">
+                                <div id="words-add-message"></div>
+                                <form id="words-add-form">
+                                    <input id="words-add-language1" type="text" placeholder="Language 1" required="true"/>
+                                    <input id="words-add-language2" type="text" placeholder="Language 2" required="true"/>
+                                    <input id="words-add-button" type="submit" value="Add word"/>
+                                </form>
+                                <hr class="spacer-top-15 spacer-bottom-5">
+                            </div>
                             <div id="words-in-list">
                             </div>
     					</div>
@@ -116,6 +136,15 @@
                             </form>
                             <hr class="spacer-top-15 spacer-bottom-5">
                             <div id="list-of-word-lists">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="box-head">
+                            Shared with you
+                        </div>
+                        <div class="box-body">
+                            <div id="list-of-shared-word-lists">
                             </div>
                         </div>
                     </div>
@@ -236,8 +265,10 @@
         <script src="home/user.js" type="text/javascript"></script>
         <script src="home/word-lists.js" type="text/javascript"></script>
         
+        <script  src="single-page-application.js" type="text/javascript"></script>
+        
         <?php
-        	require('html-include/footer.html');
+        	//require('html-include/footer.html');
         ?>
     </body>
 </html>

@@ -368,8 +368,10 @@
 			});       
         </script>
         
+        <script  src="single-page-application.js" type="text/javascript"></script>
+        
         <?php
-        	require('html-include/footer.html');
+        	//require('html-include/footer.html');
         ?>
     </body>
 </html>
