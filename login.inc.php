@@ -327,9 +327,8 @@
 								<div class="right-column-img-wrapper">
 									<img src="img/timo-denk.jpg" class="right-column-img"/>
 								</div>
-							<p>
-								My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.
-							</p>
+							<p>My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.</p>
+                            <p>In my leisure time I like to develop software and realize hardware projects. I also do a lot of sports.</p>
 						</div>
 					</div>
 				</div>
@@ -337,10 +336,6 @@
     		
     		<br class="clear-both hide-below-700">
         </div>
-        
-        <?php
-        	require('html-include/footer.html');
-        ?>
         
         
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
@@ -371,8 +366,10 @@
 					message: $('#contact-message').val()
 				}).done(function(data) { $('#contact-body').html(data); });
 			});       
-			
-			
         </script>
+        
+        <?php
+        	require('html-include/footer.html');
+        ?>
     </body>
 </html>

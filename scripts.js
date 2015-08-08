@@ -5,7 +5,7 @@ function toggleMenu() {
     menuShown = !menuShown;
 }
 
-$('#head-nav').append('<img src="img/menu.png" class="menu-button" onclick="toggleMenu" />');
+$('#head-nav').append('<img src="img/menu.png" class="menu-button nav-image" style="background: url(\'img/menu.png\'); " onclick="toggleMenu()" />');
 
 
 // loading animation
@@ -13,7 +13,7 @@ var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></d
 
 
 // toast
-$('body').append('<div id="toast" style="position: fixed; bottom: 20px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; z-index: 1; "></div>');
+$('body').append('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 20px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; z-index: 1; "></div>');
 
 function Toast(text, ms) {
     this.ms = ms;
