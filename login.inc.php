@@ -1,5 +1,5 @@
 <?php
-	require('database.php');
+	require('database.class.php');
 ?>
 
 <!DOCTYPE html>
@@ -102,7 +102,7 @@
 		        	<div class="box">
 			        	<div class="box-head">Login</div>
 			        	<div class="box-body">
-			        		<form method="post" action="login.php">
+			        		<form method="post" action="server.php?action=login">
 			        			<table>
 			        				<tr>
 			        					<td>Email-address</td>
@@ -126,7 +126,7 @@
 			        <div class="box right">
 			        	<div class="box-head">Sign up</div>
 			        	<div class="box-body">
-			        		<form method="post" action="signup.php">
+			        		<form method="post" action="server.php?action=signup">
 			        			<table>
 			        				<tr>
 			        					<td>First name</td>
@@ -359,7 +359,8 @@
 				$('#contact-submit').prop('disabled', true);
 				$('#contact-submit').attr('value', 'Sending...');
 				
-				$.post('contact.php', { 
+				$.post('server.php', { 
+                    action: 'contact',
 					name: $('#contact-name').val(), 
 					email: $('#contact-email').val(),
 					subject: $('#contact-subject').val(),

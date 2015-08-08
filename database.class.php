@@ -1,6 +1,6 @@
 <?php
-	require('dbconnect.php');
-	require('validation.php');
+	require('dbconnect.inc.php');
+	require('validation.class.php');
 	
 	class Database {
 		static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
@@ -229,8 +229,7 @@
                 $sql = "INSERT INTO `relationship` (`user1`, `user2`, `time`, `type`) VALUES ('$id', '$added_user_id', '$time', '1')";
                 $query = mysqli_query($con, $sql);
                 return 1;
-            }
-            else {
+            } else {
 				$sql = "UPDATE `relationship` SET `type` = '1', `time`= '$time' WHERE `user1` = '$id' AND `user2` = '$added_user_id'";
 				$query = mysqli_query($con, $sql);
 				return 1;
@@ -389,8 +388,7 @@
 			if ($count == 0) {
 				$sql = "INSERT INTO `share` (`user`, `list`, `permissions`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "')";
 				$query = mysqli_query($con, $sql);
-            }
-            else {
+            } else {
 				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND `user` = '$share_with_id'";
 				$query = mysqli_query($con, $sql);
             }
