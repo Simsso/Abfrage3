@@ -102,7 +102,7 @@
 		        	<div class="box">
 			        	<div class="box-head">Login</div>
 			        	<div class="box-body">
-			        		<form method="post" action="server.php?action=login">
+			        		<form method="post" name="login" action="server.php?action=login" data-submit-loading="true">
 			        			<table>
 			        				<tr>
 			        					<td>Email-address</td>
@@ -126,7 +126,7 @@
 			        <div class="box right">
 			        	<div class="box-head">Sign up</div>
 			        	<div class="box-body">
-			        		<form method="post" action="server.php?action=signup">
+			        		<form method="post" name="signup" action="server.php?action=signup" data-submit-loading="true">
 			        			<table>
 			        				<tr>
 			        					<td>First name</td>
@@ -138,7 +138,7 @@
 			        				</tr>
 			        				<tr>
 			        					<td>Email-address</td>
-			        					<td><input type="email" name="email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
+			        					<td><input type="email" name="signup-email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
 			        				</tr>
 			        				<tr>
 			        					<td>Password</td>
@@ -215,7 +215,7 @@
                     <div class="box-head">Icon source</div>
                     <div class="box-body">
                         <div>
-                            Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
+                            Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> and <a href="http://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
                         </div>
                     </div>
                 </div>
@@ -366,7 +366,20 @@
 					subject: $('#contact-subject').val(),
 					message: $('#contact-message').val()
 				}).done(function(data) { $('#contact-body').html(data); });
-			});       
+			});   
+            
+            // submit forms loading screen
+            $('form[data-submit-loading=true]').on('submit', function(e) {
+                $('body').append(loadingFullscreen);
+                $('.sk-three-bounce.fullscreen').css('opacity', '1');
+                
+                // delay form submit
+                var form = this;
+                e.preventDefault();
+                setTimeout(function () {
+                    form.submit();
+                }, 500);
+            });
         </script>
         
         <script  src="single-page-application.js" type="text/javascript"></script>

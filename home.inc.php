@@ -1,7 +1,6 @@
 <?php
 	require('database.class.php');
 	require('mail.class.php');
-	
 	$user = Database::get_user_by_id($_SESSION['id']);
 	$next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 ?>
@@ -28,7 +27,7 @@
                         <a href="#settings"><img src="img/settings.png" class="nav-image" alt="Settings" title="Settings"/></a>
                     </li>
     				<li id="nav_logout" class="nav-img-li">
-                        <a href="/./logout.php"><img src="img/logout.png" class="nav-image" alt="Logout" title="Logout"/></a>
+                        <a href="/./server.php?action=logout"><img src="img/logout.png" class="nav-image" alt="Logout" title="Logout"/></a>
                     </li>
     			</ul><br class="clear-both">
     		</div>
@@ -48,7 +47,15 @@
     						Hey <? echo $user->firstname; ?>!
     					</div>
     					<div class="box-body">
-    						<p>Last login at <? echo $next_to_last_login->get_date_string(); ?> from IP-address <? echo $next_to_last_login->ip; ?></p>
+                            <?php
+                                if (is_null($next_to_last_login)) {
+                                    // first login
+                                    echo '<p>Welcome to Abfrage3! <a href="#word-lists">Start by creating a new word list.</a></p>';
+                                } else {
+                                    echo '<p>Last login at ' . $next_to_last_login->get_date_string() . ' from IP-address ' . $next_to_last_login->ip . '</p>';
+                                }
+                            ?>
+    						
     					</div>
     				</div>
     			</div>
@@ -81,16 +88,20 @@
     			<div class="left-column">
                     <div class="box" id="word-list-info">
                         <div class="box-head">
-                            
+                            <div></div>
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" data-start-state="expanded">
                         </div>
                     </div>
                     <div class="box" id="word-list-sharing">
                         <div class="box-head">
-                            Sharing
+                            <!--<img src="img/share.png" class="box-head-background" />-->
+                            Share
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
+                            <img src="img/expand.png" class="box-head-right-icon" data-action="expand" />
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" data-start-state="collapsed">
                             <form id="share-list-form">
                                 <input id="share-list-other-user-email" type="text" placeholder="Email-address" required="true"/>
                                 <select id="share-list-permissions" required="true">
@@ -108,8 +119,9 @@
                     <div class="box" id="word-list-info-words">
                         <div class="box-head">
                             Words
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
-    					<div class="box-body">
+                        <div class="box-body" data-start-state="expanded">
                             <div id="words-add">
                                 <div id="words-add-message"></div>
                                 <form id="words-add-form">
@@ -128,8 +140,10 @@
                     <div class="box">
                         <div class="box-head">
                             Your word lists
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" data-start-state="expanded">
                             <form id="word-list-add-form">
                                 <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
                                 <input id="word-list-add-button" type="submit" value="Create list"/>
@@ -142,8 +156,10 @@
                     <div class="box">
                         <div class="box-head">
                             Shared with you
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfSharedWordLists" />
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" data-start-state="expanded">
                             <div id="list-of-shared-word-lists">
                             </div>
                         </div>
@@ -167,8 +183,10 @@
     				<div class="box">
     					<div class="box-head">
     						People you've added
-    					</div>
-    					<div class="box-body">
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                        </div>
+                        <div class="box-body" data-start-state="expanded">
                             <div id="user-add-message"></div>
                             <form id="user-add-form">
                                 <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
@@ -185,9 +203,12 @@
     				<div class="box">
     					<div class="box-head">
     						People who have added you
-    					</div>
-    					<div class="box-body" id="people-who-have-added-you">
-                            
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                        </div>
+                        <div class="box-body" data-start-state="expanded">
+                            <div id="people-who-have-added-you">
+                            </div>
     					</div>
     				</div>
     			</div>

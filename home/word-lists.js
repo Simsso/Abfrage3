@@ -2,14 +2,8 @@ var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordli
 var noSharedWordListOutput = '<p>There are no shared lists to show.</p>';
 var listNotShared = '<p class="spacer-top-15">The selected list isn\'t shared with anyone. Only you can see it.</p>';
 var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
+var noWordsInListDisallowEdit = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
 var shownListId = -1;
-
-var ajaxRequests = {
-    loadWordList: new AjaxRequestsManager(true),
-    loadListOfWordLists: new AjaxRequestsManager(true),
-    loadListOfSharedWordLists: new AjaxRequestsManager(true),
-    refreshListSharings: new AjaxRequestsManager(true)
-};
 
 $('#word-list-add-form').on('submit', function(e) {
     // dont visit action="..." page
@@ -48,6 +42,8 @@ function addWordList(name, callback) {
 function refreshListOfWordLists(showLoadingInformation) {
     if (showLoadingInformation)
         $('#list-of-word-lists').html(loading);
+    
+    showNoListSelectedInfo();
 
     ajaxRequests.loadListOfWordLists.add(
         jQuery.ajax('server.php', {
@@ -98,6 +94,8 @@ function refreshListOfWordLists(showLoadingInformation) {
 function refreshListOfSharedWordLists(showLoadingInformation) {
     if (showLoadingInformation)
         $('#list-of-shared-word-lists').html(loading);
+    
+    showNoListSelectedInfo();
 
     ajaxRequests.loadListOfSharedWordLists.add(
         jQuery.ajax('server.php', {
@@ -160,7 +158,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
 }
 
 function showNoListSelectedInfo() {
-    $('#word-list-info .box-head').html("Word lists");
+    $('#word-list-info .box-head > div').html("Word lists");
     $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to start editing.</p>');
     $('#word-list-info-words').hide();
     $('#word-list-sharing').hide();
@@ -168,7 +166,7 @@ function showNoListSelectedInfo() {
 
 function loadWordList(id, showLoadingInformation, callback, allowEdit, allowSharing) {
     if (showLoadingInformation) {
-        $('#word-list-info .box-head').html("Loading...");
+        $('#word-list-info .box-head > div').html("Loading...");
         $('#word-list-info .box-body').html(loading);
         $('#word-list-info-words').hide();
         $('#word-list-sharing').hide();
@@ -190,7 +188,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             shownListId = id;
 
             // info box head
-            $('#word-list-info .box-head').html("Word list: " + data.name);
+            $('#word-list-info .box-head > div').html(data.name);
             
             // info box body
             var wordListInfoBoxBody = '';
@@ -206,6 +204,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             // sharing box
             if (allowSharing) {
                 refreshListSharings(true, data.id);
+                $('#word-list-sharing').show();
             }
             else {
                 $('#word-list-sharing').hide();
@@ -213,7 +212,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             
             // list of words
             if (data.words.length == 0) { // no words added yet
-                $('#words-in-list').html(noWordsInList);
+                $('#words-in-list').html((allowEdit)?noWordsInList:noWordsInListDisallowEdit);
             }
             else {
                 var wordListHTML = "";
@@ -225,7 +224,9 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
                 $('#words-in-list').html(wordListHTML);
             }
             $('#word-list-info-words').show();
-            if (!allowEdit) 
+            if (allowEdit) 
+                $('#words-add').show();
+            else 
                 $('#words-add').hide();
         })
     );
@@ -361,6 +362,10 @@ function addWord(lang1, lang2, allowEdit) {
 }
 
 function refreshListSharings(showLoadingInformation, wordListId) { 
+    if (wordListId == undefined)
+        wordListId = shownListId;
+    
+    
     $('#word-list-sharing').show();
     if (showLoadingInformation) {
         $('#list-sharings').html(loading);

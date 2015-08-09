@@ -289,9 +289,9 @@
         static function get_word_list($user_id, $word_list_id) {
 			global $con;
 			$sql = "
-            SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time` 
-            FROM `list`
-            WHERE `creator` = '" . $user_id . "' AND `id` = '" . $word_list_id . "'";
+            SELECT `list`.`id`, `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` 
+            FROM `list`, `share`
+            WHERE (`list`.`creator` = '" . $user_id . "' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND `list`.`id` = '" . $word_list_id . "'";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) {  
                 return new WordList(
@@ -366,8 +366,9 @@
             global $con;
             $sql = "
                 SELECT `share`.`id` AS 'share_id', `share`.`permissions`, `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
-                FROM `share`, `list` 
-                WHERE `share`.`user` = '$id' AND `share`.`list` = `list`.`id` AND `list`.`active` = '1' AND `share`.`permissions` <> '0'";
+                FROM `share`, `list`, `relationship` 
+                WHERE `share`.`user` = '$id' AND `share`.`list` = `list`.`id` AND `list`.`active` = '1' AND `share`.`permissions` <> '0' 
+                    AND `relationship`.`user1` = '$id' AND `relationship`.`user2` = `list`.`creator` AND `relationship`.`type` = '1'";
 			$query = mysqli_query($con, $sql);
 			$result = array();
 			while ($row = mysqli_fetch_assoc($query)) {  

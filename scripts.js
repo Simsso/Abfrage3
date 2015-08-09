@@ -1,3 +1,18 @@
+// box head right icons
+$('.box .box-head img.box-head-right-icon').on('click', function() {
+    switch($(this).data('action')) {
+        case 'expand':
+            $(this).data('action', 'collapse').attr('src', 'img/collapse.png').parent().next().show();
+            break;
+        case 'collapse':
+            $(this).data('action', 'expand').attr('src', 'img/expand.png').parent().next().hide();
+            break;
+        case 'refresh':
+            window[$(this).data('function-name')](true);
+            break;
+    }
+}).show();
+
 // mobile menu
 var menuShown = false;
 function toggleMenu() {
@@ -10,6 +25,7 @@ $('#head-nav').append('<img src="img/menu.png" class="menu-button nav-image" sty
 
 // loading animation
 var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>' 
+var loadingFullscreen = '<div class="sk-three-bounce fullscreen"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>' 
 
 
 // toast
@@ -40,6 +56,13 @@ function AjaxRequestsManager(onlyOne) {
         this.list.push(ajaxRequest);
     };
 }
+
+var ajaxRequests = {
+    loadWordList: new AjaxRequestsManager(true),
+    loadListOfWordLists: new AjaxRequestsManager(true),
+    loadListOfSharedWordLists: new AjaxRequestsManager(true),
+    refreshListSharings: new AjaxRequestsManager(true)
+};
 
 $(document).ajaxError(function() {
     new Toast('An Ajax request failed.');

@@ -12,9 +12,9 @@ function addUser(email, callback) {
 
         }
     }).done(function(data) {
-        if (data.status == 1) {
-            refreshListOfAddedUsers(false);
-        }
+        console.log(data);
+        refreshListOfAddedUsers(false);
+        refreshListOfSharedWordLists(true);
 
         callback(data);
     });
@@ -53,7 +53,7 @@ function removeUser(id) {
         }
     }).done(function(data) {
         console.log(data);
-        $('#added-users-row-' + id).hide();
+        $('#added-users-row-' + id).remove();
 
         // set text to 
         if ($('#people-you-have-added tr').length == 1) {
@@ -61,13 +61,14 @@ function removeUser(id) {
         }
 
         refreshListOfUsersWhoHaveAddedYou(false);
+        refreshListOfSharedWordLists(true);
     });
 }
 
 
 // list of added users
-function refreshListOfAddedUsers(hideLoadingInformation) {
-    if (hideLoadingInformation)
+function refreshListOfAddedUsers(showLoadingInformation) {
+    if (showLoadingInformation)
         $('#people-you-have-added').html(loading);
 
     jQuery.ajax('server.php', {
