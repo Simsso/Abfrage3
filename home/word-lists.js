@@ -199,6 +199,8 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
                 
             }
             
+            wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." />';
+            
             $('#word-list-info .box-body').html(wordListInfoBoxBody);
 
             // sharing box
