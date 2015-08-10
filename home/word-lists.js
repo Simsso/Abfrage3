@@ -5,6 +5,7 @@ var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain
 var noWordsInListDisallowEdit = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
 var shownListId = -1;
 var shownListData = null;
+var noLabels = '<p>You don\'t have any labels.</p>';
 
 function addWordList(name, callback) {
     jQuery.ajax('server.php', {
@@ -82,14 +83,18 @@ function refreshListOfWordLists(showLoadingInformation) {
                     }
                 }
                 else if ($button.data('action') == 'edit') { // edit / show list button click
-                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
-                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    enableAllViewEditButtons();
                     $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, true, true);
                 }
             });
         })
     );
+}
+
+function enableAllViewEditButtons() {
+    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
 }
 
 function refreshListOfSharedWordLists(showLoadingInformation) {
@@ -142,14 +147,12 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
                     }
                 }
                 else if ($button.data('action') == 'edit') { // edit / show list button click
-                    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
-                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    enableAllViewEditButtons()
                     $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, true, false);
                 }
                 else if ($button.data('action') == 'view') { // edit / show list button click
-                    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
-                    $('#list-of-word-lists input[type=button]').prop('disabled', false);
+                    enableAllViewEditButtons();
                     $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, false, false);
                 }
@@ -189,6 +192,15 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             data = jQuery.parseJSON(data);
             
             shownListData = data;
+            
+            // handle data types
+            shownListData.creationTime = parseInt(shownListData.creationTime);
+            shownListData.creator.id = parseInt(shownListData.creator.id);
+            for (var i = 0; i < shownListData.labels.length; i++) {
+                shownListData.labels[i].id = parseInt(shownListData.labels[i].id);
+                shownListData.labels[i].parent_label = parseInt(shownListData.labels[i].parent_label);
+                shownListData.labels[i].user = parseInt(shownListData.labels[i].user);
+            }
 
             shownListId = id;
 
@@ -247,6 +259,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             else 
                 $('#words-add').hide();
             
+            getLabelList(true);
             $('#word-list-label').show();
         })
     );
@@ -503,6 +516,191 @@ function setSharingPermissions(listId, email, permissions, callback) {
         data = jQuery.parseJSON(data);
 
         callback(data);
+    });
+}
+
+
+// label functions
+
+function getLabelList(showLoadingInformation) {
+    if (showLoadingInformation)
+        $('#list-labels-list').html(loading);
+
+    
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'get-labels-of-user'
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        labels = jQuery.parseJSON(data);
+        
+        // handle data types
+        for (var i = 0; i < labels.length; i++) {
+            labels[i].id = parseInt(labels[i].id);
+            labels[i].parent_label = parseInt(labels[i].parent_label);
+            labels[i].user = parseInt(labels[i].user);
+        }
+
+        var html = getHtmlListOfLabelId(labels, 0, 0);
+        /*for (var i = 0; i < labels.length; i++) {
+            html += '<li id="label-list-row-id-' + labels[i].id + '" style="margin-left: ' + (15 * getLabelIndenting(labels, i)) + 'px; "><label><input type="checkbox" data-label-id="'+labels[i].id+'" ' + (labelAttachedToList(shownListData, labels[i].id)?'checked="true"':'') + '/> ' + labels[i].name + ' (' + labels[i].parent_label + ')</label></li>';
+        }*/
+        
+        if (html.length > 0) {
+            html = '<ul>' + html + '</ul>';
+        }
+        else {
+            html = noLabels;
+        }
+        
+        $('#list-labels-list').html(html);
+        $('#list-labels-list input[type=checkbox]').click( function(){
+            var labelId = $(this).data('label-id');
+            if($(this).is(':checked')) {
+                attachListToLabel(labelId, shownListId, function() {
+                    shownListData.labels.push(labels[getLabelIndexByLabelId(labels, labelId)]);
+                });
+            }
+            else {
+                detachListFromLabel(labelId, shownListId, function() {
+                    shownListData.labels.splice(getLabelIndexByLabelId(shownListData.labels, labelId), 1);
+                });
+            }
+        });
+        
+        
+        // select for parent label refresh
+        var $selectParent = $('#label-add-parent');
+        var selectHtml = '<option value="0">No parent label</option>';
+        var indenting = 0, farestIndentingReached = false;
+        while (!farestIndentingReached) {
+            var labelIds = getLabelIdsWithIndenting(labels, indenting);
+            for (var i = 0; i < labelIds.length; i++) {
+                selectHtml += '<option value="' + labelIds[i] + '">' + labels[getLabelIndexByLabelId(labels, labelIds[i])].name + '</option>';
+            }
+            indenting++;
+            
+            if (labelIds.length == 0) {
+                farestIndentingReached = true;
+            }
+        }
+        $selectParent.html(selectHtml);
+    });
+}
+
+function getHtmlListOfLabelId(labels, id, indenting) {
+    var output = '';
+    var labelIds = getLabelIdsWithIndenting(labels, indenting);
+    for (var i = 0; i < labelIds.length; i++) {
+        var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
+        if (currentLabel.parent_label == id) {
+            output += '<li id="label-list-row-id-' + currentLabel.id + '" style="margin-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + currentLabel.id + '" ' + (labelAttachedToList(shownListData, currentLabel.id)?'checked="true"':'') + '/> ' + currentLabel.name + '</label></li>';
+            output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1);
+        }
+    }
+    return output;
+}
+
+function getLabelIndexByLabelId(labels, labelId) {
+    for (var i = 0; i < labels.length; i++) {
+        if (labelId == labels[i].id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function labelAttachedToList(list, labelId) {
+    for (var i = 0; i < list.labels.length; i++) {
+        if (labelId == list.labels[i].id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getLabelIdsWithIndenting(labels, indenting) {
+    var selectedLabels = new Array();
+    for (var i = 0; i < labels.length; i++) {
+        if (getLabelIndenting(labels, i) == indenting) {
+            selectedLabels.push(labels[i].id);
+        }
+    }
+    return selectedLabels;
+}
+
+function getLabelIndenting(labels, index) {
+    if (labels[index].parent_label == 0)
+        return 0;
+    
+    return getLabelIndenting(labels, getLabelIndexByLabelId(labels, labels[index].parent_label)) + 1;
+}
+
+function addLabel(listId, name, parentId, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'add-label',
+            label_name: name,
+            parent_label_id: parentId
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        callback();
+    });
+}
+
+$('#label-add-form').on('submit', function(e) {
+    e.preventDefault();
+    
+    $button = $('#label-add-button').prop('disabled', true).attr('value', 'Adding label...');
+    $nameInput = $('#label-add-name').prop('disabled', true);
+    $parentSelect = $('#label-add-parent').prop('disabled', true);
+    
+    addLabel(shownListId, $nameInput.val(), $parentSelect.val(), function() {
+        getLabelList(false);
+    
+        $button.prop('disabled', false).attr('value', 'Add label');
+        $nameInput.prop('disabled', false).val('');
+        $parentSelect.prop('disabled', false).val(null);
+    });
+});
+
+function attachListToLabel(labelId, listId, callback) {
+    setLabelListAttachment(labelId, listId, 1, callback);
+}
+
+function detachListFromLabel(labelId, listId, callback) {
+    setLabelListAttachment(labelId, listId, 0, callback);
+}
+
+function setLabelListAttachment(labelId, listId, attachment, callback) {
+    if (listId == undefined) {
+        listId = shownListId;
+    }
+    
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'set-label-list-attachment',
+            label_id: labelId,
+            list_id: listId,
+            attachment: attachment
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        callback();
     });
 }
 

@@ -173,6 +173,7 @@ ul.social-icons li {
 body > .main {
 	position: relative;
 	margin-bottom: 57px;
+    margin-bottom: 25px;
 }
 
 .box {
@@ -305,7 +306,7 @@ p:not(:last-child), ul.normal:not(:last-child) {
 	margin-bottom: 24px;
 }
 
-.main > div {
+.main > div:not(:first-child) {
 	display: none;
 }
 
@@ -414,8 +415,17 @@ div.center {
     box-shadow: none !important;
 }
 
-input:first-child:last-child {
+.checkbox-wrapper {
+    cursor: pointer;
+}
+
+
+input[type=text]:first-child:last-child {
     width: calc(100% - 16px);
+}
+
+.inline {
+    display: inline;
 }
     
 .height-hidden {

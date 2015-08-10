@@ -13,6 +13,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=textarea]:focus, 
 	border-color: #888888;
 }
 
+input[type=checkbox] {
+    height: 14px;
+}
+
 select {
     border-radius: 0;
 }

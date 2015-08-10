@@ -89,7 +89,7 @@
                     <div class="box" id="word-list-info">
                         <div class="box-head">
                             <img src="img/info.png" />
-                            <div></div>
+                            <div class="inline"></div>
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
                         <div class="box-body" data-start-state="expanded">
@@ -123,12 +123,19 @@
                         <div class="box-head">
                             <img src="img/tags.png" />
                             Labels
-                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListLabels" />
-                            <img src="img/expand.png" class="box-head-right-icon" data-action="expand" />
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
+                            <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
-                        <div class="box-body" data-start-state="collapsed">
-                            <div id="list-labels">
-                                
+                        <div class="box-body" data-start-state="expanded">
+                            <div id="label-add">
+                                <form id="label-add-form">
+                                    <input id="label-add-name" type="text" placeholder="Label name" required="true"/>
+                                    <select id="label-add-parent"></select>
+                                    <input id="label-add-button" type="submit" value="Add label"/>
+                                </form>
+                                <hr class="spacer-top-15 spacer-bottom-15">
+                            </div>
+                            <div id="list-labels-list">
                             </div>
                         </div>
                     </div>

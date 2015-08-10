@@ -180,8 +180,8 @@
                 echo Database::set_label_status($_SESSION['id'], $_GET['label_id'], 0);
                 break;
             
-            case 'attach-list-to-label':
-                echo Database::attach_list_to_label($_SESSION['id'], $_GET['label_id'], $_GET['list_id']);
+            case 'set-label-list-attachment':
+                echo Database::set_label_list_attachment($_SESSION['id'], $_GET['label_id'], $_GET['list_id'], $_GET['attachment']);
                 break;
             
             case 'detach-list-from-label':
