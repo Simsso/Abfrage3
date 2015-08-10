@@ -461,15 +461,25 @@
                 // update
                 $sql = "UPDATE `label` SET `active` = '1' WHERE `name` = '".$label_name."' AND `user` = '".$user_id."' AND `parent` = '".$parent_label_id."'";
                 $query = mysqli_query($con, $sql);
-                return 0;
+                return 1;
             }
         }
         
         static function set_label_status($user_id, $id, $status) {
             global $con;
-            $sql = "UPDATE `label` SET `status` = '".$status."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
+            $sql = "UPDATE `label` SET `active` = '".$status."' WHERE `id` = '".$id."' AND `user` = '".$user_id."'";
             $query = mysqli_query($con, $sql);
-            return 1;
+            
+            if ($status == 0) {
+                // unset all label attachments
+                $sql = "
+                    UPDATE `label_attachment`, `label` 
+                    SET `label_attachment`.`active` = '0' 
+                    WHERE `label`.`id` = `label_attachment`.`label` AND 
+                        `label`.`id` = '".$id."' AND `label`.`user` = '".$user_id."'";
+                $query = mysqli_query($con, $sql);
+            }
+            return "user_id: " . $user_id . "; id: " . $id . "; status: " . $status . ";";
         }
         
         static function set_label_list_attachment($user_id, $label_id, $list_id, $attachment) {
@@ -538,7 +548,7 @@
 			$sql = "SELECT * FROM `label` WHERE `id` = '" . $id . "'";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) { 
-			  return new Label($id, $row['name'], $row['user'], $row['active']);
+			  return new Label($id, $row['name'], $row['user'], $row['parent_label'], $row['active']);
 			}
             return NULL;
         }

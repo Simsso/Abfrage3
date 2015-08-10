@@ -177,15 +177,11 @@
                 break;
             
             case 'remove-label':
-                echo Database::set_label_status($_SESSION['id'], $_GET['label_id'], 0);
+                echo Database::set_label_status($_SESSION['id'], $_GET['label_id'], "0");
                 break;
             
             case 'set-label-list-attachment':
                 echo Database::set_label_list_attachment($_SESSION['id'], $_GET['label_id'], $_GET['list_id'], $_GET['attachment']);
-                break;
-            
-            case 'detach-list-from-label':
-                // TODO
                 break;
             
             case 'get-labels-of-user':

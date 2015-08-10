@@ -130,8 +130,13 @@
                             <div id="label-add">
                                 <form id="label-add-form">
                                     <input id="label-add-name" type="text" placeholder="Label name" required="true"/>
-                                    <select id="label-add-parent"></select>
+                                    <select id="label-add-parent" required="true"></select>
                                     <input id="label-add-button" type="submit" value="Add label"/>
+                                </form>
+                                
+                                <form id="label-remove-form">
+                                    <select id="label-remove-select"></select>
+                                    <input id="label-remove-button" type="submit" value="Remove label"/>
                                 </form>
                                 <hr class="spacer-top-15 spacer-bottom-15">
                             </div>
