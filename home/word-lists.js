@@ -546,10 +546,10 @@ function getLabelList(showLoadingInformation) {
             labels[i].user = parseInt(labels[i].user);
         }
 
-        var html = getHtmlListOfLabelId(labels, 0, 0, true);
+        var html = getHtmlListOfLabelId(labels, 0, 0);
         
         if (html.length > 0) {
-            html = '<ul>' + html + '</ul>';
+            html = '<table class="box-table button-right-column">' + html + '</table>';
         }
         else {
             html = noLabels;
@@ -571,36 +571,55 @@ function getLabelList(showLoadingInformation) {
         });
         
         
-        // select for parent label refresh
-        var $selectParent = $('#label-add-parent');
-        var selectHtml = getHtmlListOfLabelId(labels, 0, 0, false);
-        $selectParent.html('<option value="0">No parent label</option>' + selectHtml); // parent label select
-        $('#label-remove-select').html(selectHtml); // delete label select
+
+        $('.label-add-form').on('submit', function(e) {
+            e.preventDefault();
+
+            $button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
+            $nameInput = $(this).children('.label-add-name').prop('disabled', true);
+            $parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
+
+            addLabel(shownListId, $nameInput.val(), $parentSelect.val(), function() {
+                getLabelList(false);
+
+                $button.prop('disabled', false).attr('value', 'Add label');
+                $nameInput.prop('disabled', false).val('');
+                $parentSelect.prop('disabled', false).val(null);
+            });
+        });
+        
+        $('.label-remove-form').on('submit', function(e) {
+            e.preventDefault();
+
+            $(this).children('.label-remove-select').prop('disabled', true);
+            $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing label...');
+
+            var labelId = $(this).children('.label-remove-select').val();
+            removeLabel(labelId, function() {
+                $(this).children('.label-remove-select').prop('disabled', false);
+                $(this).children('.label-remove-button').prop('disabled', false).attr('value', 'Remove label');
+                shownListData.labels.splice(getLabelIndexByLabelId(shownListData.labels, labelId), 1);
+                getLabelList(false);
+            });
+        });
     });
 }
 
-function getHtmlListOfLabelId(labels, id, indenting, forListElement) {
-    var output = '';
+function getHtmlListOfLabelId(labels, id, indenting) {
+    var output = '<tr><td colspan="2"><form class="label-add-form"><input class="label-add-name" type="text" placeholder="Label name" required="true" class="inline"/><input class="label-add-button" type="submit" value="Add label" class="inline"/></form></td>';
     var labelIds = getLabelIdsWithIndenting(labels, indenting);
     for (var i = 0; i < labelIds.length; i++) {
         var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
         if (currentLabel.parent_label == id) {
-            if (forListElement)
-                output += getSingleListElementOfLabelList(currentLabel, indenting);
-            else
-                output += getSingleSelectElementOfLabelList(currentLabel, indenting);
+            output += getSingleListElementOfLabelList(currentLabel, indenting);
             output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1, forListElement);
-        }
+        } 
     }
     return output;
 }
 
 function getSingleListElementOfLabelList(label, indenting) {
-    return '<li id="label-list-row-id-' + label.id + '" style="margin-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></li>';
-}
-
-function getSingleSelectElementOfLabelList(label, indenting) {
-    return '<option value="' + label.id + '">' + '&nbsp;'.repeat(4 * indenting) + label.name + '</option>';
+    return '<tr id="label-list-row-id-' + label.id + '"><td style="padding-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><form class="label-remove-form"><input type="hidden" class="label-remove-select" value="' + label.id + '"/><input class="label-remove-button" type="submit" value="Remove label" class="inline"/></form></td></tr>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
@@ -655,22 +674,6 @@ function addLabel(listId, name, parentId, callback) {
     });
 }
 
-$('#label-add-form').on('submit', function(e) {
-    e.preventDefault();
-    
-    $button = $('#label-add-button').prop('disabled', true).attr('value', 'Adding label...');
-    $nameInput = $('#label-add-name').prop('disabled', true);
-    $parentSelect = $('#label-add-parent').prop('disabled', true);
-    
-    addLabel(shownListId, $nameInput.val(), $parentSelect.val(), function() {
-        getLabelList(false);
-    
-        $button.prop('disabled', false).attr('value', 'Add label');
-        $nameInput.prop('disabled', false).val('');
-        $parentSelect.prop('disabled', false).val(null);
-    });
-});
-
 function attachListToLabel(labelId, listId, callback) {
     setLabelListAttachment(labelId, listId, 1, callback);
 }
@@ -716,21 +719,6 @@ function removeLabel(labelId, callback) {
         callback();
     });
 }
-
-$('#label-remove-form').on('submit', function(e) {
-    e.preventDefault();
-    
-    $('#label-remove-select').prop('disabled', true);
-    $('#label-remove-button').prop('disabled', true).attr('value', 'Removing label...');
-    
-    var labelId = $('#label-remove-select').val();
-    removeLabel(labelId, function() {
-        $('#label-remove-select').prop('disabled', false);
-        $('#label-remove-button').prop('disabled', false).attr('value', 'Remove label');
-        shownListData.labels.splice(getLabelIndexByLabelId(shownListData.labels, labelId), 1);
-        getLabelList(false);
-    });
-});
 
 
 // refresh functions
