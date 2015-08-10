@@ -592,7 +592,7 @@ function getLabelList(showLoadingInformation) {
             e.preventDefault();
 
             $(this).children('.label-remove-select').prop('disabled', true);
-            $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing label...');
+            $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing...');
 
             var labelId = $(this).children('.label-remove-select').val();
             removeLabel(labelId, function() {
@@ -602,24 +602,29 @@ function getLabelList(showLoadingInformation) {
                 getLabelList(false);
             });
         });
+        
+        $('.label-add-sub-label').on('click', function() {
+            $(this).hide().parent().parent().next().show().children().select('input[type=text]').first().focus();
+        });
+                                    
     });
 }
 
 function getHtmlListOfLabelId(labels, id, indenting) {
-    var output = '<tr><td colspan="2"><form class="label-add-form"><input class="label-add-name" type="text" placeholder="Label name" required="true" class="inline"/><input class="label-add-button" type="submit" value="Add label" class="inline"/></form></td>';
+    var output = '<tr' + ((indenting == 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/> <input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
     var labelIds = getLabelIdsWithIndenting(labels, indenting);
     for (var i = 0; i < labelIds.length; i++) {
         var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
         if (currentLabel.parent_label == id) {
             output += getSingleListElementOfLabelList(currentLabel, indenting);
-            output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1, forListElement);
+            output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1);
         } 
     }
     return output;
 }
 
 function getSingleListElementOfLabelList(label, indenting) {
-    return '<tr id="label-list-row-id-' + label.id + '"><td style="padding-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><form class="label-remove-form"><input type="hidden" class="label-remove-select" value="' + label.id + '"/><input class="label-remove-button" type="submit" value="Remove label" class="inline"/></form></td></tr>';
+    return '<tr id="label-list-row-id-' + label.id + '"><td style="padding-left: ' + (15 * indenting + 15) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><input type="button" class="label-add-sub-label inline" value="Add sub-label"/> <form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
@@ -709,6 +714,23 @@ function removeLabel(labelId, callback) {
         data: {
             action: 'remove-label',
             label_id: labelId
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        callback();
+    });
+}
+
+function renameLabel(labelId, labelName, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'rename-label',
+            label_id: labelId,
+            label_name: labelName
         },
         type: 'GET',
         error: function(jqXHR, textStatus, errorThrown) {
