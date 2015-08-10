@@ -1,3 +1,17 @@
+// string prototype
+String.prototype.repeat = function(n) {
+    if (n == 0) 
+        return '';
+    n= n || 1;
+    return Array(n + 1).join(this);
+}
+
+
+// time
+Date.prototype.toDefaultString = function() {
+    return this.getDate() + "." + (this.getMonth()+1) + "." + this.getFullYear() + " " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
+}
+
 // box head right icons
 $('.box .box-head img.box-head-right-icon').on('click', function() {
     switch($(this).data('action')) {
@@ -118,12 +132,6 @@ setTimeout(function() {
         });
     }
 }, 1000);
-
-
-// time
-function timeToString(date) {
-    return date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-}
 
 
 // save text as file

@@ -218,7 +218,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             }
             
             var creationTime = new Date(parseInt(data.creation_time) * 1000);
-            wordListInfoBoxBody += '<p>Creation date: ' + timeToString(creationTime) + '</p>';
+            wordListInfoBoxBody += '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
             
             if (allowEdit) {
                 wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label> ';
@@ -546,10 +546,7 @@ function getLabelList(showLoadingInformation) {
             labels[i].user = parseInt(labels[i].user);
         }
 
-        var html = getHtmlListOfLabelId(labels, 0, 0);
-        /*for (var i = 0; i < labels.length; i++) {
-            html += '<li id="label-list-row-id-' + labels[i].id + '" style="margin-left: ' + (15 * getLabelIndenting(labels, i)) + 'px; "><label><input type="checkbox" data-label-id="'+labels[i].id+'" ' + (labelAttachedToList(shownListData, labels[i].id)?'checked="true"':'') + '/> ' + labels[i].name + ' (' + labels[i].parent_label + ')</label></li>';
-        }*/
+        var html = getHtmlListOfLabelId(labels, 0, 0, true);
         
         if (html.length > 0) {
             html = '<ul>' + html + '</ul>';
@@ -576,34 +573,34 @@ function getLabelList(showLoadingInformation) {
         
         // select for parent label refresh
         var $selectParent = $('#label-add-parent');
-        var selectHtml = '<option value="0">No parent label</option>';
-        var indenting = 0, farestIndentingReached = false;
-        while (!farestIndentingReached) {
-            var labelIds = getLabelIdsWithIndenting(labels, indenting);
-            for (var i = 0; i < labelIds.length; i++) {
-                selectHtml += '<option value="' + labelIds[i] + '">' + labels[getLabelIndexByLabelId(labels, labelIds[i])].name + '</option>';
-            }
-            indenting++;
-            
-            if (labelIds.length == 0) {
-                farestIndentingReached = true;
-            }
-        }
-        $selectParent.html(selectHtml);
+        var selectHtml = getHtmlListOfLabelId(labels, 0, 0, false);
+        $selectParent.html('<option value="0">No parent label</option>' + selectHtml); // parent label select
+        $('#label-remove-select').html(selectHtml); // delete label select
     });
 }
 
-function getHtmlListOfLabelId(labels, id, indenting) {
+function getHtmlListOfLabelId(labels, id, indenting, forListElement) {
     var output = '';
     var labelIds = getLabelIdsWithIndenting(labels, indenting);
     for (var i = 0; i < labelIds.length; i++) {
         var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
         if (currentLabel.parent_label == id) {
-            output += '<li id="label-list-row-id-' + currentLabel.id + '" style="margin-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + currentLabel.id + '" ' + (labelAttachedToList(shownListData, currentLabel.id)?'checked="true"':'') + '/> ' + currentLabel.name + '</label></li>';
-            output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1);
+            if (forListElement)
+                output += getSingleListElementOfLabelList(currentLabel, indenting);
+            else
+                output += getSingleSelectElementOfLabelList(currentLabel, indenting);
+            output += getHtmlListOfLabelId(labels, labelIds[i], indenting + 1, forListElement);
         }
     }
     return output;
+}
+
+function getSingleListElementOfLabelList(label, indenting) {
+    return '<li id="label-list-row-id-' + label.id + '" style="margin-left: ' + (15 * indenting) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></li>';
+}
+
+function getSingleSelectElementOfLabelList(label, indenting) {
+    return '<option value="' + label.id + '">' + '&nbsp;'.repeat(4 * indenting) + label.name + '</option>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
@@ -703,6 +700,37 @@ function setLabelListAttachment(labelId, listId, attachment, callback) {
         callback();
     });
 }
+
+function removeLabel(labelId, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'remove-label',
+            label_id: labelId
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        callback();
+    });
+}
+
+$('#label-remove-form').on('submit', function(e) {
+    e.preventDefault();
+    
+    $('#label-remove-select').prop('disabled', true);
+    $('#label-remove-button').prop('disabled', true).attr('value', 'Removing label...');
+    
+    var labelId = $('#label-remove-select').val();
+    removeLabel(labelId, function() {
+        $('#label-remove-select').prop('disabled', false);
+        $('#label-remove-button').prop('disabled', false).attr('value', 'Remove label');
+        shownListData.labels.splice(getLabelIndexByLabelId(shownListData.labels, labelId), 1);
+        getLabelList(false);
+    });
+});
 
 
 // refresh functions
