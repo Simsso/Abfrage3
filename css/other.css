@@ -198,6 +198,12 @@ body > .main {
     margin: -7px;
     margin-right: 7px;
 }
+.box .box-head img:first-child:not(.box-head-right-icon) {
+    height: 32px;
+    width: 32px;
+    margin: -8px 15px -11px -6px;
+    opacity: 0.8;
+}
 .box .box-head img.box-head-right-icon {
     height: 24px;
     width: 24px;

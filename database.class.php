@@ -297,7 +297,7 @@
                 return new WordList(
                     $row['id'], 
                     $row['name'], 
-                    $row['creator'], 
+                    SimpleUser::get_by_id($row['creator']), 
                     $row['comment'], 
                     $row['language1'], 
                     $row['language2'], 
@@ -306,6 +306,9 @@
 			}
         }
         
+        static function rename_word_list($user_id, $list_id, $list_name) { 
+            // TODO
+        }
         static function get_words_of_list($list_id) {
             global $con;
 			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1' ORDER BY `id` DESC";
@@ -383,14 +386,14 @@
         static function set_sharing_permissions($user_id, $word_list_id, $email, $permissions) {
             $share_with_id = self::email2id($email);
 			global $con; 
-			$sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE `user` = '" . $share_with_id . "' AND `list` = '" . $word_list_id . "'";
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE (`user` = '" . $share_with_id . "' OR `user` = '".$user_id."') AND `list` = '" . $word_list_id . "'";
 			$query = mysqli_query($con, $sql);
 			$count = mysqli_fetch_object($query)->count;
 			if ($count == 0) {
 				$sql = "INSERT INTO `share` (`user`, `list`, `permissions`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "')";
 				$query = mysqli_query($con, $sql);
             } else {
-				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND `user` = '$share_with_id'";
+				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "' OR `user` = '".$user_id."')";
 				$query = mysqli_query($con, $sql);
             }
             return 1;
@@ -402,7 +405,7 @@
             $sql = "
                 UPDATE `share`, `list`
                 SET `share`.`permissions` = '$permissions' 
-                WHERE `share`.`id` = '$id' AND `list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "'";
+                WHERE `share`.`id` = '$id' AND (`list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "' OR `share`.`user` = '" . $user_id . "')";
             $query = mysqli_query($con, $sql);
             return 1;
         }
@@ -432,7 +435,41 @@
 			}
             return $result;
         }
+        
+        
+        // word list labels
+        
+        static function add_label($user_id, $label_name, $parent_label_id) {
+            global $con;
+            // TODO
+        }
+        
+        static function set_label_status($user_id, $label_id, $status) {
+            global $con;
+            $sql = "UPDATE `label` SET `status` = '".$status."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
+            $query = mysqli_query($con, $sql);
+            return 1;
+        }
+        
+        static function attach_list_to_label($user_id, $label_id, $list_id) {
+            global $con;
+            // TODO
+        }
+        
+        static function get_labels_of_user($user_id) {
+            global $con;
+            // TODO
+        }
+        
+        static function rename_label($user_id, $label_id, $label_name) {
+            global $con;
+            // TODO
+        }
 	}
+
+    class Label {
+        // TODO
+    }
 
 	class SimpleUser {
 		public $id;
@@ -454,6 +491,16 @@
 		public function get_next_to_last_login() {
 			return Database::get_next_to_last_login_of_user($this->id);
 		}
+        
+        static function get_by_id($id) {
+            global $con;
+			
+			$sql = "SELECT `firstname`, `lastname`, `email` FROM `user` WHERE `id` = '" . $id . "'";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  return new SimpleUser($id, $row['firstname'], $row['lastname'], $row['email']);
+			}
+        }
 	}
 		
 		

@@ -4,6 +4,9 @@
 
     if (isset($_GET['action'])) {
         switch($_GET['action']) {
+            
+            // outer functions (contact, login, logout, signup)
+            
             case 'contact':
                 require('mail.class.php');
 
@@ -83,6 +86,9 @@
                 }
                 break;
 
+            
+            //users 
+            
             case 'add-user':
                 echo Database::add_user($_SESSION['id'], Validation::format_text($_GET['email']));
                 break;
@@ -99,6 +105,9 @@
                 echo json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id']));
                 break;
 
+            
+            // word lists
+            
             case 'add-word-list':
                 echo json_encode(Database::add_word_list($_SESSION['id'], Validation::format_text($_GET['name'])));
                 break;
@@ -114,11 +123,17 @@
             case 'get-word-list':
                 echo json_encode(Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
                 break;
+            
+            case 'rename-word-list':
+                echo Database::rename_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['word_list_name']));
 
             case 'delete-word-list':
                 echo Database::delete_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']));
                 break;
 
+            
+            // single word in word list
+            
             case 'add-word':
                 echo Database::add_word($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']));
                 break;
@@ -131,6 +146,9 @@
                 echo Database::remove_word($_SESSION['id'], Validation::format_text($_GET['word_id']));
                 break;
 
+            
+            // word list sharing
+            
             case 'share-list':
                 echo Database::share_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']));
                 break;
@@ -149,6 +167,33 @@
 
             case 'get-sharing-info-of-list':
                 echo json_encode(Database::get_sharing_info_of_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
+                break;
+            
+            
+            // word list labels
+            
+            case 'add-label':
+                echo Database::add_label($_SESSION['id'], $_GET['label_name'], $_GET['parent_label_id']);
+                break;
+            
+            case 'remove-label':
+                echo Database::set_label_status($_SESSION['id'], $_GET['label_id'], 0);
+                break;
+            
+            case 'attach-list-to-label':
+                echo Database::attach_list_to_label($_SESSION['id'], $_GET['label_id'], $_GET['list_id']);
+                break;
+            
+            case 'detach-list-from-label':
+                // TODO
+                break;
+            
+            case 'get-labels-of-user':
+                echo json_encode(Database::get_labels_of_user($_SESSION['id']));
+                break;
+            
+            case 'rename-label':
+                echo Database::rename_label($_SESSION['id'], $_GET['label_id'], $_GET['label_name']);
                 break;
         }
     } else {

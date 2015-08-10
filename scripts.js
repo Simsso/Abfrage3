@@ -120,6 +120,22 @@ setTimeout(function() {
 }, 1000);
 
 
+// time
+function timeToString(date) {
+    return date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+
+
+// save text as file
+function saveTextAsFile(text, fileName) {
+    var textFileAsBlob = new Blob([text], {type:'text/plain'});
+    var tmpDownloadLink = document.createElement("a");
+    tmpDownloadLink.download = fileName;
+    tmpDownloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    tmpDownloadLink.click();
+}
+
+
 // analytics
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
