@@ -88,15 +88,17 @@
     			<div class="left-column">
                     <div class="box" id="word-list-info">
                         <div class="box-head">
+                            <img src="img/info.png" />
                             <div></div>
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
                         <div class="box-body" data-start-state="expanded">
                         </div>
                     </div>
+                    
                     <div class="box" id="word-list-sharing">
                         <div class="box-head">
-                            <!--<img src="img/share.png" class="box-head-background" />-->
+                            <img src="img/share.png" />
                             Share
                             <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
                             <img src="img/expand.png" class="box-head-right-icon" data-action="expand" />
@@ -116,8 +118,24 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="box" id="word-list-label">
+                        <div class="box-head">
+                            <img src="img/tags.png" />
+                            Labels
+                            <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListLabels" />
+                            <img src="img/expand.png" class="box-head-right-icon" data-action="expand" />
+                        </div>
+                        <div class="box-body" data-start-state="collapsed">
+                            <div id="list-labels">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="box" id="word-list-info-words">
                         <div class="box-head">
+                            <img src="img/grid.png" />
                             Words
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
                         </div>
@@ -139,6 +157,7 @@
     			<div class="right-column">
                     <div class="box">
                         <div class="box-head">
+                            <img src="img/server.png" />
                             Your word lists
                             <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
@@ -155,6 +174,7 @@
                     </div>
                     <div class="box">
                         <div class="box-head">
+                            <img src="img/share.png" />
                             Shared with you
                             <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfSharedWordLists" />
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
@@ -182,6 +202,7 @@
     			<div class="left-column width-50">
     				<div class="box">
     					<div class="box-head">
+                            <img src="img/users.png" />
     						People you've added
                             <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
@@ -202,6 +223,7 @@
     			<div class="right-column width-50">
     				<div class="box">
     					<div class="box-head">
+                            <img src="img/users.png" />
     						People who have added you
                             <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
                             <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
