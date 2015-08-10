@@ -294,7 +294,7 @@
             WHERE (`list`.`creator` = '" . $user_id . "' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND `list`.`id` = '" . $word_list_id . "'";
 			$query = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($query)) {  
-                return new WordList(
+                $list = new WordList(
                     $row['id'], 
                     $row['name'], 
                     SimpleUser::get_by_id($row['creator']), 
@@ -303,6 +303,8 @@
                     $row['language2'], 
                     $row['creation_time'],
                     self::get_words_of_list($row['id']));
+                $list->set_labels(WordList::get_labels_of_list($user_id, $word_list_id));
+                return $list;
 			}
         }
         
@@ -442,33 +444,104 @@
         static function add_label($user_id, $label_name, $parent_label_id) {
             global $con;
             // TODO
+            // check already existing
+			$sql = "
+                SELECT COUNT(`id`) AS `count` 
+                FROM `label` 
+                WHERE `name` = '".$label_name."' AND `user` = '".$user_id."' AND `parent` = '".$parent_label_id."'";
+			$query = mysqli_query($con, $sql);
+			$count = mysqli_fetch_object($query)->count;
+			if ($count == 0) {
+                // insert
+				$sql = "INSERT INTO `label` (`user`, `name`, `parent`) 
+					VALUES ('" . $user_id . "', '" . $label_name . "', '".$parent_label_id."')";
+				$query = mysqli_query($con, $sql);
+                return mysqli_insert_id($con);
+            } else {
+                // update
+                $sql = "UPDATE `label` SET `active` = '1' WHERE `name` = '".$label_name."' AND `user` = '".$user_id."' AND `parent` = '".$parent_label_id."'";
+                $query = mysqli_query($con, $sql);
+                return 0;
+            }
         }
         
-        static function set_label_status($user_id, $label_id, $status) {
+        static function set_label_status($user_id, $id, $status) {
             global $con;
             $sql = "UPDATE `label` SET `status` = '".$status."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
             $query = mysqli_query($con, $sql);
             return 1;
         }
         
-        static function attach_list_to_label($user_id, $label_id, $list_id) {
+        static function set_label_list_attachment($user_id, $label_id, $list_id, $attachment) {
             global $con;
-            // TODO
+            // check already attached
+			$sql = "
+                SELECT COUNT(`label_attachment`.`id`) AS `count` 
+                FROM `label_attachment`, `label` 
+                WHERE `label_attachment`.`label` = `label`.`id` AND 
+                    `label`.`user` = '".$user_id."' AND `label`.`id` = '".$label_id."' AND `label_attachment`.`list` = '".$list_id."'";
+			$query = mysqli_query($con, $sql);
+			$count = mysqli_fetch_object($query)->count;
+			if ($count == 0) {
+                // insert
+				$sql = "INSERT INTO `label_attachment` (`list`, `label`, `active`) 
+					VALUES ('" . $list_id . "', '" . $label_id . "', '".$attachment."')";
+				$query = mysqli_query($con, $sql);
+                return mysqli_insert_id($con);
+            } else {
+                // update
+                $sql = "UPDATE `label_attachment`, `label` SET `label_attachment`.`active` = '".$attachment."' WHERE `label_attachment`.`label` = `label`.`id` AND 
+                    `label`.`user` = '".$user_id."' AND `label`.`id` = '".$label_id."' AND `label_attachment`.`list` = '".$list_id."'";
+                $query = mysqli_query($con, $sql);
+                return 1;
+            }
         }
         
         static function get_labels_of_user($user_id) {
             global $con;
-            // TODO
+            
+            $sql = "SELECT * FROM `label` WHERE `user` = '".$user_id."' AND `active` = '1'";
+            $query = mysqli_query($con, $sql);
+            $output = array();
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  array_push($output, new Label($row['id'], $row['name'], $row['user'], $row['parent'], $row['active']));
+			}
+            return $output;
         }
         
         static function rename_label($user_id, $label_id, $label_name) {
             global $con;
-            // TODO
+            $sql = "UPDATE `label` SET `name` = '".$label_name."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
+            $query = mysqli_query($con, $sql);
+            return 1;
         }
 	}
 
     class Label {
-        // TODO
+        public $id;
+        public $name;
+        public $user;
+        public $parent_label;
+        public $active;
+        
+        public function __construct($id, $name, $user, $parent_label, $active) {
+            $this->id = $id;
+            $this->name = $name;
+            $this->user = $user;
+            $this->parent_label = $parent_label;
+            $this->active = $active;
+        }
+        
+        public function get_by_id($id) {
+            global $con;
+			
+			$sql = "SELECT * FROM `label` WHERE `id` = '" . $id . "'";
+			$query = mysqli_query($con, $sql);
+			while ($row = mysqli_fetch_assoc($query)) { 
+			  return new Label($id, $row['name'], $row['user'], $row['active']);
+			}
+            return NULL;
+        }
     }
 
 	class SimpleUser {
@@ -570,10 +643,33 @@
 
     class WordList extends BasicWordList {
         public $words;
+        public $labels;
         
         public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time, $words) {
-            $this->words = $words;
             parent::__construct($id, $name, $creator, $comment, $language1, $language2, $creation_time);
+            $this->words = $words;
+        }
+        
+        static function get_labels_of_list($user, $id) {
+            global $con;
+        
+			$sql = "
+                SELECT `label`.`id`, `label`.`user`, `label`.`name`, `label`.`parent` 
+                FROM `label`, `label_attachment`, `list`
+                WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = '".$user."' AND
+                    `label`.`active` = '1' AND `label_attachment`.`active` = '1' AND 
+                    `label_attachment`.`list` = '".$id."'
+                GROUP BY `label`.`id`";
+			$query = mysqli_query($con, $sql);
+            $output = array();
+			while ($row = mysqli_fetch_assoc($query)) { 
+                array_push($output, new Label($row['id'], $row['name'], $row['user'], $row['parent'], 1)); 
+            }
+            return $output;
+        }
+        
+        function set_labels($labels) {
+            $this->labels = $labels;
         }
     }
 
