@@ -6,6 +6,10 @@ var noWordsInListDisallowEdit = '<p class="spacer-top-15">The selected list does
 var shownListId = -1;
 var shownListData = null;
 var noLabels = '<p>You don\'t have any labels.</p>';
+var labels;
+
+var expandedLabelsIds = []
+
 
 function addWordList(name, callback) {
     jQuery.ajax('server.php', {
@@ -62,7 +66,7 @@ function refreshListOfWordLists(showLoadingInformation) {
 
             var output = "";
             for (var i = 0; i < data.length; i++) {
-                output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
+                output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
             }
             if (output.length == 0) {
                 output = noWordListOutput;
@@ -120,7 +124,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
             for (var i = 0; i < data.length; i++) {
                 output += '<tr id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
                 output += '<td>' + data[i].name + '</td>';
-                output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/> <input type="button" class="inline" value="Hide" data-action="delete-sharing" data-sharing-id="' + data[i].sharing_id + '" data-list-id="' + data[i].id + '"/></td></tr>';
+                output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Hide" data-action="delete-sharing" data-sharing-id="' + data[i].sharing_id + '" data-list-id="' + data[i].id + '"/></td></tr>';
             }
             if (output.length == 0) {
                 output = noSharedWordListOutput;
@@ -279,7 +283,7 @@ function exportList(list) {
 }
 
 function getTableRowOfWord(id, lang1, lang2, allowEdit) {
-    return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/> <input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td>':'') + '</tr>';
+    return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td>':'') + '</tr>';
 }
                                                                                           
 function getTableOfWordList(content, allowEdit) {
@@ -617,7 +621,8 @@ function getLabelList(showLoadingInformation) {
             var $firstCell = $('#label-rename-table-cell-' + labelId);
             if ($button.data('action') == 'rename-edit') {
                 var labelName = labels[getLabelIndexByLabelId(labels, labelId)].name;
-                $firstCell.html($firstCell.html().replace($firstCell.text(), '') + ' <input type="text" class="inline" value="' + labelName + '" required="true"/>');
+                $firstCell.find('label span').html('');
+                $firstCell.append('&nbsp;<input type="text" class="inline" value="' + labelName + '" required="true"/>');
                 $button.data('action', 'rename-save');
             } 
             else {
@@ -630,16 +635,49 @@ function getLabelList(showLoadingInformation) {
                     
                     $button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
                     $firstCell.children('input').remove();
-                    $firstCell.append(newName);
+                    $firstCell.find('label span').html('&nbsp;' + newName);
                     labels[getLabelIndexByLabelId(labels, labelId)].name = newName;
                 });
+            }
+        });
+        
+        // expand single labels
+        $('.small-exp-col-icon').on('click', function() {
+            var $this = $(this);
+            var expand = ($this.data('state') == 'collapsed');
+            
+            var i = 0;
+            var $row = $this.parent().parent();
+            var allFollowing = $row.nextAll();
+            var selfIndenting = $row.data('indenting');
+            while (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined) {
+                if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
+                    if (expand) 
+                        allFollowing.eq(i).show();
+                    else {
+                        allFollowing.eq(i).hide();
+                        allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.png').data('state', 'collapsed');
+                        expandedLabelsIds.removeAll(parseInt(allFollowing.eq(i).data('label-id')));
+                    }
+                }
+                i++;
+            }
+            
+            if (expand) {
+                $this.data('state', 'expanded').attr('src', 'img/collapse.png');
+                expandedLabelsIds.push(parseInt($row.data('label-id')));
+            }
+            else {
+                $this.data('state', 'collapsed').attr('src', 'img/expand.png');
+                console.log($row);
+                expandedLabelsIds.removeAll(parseInt($row.data('label-id')));
             }
         });
     });
 }
 
 function getHtmlListOfLabelId(labels, id, indenting) {
-    var output = '<tr' + ((indenting == 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/> <input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
+    var output = '<tr' + ((indenting == 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15 + ((indenting == 0) ? 0 : 16)) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;<input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
     var labelIds = getLabelIdsWithIndenting(labels, indenting);
     for (var i = 0; i < labelIds.length; i++) {
         var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
@@ -652,7 +690,10 @@ function getHtmlListOfLabelId(labels, id, indenting) {
 }
 
 function getSingleListElementOfLabelList(label, indenting) {
-    return '<tr id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td style="padding-left: ' + (15 * indenting + 15) + 'px; " id="label-rename-table-cell-' + label.id + '"><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" /> <input type="button" class="label-add-sub-label inline" value="Add sub-label"/> <form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
+    var subLabelsCount = numberOfSubLabels(labels, label.id);
+    var expanded = expandedLabelsIds.contains(label.id), parentExpanded = expandedLabelsIds.contains(label.parent_label);
+    
+    return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.png" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" />&nbsp;<input type="button" class="label-add-sub-label inline" value="Add sub-label"/>&nbsp;<form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
@@ -662,6 +703,22 @@ function getLabelIndexByLabelId(labels, labelId) {
         }
     }
     return -1;
+}
+
+function numberOfSubLabels(labels, labelId) {
+    var count = 0;
+    var indenting = getLabelIndenting(labels, getLabelIndexByLabelId(labels, labelId));
+    var oneIndentingMore = getLabelIdsWithIndenting(labels, indenting + 1);
+    for (var i = 0; i < oneIndentingMore.length; i++) {
+        if (labels[getLabelIndexByLabelId(labels, oneIndentingMore[i])].parent_label == labelId) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function isParentLabelOfId(labels, labelId) {
+    // TODO
 }
 
 function labelAttachedToList(list, labelId) {

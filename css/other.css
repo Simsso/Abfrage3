@@ -362,6 +362,21 @@ div.right-column-img-wrapper {
     color: #FFFFFF;
 }
 
+.small-exp-col-icon {
+    height: 16px;
+    width: 16px;
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.checkbox {
+    height: 8px;
+    width: 8px;
+    display: inline-block;
+    background-image: url('/./img/check-16.png');
+    background-size: contain;
+}
+
 
 
 
