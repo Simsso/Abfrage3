@@ -307,7 +307,12 @@
     		<br class="clear-both hide-below-700">
         </div>
         
+        <?php
+        	//require('html-include/footer.html');
+        ?>
+        
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
+        <script src="extensions.js" type="text/javascript"></script>
         <script src="scripts.js" type="text/javascript"></script>
         
         <script src="home/query.js" type="text/javascript"></script>
@@ -316,9 +321,5 @@
         <script src="home/settings.js" type="text/javascript"></script>
         
         <script  src="single-page-application.js" type="text/javascript"></script>
-        
-        <?php
-        	//require('html-include/footer.html');
-        ?>
     </body>
 </html>
