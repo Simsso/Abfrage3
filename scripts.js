@@ -1,39 +1,3 @@
-// string prototype
-String.prototype.repeat = function(n) {
-    if (n == 0) 
-        return '';
-    n= n || 1;
-    return Array(n + 1).join(this);
-}
-
-Array.prototype.contains = function(obj) {
-    for (var i = 0; i < this.length; i++) {
-        if (this[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-}
-Array.prototype.remove = function(obj) {
-    var index = this.indexOf(obj) != -1
-    if (index != -1) {
-        array.splice(i, 1);
-    }
-}
-Array.prototype.removeAll = function(obj) {
-    for(var i = 0; i < this.length; i++) {
-	   if (this[i] === obj) {
-           this.splice(i, 1);
-       }
-    }
-}
-
-
-// time
-Date.prototype.toDefaultString = function() {
-    return this.getDate() + "." + (this.getMonth()+1) + "." + this.getFullYear() + " " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
-}
-
 // box head right icons
 $('.box .box-head img.box-head-right-icon').on('click', function() {
     switch($(this).data('action')) {
