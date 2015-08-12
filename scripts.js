@@ -6,6 +6,28 @@ String.prototype.repeat = function(n) {
     return Array(n + 1).join(this);
 }
 
+Array.prototype.contains = function(obj) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+Array.prototype.remove = function(obj) {
+    var index = this.indexOf(obj) != -1
+    if (index != -1) {
+        array.splice(i, 1);
+    }
+}
+Array.prototype.removeAll = function(obj) {
+    for(var i = 0; i < this.length; i++) {
+	   if (this[i] === obj) {
+           this.splice(i, 1);
+       }
+    }
+}
+
 
 // time
 Date.prototype.toDefaultString = function() {
