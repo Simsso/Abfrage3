@@ -622,7 +622,7 @@ function getLabelList(showLoadingInformation) {
             if ($button.data('action') == 'rename-edit') {
                 var labelName = labels[getLabelIndexByLabelId(labels, labelId)].name;
                 $firstCell.find('label span').html('');
-                $firstCell.append('&nbsp;<input type="text" class="inline" value="' + labelName + '" required="true"/>');
+                $firstCell.append('<input type="text" class="inline" value="' + labelName + '" required="true"/>');
                 $button.data('action', 'rename-save');
             } 
             else {
@@ -632,7 +632,6 @@ function getLabelList(showLoadingInformation) {
                 $button.prop('disabled', true).attr('value', 'Renaming...');
                 $input.prop('disabled', true);
                 renameLabel(labelId, newName, function() {
-                    
                     $button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
                     $firstCell.children('input').remove();
                     $firstCell.find('label span').html('&nbsp;' + newName);
