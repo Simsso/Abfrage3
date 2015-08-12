@@ -604,9 +604,37 @@ function getLabelList(showLoadingInformation) {
         });
         
         $('.label-add-sub-label').on('click', function() {
-            $(this).hide().parent().parent().next().show().children().select('input[type=text]').first().focus();
+            $(this).hide().parent().parent().next().show().children().find('input[type=text]').first().focus();
         });
-                                    
+               
+        $('.label-rename-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            
+            var labelId = $(this).data('label-id');
+            console.log(labelId);
+            var $button = $('#label-rename-button-' + labelId);
+            var $firstCell = $('#label-rename-table-cell-' + labelId);
+            if ($button.data('action') == 'rename-edit') {
+                var labelName = labels[getLabelIndexByLabelId(labels, labelId)].name;
+                $firstCell.html($firstCell.html().replace($firstCell.text(), '') + ' <input type="text" class="inline" value="' + labelName + '" required="true"/>');
+                $button.data('action', 'rename-save');
+            } 
+            else {
+                var $input = $firstCell.children('input').first();
+                var newName = $input.val();
+                
+                $button.prop('disabled', true).attr('value', 'Renaming...');
+                $input.prop('disabled', true);
+                renameLabel(labelId, newName, function() {
+                    
+                    $button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
+                    $firstCell.children('input').remove();
+                    $firstCell.append(newName);
+                    labels[getLabelIndexByLabelId(labels, labelId)].name = newName;
+                });
+            }
+        });
     });
 }
 
@@ -624,7 +652,7 @@ function getHtmlListOfLabelId(labels, id, indenting) {
 }
 
 function getSingleListElementOfLabelList(label, indenting) {
-    return '<tr id="label-list-row-id-' + label.id + '"><td style="padding-left: ' + (15 * indenting + 15) + 'px; "><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><input type="button" class="label-add-sub-label inline" value="Add sub-label"/> <form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
+    return '<tr id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td style="padding-left: ' + (15 * indenting + 15) + 'px; " id="label-rename-table-cell-' + label.id + '"><label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/> ' + label.name + '</label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" /> <input type="button" class="label-add-sub-label inline" value="Add sub-label"/> <form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
