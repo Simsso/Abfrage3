@@ -9,7 +9,7 @@
 <html>
 <? require('html-include/head.html'); ?>
     <body>
-    	<nav id="head-nav" class="navbar">
+        <nav id="head-nav" class="navbar">
     		<div class="navbar-inner content-width">
     			<a href="#home">
     				<img class="logo" src="img/logo-46.png" />
