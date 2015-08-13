@@ -2,10 +2,10 @@
 $('.box .box-head img.box-head-right-icon').on('click', function() {
     switch($(this).data('action')) {
         case 'expand':
-            $(this).data('action', 'collapse').attr('src', 'img/collapse.png').parent().next().show();
+            $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
             break;
         case 'collapse':
-            $(this).data('action', 'expand').attr('src', 'img/expand.png').parent().next().hide();
+            $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
             break;
         case 'refresh':
             window[$(this).data('function-name')](true);
@@ -35,7 +35,7 @@ function toggleMenu() {
 function showMenu() {
     menuShown = true;
     $('body').addClass('mobile-menu-shown');
-    $('.menu-button').attr('src', 'img/menu-close.png');
+    $('.menu-button').attr('src', 'img/menu-close.svg');
     
     setTimeout(function() {
         $('#main-wrapper').on('click', function() {
@@ -48,10 +48,10 @@ function hideMenu() {
     menuShown = false;
     $('#main-wrapper').unbind('click');
     $('body').removeClass('mobile-menu-shown');
-    $('.menu-button').attr('src', 'img/menu.png');
+    $('.menu-button').attr('src', 'img/menu.svg');
 }
 
-$('#head-nav').append('<img src="img/menu.png" class="menu-button nav-image" onclick="toggleMenu()" />');
+$('#head-nav').append('<img src="img/menu.svg" class="menu-button nav-image" onclick="toggleMenu()" />');
 
 $('#mobile-nav > div li a').on('click', function() {
     hideMenu();

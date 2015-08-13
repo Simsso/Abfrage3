@@ -17,7 +17,7 @@
                     </a><br class="clear-both smaller-800">
                     <ul class="nav left">
                         <li class="nav_home nav-img-li" data-text="Home">
-                            <a href="#home"><img src="img/home.png" class="nav-image" alt="Home" title="Home"/></a>
+                            <a href="#home"><img src="img/home.svg" class="nav-image" alt="Home" title="Home"/></a>
                         </li>
                         <li class="nav_query" data-text="Query"><a href="#query">Query</a></li>
                         <li class="nav_word-lists" data-text="Word lists"><a href="#word-lists">Word lists</a></li>
@@ -25,10 +25,10 @@
                     </ul>
                     <ul class="nav right">
                         <li class="nav_settings nav-img-li" data-text="Settings">
-                            <a href="#settings"><img src="img/settings.png" class="nav-image" alt="Settings" title="Settings"/></a>
+                            <a href="#settings"><img src="img/settings.svg" class="nav-image" alt="Settings" title="Settings"/></a>
                         </li>
                         <li class="nav_logout nav-img-li" data-text="Logout">
-                            <a href="/./server.php?action=logout"><img src="img/logout.png" class="nav-image" alt="Logout" title="Logout"/></a>
+                            <a href="/./server.php?action=logout"><img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/></a>
                         </li>
                     </ul><br class="clear-both">
                 </div>
@@ -89,9 +89,9 @@
                     <div class="left-column">
                         <div class="box" id="word-list-info">
                             <div class="box-head">
-                                <img src="img/info.png" />
+                                <img src="img/info.svg" />
                                 <div class="inline"></div>
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                             </div>
@@ -99,10 +99,10 @@
 
                         <div class="box" id="word-list-sharing">
                             <div class="box-head">
-                                <img src="img/share.png" />
+                                <img src="img/share.svg" />
                                 Share
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
-                                <img src="img/expand.png" class="box-head-right-icon" data-action="expand" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
+                                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
                             </div>
                             <div class="box-body" data-start-state="collapsed">
                                 <form id="share-list-form">
@@ -122,10 +122,10 @@
 
                         <div class="box" id="word-list-label">
                             <div class="box-head">
-                                <img src="img/tags.png" />
+                                <img src="img/tags.svg" />
                                 Labels
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <!--<div id="label-add">
@@ -141,9 +141,9 @@
 
                         <div class="box" id="word-list-info-words">
                             <div class="box-head">
-                                <img src="img/grid.png" />
+                                <img src="img/grid.svg" />
                                 Words
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <div id="words-add">
@@ -163,10 +163,10 @@
                     <div class="right-column">
                         <div class="box">
                             <div class="box-head">
-                                <img src="img/server.png" />
+                                <img src="img/server.svg" />
                                 Your word lists
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <form id="word-list-add-form">
@@ -180,10 +180,10 @@
                         </div>
                         <div class="box">
                             <div class="box-head">
-                                <img src="img/share.png" />
+                                <img src="img/share.svg" />
                                 Shared with you
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfSharedWordLists" />
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfSharedWordLists" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <div id="list-of-shared-word-lists">
@@ -208,10 +208,10 @@
                     <div class="left-column width-50">
                         <div class="box">
                             <div class="box-head">
-                                <img src="img/users.png" />
+                                <img src="img/users.svg" />
                                 People you've added
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <div id="user-add-message"></div>
@@ -229,10 +229,10 @@
                     <div class="right-column width-50">
                         <div class="box">
                             <div class="box-head">
-                                <img src="img/users.png" />
+                                <img src="img/users.svg" />
                                 People who have added you
-                                <img src="img/refresh.png" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
-                                <img src="img/collapse.png" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
+                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                             </div>
                             <div class="box-body" data-start-state="expanded">
                                 <div id="people-who-have-added-you">

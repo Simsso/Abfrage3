@@ -172,6 +172,8 @@ ul.social-icons li {
 
 .nav-image {
     opacity: 0.8;
+    height: 32px;
+    width: 32px;
 }
 .nav-image:hover {
     opacity: 1;
@@ -381,7 +383,7 @@ div.right-column-img-wrapper {
     height: 8px;
     width: 8px;
     display: inline-block;
-    background-image: url('/img/check-16.png');
+    background-image: url('/img/check-16.svg');
     background-size: contain;
 }
 
@@ -433,7 +435,7 @@ div.right-column-img-wrapper {
 
 #mobile-nav > div li.visited a {
     color: white;
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 body.mobile-menu-shown {
@@ -554,7 +556,7 @@ input[type=text]:first-child:last-child {
 		padding: 10px 10px;
     }*/
     
-    .smaller-800, ul.nav {
+    .smaller-800, #head-nav ul.nav {
         display: none;
     }
     .navbar .menu-button {
