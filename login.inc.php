@@ -14,7 +14,7 @@
                     </a><br class="clear-both smaller-800">
                     <ul class="nav left">
                         <li class="nav_home nav-img-li" data-text="Home">
-                            <a href="#home"><img src="img/home.png" class="nav-image" alt="Home" title="Home"/></a>
+                            <a href="#home"><img src="img/home.svg" class="nav-image" alt="Home" title="Home"/></a>
                         </li>
                     </ul>
 

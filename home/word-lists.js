@@ -655,7 +655,7 @@ function getLabelList(showLoadingInformation) {
                         allFollowing.eq(i).show();
                     else {
                         allFollowing.eq(i).hide();
-                        allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.png').data('state', 'collapsed');
+                        allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
                         expandedLabelsIds.removeAll(parseInt(allFollowing.eq(i).data('label-id')));
                     }
                 }
@@ -663,11 +663,11 @@ function getLabelList(showLoadingInformation) {
             }
             
             if (expand) {
-                $this.data('state', 'expanded').attr('src', 'img/collapse.png');
+                $this.data('state', 'expanded').attr('src', 'img/collapse.svg');
                 expandedLabelsIds.push(parseInt($row.data('label-id')));
             }
             else {
-                $this.data('state', 'collapsed').attr('src', 'img/expand.png');
+                $this.data('state', 'collapsed').attr('src', 'img/expand.svg');
                 console.log($row);
                 expandedLabelsIds.removeAll(parseInt($row.data('label-id')));
             }
@@ -692,7 +692,7 @@ function getSingleListElementOfLabelList(label, indenting) {
     var subLabelsCount = numberOfSubLabels(labels, label.id);
     var expanded = expandedLabelsIds.contains(label.id), parentExpanded = expandedLabelsIds.contains(label.parent_label);
     
-    return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.png" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" />&nbsp;<input type="button" class="label-add-sub-label inline" value="Add sub-label"/>&nbsp;<form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
+    return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" />&nbsp;<input type="button" class="label-add-sub-label inline" value="Add sub-label"/>&nbsp;<form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
 }
 
 function getLabelIndexByLabelId(labels, labelId) {
