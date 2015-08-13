@@ -61,7 +61,6 @@
 
                             // email confirmation
                             if($_GET['email_confirmation_key'] && $_GET['email']) {
-                                require('database.php');
                                 if (Database::confirm_email($_GET['email'], $_GET['email_confirmation_key'])) {
                                     $infobox_header = "Email address confirmed";
                                     $infobox_green_red = "green"; 
