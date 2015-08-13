@@ -15,12 +15,47 @@ $('.box .box-head img.box-head-right-icon').on('click', function() {
 
 // mobile menu
 var menuShown = false;
-function toggleMenu() {
-    $('.smaller-800, ul.nav').css({ 'display': (menuShown)?'none':'block' });
-    menuShown = !menuShown;
+
+$('body').prepend('<nav id="mobile-nav"><div></div></nav>');
+$('#mobile-nav > div').html($('.navbar-inner.content-width').html()).find('*').show();
+
+var $menuIcons = $('#mobile-nav > div .nav-img-li');
+for (var i = 0; i < $menuIcons.length; i++) {
+    var $currentMenuIcon = $menuIcons.eq(i);
+    var text = $currentMenuIcon.data('text');
+    $currentMenuIcon.find('a').append('&nbsp;' + text);
 }
 
-$('#head-nav').append('<img src="img/menu.png" class="menu-button nav-image" style="background: url(\'img/menu.png\'); " onclick="toggleMenu()" />');
+function toggleMenu() {
+    if (menuShown) 
+        hideMenu();
+    else
+        showMenu();
+}
+function showMenu() {
+    menuShown = true;
+    $('body').addClass('mobile-menu-shown');
+    $('.menu-button').attr('src', 'img/menu-close.png');
+    
+    setTimeout(function() {
+        $('#main-wrapper').on('click', function() {
+            hideMenu();
+        });
+    }, 1);
+}
+
+function hideMenu() {
+    menuShown = false;
+    $('#main-wrapper').unbind('click');
+    $('body').removeClass('mobile-menu-shown');
+    $('.menu-button').attr('src', 'img/menu.png');
+}
+
+$('#head-nav').append('<img src="img/menu.png" class="menu-button nav-image" onclick="toggleMenu()" />');
+
+$('#mobile-nav > div li a').on('click', function() {
+    hideMenu();
+});
 
 
 // loading animation
