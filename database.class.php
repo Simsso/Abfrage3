@@ -221,7 +221,7 @@
                 return -1;
             
             if ($added_user_id == $id) 
-                return 2;
+                return -2;
             
             $time = time();
             // check if the user is already added
@@ -232,7 +232,7 @@
             } else {
 				$sql = "UPDATE `relationship` SET `type` = '1', `time`= '$time' WHERE `user1` = '$id' AND `user2` = '$added_user_id'";
 				$query = mysqli_query($con, $sql);
-				return 1;
+				return 2;
             }
             return 0;
         }
@@ -387,18 +387,22 @@
         
         static function set_sharing_permissions($user_id, $word_list_id, $email, $permissions) {
             $share_with_id = self::email2id($email);
+            if ($share_with_id == $user_id) return -1; 
+            
 			global $con; 
-			$sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE (`user` = '" . $share_with_id . "' OR `user` = '".$user_id."') AND `list` = '" . $word_list_id . "'";
+			$sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE `user` = '" . $share_with_id . "' AND `list` = '" . $word_list_id . "'";
 			$query = mysqli_query($con, $sql);
 			$count = mysqli_fetch_object($query)->count;
 			if ($count == 0) {
 				$sql = "INSERT INTO `share` (`user`, `list`, `permissions`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "')";
 				$query = mysqli_query($con, $sql);
+				return 1;
             } else {
-				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "' OR `user` = '".$user_id."')";
+				$sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "')";
 				$query = mysqli_query($con, $sql);
+				return 2;
             }
-            return 1;
+            return -1;
         }
         
         static function set_sharing_permissions_by_sharing_id($user_id, $id, $permissions) {
@@ -437,6 +441,18 @@
 			}
             return $result;
         }
+		
+		static function set_word_list_languages($user_id, $list_id, $language1, $language2) {
+			global $con;
+            
+            $sql = "
+            	UPDATE `list`, `share` 
+            	SET `list`.`language1` = '".$language1."', `list`.`language2` = '".$language2."' 
+            	WHERE `list`.`id` = '".$list_id."' AND 
+            		(`list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "' OR `share`.`user` = '" . $user_id . "')";
+            $query = mysqli_query($con, $sql);
+            return 1;
+		}
         
         
         // word list labels

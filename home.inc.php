@@ -75,12 +75,26 @@
 
 
                 <div id="content-query">
-
                     <div class="left-column">
-
+                    	<div class="box">
+                    		<div class="box-head">Select labels and word lists</div>
+                    		<div class="box-body">
+								<div id="query-label-selection">
+									
+								</div>
+                    		</div>
+                    	</div>
                     </div>
                     <div class="right-column">
-
+                    	<div class="box">
+                    		<div class="box-head">
+                    			Query Settings
+                    		</div>
+	                    	<div class="box-body">
+	                    		<p>Text box or buttons</p>
+	                    		<p>Query algorithm</p>
+	                    	</div>
+                    	</div>
                     </div>
                 </div>
 
@@ -149,8 +163,8 @@
                                 <div id="words-add">
                                     <div id="words-add-message"></div>
                                     <form id="words-add-form">
-                                        <input id="words-add-language1" type="text" placeholder="Language 1" required="true"/>
-                                        <input id="words-add-language2" type="text" placeholder="Language 2" required="true"/>
+                                        <input id="words-add-language1" type="text" placeholder="First language" required="true"/>
+                                        <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
                                         <input id="words-add-button" type="submit" value="Add word"/>
                                     </form>
                                     <hr class="spacer-top-15 spacer-bottom-5">

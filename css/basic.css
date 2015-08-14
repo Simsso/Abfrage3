@@ -41,8 +41,8 @@ input[type=button], input[type=submit], .button {
 	box-shadow: 0 1px 1px #C3C7CD, inset 0 1px 1px #FEECBB;
 }
 input[type=button].inline, input[type=submit].inline, input[type=text].inline, input[type=password].inline, input[type=textarea].inline, input[type=email].inline, input[type=number].inline, textarea.inline, .button.inline {
-    margin-top: -8px;
-    margin-bottom: -8px;
+    margin-top: -6px;
+    margin-bottom: -6px;
 }
 input[type=button].inline-both, input[type=submit].inline-both, input[type=text].inline-both, input[type=password].inline-both, input[type=textarea].inline-both, input[type=email].inline-both, input[type=number].inline-both, textarea.inline-both, .button.inline-both {
     margin: -8px;
