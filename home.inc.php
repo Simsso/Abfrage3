@@ -21,9 +21,11 @@
                         </li>
                         <li class="nav_query" data-text="Query"><a href="#query">Query</a></li>
                         <li class="nav_word-lists" data-text="Word lists"><a href="#word-lists">Word lists</a></li>
-                        <li class="nav_user" data-text="User"><a href="#user">User</a></li>
                     </ul>
                     <ul class="nav right">
+                        <li class="nav_user nav-img-li" data-text="User">
+                        	<a href="#user"><img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/></a>
+                        </li>
                         <li class="nav_settings nav-img-li" data-text="Settings">
                             <a href="#settings"><img src="img/settings.svg" class="nav-image" alt="Settings" title="Settings"/></a>
                         </li>
@@ -93,6 +95,7 @@
 	                    	<div class="box-body">
 	                    		<p>Text box or buttons</p>
 	                    		<p>Query algorithm</p>
+	                    		<p>Direction</p>
 	                    	</div>
                     	</div>
                     </div>
@@ -101,6 +104,10 @@
 
                 <div id="content-word-lists">
                     <div class="left-column">
+                    	<div class="box" id="word-list-title">
+                    		<div class="box-head active"></div>
+                    	</div>
+                    	
                         <div class="box" id="word-list-info">
                             <div class="box-head">
                                 <img src="img/info.svg" />
@@ -139,9 +146,9 @@
                                 <img src="img/tags.svg" />
                                 Labels
                                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
-                                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
                             </div>
-                            <div class="box-body" data-start-state="expanded">
+                            <div class="box-body" data-start-state="collapsed">
                                 <!--<div id="label-add">
 
 

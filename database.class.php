@@ -308,8 +308,12 @@
 			}
         }
         
-        static function rename_word_list($user_id, $list_id, $list_name) { 
-            // TODO
+        static function rename_word_list($user_id, $word_list_id, $list_name) { 
+            global $con;
+
+            $sql = "UPDATE `list` SET `name` = '".$list_name."' WHERE `id` = '".$word_list_id."' AND `creator` = '".$user_id."'";
+            $query = mysqli_query($con, $sql);
+            return 1;
         }
         static function get_words_of_list($list_id) {
             global $con;

@@ -126,7 +126,8 @@
             
             case 'rename-word-list':
                 echo Database::rename_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['word_list_name']));
-
+				break;
+				
             case 'delete-word-list':
                 echo Database::delete_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']));
                 break;

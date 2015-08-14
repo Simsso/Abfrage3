@@ -66,13 +66,13 @@ function refreshListOfWordLists(showLoadingInformation) {
 
             var output = "";
             for (var i = 0; i < data.length; i++) {
-                output += '<tr id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
+                output += '<tr data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
             }
             if (output.length == 0) {
                 output = noWordListOutput;
             }
             else {
-                output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
+                output = '<table class="box-table button-right-column"></tr>' + output + '</table>';
             }
             $('#list-of-word-lists').html(output);
             $('#list-of-word-lists input[type=button]').on('click', function() {
@@ -87,8 +87,6 @@ function refreshListOfWordLists(showLoadingInformation) {
                     }
                 }
                 else if ($button.data('action') == 'edit') { // edit / show list button click
-                    enableAllViewEditButtons();
-                    $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, true, true);
                 }
             });
@@ -97,8 +95,8 @@ function refreshListOfWordLists(showLoadingInformation) {
 }
 
 function enableAllViewEditButtons() {
-    $('#list-of-word-lists input[type=button]').prop('disabled', false);
-    $('#list-of-shared-word-lists input[type=button]').prop('disabled', false);
+	$('#list-of-shared-word-lists tr, #list-of-word-lists tr').removeClass('active');
+    $('#list-of-shared-word-lists input[type=button], #list-of-word-lists input[type=button]').show();
 }
 
 function refreshListOfSharedWordLists(showLoadingInformation) {
@@ -122,7 +120,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
 
             var output = "";
             for (var i = 0; i < data.length; i++) {
-                output += '<tr id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
+                output += '<tr data-list-id="' + data[i].id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
                 output += '<td>' + data[i].name + '</td>';
                 output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Hide" data-action="delete-sharing" data-sharing-id="' + data[i].sharing_id + '" data-list-id="' + data[i].id + '"/></td></tr>';
             }
@@ -130,7 +128,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
                 output = noSharedWordListOutput;
             }
             else {
-                output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td></td></tr>' + output + '</table>';
+                output = '<table class="box-table button-right-column">' + output + '</table>';
             }
             $('#list-of-shared-word-lists').html(output);
             $('#list-of-shared-word-lists input[type=button]').on('click', function() {
@@ -151,13 +149,9 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
                     }
                 }
                 else if ($button.data('action') == 'edit') { // edit / show list button click
-                    enableAllViewEditButtons()
-                    $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, true, false);
                 }
                 else if ($button.data('action') == 'view') { // edit / show list button click
-                    enableAllViewEditButtons();
-                    $button.prop('disabled', true);
                     loadWordList($button.data('list-id'), true, function() { }, false, false);
                 }
             });
@@ -169,6 +163,7 @@ function showNoListSelectedInfo() {
     $('#word-list-info .box-head > div').html("Word lists");
     $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to get started.</p>');
     $('#word-list-info-words').hide();
+    $('#word-list-title').hide();
     $('#word-list-sharing').hide();
     $('#word-list-label').hide();
 }
@@ -180,7 +175,14 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
         $('#word-list-info-words').hide();
         $('#word-list-sharing').hide();
         $('#word-list-label').hide();
+        $('#word-list-title').hide();
     }
+    
+    // handle buttons and background colors indicating which list is currently shown
+    enableAllViewEditButtons();
+    // highlight row of list by adding active class and hide button to view the list
+    $('#list-of-word-lists tr[data-list-id=' + id + '], #list-of-shared-word-lists tr[data-list-id=' + id + ']').addClass('active').find('input[type=button]').first().hide();
+    
     ajaxRequests.loadWordList.add(
         jQuery.ajax('server.php', {
             data: {
@@ -212,7 +214,8 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             shownListId = id;
 
             // info box head
-            $('#word-list-info .box-head > div').html(data.name);
+            $('#word-list-info .box-head > div').html("General");
+            $('#word-list-title .box-head').html(shownListData.name);
             
             // info box body
             var wordListInfoBoxBody = '';
@@ -222,15 +225,16 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             }
             else {
                 wordListInfoBoxBody += '<p>You own this list.</p>';
+                wordListInfoBoxBody += '<p><form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + shownListData.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form></p>';
             }
             
-            var creationTime = new Date(parseInt(data.creation_time) * 1000);
-            wordListInfoBoxBody += '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
+            // var creationTime = new Date(parseInt(data.creation_time) * 1000);
+            // wordListInfoBoxBody += '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
             
             if (allowEdit) {
-            	wordListInfoBoxBody += '<p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + shownListData.language1 + '"/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + shownListData.language2 + '"/>&nbsp;<input type="submit" id="word-list-languages-button" value="Save languages" /></form></p>'; 
+            	wordListInfoBoxBody += '<p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + shownListData.language1 + '" class="inline"/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + shownListData.language2 + '" class="inline"/>&nbsp;<input type="submit" id="word-list-languages-button" value="Save languages" class="inline"/></form></p>'; 
             	
-                wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label>';
+                //wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label>';
             }
             else {
                 
@@ -267,6 +271,24 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             }
             
             // events
+            $('#rename-list-form').on('submit', function(e) {
+            	e.preventDefault();
+       
+            	var $nameInput = $('#rename-list-name'), $submitButton = $('#rename-list-button');
+            	$nameInput.prop('disabled', true);
+            	$submitButton.prop('disabled', true).attr('value', 'Renaming...');
+          	
+            	var newListName = $nameInput.val();
+            	renameList(shownListId, newListName, function(data) {
+	            	$nameInput.prop('disabled', false);
+	            	$submitButton.prop('disabled', false).attr('value', 'Rename');
+	            	
+	            	$('#word-list-title .box-head').html(newListName);
+	            	$('#word-list-info > div > div').html(newListName);
+	            	$('#list-of-word-lists-row-' + shownListId).children().first().html(newListName);
+            	});
+            });
+            
             $('#change-language-form').on('submit', function(e) {
             	e.preventDefault();
             	var $lang1Input = $('#word-list-language1'), $lang2Input = $('#word-list-language2'), $submitButton = $('#word-list-languages-button');
@@ -296,7 +318,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             
             
             
-            
+            $('#word-list-title').show();
             $('#word-list-info-words').show();
             if (allowEdit) 
                 $('#words-add').show();
@@ -881,6 +903,23 @@ function renameLabel(labelId, labelName, callback) {
     }).done(function(data) {
         console.log(data);
         callback();
+    });
+}
+
+function renameList(listId, listName, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'rename-word-list',
+            word_list_id: listId,
+            word_list_name: listName
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        console.log(data);
+        callback(data);
     });
 }
 
