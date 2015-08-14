@@ -1,8 +1,9 @@
 <?php
-	require('dbconnect.inc.php');
-	require('validation.class.php');
+	require('dbconnect.inc.php'); // include data base connection
+	require('validation.class.php'); // include validation class to verify correctness of strings in general
 	
 	class Database {
+		// register user
 		static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
 			if ($firstname == NULL) {
 				throw new Exception("No first name given");
@@ -35,6 +36,7 @@
 			}
 		}
 		
+		// check if an email-address is available
 		static function email_available($email) {
 			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "'";
@@ -50,8 +52,8 @@
 		// checks a email password combination
 		// returns:
 		// 0: wrong combination
-		// 1: right combination and email has been confirmed
-		// 2: right combination and email has not been confirmed yet
+		// 1: right combination
+		// 2: right combination but email has not been confirmed yet
 		static function check_login_data($email, $password) {
 			global $con;
 			
@@ -73,6 +75,7 @@
 			}
 		}
 		
+		// read the user specifict salt used to do the password hash
 		static function get_salt_by_email($email) {
 			global $con;
 			
@@ -84,6 +87,7 @@
 			return null;
 		}
 		
+		// conver a user email to the id of the user
 		static function email2id($email) {
 			global $con;
 			
@@ -95,10 +99,12 @@
             return NULL;
 		}
 		
+		// get user object by id
 		static function get_user_by_id($id) {
 			return new User($id);
 		}
 		
+		// confirm email-address
 		static function confirm_email($email, $key) {
 			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '$email' AND `email_confirmation_key` = '$key'";
@@ -112,6 +118,7 @@
 			return FALSE;
 		}
 		
+		// add a login
 		static function add_login($id) {
 			global $con;
 			$ip = $_SERVER['REMOTE_ADDR']; 
@@ -121,6 +128,7 @@
 			$query = mysqli_query($con, $sql);
 		}
 		
+		// returns true if the given user logs in for the first time
 		static function first_login_of_user($id) {
 			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `id` = '$id'";
@@ -132,6 +140,7 @@
 			return FALSE;
 		}
 		
+		// returns login object of the last login of a user
 		static function get_last_login_of_user($id) {
 			global $con;
 			$sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1";
@@ -141,7 +150,8 @@
 			}
 			return NULL;
 		}
-		
+	
+		// returns login object of the next to last login of a user
 		static function get_next_to_last_login_of_user($id) {
 			global $con;
 			$sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1,2";
@@ -152,6 +162,7 @@
 			return NULL;
 		}
 		
+		// get list of added users of user
 		static function get_list_of_added_users_of_user($id) {
 			global $con;
 			$sql = "
@@ -168,6 +179,7 @@
 			return $result;
 		}
         
+        // get list of users who have added user
         static function get_list_of_users_who_have_added_user($id) {
 			global $con;
 			$sql = "
@@ -184,6 +196,7 @@
 			return $result;
         }
         
+		// returns true if users have added them both (bidirectional)
         static function users_have_added_them_both($user1, $user2) {
 			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user1` = '$user1' AND `user2` = '$user2' AND `relationship`.`type` = 1";
@@ -198,6 +211,7 @@
             return false;
         }
 		
+		// get number of registered users
 		static function get_number_of_registered_users() {
 			global $con; 
 			$sql = "SELECT COUNT(`id`) AS `count` FROM `user`";
@@ -205,6 +219,7 @@
 			return mysqli_fetch_object($query)->count;
 		}
 		
+		// get number of logins during last time given in seconds
 		static function get_number_of_logins_during_last_time($time_in_seconds) {
 			$time_min = time() - $time_in_seconds;
 			global $con; 
@@ -213,6 +228,7 @@
 			return mysqli_fetch_object($query)->count;
 		}
         
+		// add user
         static function add_user($id, $email) {
             global $con;
             $added_user_id = self::email2id($email);
@@ -237,6 +253,7 @@
             return 0;
         }
         
+		// remove user
         static function remove_user($user1, $user2) {
                 global $con;
             
@@ -245,6 +262,7 @@
 				return 1;
         }
         
+		// are two users already having a relationship entry in the data base
         static function user_already_have_relationship($user1, $user2) {
             global $con;
             
@@ -258,7 +276,7 @@
         
         
         // word lists
-        
+        // add word lsit
         static function add_word_list($id, $name) {
             // returns id and state
             global $con;
@@ -271,6 +289,7 @@
             return $result;
         }
         
+		// get list of word lists of a user
         static function get_word_lists_of_user($id) {
 			global $con;
 			$sql = "
@@ -286,6 +305,7 @@
 			return $result;
         }
         
+		// get specific word list
         static function get_word_list($user_id, $word_list_id) {
 			global $con;
 			$sql = "
@@ -308,6 +328,7 @@
 			}
         }
         
+		// rename word list
         static function rename_word_list($user_id, $word_list_id, $list_name) { 
             global $con;
 
@@ -315,6 +336,8 @@
             $query = mysqli_query($con, $sql);
             return 1;
         }
+		
+		// get words of list
         static function get_words_of_list($list_id) {
             global $con;
 			$sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1' ORDER BY `id` DESC";
@@ -326,6 +349,7 @@
             return $output;
         }
         
+		// delete word list
         static function delete_word_list($user_id, $word_list_id) {
             global $con;
 
@@ -334,6 +358,7 @@
             return 1;
         }
         
+        // add word
         static function add_word($user_id, $word_list_id, $lang1, $lang2) {
             global $con;
             $sql = "INSERT INTO `word` (`list`, `language1`, `language2`)
@@ -342,6 +367,7 @@
             return mysqli_insert_id($con);
         }
         
+		// update word
         static function update_word($user_id, $word_id, $lang1, $lang2) {
             global $con;
             // TODO: add check if word is owned by $user_id
@@ -350,6 +376,7 @@
             return 1;
         }
         
+		// remove word
         static function remove_word($user_id, $word_id) {
             global $con;
             // TODO: add check if word is owned by $user_id
@@ -358,6 +385,7 @@
             return 1;
         }
         
+		// get list of shared word lists of user
         static function get_list_of_shared_word_lists_of_user($id) {
             global $con;
 			$sql = "SELECT `share`.`id` AS 'share_id', `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` FROM `share`, `list` WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = '$id' AND `list`.`active` = '1'";
@@ -371,6 +399,7 @@
 			return $result;
         }
         
+        // get list of shared word lists with user (given id)
         static function get_list_of_shared_word_lists_with_user($id) {
             global $con;
             $sql = "
@@ -389,6 +418,7 @@
 			return $result;
         }
         
+        // set sharing permissions of word list with user (email)
         static function set_sharing_permissions($user_id, $word_list_id, $email, $permissions) {
             $share_with_id = self::email2id($email);
             if ($share_with_id == $user_id) return -1; 
@@ -409,6 +439,7 @@
             return -1;
         }
         
+        // set sharing permissions of word list with user (id)
         static function set_sharing_permissions_by_sharing_id($user_id, $id, $permissions) {
             global $con;
             
@@ -420,6 +451,7 @@
             return 1;
         }
         
+        // set sharing permissions of list with user
         static function get_sharing_perimssions_of_list_with_user($list_owner, $word_list_id, $email) {
             $share_with_id = self::email2id($email);
             
@@ -431,6 +463,7 @@
 			}
         }
         
+        // get sharing information of list
         static function get_sharing_info_of_list($user_id, $word_list_id) {
             global $con;
 			$sql = "
@@ -446,6 +479,7 @@
             return $result;
         }
 		
+		// set word list languages
 		static function set_word_list_languages($user_id, $list_id, $language1, $language2) {
 			global $con;
             
@@ -460,7 +494,7 @@
         
         
         // word list labels
-        
+        // add label
         static function add_label($user_id, $label_name, $parent_label_id) {
             global $con;
             // TODO
@@ -485,6 +519,7 @@
             }
         }
         
+		// set label status
         static function set_label_status($user_id, $id, $status) {
             global $con;
             $sql = "UPDATE `label` SET `active` = '".$status."' WHERE `id` = '".$id."' AND `user` = '".$user_id."'";
@@ -502,6 +537,7 @@
             return "user_id: " . $user_id . "; id: " . $id . "; status: " . $status . ";";
         }
         
+		// set label list attachment
         static function set_label_list_attachment($user_id, $label_id, $list_id, $attachment) {
             global $con;
             // check already attached
@@ -527,6 +563,7 @@
             }
         }
         
+        // get labels of user
         static function get_labels_of_user($user_id) {
             global $con;
             
@@ -539,6 +576,7 @@
             return $output;
         }
         
+		// rename label
         static function rename_label($user_id, $label_id, $label_name) {
             global $con;
             $sql = "UPDATE `label` SET `name` = '".$label_name."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
@@ -547,6 +585,7 @@
         }
 	}
 
+	
     class Label {
         public $id;
         public $name;
@@ -562,6 +601,7 @@
             $this->active = $active;
         }
         
+		// second constructor (by id)
         public function get_by_id($id) {
             global $con;
 			
@@ -586,15 +626,8 @@
 			$this->lastname = $lastname;
             $this->email = $email;
 		}
-		
-		public function get_last_login() {
-			return Database::get_last_login_of_user($this->id);
-		}
-		
-		public function get_next_to_last_login() {
-			return Database::get_next_to_last_login_of_user($this->id);
-		}
         
+		// second constructor (by id)
         static function get_by_id($id) {
             global $con;
 			
@@ -604,6 +637,14 @@
 			  return new SimpleUser($id, $row['firstname'], $row['lastname'], $row['email']);
 			}
         }
+		
+		public function get_last_login() {
+			return Database::get_last_login_of_user($this->id);
+		}
+		
+		public function get_next_to_last_login() {
+			return Database::get_next_to_last_login_of_user($this->id);
+		}
 	}
 		
 		
@@ -614,6 +655,7 @@
 		public $email_confirmed;
 		public $email_confirmation_key;
 		
+		// constructor (by id)
 		public function __construct($id) {
 			global $con;
 			
@@ -671,7 +713,9 @@
         }
     }
 
+
     class WordList extends BasicWordList {
+    	// additionally stores words of the list and the list's labels
         public $words;
         public $labels;
         

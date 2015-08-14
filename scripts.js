@@ -13,6 +13,8 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
     }
 }).show();
 
+
+
 // mobile menu
 var menuShown = false;
 
@@ -58,9 +60,13 @@ $('#mobile-nav > div li a').on('click', function() {
 });
 
 
+
+
 // loading animation
 var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>' 
 var loadingFullscreen = '<div class="sk-three-bounce fullscreen"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>' 
+
+
 
 
 // toast
@@ -78,7 +84,9 @@ function Toast(text, ms) {
 }
 
 
-// ajax request manager
+
+// Ajax request manager
+// manages Ajax requests of the same type and can make sure that there is only one running at the same time
 function AjaxRequestsManager(onlyOne) {
     this.onlyOne = onlyOne;
     this.list = new Array();
@@ -104,7 +112,8 @@ $(document).ajaxError(function() {
 });
 
 
-// screenshots
+
+// screenshot popups
 $('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
 $('.screenshot').on('click', function() {
     $('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
@@ -119,6 +128,7 @@ $(document).keyup(function(e) {
         $('#screenshot-popup-wrapper').fadeOut();
     }
 });
+
 
 
 // cookies
@@ -136,6 +146,7 @@ function readCookie(key)
 
 setTimeout(function() {
     if (readCookie('accepted_cookies') != 'true') {
+		// show cookie message
         $('#main-wrapper').prepend('<div id="cookie-header" class="cookie-header" style="display: none; opacity: 0"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience on my website. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></div>');
         
         setTimeout(function() {
@@ -155,6 +166,7 @@ setTimeout(function() {
 }, 1000);
 
 
+
 // save text as file
 function saveTextAsFile(text, fileName) {
     var textFileAsBlob = new Blob([text], {type:'text/plain'});
@@ -165,7 +177,7 @@ function saveTextAsFile(text, fileName) {
 }
 
 
-// analytics
+// Google analytics
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

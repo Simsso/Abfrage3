@@ -1,8 +1,10 @@
 <?php
   	session_start();
-	if (isset($_SESSION['id'])) {
+	
+	// include the files depending on the session status
+	if (isset($_SESSION['id'])) { // user logged in
 		require('home.inc.php');
-	} else {
+	} else { // user not logged in
 		require('login.inc.php');
 	}
 ?>

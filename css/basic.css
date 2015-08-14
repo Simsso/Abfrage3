@@ -1,3 +1,5 @@
+/* basic, reuseable CSS */
+
 input[type=text], input[type=password], input[type=textarea], input[type=email], input[type=number], textarea, select {
 	padding: 8px;
 	font-size: 9pt;

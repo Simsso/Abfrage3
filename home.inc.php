@@ -10,6 +10,8 @@
 <? require('html-include/head.html'); ?>
     <body>
         <div id="main-wrapper">
+        	
+        	<!-- navigation -->
             <nav id="head-nav" class="navbar">
                 <div class="navbar-inner content-width">
                     <a href="#home">
@@ -35,6 +37,7 @@
                     </ul><br class="clear-both">
                 </div>
             </nav>
+            
 
             <div class="main content-width" id="main">
                 <div class="sk-three-bounce">
@@ -43,6 +46,7 @@
                     <div class="sk-child sk-bounce3"></div>
                 </div>
 
+				<!-- Home -->
                 <div id="content-home">
                     <div class="left-column">
                         <div class="box">
@@ -76,6 +80,7 @@
                 </div>
 
 
+				<!-- Query -->
                 <div id="content-query">
                     <div class="left-column">
                     	<div class="box">
@@ -102,6 +107,7 @@
                 </div>
 
 
+				<!-- Word lists -->
                 <div id="content-word-lists">
                     <div class="left-column">
                     	<div class="box" id="word-list-title">
@@ -215,16 +221,7 @@
                 </div>
 
 
-                <div id="content-share">
-                    <div class="left-column">
-
-                    </div>
-                    <div class="right-column">
-
-                    </div>
-                </div>
-
-
+				<!-- Users -->
                 <div id="content-user">
                     <div class="left-column width-50">
                         <div class="box">
@@ -264,6 +261,7 @@
                 </div>
 
 
+				<!-- Settings -->
                 <div id="content-settings">
                     <div class="left-column width-30">
                         <div class="box">
@@ -334,15 +332,19 @@
             ?>
         </div>
         
+        <!-- basic scripts -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
         <script src="extensions.js" type="text/javascript"></script>
         <script src="scripts.js" type="text/javascript"></script>
         
+        
+		<!-- include scripts for every single page -->
         <script src="home/query.js" type="text/javascript"></script>
         <script src="home/word-lists.js" type="text/javascript"></script>
         <script src="home/user.js" type="text/javascript"></script>
         <script src="home/settings.js" type="text/javascript"></script>
         
-        <script  src="single-page-application.js" type="text/javascript"></script>
+        <!-- single page application script -->
+        <script src="single-page-application.js" type="text/javascript"></script>
     </body>
 </html>
