@@ -1,5 +1,5 @@
 // box head right icons
-$('.box .box-head img.box-head-right-icon').on('click', function() {
+$('.box .box-head img.box-head-right-icon').on('click', function(event) {
     switch($(this).data('action')) {
         case 'expand':
             $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();

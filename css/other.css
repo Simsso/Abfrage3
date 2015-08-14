@@ -89,6 +89,9 @@ ul.social-icons li {
 	max-width: 1170px;
 	margin: auto;
 }
+.main.content-width {
+	padding-bottom: 25px;
+}
 
 .navbar {
 	position: relative;
@@ -201,6 +204,11 @@ body > .main {
 	background-color: #F3F5F6;
 	border-bottom: 1px solid #ECEFF1;
 }
+.box .box-head.active {
+	border-bottom: 0;
+	background-color: #4F5B93;
+	color: white;
+}
 .box .box-head.green {
 	background-color: #5DCC57;
 }
@@ -270,8 +278,11 @@ body > .main {
 .box .box-table tr:not(:first-child) td {
     border-top: 1px solid #8892BF;
 }
-.box .box-table th {
-    border-bottom: 1px solid #38426F;
+
+.box .box-table tr.active {
+    background-color: #4F5B93;
+    color: #FFFFFF;
+    font-weight: bold;
 }
 
 .box-table.button-right-column td:last-child {
