@@ -205,6 +205,9 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
                 shownListData.labels[i].parent_label = parseInt(shownListData.labels[i].parent_label);
                 shownListData.labels[i].user = parseInt(shownListData.labels[i].user);
             }
+            
+            if (!shownListData.language1) shownListData.language1 = "First language";
+            if (!shownListData.language2) shownListData.language2 = "Second language";
 
             shownListId = id;
 
@@ -225,7 +228,9 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             wordListInfoBoxBody += '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
             
             if (allowEdit) {
-                wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label> ';
+            	wordListInfoBoxBody += '<p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + shownListData.language1 + '"/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + shownListData.language2 + '"/>&nbsp;<input type="submit" id="word-list-languages-button" value="Save languages" /></form></p>'; 
+            	
+                wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label>';
             }
             else {
                 
@@ -234,6 +239,9 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="exportList()"/>';
             
             $('#word-list-info .box-body').html(wordListInfoBoxBody);
+            		
+    		$('#words-add-language1').attr('placeholder', shownListData.language1);
+    		$('#words-add-language2').attr('placeholder', shownListData.language2);
 
             // sharing box
             if (allowSharing) {
@@ -254,9 +262,41 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
                     console.log(data.words[i]);
                     wordListHTML += getTableRowOfWord(data.words[i].id, data.words[i].language1, data.words[i].language2, allowEdit);
                 }
-                wordListHTML = getTableOfWordList(wordListHTML, allowEdit);
+                wordListHTML = getTableOfWordList(wordListHTML, allowEdit, shownListData.language1, shownListData.language2);
                 $('#words-in-list').html(wordListHTML);
             }
+            
+            // events
+            $('#change-language-form').on('submit', function(e) {
+            	e.preventDefault();
+            	var $lang1Input = $('#word-list-language1'), $lang2Input = $('#word-list-language2'), $submitButton = $('#word-list-languages-button');
+            	$lang1Input.prop('disabled', true);
+            	$lang2Input.prop('disabled', true);
+            	$submitButton.prop('disabled', true).attr('value', 'Saving languages...');
+            	
+            	var lang1 = $lang1Input.val(), lang2 = $lang2Input.val();
+            	
+            	setWordListLanguages(shownListId, lang1, lang2, function(data) {
+            		console.log(data);
+            		
+	            	$lang1Input.prop('disabled', false);
+	            	$lang2Input.prop('disabled', false);
+	            	$submitButton.prop('disabled', false).attr('value', 'Save languages');
+            	
+            		shownListData.language1 = lang1;
+            		shownListData.language2 = lang2;
+            		
+            		$('#words-add-language1').attr('placeholder', lang1);
+            		$('#words-add-language2').attr('placeholder', lang2);
+            		$('#word-list-table').find('td').eq(0).html(lang1);
+            		$('#word-list-table').find('td').eq(1).html(lang2);
+            	});
+            });
+            
+            
+            
+            
+            
             $('#word-list-info-words').show();
             if (allowEdit) 
                 $('#words-add').show();
@@ -286,8 +326,8 @@ function getTableRowOfWord(id, lang1, lang2, allowEdit) {
     return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td>':'') + '</tr>';
 }
                                                                                           
-function getTableOfWordList(content, allowEdit) {
-    return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold"><td>First language</td><td>Second language</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
+function getTableOfWordList(content, allowEdit, lang1, lang2) {
+    return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
 } 
 
 function editSaveWord(event, id) {
@@ -329,7 +369,24 @@ function saveWord(id, lang1, lang2, callback) {
 
         }
     }).done(function(data) {
-        callback();
+        callback(data);
+    });
+}
+
+function setWordListLanguages(id, lang1, lang2, callback) {
+    jQuery.ajax('server.php', {
+        data: {
+            action: 'set-word-list-languages',
+            word_list_id: id,
+            lang1: lang1,
+            lang2: lang2
+        },
+        type: 'GET',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+    }).done(function(data) {
+        callback(data);
     });
 }
 
@@ -402,7 +459,7 @@ function addWord(lang1, lang2, allowEdit) {
         }
     }).done(function(data) {
         if ($('#word-list-table').length == 0) { // no words added
-            var wordListHTML = getTableOfWordList("", allowEdit);
+            var wordListHTML = getTableOfWordList("", allowEdit, shownListData.language1, shownListData.language2);
             $('#words-in-list').html(wordListHTML);
         }
         $('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2, allowEdit));
@@ -503,13 +560,14 @@ function setSharingPermissionsBySharingId(sharingId, permissions, callback) {
     });
 }
 
-function setSharingPermissions(listId, email, permissions, callback) {
+function setSharingPermissions(listId, email, permissions, initiatorIsListOwner, callback) {
     jQuery.ajax('server.php', {
         data: {
             action: 'set-sharing-permissions',
             word_list_id: listId,
             email: email,
-            permissions: permissions
+            permissions: permissions,
+            initiator_is_list_owner: initiatorIsListOwner
         },
         type: 'GET',
         error: function(jqXHR, textStatus, errorThrown) {
@@ -649,7 +707,7 @@ function getLabelList(showLoadingInformation) {
             var $row = $this.parent().parent();
             var allFollowing = $row.nextAll();
             var selfIndenting = $row.data('indenting');
-            while (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined) {
+            while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined)) {
                 if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
                     if (expand) 
                         allFollowing.eq(i).show();

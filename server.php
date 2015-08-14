@@ -130,6 +130,10 @@
             case 'delete-word-list':
                 echo Database::delete_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']));
                 break;
+				
+			case 'set-word-list-languages':
+				echo Database::set_word_list_languages($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']));
+				break;
 
             
             // single word in word list
@@ -155,7 +159,7 @@
 
             case 'set-sharing-permissions':
                 echo Database::set_sharing_permissions($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']), Validation::format_text($_GET['permissions']));
-            break;
+            	break;
 
             case 'set-sharing-permissions-by-sharing-id':
                 echo Database::set_sharing_permissions_by_sharing_id($_SESSION['id'], Validation::format_text($_GET['sharing_id']), Validation::format_text($_GET['permissions']));
@@ -173,15 +177,15 @@
             // word list labels
             
             case 'add-label':
-                echo Database::add_label($_SESSION['id'], $_GET['label_name'], $_GET['parent_label_id']);
+                echo Database::add_label($_SESSION['id'], Validation::format_text($_GET['label_name']), Validation::format_text($_GET['parent_label_id']));
                 break;
             
             case 'remove-label':
-                echo Database::set_label_status($_SESSION['id'], $_GET['label_id'], "0");
+                echo Database::set_label_status($_SESSION['id'], Validation::format_text($_GET['label_id']), "0");
                 break;
             
             case 'set-label-list-attachment':
-                echo Database::set_label_list_attachment($_SESSION['id'], $_GET['label_id'], $_GET['list_id'], $_GET['attachment']);
+                echo Database::set_label_list_attachment($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['list_id']), Validation::format_text($_GET['attachment']));
                 break;
             
             case 'get-labels-of-user':
@@ -189,7 +193,7 @@
                 break;
             
             case 'rename-label':
-                echo Database::rename_label($_SESSION['id'], $_GET['label_id'], $_GET['label_name']);
+                echo Database::rename_label($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['label_name']));
                 break;
         }
     } else {

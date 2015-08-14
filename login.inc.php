@@ -228,9 +228,9 @@
                             <div class="box-head">About Abfrage3</div>
                             <div class="box-body">
                                 <h4>Earlier versions</h4>
-                                <p>Abfrage3 has a long history: The first version, "Abfrage", was written in Java and looked very awful (Screenshot 1). It was developed in October 2013. Abfrage2 was not really successful though, it was just an attempt to create a nice WPF layout which totally failed. In Summer 2014 the third version Abfrage3 (Screenshot 2), a C# WPF application, became the first version in this series of the vocabulary learning software with advanced features like uploading and sharing lists, auto translation and a lot more. Unfortunately it was only executable on Windows which leaded in August 2015 to the development of Abfrage3Web - the website you are currently visiting. </p>
+                                <p>Abfrage3 has a long history: The first version, "Abfrage", was written in Java and looked very awful (Screenshot 1). It was developed in October 2013. Abfrage2 was not really successful though, it was just an attempt to create a nice WPF layout which totally failed. In Summer 2014 the third version Abfrage3 (Screenshot 2), a C# WPF application, became the first version in this series of the vocabulary learning software with advanced features like uploading and sharing lists, auto translation and a lot more. Unfortunately it was only executable on Windows which lead in August 2015 to the development of Abfrage3Web - the website you are currently visiting. </p>
                                 <h4>Naming</h4>
-                                <p>The name Abfrage3 is german and means something like <i>Query3</i>. For traditinal reasons the English version was also named in german.</p>
+                                <p>The name Abfrage3 is german and means something like <i>Query3</i>. For traditional reasons the English version was also named in german.</p>
                                 <h4>Ambition</h4>
                                 <p>The big idea of Abfrage3Web was to create a fully functional vocabulary trainer which is fun to use. An important specification was the possibility to comfortably share word lists with other users. </p>
                             </div>
