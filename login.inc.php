@@ -7,6 +7,8 @@
 <? require('html-include/head.html'); ?>
     <body>
         <div id="main-wrapper">
+        	
+        	<!-- navigation -->
             <nav id="head-nav" class="navbar" id="nav">
                 <div class="navbar-inner content-width">
                     <a href="#home">
@@ -25,12 +27,17 @@
                     </ul><br class="clear-both">
                 </div>
             </nav>
+            
+            
+            
             <div class="main content-width" id="main">		
                 <div class="sk-three-bounce">
                     <div class="sk-child sk-bounce1"></div>
                     <div class="sk-child sk-bounce2"></div>
                     <div class="sk-child sk-bounce3"></div>
                 </div>
+                
+                <!-- Home -->
                 <div id="content-home">
                     <div class="left-column">
                         <?php
@@ -160,6 +167,7 @@
                 </div>
 
 
+                <!-- Legal info -->
                 <div id="content-legal-info">
                     <div class="box">
                         <div class="box-head">Terms and conditions template for website usage</div>
@@ -222,6 +230,7 @@
                 </div>
 
 
+                <!-- About -->
                 <div id="content-about">
                     <div class="left-column">
                         <div class="box">
@@ -258,6 +267,7 @@
                 </div>
 
 
+                <!-- Contact -->
                 <div id="content-contact">
                     <div class="left-column">
                         <div class="box">
@@ -343,12 +353,15 @@
         </div>
         
         
+        <!-- basic scripts -->
         <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
         <script src="extensions.js" type="text/javascript"></script>
         <script src="scripts.js" type="text/javascript"></script>
 
+		<!-- include scripts for every single page -->
         <script src="login/contact.js" type="text/javascript"></script>
         
+        <!-- single page application script -->
         <script src="single-page-application.js" type="text/javascript"></script>
     </body>
 </html>

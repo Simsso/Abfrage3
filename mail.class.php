@@ -10,6 +10,7 @@
 		protected $from;
 		protected $reply_to;
 	
+		// Mail class constructor
 	    public function __construct($to, $from, $reply_to, $subject, $body) {
 	    	$this->from = $from;
 			$this->reply_to = $reply_to;
@@ -49,6 +50,7 @@
 		}
 	}
 	
+	// HTML mail
 	class HTML_Mail extends Mail {
 	    public function __construct($to, $from, $reply_to, $subject, $body) {
 	    	// call default constructor
@@ -63,6 +65,7 @@
 		}
 	}
 	
+	// default HTML mail for users
 	class Default_Client_HTML_Mail extends HTML_Mail {
 		public function __construct($to, $subject, $name, $text) {
 			$body ='
@@ -71,7 +74,7 @@
 		<nav style="position: relative;
 		    height: 56px;
 		    width: 100%;
-		    padding: 5px 0;
+		    padding: 25px;
 		    background-color: #8892BF;
 		    border-style: solid;
 		    border-width: 0 0 6px 0;
