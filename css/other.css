@@ -590,7 +590,7 @@ input[type=text]:first-child:last-child {
         width: initial;
     }
 }
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 701px) {
     ul.nav {
          display: block !important;
     }

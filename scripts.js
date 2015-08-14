@@ -35,6 +35,8 @@ function toggleMenu() {
         showMenu();
 }
 function showMenu() {
+    if (menuShown) return;
+    
     menuShown = true;
     $('body').addClass('mobile-menu-shown');
     $('.menu-button').attr('src', 'img/menu-close.svg');
@@ -47,6 +49,8 @@ function showMenu() {
 }
 
 function hideMenu() {
+    if (!menuShown) return;
+    
     menuShown = false;
     $('#main-wrapper').unbind('click');
     $('body').removeClass('mobile-menu-shown');
@@ -55,8 +59,11 @@ function hideMenu() {
 
 $('#head-nav').append('<img src="img/menu.svg" class="menu-button nav-image" onclick="toggleMenu()" />');
 
-$('#mobile-nav > div li a').on('click', function() {
-    hideMenu();
+$('#mobile-nav > div li a').on('click', hideMenu);
+$(window).on('resize', function() {
+    if (menuShown && $(window).width() > 700) {
+        hideMenu();
+    }
 });
 
 
