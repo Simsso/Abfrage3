@@ -280,7 +280,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
 
             // info box head and list name box
             $('#word-list-title .box-head').html(shownListData.name);
-            $('#word-list-info .box-head > div').html("General information");
+            $('#word-list-info .box-head > div').html("General");
             
             // info box body
             // add content depending on the users permissions (sharing and editing)
@@ -300,7 +300,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             
             if (allowEdit) {
             	// change language form
-            	wordListInfoBoxBody += '<p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + shownListData.language1 + '" class="inline"/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + shownListData.language2 + '" class="inline"/>&nbsp;<input type="submit" id="word-list-languages-button" value="Save languages" class="inline"/></form></p>'; 
+            	wordListInfoBoxBody += '<p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + shownListData.language1 + '" class="inline"/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + shownListData.language2 + '" class="inline"/>&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages" class="inline"/></form></p>'; 
             	
                 //wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label>';
             }
@@ -375,7 +375,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             	var $lang1Input = $('#word-list-language1'), $lang2Input = $('#word-list-language2'), $submitButton = $('#word-list-languages-button');
             	$lang1Input.prop('disabled', true);
             	$lang2Input.prop('disabled', true);
-            	$submitButton.prop('disabled', true).attr('value', 'Saving languages...');
+            	$submitButton.prop('disabled', true).attr('value', 'Editing languages...');
             	
             	// read string values
             	var lang1 = $lang1Input.val(), lang2 = $lang2Input.val();
@@ -386,7 +386,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             		// re-enable inputs and buttons
 	            	$lang1Input.prop('disabled', false);
 	            	$lang2Input.prop('disabled', false);
-	            	$submitButton.prop('disabled', false).attr('value', 'Save languages');
+	            	$submitButton.prop('disabled', false).attr('value', 'Edit languages');
             	
             		// update local list object
             		shownListData.language1 = lang1;
@@ -440,7 +440,7 @@ function exportList(list) {
     
     // convert the word list into a string
     for (var i = 0; i < list.words.length; i++) {
-    	use "|" as separator between the two languages
+    	// use "|" as separator between the two languages
         output += list.words[i].language1 + " | " + list.words[i].language2 + "\n";
     }
     
@@ -552,8 +552,9 @@ function removeWord(id) {
         $row.remove();
         
         // show special message if no word is left
-        $('#word-list-table tr').length == 1) {
+        if ($('#word-list-table tr').length == 1) {
             $('#word-list-table').html(noWordInList);
+        }
     });
 }
 

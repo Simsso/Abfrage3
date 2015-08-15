@@ -280,9 +280,9 @@ body > .main {
 }
 
 .box .box-table tr.active {
-    background-color: #4F5B93;
-    color: #FFFFFF;
-    font-weight: bold;
+}
+.box .box-table tr.active td:first-child {
+    box-shadow: inset 8px 0 0 #4F5B93;
 }
 
 .box-table.button-right-column td:last-child {
