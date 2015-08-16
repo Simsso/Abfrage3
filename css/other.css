@@ -467,7 +467,12 @@ body.mobile-menu-shown #main-wrapper {
 
 
 
-
+.display-block {
+    display: block;
+}
+.display-none {
+    display: none;
+}
 
 .cc_banner {
 	border-bottom: 3px solid black;
