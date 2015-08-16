@@ -6,6 +6,11 @@ var updatePageContent = function() {
     // read page name from URL
     var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
     
+    if ($('#content-' + pageName).length == 0) { // given page doesn't exist
+   		// forward to home page
+   		pageName = "home";
+    }
+    
     // mark nav element as visisted (class active)
     $('.nav_' + pageName).addClass('visited');
     $('#content-' + pageName).show(); // show the div containing the requested page

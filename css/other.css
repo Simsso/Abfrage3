@@ -208,6 +208,7 @@ body > .main {
 	border-bottom: 0;
 	background-color: #4F5B93;
 	color: white;
+	text-align: center;
 }
 .box .box-head.green {
 	background-color: #5DCC57;
@@ -457,6 +458,11 @@ body.mobile-menu-shown {
 
 body.mobile-menu-shown #main-wrapper {
     transform: translate3d(256px, 0px, 0px);
+}
+
+.advertisment-bottom {
+	margin-top: 25px;
+	text-align: center;	
 }
 
 

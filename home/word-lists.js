@@ -49,8 +49,13 @@ $('#word-list-add-form').on('submit', function(e) {
         $('#word-list-add-name').prop('disabled', false).val('');
         $('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
 
-        refreshListOfWordLists(false); // refresh the list of word lists without loading information
-        
+        refreshListOfWordLists(false, function() {
+		    // handle buttons and background colors indicating which list is currently shown
+		    enableAllViewEditButtons();
+		    // highlight the lists row by adding active class and hide button to view the list
+		    $('#list-of-word-lists tr[data-list-id=' + data.id + ']').addClass('active').find('input[type=button]').first().hide();
+        }); // refresh the list of word lists without loading information
+	    
         // load the word list which has just been added
         loadWordList(data.id, true, function() { }, true, true); 
     });
@@ -59,7 +64,7 @@ $('#word-list-add-form').on('submit', function(e) {
 
 
 // refresh list of word lists
-function refreshListOfWordLists(showLoadingInformation) {
+function refreshListOfWordLists(showLoadingInformation, callback) {
 	// loading information
     if (showLoadingInformation)
         $('#list-of-word-lists').html(loading);
@@ -118,6 +123,8 @@ function refreshListOfWordLists(showLoadingInformation) {
                     loadWordList($button.data('list-id'), true, function() { }, true, true);
                 }
             });
+            
+            callback(data);
         })
     );
 }

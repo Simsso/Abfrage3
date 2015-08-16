@@ -5,6 +5,7 @@
     ExpiresByType image/jpeg "access plus 2 month"
     ExpiresByType image/gif "access plus 2 month"
     ExpiresByType image/png "access plus 2 month"
+    ExpiresByType image/svg "access plus 2 month"
     ExpiresByType text/css "access plus 0 seconds"
     ExpiresByType application/pdf "access plus 1 month"
     ExpiresByType application/x-javascript "access plus 0 seconds"

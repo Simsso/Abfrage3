@@ -325,6 +325,19 @@
                 </div>
 
                 <br class="clear-both hide-below-700">
+            
+            	<footer class="advertisment-bottom">
+		            <!-- advertisment -->
+		            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+						<ins class="adsbygoogle"
+						     style="display:block"
+						     data-ad-client="ca-pub-9727315436627573"
+						     data-ad-slot="4992943646"
+						     data-ad-format="auto"></ins>
+						<script>
+						(adsbygoogle = window.adsbygoogle || []).push({});
+					</script>
+				</footer>
             </div>
         
             <?php
