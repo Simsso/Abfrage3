@@ -89,7 +89,7 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
             var output = "";
             // build HTML output string
             for (var i = 0; i < data.length; i++) { // add a row for each list
-                output += '<tr data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Delete" data-action="delete" data-list-id="' + data[i].id + '"/></td></tr>';
+                output += '<tr data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/></td></tr>';
             }
 
             // if there are no lists show the appropriate message
@@ -106,23 +106,13 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
             $('#list-of-word-lists input[type=button]').on('click', function() {
                 $button = $(this);
 
-				// detect button type with data-action="xxx" attribute
-                if ($button.data('action') == 'delete') { // delete list button click
-                    $button.prop('disabled', true).attr('value', 'Deleting...');
-
-                    // call delete word list function and pass id of the list which will be deleted
-                    deleteWordList($button.data('list-id'), true, function() { });
-
-					// deleting the list which has been shown?
-                    if ($button.data('list-id') == shownListId) {
-                        showNoListSelectedInfo(); // show the message that no list is shown at the moment
-                    }
-                }
-                else if ($button.data('action') == 'edit') { // edit / show list button click
+                if ($button.data('action') == 'edit') { // edit / show list button click
                 	// edit / view call load word list function
                     loadWordList($button.data('list-id'), true, function() { }, true, true);
                 }
             });
+            
+            callback(data);
         })
     );
 }
@@ -161,9 +151,9 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
             // build HTML output string
             for (var i = 0; i < data.length; i++) {
             	// add table row of a single shared list
-                output += '<tr data-list-id="' + data[i].id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
+                output += '<tr data-list-id="' + data[i].id + '" data-sharing-id="' + data[i].sharing_id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
                 output += '<td>' + data[i].name + '</td>';
-                output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/>&nbsp;<input type="button" class="inline" value="Hide" data-action="delete-sharing" data-sharing-id="' + data[i].sharing_id + '" data-list-id="' + data[i].id + '"/></td></tr>';
+                output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/></td></tr>';
             }
             // if there are no shared lists show the appropriate message
             if (output.length == 0) {
@@ -180,29 +170,9 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
 
 				// detect button type with the data-action="xxx" attribute
 
-				// delete shared list button
-                if ($button.data('action') == 'delete-sharing') {
-                    $button.prop('disabled', true).attr('value', 'Hiding...'); // disable button
-
-                    // send server request to hide the shared list
-                    setSharingPermissionsBySharingId($button.data('sharing-id'), 0, function() {
-                        $('#list-of-shared-word-lists-row-' + $button.data('sharing-id')).remove();
-
-                        // still rows left?
-                        if ($('#list-of-shared-word-lists tr').length == 1) {
-                            $('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
-                        }
-                    });
-
-					// if the shown list has just been removed update the screen to show the appropriate message
-                    if ($button.data('list-id') == shownListId) {
-                        showNoListSelectedInfo();
-                    }
-                }
-
                 // edit and view shared list button loadWordList method calls differentiate in the fourth parameter which tells the function if the list is editbable or can just be viewed
                 // edit shared list button
-                else if ($button.data('action') == 'edit') { // edit / show list button click
+                if ($button.data('action') == 'edit') { // edit / show list button click
                     loadWordList($button.data('list-id'), true, function() { }, true, false);
                 }
 
@@ -293,11 +263,15 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             if (!allowSharing) { // not list owner
                 wordListInfoBoxBody += '<p>' + data.creator.firstname + ' ' + data.creator.lastname + ' shares this list with you.</p>';
                 wordListInfoBoxBody += '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + data.creator.firstname + '\'s list.</p>';
+                // add hide button
+                wordListInfoBoxBody += '<input type="button" class="inline" value="Hide list" id="hide-shown-word-list"/>'
             }
             else {
             	// list owner
                 wordListInfoBoxBody += '<p>You own this list.</p>';
                 wordListInfoBoxBody += '<p><form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + shownListData.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form></p>';
+                // add delete button
+                wordListInfoBoxBody += '<input type="button" class="inline" value="Delete list" id="delete-shown-word-list"/>'
             }
 
             // var creationTime = new Date(parseInt(data.creation_time) * 1000);
@@ -347,6 +321,34 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
             }
 
             // events
+            // delete word list
+            $('#delete-shown-word-list').on('click', function() {
+                $(this).prop('disabled', true).attr('value', 'Deleting...');
+
+                // call delete word list function and pass id of the list which will be deleted
+                deleteWordList(shownListId, function() {
+                    showNoListSelectedInfo(); // show the message that no list is shown at the moment
+                });
+            });
+            
+            // hide word list (stop sharing)
+            $('#hide-shown-word-list').on('click', function() {
+                $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
+                var sharingId = $('tr[data-list-id=' + shownListId + ']').data('sharing-id');
+                // send server request to hide the shared list
+                setSharingPermissionsBySharingId(sharingId, 0, function() {
+                    $('#list-of-shared-word-lists-row-' + sharingId).remove();
+
+                    // still rows left?
+                    if ($('#list-of-shared-word-lists tr').length == 1) {
+                        $('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
+                    }
+
+                    // because the shown list has just been removed update the screen to show the appropriate message
+                    showNoListSelectedInfo();
+                });
+            });
+            
             // rename form
             $('#rename-list-form').on('submit', function(e) {
             	e.preventDefault();
@@ -565,7 +567,7 @@ function removeWord(id) {
 
 
 // delete word list
-function deleteWordList(id) {
+function deleteWordList(id, callback) {
     jQuery.ajax('server.php', {
         data: {
             action: 'delete-word-list',
@@ -583,6 +585,7 @@ function deleteWordList(id) {
         if ($('#list-of-word-lists tr').length == 1) {
             $('#list-of-word-lists').html(noWordListOutput);
         }
+        callback();
     });
 }
 
