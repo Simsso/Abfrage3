@@ -269,7 +269,7 @@ body > .main {
 	border-collapse: separate;
 }
 
-.box .box-table td, th {
+.box .box-table td, .box .box-table th {
 	padding: 11px;
 }
 

@@ -1,16 +1,13 @@
 // single page app
 
-// load individual pages into string vars
-// TODO
-
-var updatePageContent = function() {
+var updatePageContent = function () {
   $('#main').children('div').hide(); // hide all pages
   $('li').removeClass('visited'); // unmark the navigation element
 
   // read page name from URL
-  var pageName = (location.hash.slice(1).length == 0)?"home":location.hash.slice(1);
+  var pageName = (location.hash.slice(1).length === 0) ? "home" : location.hash.slice(1);
 
-  if ($('#content-' + pageName).length == 0) { // given page doesn't exist
+  if ($('#content-' + pageName).length === 0) { // given page doesn't exist
     // forward to home page
     pageName = "home";
   }
@@ -18,10 +15,10 @@ var updatePageContent = function() {
   // mark nav element as visisted (class active)
   $('.nav_' + pageName).addClass('visited');
   $('#content-' + pageName).show(); // show the div containing the requested page
-}
+};
 
 // hashchange event listener
-$(window).on('hashchange',function() {
+$(window).on('hashchange', function () {
   updatePageContent();
 });
 

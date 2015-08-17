@@ -67,7 +67,7 @@ $('#word-list-add-form').on('submit', function(e) {
 function refreshListOfWordLists(showLoadingInformation, callback) {
   // loading information
   if (showLoadingInformation)
-  $('#list-of-word-lists').html(loading);
+    $('#list-of-word-lists').html(loading);
 
   // reset all table row highlights and hidden buttons indicating which list is selected
   showNoListSelectedInfo();
@@ -800,19 +800,12 @@ function getLabelList(showLoadingInformation) {
       labels[i].parent_label = parseInt(labels[i].parent_label); // parent label id is an integer
       labels[i].user = parseInt(labels[i].user); // label user id is an integer
     }
+    
+    // refreshQueryLabelSelection(labels);
 
-    // method returns the HTML code of the label list
-    var html = getHtmlListOfLabelId(labels, 0, 0);
 
-    if (html.length > 0) {
-      html = '<table class="box-table button-right-column">' + html + '</table>';
-    }
-    else {
-      // if there was no code returned there are no labels to show
-      html = noLabels;
-    }
 
-    $('#list-labels-list').html(html); // update DOM
+    $('#list-labels-list').html(getEditableHtmlTableOfLabels(labels)); // update DOM
 
 
     // just added checkboxes event listener
@@ -928,7 +921,7 @@ function getLabelList(showLoadingInformation) {
 
 
     // expand single labels
-    $('.small-exp-col-icon').on('click', function() {
+    $('#list-labels-list .small-exp-col-icon').on('click', function() {
       var $this = $(this);
       var expand = ($this.data('state') == 'collapsed');
 
@@ -965,6 +958,20 @@ function getLabelList(showLoadingInformation) {
   });
 }
 
+
+function getEditableHtmlTableOfLabels(labels) {
+  // method returns the HTML code of the label list
+  var html = getHtmlListOfLabelId(labels, 0, 0);
+
+  if (html.length > 0) {
+    html = '<table class="box-table button-right-column">' + html + '</table>';
+  }
+  else {
+    // if there was no code returned there are no labels to show
+    html = noLabels;
+  }
+  return html;
+}
 
 // get HTML list of label id
 // returns the HTML list showing a label and it's sub-labels

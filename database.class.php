@@ -303,6 +303,12 @@ class Database {
 		}
 		return $result;
 	}
+    
+    // get query lists of user
+    // includes self created lists and lists shared with the user
+    static function get_query_lists_of_user($id) {
+      return array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
+    }
 
 	// get specific word list
 	static function get_word_list($user_id, $word_list_id) {
@@ -582,6 +588,37 @@ class Database {
 		$query = mysqli_query($con, $sql);
 		return 1;
 	}
+  
+    static function get_label_list_attachments_of_user($id) {
+      global $con;
+
+      $sql = "
+        SELECT `label_attachment`.`id`, `label_attachment`.`list`, `label_attachment`.`label`, `label_attachment`.`active` 
+        FROM `label_attachment`, `label` 
+        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = '".$id."' AND 
+          `label_attachment`.`active` = '1' AND `label`.`active` = '1'";
+      $query = mysqli_query($con, $sql);
+      $output = array();
+      while ($row = mysqli_fetch_assoc($query)) {
+        $attachment = new LabelAttachment($row['id'], $row['list'], $row['label'], $row['active']);
+        array_push($output, $attachment);
+      }
+      return $output;
+    }
+}
+
+class LabelAttachment {
+  public $id;
+  public $list;
+  public $label;
+  public $active;
+  
+  function __construct($id, $list, $label, $active) {
+    $this->id = $id;
+    $this->list = $list;
+    $this->label = $label;
+    $this->active = $active;
+  }
 }
 
 
@@ -710,6 +747,17 @@ class BasicWordList {
 		$this->language2 = $language2;
 		$this->creation_time = $creation_time;
 	}
+  
+    public function get_by_id($id) {
+      global $con;
+
+      $sql = "SELECT * FROM `list` WHERE `id` = '" . $id . "'";
+      $query = mysqli_query($con, $sql);
+      while ($row = mysqli_fetch_assoc($query)) {
+        return new BasicWordList($id, $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+      }
+      return null;
+    }
 }
 
 
