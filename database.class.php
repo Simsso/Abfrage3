@@ -21,7 +21,6 @@
 				$salt = rand(0, 999999);
 				$password = sha1($salt . $password);
 				unset($confirmpassword);
-				
 				$email_confirmation_key = sha1($salt . $email . $password);
 				$reg_time = time();
 				
