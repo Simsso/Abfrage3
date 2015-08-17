@@ -47,7 +47,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 			</div>
 
 			<!-- Home -->
-			<div id="content-home">
+			<div id="content-home" data-page="home">
 				<div class="left-column">
 					<div class="box">
 						<div class="box-head">
@@ -81,13 +81,15 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
 			<!-- Query -->
-			<div id="content-query">
+			<div id="content-query" data-page="query">
 				<div class="left-column">
 					<div class="box">
 						<div class="box-head">Select labels and word lists</div>
 						<div class="box-body">
 							<div id="query-label-selection">
 
+							</div>
+							<div id="query-list-selection">
 							</div>
 						</div>
 					</div>
@@ -108,7 +110,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
 			<!-- Word lists -->
-			<div id="content-word-lists">
+			<div id="content-word-lists" data-page="word-lists">
 				<div class="left-column">
 					<div class="box" id="word-list-title">
 						<div class="box-head active"></div>
@@ -222,7 +224,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
 		<!-- Users -->
-		<div id="content-user">
+		<div id="content-user" data-page="users">
 			<div class="left-column width-50">
 				<div class="box">
 					<div class="box-head">
@@ -262,7 +264,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
 		<!-- Settings -->
-		<div id="content-settings">
+		<div id="content-settings" data-page="settings">
 			<div class="left-column width-30">
 				<div class="box">
 					<div class="box-head">Settings</div>
@@ -352,8 +354,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
 <!-- include scripts for every single page -->
-<script src="home/query.js" type="text/javascript"></script>
 <script src="home/word-lists.js" type="text/javascript"></script>
+<script src="home/query.js" type="text/javascript"></script>
 <script src="home/user.js" type="text/javascript"></script>
 <script src="home/settings.js" type="text/javascript"></script>
 
