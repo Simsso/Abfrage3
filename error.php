@@ -1,6 +1,8 @@
 <?php
   $status = $_SERVER['REDIRECT_STATUS'];
   $codes = array(
+    400 => array('400 Bad Request', 'The server cannot or will not process the request due to something that is perceived to be a client error.'),
+    401 => array('401 Unauthorized', 'An authentication is required and has failed or has not yet been provided.'),
     403 => array('403 Forbidden', 'The server has refused to fulfill your request.'),
     404 => array('404 Not Found', 'The document/file requested was not found on this server.'),
     405 => array('405 Method Not Allowed', 'The method specified in the Request-Line is not allowed for the specified resource.'),
