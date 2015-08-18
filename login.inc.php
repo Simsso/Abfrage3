@@ -133,6 +133,9 @@
 						<div class="box-head">Sign up</div>
 						<div class="box-body">
 							<form method="post" name="signup" action="server.php?action=signup" data-submit-loading="true">
+                                <!-- prevents auto fill of sign up form -->
+                                <input type="text" class="display-none"/>
+                                <input type="password" class="display-none"/>
 								<table>
 									<tr>
 										<td>First name</td>

@@ -216,12 +216,91 @@ function getSingleListElementOfLabelListQuery(label, indenting) {
   return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper" data-checked="false" data-label-id="' + label.id + '">' + label.name + '</label></td></tr>';
 }
 
+function getListById(id) {
+  for (var i = 0; i < queryLists.length; i++) {
+    if (queryLists[i].id === id) {
+      return queryLists[i];
+    }
+  }
+  return undefined;
+}
 
 
 
+
+var queryWords = [], queryAlgorithm = 'random', queryDirection = -1, queryType = 'text-box', queryRunning = false, 
+    currentWord = null, currentDirection = null, currentWordCorrectAnswer = null, queryWrongAnswerGiven = false;
 
 function startQuery() {
-  alert('coming soon...');
+  queryRunning = true;
+  
+  // produce one array containing all query words
+  for (var i = 0; i < querySelectedLists.length; i++) {
+    queryWords = queryWords.concat(getListById(querySelectedLists[i]).words);
+  }
+  
+  nextWord();
+  
+  $('#query-box img[data-action="expand"]').trigger('click'); // expand query container[].
+}
+
+function nextWord() {  
+  currentWord = getNextWord();
+  var listOfTheWord = getListById(currentWord.list);
+  
+  if (queryType == 'text-box') {
+    if (queryDirection == -1) { // both directions
+      currentDirection = Math.round(Math.random()); // get random direction
+    }
+    else {
+      currentDirection = queryDirection;
+    }
+    
+    // fill the question fields
+    if (currentDirection == 0) {
+      $('#query-lang1').html(listOfTheWord.language1);
+      $('#query-lang2').html(listOfTheWord.language2);
+      $('#query-question').html(currentWord.language1);
+      currentWordCorrectAnswer = currentWord.language2;
+    }
+    else {
+      $('#query-lang1').html(listOfTheWord.language2);
+      $('#query-lang2').html(listOfTheWord.language1);
+      $('#query-question').html(currentWord.language2);
+      currentWordCorrectAnswer = currentWord.language1;
+    }
+    
+        
+    setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
+  }
+}
+
+function getNextWord() {
+  if (queryAlgorithm == 'random') {
+    return queryWords[Math.round(Math.random() * (queryWords.length - 1))];
+  }
+}
+
+
+$('#query-answer').on('keypress', function(e) {
+    if (e.which == 13) {
+      if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer
+        if (queryWrongAnswerGiven) {
+          queryWrongAnswerGiven = false;
+          $('#correct-answer').hide();
+        }
+        nextWord();
+      }
+      else { // wrong answer
+        $('#correct-answer').show().html(currentWordCorrectAnswer);
+        $(this).select();
+        queryWrongAnswerGiven = true;
+      }
+    }
+});
+      
+function checkAnswer(user, correct) {
+  return (user == correct);
 }
 
 
