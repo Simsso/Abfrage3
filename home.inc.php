@@ -82,7 +82,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 			<!-- Query -->
 			<div id="content-query" data-page="query">
 				<div class="left-column">
-					<div class="box">
+					<div class="box" id="query-select-box">
 						<div class="box-head">
                           Select labels and word lists
                           <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
@@ -92,13 +92,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                             <div id="query-selection"></div>
 						</div>
 					</div>
+                  
 					<div class="box" id="query-box">
 						<div class="box-head">
                           Query
                           <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
                         </div>
 						<div class="box-body" data-start-state="collapsed">
-                          <div id="query">
+                          <div id="query" class="display-none">
                             <table class="width-100">
                               <tr>
                                 <td><span class="language" id="query-lang1">English</span>:&nbsp;</td>
@@ -108,7 +109,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                                 <td><span class="language" id="query-lang2">German</span>:&nbsp;</td>
                                 <td>
                                   <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
-                                  <input type="text" id="query-answer" class="unremarkable" class="width-100"/>
+                                  <input type="text" id="query-answer" class="unremarkable width-100"/>
                                 </td>
                               </tr>
                             </table>
