@@ -784,6 +784,9 @@ class BasicWordList {
 		$this->language1 = $language1;
 		$this->language2 = $language2;
 		$this->creation_time = intval($creation_time);
+      
+        if ($this->language1 == null) $this->language1 = "First language";
+        if ($this->language2 == null) $this->language2 = "Second language";
 	}
   
     public function get_by_id($id) {

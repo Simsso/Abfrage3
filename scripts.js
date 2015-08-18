@@ -13,6 +13,24 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   }
 }).show();
 
+$('.box .box-head img.box-head-right-icon').on('expand', function() {
+  $(this).data('action', 'expand').trigger('click');
+});
+
+$('.box .box-head img.box-head-right-icon').on('collapse', function() {
+  $(this).data('action', 'collapse').trigger('click');
+});
+
+
+// box shadow blinking
+$('.box').on('shadow-blink-green', function() {
+  $this = $(this).find('.box-body');
+  $this.addClass('green-shadow');
+  setTimeout(function() {
+    $this.removeClass('green-shadow');
+  }, 200);
+});
+
 
 
 // mobile menu

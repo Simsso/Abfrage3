@@ -27,7 +27,7 @@ function refreshQueryLabelList(showLoadingInformation) {
     queryAttachments = dataJSON.label_list_attachments;
     queryLists = dataJSON.lists;
     
-    $('#query-selection').html('<div id="query-label-selection" style="width: calc(50% - 12.5px); float: left; "></div><div id="query-list-selection" style="width: calc(50% - 12.5px); float: right; "></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start query" class="spacer-top-15 width-100 height-50px" disabled="true"/></p>');
+    $('#query-selection').html('<div id="query-label-selection" style="width: calc(50% - 12.5px); float: left; "></div><div id="query-list-selection" style="width: calc(50% - 12.5px); float: right; "></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start query" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
     
     // provide label selection
     $('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
@@ -232,16 +232,19 @@ var queryWords = [], queryAlgorithm = 'random', queryDirection = -1, queryType =
     currentWord = null, currentDirection = null, currentWordCorrectAnswer = null, queryWrongAnswerGiven = false;
 
 function startQuery() {
+  $('#query').removeClass('display-none');
   queryRunning = true;
   
   // produce one array containing all query words
+  queryWords = [];
   for (var i = 0; i < querySelectedLists.length; i++) {
     queryWords = queryWords.concat(getListById(querySelectedLists[i]).words);
   }
   
   nextWord();
   
-  $('#query-box img[data-action="expand"]').trigger('click'); // expand query container[].
+  $('#query-select-box img[data-action="collapse"]').trigger('collapse');
+  $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 }
 
 function nextWord() {  
@@ -289,6 +292,9 @@ $('#query-answer').on('keypress', function(e) {
           queryWrongAnswerGiven = false;
           $('#correct-answer').hide();
         }
+        
+        $('#query-box').trigger('shadow-blink-green');
+        
         nextWord();
       }
       else { // wrong answer
