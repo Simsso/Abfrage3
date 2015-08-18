@@ -73,6 +73,39 @@ class Database {
 			}
 		}
 	}
+  
+    static function stay_logged_in($id) {
+      $salt = rand(0, 999999);
+      $hash = sha1($salt . $id . $_SERVER['REMOTE_ADDR']);
+      
+      // store the hash
+      setcookie("stay_logged_in_hash", $hash, time() + 3600 * 24 * 31, '/'); // set cookie for one month
+      // store the user's id
+      setcookie("stay_logged_in_id", $id, time() + 3600 * 24 * 31, '/'); // set cookie for one month
+      
+      // update database
+      global $con;
+      $sql = "UPDATE `user` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = '".$id."'";
+      $query = mysqli_query($con, $sql);
+    }
+  
+    static function check_stay_logged_in($id, $hash) {
+      $stored_hash = "";
+      $stored_salt = 0;
+      
+      global $con;
+      $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `user` WHERE `id` = '".$id."'";
+      $query = mysqli_query($con, $sql);
+      while ($row = mysqli_fetch_assoc($query)) {
+        $stored_hash = $row['stay_logged_in_hash'];
+        $stored_salt = $row['stay_logged_in_salt'];
+      }
+      
+      if ($stored_hash == sha1($stored_salt . $id . $_SERVER['REMOTE_ADDR']) && $stored_hash == $hash) {
+        return true;
+      }
+      return false;
+    }
 
 	// read the user specifict salt used to do the password hash
 	static function get_salt_by_email($email) {

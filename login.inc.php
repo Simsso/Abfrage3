@@ -1,7 +1,3 @@
-<?php
-require('database.class.php');
-?>
-
 <!DOCTYPE html>
 <html>
 <? require('html-include/head.html'); ?>
@@ -119,6 +115,9 @@ require('database.class.php');
 										<td>Password</td>
 										<td><input type="password" name="password" placeholder="" required="required"/></td>
 									</tr>
+                                    <tr>
+                                        <td colspan="2"><label><input type="checkbox" name="stay-logged-in" value="1" checked="true" class="initial-width initial-height"/>&nbsp;Stay logged in</label></td>  
+                                    </tr>
 									<tr>
 										<td><input type="submit" value="Login"/></td>
 										<td></td>

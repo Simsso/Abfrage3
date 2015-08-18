@@ -468,6 +468,17 @@ body.mobile-menu-shown #main-wrapper {
 
 
 
+
+
+
+
+.initial-width {
+  width: initial;
+}
+.initial-height {
+  height: initial;
+}
+
 .display-block {
 	display: block;
 }
