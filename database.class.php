@@ -340,7 +340,11 @@ class Database {
     // get query lists of user
     // includes self created lists and lists shared with the user
     static function get_query_lists_of_user($id) {
-      return array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
+      $lists = array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
+      for ($i = 0; $i < count($lists); $i++) {
+        $lists[$i]->load_words();
+      }
+      return $lists;
     }
 
 	// get specific word list
@@ -627,9 +631,9 @@ class Database {
 
       $sql = "
         SELECT `label_attachment`.`id`, `label_attachment`.`list`, `label_attachment`.`label`, `label_attachment`.`active` 
-        FROM `label_attachment`, `label` 
-        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = '".$id."' AND 
-          `label_attachment`.`active` = '1' AND `label`.`active` = '1'";
+        FROM `label_attachment`, `label`, `list` 
+        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = '".$id."' AND `label_attachment`.`list` = `list`.`id` AND 
+          `label_attachment`.`active` = '1' AND `label`.`active` = '1' AND `list`.`active` = '1'";
       $query = mysqli_query($con, $sql);
       $output = array();
       while ($row = mysqli_fetch_assoc($query)) {
@@ -647,10 +651,10 @@ class LabelAttachment {
   public $active;
   
   function __construct($id, $list, $label, $active) {
-    $this->id = $id;
-    $this->list = $list;
-    $this->label = $label;
-    $this->active = $active;
+    $this->id = intval($id);
+    $this->list = intval($list);
+    $this->label = intval($label);
+    $this->active = intval($active);
   }
 }
 
@@ -663,11 +667,11 @@ class Label {
 	public $active;
 
 	public function __construct($id, $name, $user, $parent_label, $active) {
-		$this->id = $id;
+		$this->id = intval($id);
 		$this->name = $name;
-		$this->user = $user;
-		$this->parent_label = $parent_label;
-		$this->active = $active;
+		$this->user = intval($user);
+		$this->parent_label = intval($parent_label);
+		$this->active = intval($active);
 	}
 
 	// second constructor (by id)
@@ -690,7 +694,7 @@ class SimpleUser {
 	public $email;
 
 	public function __construct($id, $firstname, $lastname, $email) {
-		$this->id = $id;
+		$this->id =intval($id);
 		$this->firstname = $firstname;
 		$this->lastname = $lastname;
 		$this->email = $email;
@@ -731,14 +735,14 @@ class User extends SimpleUser {
 		$sql = "SELECT * FROM `user` WHERE `id` = '" . $id . "'";
 		$query = mysqli_query($con, $sql);
 		while ($row = mysqli_fetch_assoc($query)) {
-			$this->id = $id;
+			$this->id = intval($id);
 			$this->firstname = $row['firstname'];
 			$this->lastname = $row['lastname'];
 			$this->email = $row['email'];
 			$this->password = $row['password'];
 			$this->salt = $row['salt'];
-			$this->reg_time = $row['reg_time'];
-			$this->email_confirmed = $row['email_confirmed'];
+			$this->reg_time = intval($row['reg_time']);
+			$this->email_confirmed = intval($row['email_confirmed']);
 			$this->email_confirmation_key = $row['email_confirmation_key'];
 		}
 	}
@@ -751,9 +755,9 @@ class Login {
 	public $ip;
 
 	public function __construct($id, $user_id, $date, $ip) {
-		$this->id = $id;
-		$this->user_id = $user_id;
-		$this->date = $date;
+		$this->id = intval($id);
+		$this->user_id = intval($user_id);
+		$this->date = intval($date);
 		$this->ip = $ip;
 	}
 
@@ -770,15 +774,16 @@ class BasicWordList {
 	public $language1;
 	public $language2;
 	public $creation_time;
+    public $words;
 
 	public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time) {
-		$this->id = $id;
+		$this->id = intval($id);
 		$this->name = $name;
-		$this->creator = $creator;
+		$this->creator = intval($creator);
 		$this->comment = $comment;
 		$this->language1 = $language1;
 		$this->language2 = $language2;
-		$this->creation_time = $creation_time;
+		$this->creation_time = intval($creation_time);
 	}
   
     public function get_by_id($id) {
@@ -790,6 +795,17 @@ class BasicWordList {
         return new BasicWordList($id, $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
       }
       return null;
+    }
+  
+    public function load_words() {
+      global $con;
+
+      $sql = "SELECT * FROM `word` WHERE `list` = '" . $this->id . "' AND `status` = '1'";
+      $query = mysqli_query($con, $sql);
+      $this->words = array();
+      while ($row = mysqli_fetch_assoc($query)) {
+        array_push($this->words,  new Word($row['id'], $row['list'], $row['language1'], $row['language2']));
+      }
     }
 }
 
@@ -834,8 +850,8 @@ class Word {
 	public $language2;
 
 	public function __construct($id, $list, $language1, $language2) {
-		$this->id = $id;
-		$this->list = $list;
+		$this->id = intval($id);
+		$this->list = intval($list);
 		$this->language1 = $language1;
 		$this->language2 = $language2;
 	}
@@ -856,9 +872,9 @@ class SharingInformation {
 	public $permissions;
 
 	public function __construct($id, SimpleUser $user, $permissions) {
-		$this->id = $id;
+		$this->id = intval($id);
 		$this->user = $user;
-		$this->permissions = $permissions;
+		$this->permissions = intval($permissions);
 	}
 }
 ?>
