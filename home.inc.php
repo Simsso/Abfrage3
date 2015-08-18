@@ -83,13 +83,13 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 			<div id="content-query" data-page="query">
 				<div class="left-column">
 					<div class="box">
-						<div class="box-head">Select labels and word lists</div>
-						<div class="box-body">
-							<div id="query-label-selection">
-
-							</div>
-							<div id="query-list-selection">
-							</div>
+						<div class="box-head">
+                          Select labels and word lists
+                          <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
+                          <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                        </div>
+						<div class="box-body" data-start-state="expanded">
+                            <div id="query-selection"></div>
 						</div>
 					</div>
 				</div>

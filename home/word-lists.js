@@ -237,15 +237,6 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       shownListData = data; // update the list data variable to the downloaded data
       shownListId = id;
 
-      // handle data types
-      shownListData.creationTime = parseInt(shownListData.creationTime); // creation time is of type integer
-      shownListData.creator.id = parseInt(shownListData.creator.id); // creator id is of type integer
-      for (var i = 0; i < shownListData.labels.length; i++) { // cast label id, parent_label id and user id to integers
-        shownListData.labels[i].id = parseInt(shownListData.labels[i].id);
-        shownListData.labels[i].parent_label = parseInt(shownListData.labels[i].parent_label);
-        shownListData.labels[i].user = parseInt(shownListData.labels[i].user);
-      }
-
       // because the default value of language1 and language2 in the data base is nothing set it to "First language" and "Second language"
       // those vars are title of the bottom table, placeholder in the change language form and placeholder in the add new words form
       if (!shownListData.language1) shownListData.language1 = "First language";
@@ -793,13 +784,6 @@ function getLabelList(showLoadingInformation) {
   }).done(function(data) {
     console.log(data); // debug
     labels = jQuery.parseJSON(data); // parse JSON
-
-    // handle data types
-    for (var i = 0; i < labels.length; i++) {
-      labels[i].id = parseInt(labels[i].id); // id is an integer
-      labels[i].parent_label = parseInt(labels[i].parent_label); // parent label id is an integer
-      labels[i].user = parseInt(labels[i].user); // label user id is an integer
-    }
     
     // refreshQueryLabelSelection(labels);
 
