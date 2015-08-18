@@ -1,5 +1,4 @@
 <?php
-require('database.class.php');
 require('mail.class.php');
 $user = Database::get_user_by_id($_SESSION['id']);
 $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);

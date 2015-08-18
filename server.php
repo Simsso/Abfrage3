@@ -36,6 +36,12 @@ if (isset($_GET['action'])) {
       if ($result == 1) {
         session_start();
         $_SESSION['id'] = $id;
+        
+        // stay logged in
+        if ($_POST['stay-logged-in'] == 1) {
+          Database::stay_logged_in($_SESSION['id']);
+        }
+        
         Database::add_login($id);
         header("Location: /./#home");
         exit();
@@ -53,6 +59,17 @@ if (isset($_GET['action'])) {
 
     case 'logout':
       session_destroy();
+      
+      // delete stay logged in cookies
+      if (isset($_COOKIE['stay_logged_in_hash'])) {
+        unset($_COOKIE['stay_logged_in_hash']);
+        setcookie('stay_logged_in_hash', null, -1, '/');
+      }
+      if (isset($_COOKIE['stay_logged_in_id'])) {
+        unset($_COOKIE['stay_logged_in_id']);
+        setcookie('stay_logged_in_id', null, -1, '/');
+      }
+    
       header("Location: /./");
       exit();
       break;
