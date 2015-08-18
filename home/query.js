@@ -22,7 +22,7 @@ function refreshQueryLabelList(showLoadingInformation) {
     console.log(dataJSON); // debug
     queryLabels = dataJSON.labels;
     queryAttachments = dataJSON.label_list_attachments;
-    queryLists = dataJson.lists;
+    queryLists = dataJSON.lists;
 
 
     // handle data types
