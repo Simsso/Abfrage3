@@ -467,11 +467,33 @@ body.mobile-menu-shown #main-wrapper {
 }
 
 
+#query .language {
+  font-style: italic;
+  color: #444444;
+}
+/* question or answer word */
+#query-question, #query-answer {
+  font-size: 50px;
+}
 
 
 
 
 
+
+
+.unselectable {
+  cursor: default;
+  
+  /* make text not selectable */
+  -webkit-user-select: none; /* Chrome/Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
+}
 .initial-width {
   width: initial;
 }

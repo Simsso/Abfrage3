@@ -92,16 +92,57 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                             <div id="query-selection"></div>
 						</div>
 					</div>
+					<div class="box" id="query-box">
+						<div class="box-head">
+                          Query
+                          <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
+                        </div>
+						<div class="box-body" data-start-state="collapsed">
+                          <div id="query">
+                            <table class="width-100">
+                              <tr>
+                                <td><span class="language" id="query-lang1">English</span>:&nbsp;</td>
+                                <td id="query-question">design</td>
+                              </tr>
+                              <tr>
+                                <td><span class="language" id="query-lang2">German</span>:&nbsp;</td>
+                                <td>
+                                  <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
+                                  <input type="text" id="query-answer" class="unremarkable" class="width-100"/>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+						</div>
+					</div>
 				</div>
 				<div class="right-column">
+					<div class="box">
+						<div class="box-head">
+							Query Algorithm
+						</div>
+						<div class="box-body">
+							<p>Random</p>
+                            <p>Words under average</p>
+						</div>
+					</div>
 					<div class="box">
 						<div class="box-head">
 							Query Settings
 						</div>
 						<div class="box-body">
-							<p>Text box or buttons</p>
-							<p>Query algorithm</p>
-							<p>Direction</p>
+						  <p>Text box</p>
+                          <p>Buttons</p>
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-head">
+							Query Direction
+						</div>
+						<div class="box-body">
+                          <p>Both directions</p>
+                          <p>First language to second language</p>
+                          <p>Second language to first language</p>
 						</div>
 					</div>
 				</div>
