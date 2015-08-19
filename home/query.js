@@ -35,7 +35,6 @@ function List(id, name, creator, comment, language1, language2, creation_time, w
   };
 }
 
-
 // word
 function Word(id, list, language1, language2, answers) {
   this.id = id;
@@ -78,7 +77,7 @@ Word.getWordKnownBelow = function(wordArray, percentage) {
   }
   
   return Word.getRandomWordOfArray(wordsBelow);
-}
+};
 Word.getKnownAverageOfArray = function(wordArray) {
   if (wordArray.length === 0) return 0;
 
@@ -312,7 +311,7 @@ function removeListFromQuery(listId) {
 }
 
 function getListRow(list, selected) {
-  return '<tr' + (selected?'class="active"':'') + '><td><label class="checkbox-wrapper" data-list-id="' + list.id + '" data-checked="false">' + list.name + ' (' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + ')</label></td></tr>';
+  return '<tr' + (selected?'class="active"':'') + '><td><label class="checkbox-wrapper" data-list-id="' + list.id + '" data-checked="false">' + list.name + '</label></td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
 }
 
 function checkStartQueryButtonEnable() {
