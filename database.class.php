@@ -642,6 +642,18 @@ class Database {
       }
       return $output;
     }
+  
+  
+    static function add_query_results($user, $data) {
+      global $con;
+      // add the whole array
+      for ($i = 0; $i < count($data); $i++) {
+        $sql = "INSERT INTO `answer` (`user`, `word`, `correct`, `time`)
+        VALUES ('" . $user . "', '" . $data[$i]['word'] . "', '" . $data[$i]['correct'] . "', '" . $data[$i]['time'] . "')";
+        $query = mysqli_query($con, $sql);
+      }
+      return count($data);
+    }
 }
 
 class LabelAttachment {
