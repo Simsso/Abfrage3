@@ -20,7 +20,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<li class="nav_home nav-img-li" data-text="Home">
 						<a href="#home"><img src="img/home.svg" class="nav-image" alt="Home" title="Home"/></a>
 					</li>
-					<li class="nav_query" data-text="Query"><a href="#query">Query</a></li>
+					<li class="nav_query" data-text="Test"><a href="#query">Test</a></li>
 					<li class="nav_word-lists" data-text="Word lists"><a href="#word-lists">Word lists</a></li>
 				</ul>
 				<ul class="nav right">
@@ -80,7 +80,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 			</div>
 
 
-			<!-- Query -->
+			<!-- Test -->
 			<div id="content-query" data-page="query">
 				<div class="left-column">
 					<div class="box" id="query-select-box">
@@ -98,7 +98,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<div class="box" id="query-box">
 						<div class="box-head">
 						  <img src="img/question.svg" />
-                          Query
+                          Test
                           <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                         </div>
 						<div class="box-body" data-start-state="expanded">
@@ -125,13 +125,13 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<div class="box" id="query-results-upload-box">
 						<div class="box-head">
 						  <img src="img/upload.svg" />
-                          Upload query results
+                          Upload test results
                           <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                         </div>
 						<div class="box-body" data-start-state="expanded">
                           <div id="query-results-upload">
                               <p><input type="button" class="width-100" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
-                            <p>You can upload your answers (the information wether you answered the word correctly or not) to the cloud to make your next query better adjusted to your knowledge. No one else will be able to see your answers.</p>
+                            <p>You can upload your answers (the information about whether you answered the word correctly or not) to the cloud to make your next test better adjusted to your knowledge. No one else will be able to see your answers.</p>
                           </div>
 						</div>
 					</div>
@@ -142,7 +142,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<div class="box">
 						<div class="box-head">
 						    <img src="img/algorithm.svg" />
-							Query algorithm
+							Test algorithm
 						</div>
 						<div class="box-body">
                           <table class="box-table clickable">
@@ -155,7 +155,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<div class="box">
 						<div class="box-head">
 						    <img src="img/settings.svg" />
-							Query settings
+							Test settings
 						</div>
 						<div class="box-body">
                           <table class="box-table clickable">
@@ -167,7 +167,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 					<div class="box">
 						<div class="box-head">
 						    <img src="img/swap.svg" />
-							Query direction
+							Test direction
 						</div>
 						<div class="box-body">
                           <table class="box-table clickable">
@@ -400,22 +400,20 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 		<br class="clear-both hide-below-700">
 
-		<footer class="advertisment-bottom">
-			<!-- advertisment -->
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<ins class="adsbygoogle"
-			style="display:block"
-			data-ad-client="ca-pub-9727315436627573"
-			data-ad-slot="4992943646"
-			data-ad-format="auto"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>
+		<footer class="advertisment-bottom box">
+          <div class="box-body">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Abfrage3 Bottom -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9727315436627573" data-ad-slot="4992943646" data-ad-format="auto"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
 		</footer>
 	</div>
 
 	<?php
-	//require('html-include/footer.html');
+      include('html-include/footer.html');
 	?>
 </div>
 

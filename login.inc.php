@@ -5,10 +5,10 @@
 	<div id="main-wrapper">
 
 		<!-- navigation -->
-		<nav id="head-nav" class="navbar" id="nav">
+		<nav id="head-nav" class="navbar">
 			<div class="navbar-inner content-width">
 				<a href="#home">
-					<img class="logo" src="img/logo-46.png" />
+					<img class="logo" src="img/logo-46.png" alt="Abfrage3" />
 				</a><br class="clear-both smaller-800">
 				<ul class="nav left">
 					<li class="nav_home nav-img-li" data-text="Home">
@@ -116,7 +116,7 @@
 										<td><input type="password" name="password" placeholder="" required="required"/></td>
 									</tr>
                                     <tr>
-                                        <td colspan="2"><label><input type="checkbox" name="stay-logged-in" value="1" checked="true" class="initial-width initial-height"/>&nbsp;Stay logged in</label></td>  
+                                        <td colspan="2"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;Stay logged in</label></td>  
                                     </tr>
 									<tr>
 										<td><input type="submit" value="Login"/></td>
@@ -241,7 +241,7 @@
 							<h4>Earlier versions</h4>
 							<p>Abfrage3 has a long history: The first version, "Abfrage", was written in Java and looked very awful (Screenshot 1). It was developed in October 2013. Abfrage2 was not really successful though, it was just an attempt to create a nice WPF layout which totally failed. In Summer 2014 the third version Abfrage3 (Screenshot 2), a C# WPF application, became the first version in this series of the vocabulary learning software with advanced features like uploading and sharing lists, auto translation and a lot more. Unfortunately it was only executable on Windows which lead in August 2015 to the development of Abfrage3Web - the website you are currently visiting. </p>
 							<h4>Naming</h4>
-							<p>The name Abfrage3 is german and means something like <i>Query3</i>. For traditional reasons the English version was also named in german.</p>
+							<p>The name Abfrage3 is German and means something like <i>Test3</i>. For traditional reasons, the English version was also named in German.</p>
 							<h4>Ambition</h4>
 							<p>The big idea of Abfrage3Web was to create a fully functional vocabulary trainer which is fun to use. An important specification was the possibility to comfortably share word lists with other users. </p>
 						</div>
@@ -250,19 +250,19 @@
 						<div class="box-head">Source code</div>
 						<div class="box-body">
 							<p>Abfrage3 is open source! The whole code can be found on GitHub.</p>
-							<p><a href="https://github.com/Simsso/Abfrage3Web" target="_blank"><img src="img/github.png" /></a></p>
+							<p><a href="https://github.com/Simsso/Abfrage3Web" target="_blank"><img src="img/github.png" alt="GitHub" /></a></p>
 						</div>
 					</div>
 				</div>
 				<div class="right-column">
 					<div class="box">
 						<div class="box-body">
-							<div class="right-column-img-wrapper"><img src="img/abfrage-screenshot.min.jpg" class="screenshot right-column-img" data-description="The first version - Abfrage"/></div>
+							<div class="right-column-img-wrapper"><img src="img/abfrage-screenshot.min.jpg" class="screenshot right-column-img" data-description="The first version - Abfrage" alt="Abfrage screenshot"/></div>
 						</div>
 					</div>
 					<div class="box">
 						<div class="box-body">
-							<div class="right-column-img-wrapper"><img src="img/abfrage3-screenshot.min.jpg" class="screenshot right-column-img" data-description="Abfrage3 - a C# WPF application"/></div>
+							<div class="right-column-img-wrapper"><img src="img/abfrage3-screenshot.min.jpg" class="screenshot right-column-img" data-description="Abfrage3 - a C# WPF application" alt="Abfrage3 screenshot"/></div>
 						</div>
 					</div>
 				</div>
@@ -309,21 +309,21 @@
 
 					<div class="box">
 						<div class="box-head">Social</div>
-						<div class="box-body" id="contact-body">
+						<div class="box-body">
 							<ul class="social-icons">
 								<li>
 									<a href="https://plus.google.com/106647445778912368795/posts" target="_blank">
-										<img src="img/google+.png" alt="Google+" width="100px">
+										<img src="img/google+.png" alt="Google+" class="width-100px">
 									</a>
 								</li>
 								<li>
 									<a href="http://www.youtube.com/user/Simssos" target="_blank">
-										<img src="img/youtube.png" alt="YouTube" width="100px">
+										<img src="img/youtube.png" alt="YouTube" class="width-100px">
 									</a>
 								</li>
 								<li>
 									<a href="https://github.com/Simsso" target="_blank">
-										<img src="img/github.png" alt="GitHub" width="100px">
+										<img src="img/github.png" alt="GitHub" class="width-100px">
 									</a>
 								</li>
 							</ul>
@@ -337,9 +337,9 @@
 						<div class="box-head">About me</div>
 						<div class="box-body">
 							<div class="right-column-img-wrapper">
-								<img src="img/timo-denk.jpg" class="right-column-img"/>
+								<img src="img/timo-denk.jpg" class="right-column-img" alt="Timo Denk"/>
 							</div>
-							<p>My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my degree in 2016.</p>
+							<p>My name is Timo Denk, I am 18 years old and a German student. I am currently studying at Technisches Gymnasium in Waiblingen, Germany. I will get my abitur in 2016.</p>
 							<p>In my leisure time I like to develop software and realize hardware projects. I also do a lot of sports.</p>
 						</div>
 					</div>
@@ -350,7 +350,7 @@
 		</div>
 
 		<?php
-		//require('html-include/footer.html');
+		  include('html-include/footer.html');
 		?>
 	</div>
 
