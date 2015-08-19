@@ -2,14 +2,14 @@
 $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {
     case 'expand':
-    $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
-    break;
+      $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
+      break;
     case 'collapse':
-    $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
-    break;
+      $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
+      break;
     case 'refresh':
-    window[$(this).data('function-name')](true);
-    break;
+      window[$(this).data('function-name')](true);
+      break;
   }
 }).show();
 
@@ -48,9 +48,9 @@ for (var i = 0; i < $menuIcons.length; i++) {
 
 function toggleMenu() {
   if (menuShown)
-  hideMenu();
+    hideMenu();
   else
-  showMenu();
+    showMenu();
 }
 function showMenu() {
   if (menuShown) return;
@@ -102,7 +102,7 @@ function Toast(text, ms) {
   this.text = text;
 
   if (!ms)
-  var ms = 5000;
+    var ms = 5000;
   $('#toast').promise().done(function() {
     $(this).html(text).fadeIn().delay(ms).fadeOut();
   });
@@ -150,8 +150,8 @@ $('#screenshot-popup-wrapper').on('click', function() {
 });
 $(document).keyup(function(e) {
   if (e.keyCode == 27) { // escape key maps to keycode '27'
-  $('#screenshot-popup-wrapper').fadeOut();
-}
+    $('#screenshot-popup-wrapper').fadeOut();
+  }
 });
 
 
@@ -206,7 +206,7 @@ function saveTextAsFile(text, fileName) {
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+                        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-37082212-1', 'auto');
 ga('send', 'pageview');

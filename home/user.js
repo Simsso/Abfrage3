@@ -89,7 +89,7 @@ function removeUser(id) {
 function refreshListOfAddedUsers(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
-  $('#people-you-have-added').html(loading);
+    $('#people-you-have-added').html(loading);
 
   jQuery.ajax('server.php', {
     data: {
@@ -125,7 +125,7 @@ function refreshListOfAddedUsers(showLoadingInformation) {
 function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
-  $('#people-who-have-added-you').html(loading);
+    $('#people-who-have-added-you').html(loading);
 
   jQuery.ajax('server.php', {
     data: {

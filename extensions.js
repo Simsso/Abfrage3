@@ -1,7 +1,7 @@
 // repeats a given string n times
 String.prototype.repeat = function(n) {
   if (n === 0)
-  return '';
+    return '';
   n = n || 1;
   return Array(n + 1).join(this);
 };
@@ -44,9 +44,9 @@ Math.map = function(x, in_min, in_max, out_min, out_max) {
 // sign function
 Math.sgn = function(x) {
   if (x < 0)
-  return -1;
+    return -1;
   if (x === 0)
-  return 0;
+    return 0;
   return 1;
 };
 

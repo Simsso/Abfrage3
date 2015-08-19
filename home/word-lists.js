@@ -126,7 +126,7 @@ function enableAllViewEditButtons() {
 // refresh list of shared word lists (with the user)
 function refreshListOfSharedWordLists(showLoadingInformation) {
   if (showLoadingInformation)
-  $('#list-of-shared-word-lists').html(loading);
+    $('#list-of-shared-word-lists').html(loading);
 
   showNoListSelectedInfo();
 
@@ -405,9 +405,9 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       $('#word-list-info-words').show();
 
       if (allowEdit)
-      $('#words-add').show();
+        $('#words-add').show();
       else
-      $('#words-add').hide();
+        $('#words-add').hide();
 
       // update label list with loading information
       getLabelList(true);
@@ -430,7 +430,7 @@ function getTableOfWordList(content, allowEdit, lang1, lang2) {
 // export word list
 function exportList(list) {
   if (list == undefined)
-  list = shownListData;
+    list = shownListData;
 
   var output = "";
 
@@ -629,7 +629,7 @@ function addWord(lang1, lang2, allowEdit) {
 function refreshListSharings(showLoadingInformation, wordListId) {
   // set id parameter to the shown list id if undefined has been passed
   if (wordListId == undefined)
-  wordListId = shownListId;
+    wordListId = shownListId;
 
   // show loading information
   $('#word-list-sharing').show();
@@ -770,7 +770,7 @@ function setSharingPermissions(listId, email, permissions, callback) {
 // get label list of user
 function getLabelList(showLoadingInformation) {
   if (showLoadingInformation)
-  $('#list-labels-list').html(loading);
+    $('#list-labels-list').html(loading);
 
   // send request
   jQuery.ajax('server.php', {
@@ -784,7 +784,7 @@ function getLabelList(showLoadingInformation) {
   }).done(function(data) {
     console.log(data); // debug
     labels = jQuery.parseJSON(data); // parse JSON
-    
+
     // refreshQueryLabelSelection(labels);
 
 
@@ -917,7 +917,7 @@ function getLabelList(showLoadingInformation) {
       while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined)) {
         if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
           if (expand) // expand
-          allFollowing.eq(i).show();
+            allFollowing.eq(i).show();
 
           else { // collapse
             allFollowing.eq(i).hide();
@@ -1027,7 +1027,7 @@ function getLabelIdsWithIndenting(labels, indenting) {
 // returns the indenting of a label
 function getLabelIndenting(labels, index) {
   if (labels[index].parent_label == 0)
-  return 0;
+    return 0;
 
   return getLabelIndenting(labels, getLabelIndexByLabelId(labels, labels[index].parent_label)) + 1;
 }
