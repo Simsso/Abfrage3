@@ -65,8 +65,20 @@ function Word(id, list, language1, language2, answers) {
 }
 // static functions
 Word.getRandomWordOfArray = function(wordArray) {
+  if (wordArray.length === 0) return undefined;
   return wordArray[Math.round(Math.random() * (wordArray.length - 1))];
 };
+Word.getWordKnownBelow = function(wordArray, percentage) {
+  var wordsBelow = [];
+  // search for all words below given percentage
+  for (var i = 0; i < wordArray.length; i++) {
+    if (wordArray[i].getKnownAverage() < percentage) {
+      wordsBelow.push(wordArray[i]);
+    }
+  }
+  
+  return Word.getRandomWordOfArray(wordsBelow);
+}
 Word.getKnownAverageOfArray = function(wordArray) {
   if (wordArray.length === 0) return 0;
 
@@ -365,7 +377,7 @@ function getListById(id) {
 
 
 
-var queryWords = [], queryChosenAlgorithm = QueryAlgorithm.Random, queryChosenDirection = QueryDirection.Both, querySelectedType = 'text-box', queryRunning = false, 
+var queryWords = [], queryChosenAlgorithm = QueryAlgorithm.Random, queryChosenDirection = QueryDirection.Both, querySelectedType = QueryType.TextBox, queryRunning = false, 
     currentWord = null, currentDirection = null, currentWordCorrectAnswer = null, queryWrongAnswerGiven = false;
 
 var queryAnswers = [], nextIndexToUpload = 0;
@@ -388,7 +400,7 @@ function startQuery() {
 
   nextWord();
 
-  $('#query-select-box img[data-action="collapse"]').trigger('collapse');
+  //$('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 
 }
@@ -432,7 +444,7 @@ function getNextWord() {
   }
   else if (queryChosenAlgorithm == QueryAlgorithm.UnderAverage) {
     var avg = Word.getKnownAverageOfArray(queryWords);
-    
+    return Word.getWordKnownBelow(queryWords, avg);
   }
 }
 
@@ -446,7 +458,8 @@ $('#query-answer').on('keypress', function(e) {
       }
       else {
         addQueryAnswer(currentWord, 1);
-        refreshQueryResultsUploadButton();
+        
+        tryAutoUpload();
       }
 
       $('#query-box').trigger('shadow-blink-green');
@@ -460,7 +473,7 @@ $('#query-answer').on('keypress', function(e) {
         queryWrongAnswerGiven = true;
         addQueryAnswer(currentWord, 0);
         $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
-        refreshQueryResultsUploadButton();
+        tryAutoUpload();
       }
     }
   }
@@ -504,6 +517,48 @@ function uploadQueryResults() {
     console.log(data);
   });
 }
+
+
+
+
+
+
+// settings (algorithm, direction and type)
+
+// query algorithm
+$('#query-algorithm label').on('click', function() {
+  $('#query-algorithm tr').removeClass('active');
+  $(this).parent().parent().addClass('active');
+  queryChosenAlgorithm = parseInt($(this).data('algorithm'));
+});
+
+// query direction
+$('#query-direction label').on('click', function() {
+  $('#query-direction tr').removeClass('active');
+  $(this).parent().parent().addClass('active');
+  queryChosenDirection = parseInt($(this).data('direction'));
+});
+
+
+
+
+// query results auto upload
+
+function tryAutoUpload() {
+  if (autoUploadEnabled()) 
+    uploadQueryResults();
+  else
+    refreshQueryResultsUploadButton();
+}
+
+function autoUploadEnabled() {
+  return $('#query-results-auto-upload').is(':checked');
+}
+
+$('#query-results-auto-upload').on('click', function() {
+  if (autoUploadEnabled()) 
+    uploadQueryResults();
+});
 
 
 

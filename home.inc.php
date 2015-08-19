@@ -130,7 +130,7 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-results-upload">
-                  <p><input type="button" class="width-100" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <p><label><input type="checkbox" id="query-results-auto-upload" />Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
                   <p>You can upload your answers (the information about whether you answered the word correctly or not) to the cloud to make your next test better adjusted to your knowledge. No one else will be able to see your answers.</p>
                 </div>
               </div>
@@ -145,10 +145,10 @@ if (is_null($next_to_last_login)) {
                 Test algorithm
               </div>
               <div class="box-body">
-                <table class="box-table clickable">
-                  <tr class="active"><td>Random</td></tr>
-                  <tr><td>Words under average</td></tr>
-                  <tr><td>Group words</td></tr>
+                <table class="box-table clickable" id="query-algorithm">
+                  <tr class="active"><td><label data-algorithm="0">Random</label></td></tr>
+                  <tr><td><label data-algorithm="1">Words under average</label></td></tr>
+                  <tr><td><label data-algorithm="2">Group words</label></td></tr>
                 </table>
               </div>
             </div>
@@ -158,7 +158,7 @@ if (is_null($next_to_last_login)) {
                 Test settings
               </div>
               <div class="box-body">
-                <table class="box-table clickable">
+                <table class="box-table clickable" id="query-settings">
                   <tr class="active"><td>Text box</td></tr>
                   <tr><td>Buttons</td></tr>
                 </table>
@@ -170,10 +170,10 @@ if (is_null($next_to_last_login)) {
                 Test direction
               </div>
               <div class="box-body">
-                <table class="box-table clickable">
-                  <tr><td>First language to second language</td></tr>
-                  <tr><td>Second language to first language</td></tr>
-                  <tr class="active"><td>Both directions</td></tr>
+                <table class="box-table clickable" id="query-direction">
+                  <tr><td><label data-direction="0">First language to second language</label></td></tr>
+                  <tr><td><label data-direction="1">Second language to first language</label></td></tr>
+                  <tr class="active"><td><label data-direction="-1">Both directions</label></td></tr>
                 </table>
               </div>
             </div>
