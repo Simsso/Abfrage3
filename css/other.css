@@ -297,6 +297,12 @@ box-shadow: inset 5px 0 0 #8892BF;
 	white-space: nowrap;
 }
 
+.box-table.clickable td {
+  cursor: pointer !important;
+}
+.box-table.clickable td:hover {
+  color: #4F5B93;
+}
 
 .left-column {
 	float: left;
@@ -353,8 +359,10 @@ img.right-column-img {
 	width: 100%;
 }
 div.right-column-img-wrapper {
+    width: 50%;
 	max-width: 315px;
 	margin: auto;
+    margin-bottom: 25px;
 }
 
 .cookie-header {
@@ -486,7 +494,7 @@ body.mobile-menu-shown #main-wrapper {
 
 
 
-.unselectable {
+.unselectable, .box-table.clickable td {
   cursor: default;
   
   /* make text not selectable */

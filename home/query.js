@@ -109,7 +109,7 @@ function refreshQueryListSelection() {
   }
   
   
-  $('#query-list-selection').html('<table class="box-table">' + html + '</table');
+  $('#query-list-selection').html('<table class="box-table clickable">' + html + '</table');
   
   // checkbox click event
   $('#query-list-selection label').click( function(){
@@ -184,7 +184,7 @@ function getHtmlTableOfLabelsQuery(queryLabels) {
   var html = getHtmlListOfLabelIdQuery(queryLabels, 0, 0);
 
   if (html.length > 0) {
-    html = '<table class="box-table">' + html + '</table>';
+    html = '<table class="box-table clickable">' + html + '</table>';
   }
   else {
     // if there was no code returned there are no labels to show
@@ -243,7 +243,7 @@ function startQuery() {
   
   nextWord();
   
-  $('#query-select-box img[data-action="collapse"]').trigger('collapse');
+  // $('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 }
 
@@ -307,6 +307,13 @@ $('#query-answer').on('keypress', function(e) {
       
 function checkAnswer(user, correct) {
   return (user == correct);
+}
+
+
+function QueryAnswer(word, correct) {
+  this.word = word;
+  this.correct = correct;
+  this.time = Date.seconds();
 }
 
 
