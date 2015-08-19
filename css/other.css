@@ -297,8 +297,8 @@ box-shadow: inset 5px 0 0 #8892BF;
 	white-space: nowrap;
 }
 
-.box-table.clickable td {
-  cursor: pointer !important;
+.box-table.clickable td label {
+  cursor: pointer;
 }
 .box-table.clickable td:hover {
   color: #4F5B93;

@@ -342,7 +342,7 @@ class Database {
     static function get_query_lists_of_user($id) {
       $lists = array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
       for ($i = 0; $i < count($lists); $i++) {
-        $lists[$i]->load_words();
+        $lists[$i]->load_words(true, $id);
       }
       return $lists;
     }
@@ -654,6 +654,39 @@ class Database {
       }
       return count($data);
     }
+  
+    static function get_query_results($user, $wordIds) {
+      $answers = array();
+      for ($i = 0; $i < count($wordIds); $i++) {
+        array_merge($answers, Answer::get_by_word_id($wordIds[$i]));
+      }
+      return $answers;
+    }
+}
+
+class Answer {
+  public $id;
+  public $user;
+  public $word;
+  public $correct;
+  public $time;
+  
+  function __construct($id, $user, $word, $correct, $time) {
+    $this->id = intval($id);
+    $this->user = intval($user);
+    $this->word = intval($word);
+    $this->correct = intval($correct);
+    $this->time = intval($time);
+  }
+  
+  static function get_by_id($id) {
+    global $con;
+    $sql = "SELECT * FROM `answer` WHERE `id` = '".$id."'";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      return new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['time']);
+    }
+  }
 }
 
 class LabelAttachment {
@@ -818,14 +851,18 @@ class BasicWordList {
       return null;
     }
   
-    public function load_words() {
+    public function load_words($loadAnswers, $user_id) {
       global $con;
 
       $sql = "SELECT * FROM `word` WHERE `list` = '" . $this->id . "' AND `status` = '1'";
       $query = mysqli_query($con, $sql);
       $this->words = array();
       while ($row = mysqli_fetch_assoc($query)) {
-        array_push($this->words,  new Word($row['id'], $row['list'], $row['language1'], $row['language2']));
+        $word = new Word($row['id'], $row['list'], $row['language1'], $row['language2']);
+        if ($loadAnswers) {
+          $word->load_answers($user_id);
+        }
+        array_push($this->words, $word);
       }
     }
 }
@@ -869,6 +906,7 @@ class Word {
 	public $list;
 	public $language1;
 	public $language2;
+    public $answers;
 
 	public function __construct($id, $list, $language1, $language2) {
 		$this->id = intval($id);
@@ -876,6 +914,16 @@ class Word {
 		$this->language1 = $language1;
 		$this->language2 = $language2;
 	}
+  
+    function load_answers($user_id) {
+      $this->answers = array();
+      global $con;
+      $sql = "SELECT * FROM `answer` WHERE `user` = '".$user_id."' AND `word` = '".$this->id."'";
+      $query = mysqli_query($con, $sql);
+      while ($row = mysqli_fetch_assoc($query)) {
+          array_push($this->answers, new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['time']));
+      }
+    }
 
 	static function get_by_id($id) {
 		global $con;

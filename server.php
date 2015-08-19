@@ -223,11 +223,13 @@ if (isset($_GET['action'])) {
       $result->lists = Database::get_query_lists_of_user($_SESSION['id']);
       echo json_encode($result);
       break;
-    case 'upload-query-results':
-      
-      echo "{'response':'" . addslashes(Database::add_query_results($_SESSION['id'], json_decode(stripslashes($_POST['answers']), true))) . "'}";
-      break;
     
+    case 'upload-query-results':
+      $rawJSON = stripslashes($_POST['answers']);
+      $answers = json_decode($rawJSON, true);
+      $count = Database::add_query_results($_SESSION['id'], $answers);
+      echo '{"response":' . $count . '}';
+      break;
   }
 } else {
   echo "Abfrage3 server is running.";

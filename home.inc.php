@@ -111,8 +111,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                               <tr>
                                 <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
                                 <td>
-                                  <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
                                   <input type="text" id="query-answer" class="unremarkable width-100"/>
+                                  <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
+                                  <div id="query-word-mark"></div>
                                 </td>
                               </tr>
                             </table>
@@ -130,7 +131,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 						<div class="box-body" data-start-state="expanded">
                           <div id="query-results-upload">
                               <p><input type="button" class="width-100" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
-                            <p>You can upload your answers (the information wether you answered the word correctly or not) to the cloud to make your next query more adjusted to your knowledge. No one else will be able to see your answers.</p>
+                            <p>You can upload your answers (the information wether you answered the word correctly or not) to the cloud to make your next query better adjusted to your knowledge. No one else will be able to see your answers.</p>
                           </div>
 						</div>
 					</div>
