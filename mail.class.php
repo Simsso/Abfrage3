@@ -1,74 +1,74 @@
 <?php
 class Mail {
-	const DEFAULT_SENDER_EMAIL = "abfrage3@simsso.de";
+  const DEFAULT_SENDER_EMAIL = "abfrage3@simsso.de";
 
-	public $to;
-	public $subject;
-	public $body;
-	public $header;
+  public $to;
+  public $subject;
+  public $body;
+  public $header;
 
-	protected $from;
-	protected $reply_to;
+  protected $from;
+  protected $reply_to;
 
-	// Mail class constructor
-	public function __construct($to, $from, $reply_to, $subject, $body) {
-		$this->from = $from;
-		$this->reply_to = $reply_to;
+  // Mail class constructor
+  public function __construct($to, $from, $reply_to, $subject, $body) {
+    $this->from = $from;
+    $this->reply_to = $reply_to;
 
-		// set to default value if no $from has been passed
-		if (is_null($this->from)) {
-			$this->from = self::DEFAULT_SENDER_EMAIL;
-		}
+    // set to default value if no $from has been passed
+    if (is_null($this->from)) {
+      $this->from = self::DEFAULT_SENDER_EMAIL;
+    }
 
-		// set $reply_to to $from if no reply address has been passed
-		if (is_null($this->reply_to)) {
-			$this->reply_to = $this->from;
-		}
+    // set $reply_to to $from if no reply address has been passed
+    if (is_null($this->reply_to)) {
+      $this->reply_to = $this->from;
+    }
 
-		// set attributes
-		$this->to = $to;
-		$this->subject = $subject;
-		$this->body = $body;
+    // set attributes
+    $this->to = $to;
+    $this->subject = $subject;
+    $this->body = $body;
 
-		// default header
-		$this->update_header();
-	}
+    // default header
+    $this->update_header();
+  }
 
-	protected function update_header() {
-		$this->header = "From: " . $this->from . "\r\nReply-To: " . $this->reply_to . "\r\n";
-	}
+  protected function update_header() {
+    $this->header = "From: " . $this->from . "\r\nReply-To: " . $this->reply_to . "\r\n";
+  }
 
-	function send() {
-		mail($this->to, $this->subject, $this->body, $this->header);
-	}
+  function send() {
+    mail($this->to, $this->subject, $this->body, $this->header);
+  }
 
-	static function get_email_confirmation_mail($name, $email, $key) {
-		$text = 'You have created an Abfrage3 account. Confirm your email address by clicking the following link:<br>
+  static function get_email_confirmation_mail($name, $email, $key) {
+    $text = 'You have created an Abfrage3 account. Confirm your email address by clicking the following link:<br>
 		<a href="http://abfrage3.simsso.de/?email=' . $email . '&email_confirmation_key=' . $key . '">http://abfrage3.simsso.de/?email=' . $email . '&email_confirmation_key=' . $key . '</a></p>
 		<p>If you have not created an account simply ignore this email.';
-		return new Default_Client_HTML_Mail($email, "Abfrage3 email confirmation", $name, $text);
-	}
+    return new Default_Client_HTML_Mail($email, "Abfrage3 email confirmation", $name, $text);
+  }
 }
 
 // HTML mail
 class HTML_Mail extends Mail {
-	public function __construct($to, $from, $reply_to, $subject, $body) {
-		// call default constructor
-		parent::__construct($to, $from, $reply_to, $subject, $body);
+  public function __construct($to, $from, $reply_to, $subject, $body) {
+    // call default constructor
+    parent::__construct($to, $from, $reply_to, $subject, $body);
 
-		// set different header with HTML information
-		$this->update_header();
-	}
+    // set different header with HTML information
+    $this->update_header();
+  }
 
-	protected function update_header() {
-		$this->header = "From: " . $this->from . "\r\nReply-To: " . $this->reply_to . "\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=ISO-8859-1\r\n";
-	}
+  protected function update_header() {
+    $this->header = "From: " . $this->from . "\r\nReply-To: " . $this->reply_to . "\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=ISO-8859-1\r\n";
+  }
 }
 
 // default HTML mail for users
 class Default_Client_HTML_Mail extends HTML_Mail {
-	public function __construct($to, $subject, $name, $text) {
-		$body ='
+  public function __construct($to, $subject, $name, $text) {
+    $body ='
 		<html>
 		<body style="font-family: arial; background-color: #ECEFF1; margin: 0; padding: 0;">
 		<nav style="position: relative;
@@ -96,7 +96,7 @@ class Default_Client_HTML_Mail extends HTML_Mail {
 		</body>
 		</html>
 		';
-		parent::__construct($to, self::DEFAULT_SENDER_EMAIL, null, $subject, $body);
-	}
+    parent::__construct($to, self::DEFAULT_SENDER_EMAIL, null, $subject, $body);
+  }
 }
 ?>

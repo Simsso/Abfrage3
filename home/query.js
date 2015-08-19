@@ -24,13 +24,13 @@ function refreshQueryLabelList(showLoadingInformation) {
     console.log(data);
     var dataJSON = jQuery.parseJSON(data); // parse JSON
     console.log(dataJSON); // debug
-    
+
     // labels
     queryLabels = dataJSON.labels;
-    
+
     // label list attachments
     queryAttachments = dataJSON.label_list_attachments;
-    
+
     // lists
     queryLists = [];
     for (var i = 0; i < dataJSON.lists.length; i++) {
@@ -47,19 +47,19 @@ function refreshQueryLabelList(showLoadingInformation) {
         )
       );
     }
-    
+
     $('#query-selection').html('<div id="query-label-selection" style="width: calc(50% - 12.5px); float: left; "></div><div id="query-list-selection" style="width: calc(50% - 12.5px); float: right; "></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start test" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
-    
+
     // provide label selection
     $('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
-    
+
     // provide list selection
     refreshQueryListSelection();
-    
-    
+
+
     // start query button click event
     $('#query-start-button').on('click', startQuery);
-    
+
     // checkbox click event
     $('#query-label-selection label').on('click', function(){
       // read label id from checkbox data tag
@@ -74,7 +74,7 @@ function refreshQueryLabelList(showLoadingInformation) {
         addLabelToQuery(labelId);
       }
     });
-    
+
     // expand functionallity
     // expand single labels
     $('#query-label-selection .small-exp-col-icon').on('click', function() {
@@ -89,7 +89,7 @@ function refreshQueryLabelList(showLoadingInformation) {
       while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined)) {
         if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
           if (expand) // expand
-          allFollowing.eq(i).show();
+            allFollowing.eq(i).show();
 
           else { // collapse
             allFollowing.eq(i).hide();
@@ -118,20 +118,20 @@ function refreshQueryLabelList(showLoadingInformation) {
 
 function refreshQueryListSelection() {
   var html = '';
-  
+
   queryLists.sort(compareListsByName);
-  
+
   for (var i = 0; i < queryLists.length; i++) {
     var selected = false;
     if (querySelectedLists.contains(queryLists[i].id)) 
       selected = true;
-    
+
     html += getListRow(queryLists[i], selected);
   }
-  
-  
+
+
   $('#query-list-selection').html('<table class="box-table clickable">' + html + '</table');
-  
+
   // checkbox click event
   $('#query-list-selection label').click( function(){
     // read list id from checkbox data tag
@@ -155,7 +155,7 @@ function addLabelToQuery(labelId) {
       addListToQuery(queryAttachments[i].list);
     }
   }
-  
+
   $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').find('label').data('checked', 'true');
   querySelectedLabel.push(labelId);
 }
@@ -257,30 +257,30 @@ var queryAnswers = [], nextIndexToUpload = 0;
 function startQuery() {
   $('#query').removeClass('display-none');
   queryRunning = true;
-  
+
   // produce one array containing all query words
   queryWords = [];
   for (var i = 0; i < querySelectedLists.length; i++) {
     queryWords = queryWords.concat(getListById(querySelectedLists[i]).words);
   }
-  
+
   // array of ids of words selecte for the query
   var wordIds = [];
   for (var i = 0; i < queryWords.length; i++) {
     wordIds.push(queryWords[i].id);
   }
-  
+
   nextWord();
 
   $('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
-  
+
 }
 
 function nextWord() {  
   currentWord = getNextWord();
   var listOfTheWord = getListById(currentWord.list);
-  
+
   if (queryType == 'text-box') {
     if (queryDirection == -1) { // both directions
       currentDirection = Math.round(Math.random()); // get random direction
@@ -288,7 +288,7 @@ function nextWord() {
     else {
       currentDirection = queryDirection;
     }
-    
+
     // fill the question fields
     if (currentDirection == 0) {
       $('#query-lang1').html(listOfTheWord.language1);
@@ -302,11 +302,11 @@ function nextWord() {
       $('#query-question').html(currentWord.language2);
       currentWordCorrectAnswer = currentWord.language1;
     }
-    
-        
+
+
     setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
   }
-    
+
   $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
 }
 
@@ -318,41 +318,41 @@ function getNextWord() {
 
 
 $('#query-answer').on('keypress', function(e) {
-    if (e.which == 13) {
-      if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer
-        if (queryWrongAnswerGiven) {
-          queryWrongAnswerGiven = false;
-          $('#correct-answer').hide();
-        }
-        else {
-          addQueryAnswer(currentWord, 1);
-          refreshQueryResultsUploadButton();
-        }
-        
-        $('#query-box').trigger('shadow-blink-green');
-        
-        nextWord();
+  if (e.which == 13) {
+    if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer
+      if (queryWrongAnswerGiven) {
+        queryWrongAnswerGiven = false;
+        $('#correct-answer').hide();
       }
-      else { // wrong answer
-        if (!queryWrongAnswerGiven) { // show correct answer
-          $('#correct-answer').show().html(currentWordCorrectAnswer);
-          $(this).select();
-          queryWrongAnswerGiven = true;
-          addQueryAnswer(currentWord, 0);
-          $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
-          refreshQueryResultsUploadButton();
-        }
+      else {
+        addQueryAnswer(currentWord, 1);
+        refreshQueryResultsUploadButton();
+      }
+
+      $('#query-box').trigger('shadow-blink-green');
+
+      nextWord();
+    }
+    else { // wrong answer
+      if (!queryWrongAnswerGiven) { // show correct answer
+        $('#correct-answer').show().html(currentWordCorrectAnswer);
+        $(this).select();
+        queryWrongAnswerGiven = true;
+        addQueryAnswer(currentWord, 0);
+        $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
+        refreshQueryResultsUploadButton();
       }
     }
+  }
 });
 
 function addQueryAnswer(word, answer) {
   var answer = new QueryAnswer(word.id, answer);
   queryAnswers.push(answer);
   word.answers.push(answer);
-    
+
 }
-      
+
 function checkAnswer(user, correct) {
   return (user.trim() == correct.trim());
 }
@@ -367,9 +367,9 @@ $('#query-results-upload-button').on('click', uploadQueryResults);
 function uploadQueryResults() {
   var answersToUpload = queryAnswers.slice(nextIndexToUpload);
   nextIndexToUpload = queryAnswers.length;
-  
+
   refreshQueryResultsUploadButton();
-  
+
   $.ajax({
     type: 'POST',
     url: 'server.php?action=upload-query-results',
@@ -377,10 +377,10 @@ function uploadQueryResults() {
     dataType: 'json'
   })
   .done( function( data ) {
-      console.log(data);
+    console.log(data);
   })
   .fail( function( data ) {
-      console.log(data);
+    console.log(data);
   });
 }
 
@@ -392,27 +392,27 @@ function List(id, name, creator, comment, language1, language2, creation_time, w
   this.language2 = language2;
   this.comment = comment;
   this.creation_time = creation_time;
-  
+
   this.words = [];
   for (var i = 0; i < words.length; i++) {
     this.words.push(new Word(words[i].id, words[i].list, words[i].language1, words[i].language2, words[i].answers)); 
   }
-  
-  
+
+
   // methods
-  
+
   this.getName = function() {
     return this.name;
   }
-  
+
   this.getKnownAverage = function() {
     if (this.words.length === 0) return 0;
-    
+
     var sum = 0.0;
     for (var i = 0; i < this.words.length; i++) {
       sum += this.words[i].getKnownAverage();
     }
-    
+
     return sum / this.words.length;
   }
 }
@@ -422,17 +422,17 @@ function Word(id, list, language1, language2, answers) {
   this.language1 = language1;
   this.language2 = language2;
   this.list = list;
-  
+
   this.answers = [];
   for (var i = 0; i < answers.length; i++) {
     this.answers.push(new QueryAnswer(answers[i].word, answers[i].correct, answers[i].id, answers[i].time));
   }
-  
-  
+
+
   // methods
   this.getKnownAverage = function() {
     if (this.answers.length === 0) return 0;
-    
+
     var knownCount = 0.0;
     for (var i = 0; i < this.answers.length; i++) {
       if (this.answers[i].correct === 1) {
@@ -446,12 +446,12 @@ function Word(id, list, language1, language2, answers) {
 function QueryAnswer(word, correct, id, time) {
   this.word = word;
   this.correct = correct;
-      
+
   if (time === undefined) 
     this.time = Date.seconds();
   else 
     this.time = time;
-  
+
   if (id === undefined) 
     this.id = undefined;
   else 
