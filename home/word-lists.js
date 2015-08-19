@@ -824,6 +824,8 @@ function getLabelList(showLoadingInformation) {
       $nameInput = $(this).children('.label-add-name').prop('disabled', true);
       $parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
 
+      expandedLabelsIds.push(parseInt($parentSelect.val())); // expand parent label of newly added label
+      
       // send message to the server
       addLabel(shownListId, $nameInput.val(), $parentSelect.val(), function() {
         // after adding successfully refresh the label list without loading information

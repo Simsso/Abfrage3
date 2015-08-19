@@ -130,7 +130,7 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-results-upload">
-                  <p><label><input type="checkbox" id="query-results-auto-upload" />Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
                   <p>You can upload your answers (the information about whether you answered the word correctly or not) to the cloud to make your next test better adjusted to your knowledge. No one else will be able to see your answers.</p>
                 </div>
               </div>
