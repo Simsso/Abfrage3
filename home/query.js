@@ -7,8 +7,9 @@ var querySelectedLists = [];
 
 // get label list of user
 function refreshQueryLabelList(showLoadingInformation) {
-  if (showLoadingInformation)
+  if (showLoadingInformation) {
     $('#query-selection').html(loading);
+  }
 
   // send request
   jQuery.ajax('server.php', {
@@ -231,6 +232,8 @@ function getListById(id) {
 var queryWords = [], queryAlgorithm = 'random', queryDirection = -1, queryType = 'text-box', queryRunning = false, 
     currentWord = null, currentDirection = null, currentWordCorrectAnswer = null, queryWrongAnswerGiven = false;
 
+var queryAnswers = [], nextIndexToUpload = 0;
+
 function startQuery() {
   $('#query').removeClass('display-none');
   queryRunning = true;
@@ -292,23 +295,59 @@ $('#query-answer').on('keypress', function(e) {
           queryWrongAnswerGiven = false;
           $('#correct-answer').hide();
         }
+        else {
+          queryAnswers.push(new QueryAnswer(currentWord.id, 1));
+          refreshQueryResultsUploadButton();
+        }
         
         $('#query-box').trigger('shadow-blink-green');
         
         nextWord();
       }
       else { // wrong answer
-        $('#correct-answer').show().html(currentWordCorrectAnswer);
-        $(this).select();
-        queryWrongAnswerGiven = true;
+        if (!queryWrongAnswerGiven) { // show correct answer
+          $('#correct-answer').show().html(currentWordCorrectAnswer);
+          $(this).select();
+          queryWrongAnswerGiven = true;
+          queryAnswers.push(new QueryAnswer(currentWord.id, 0));
+          refreshQueryResultsUploadButton();
+        }
       }
     }
 });
       
 function checkAnswer(user, correct) {
-  return (user == correct);
+  return (user.trim() == correct.trim());
 }
 
+function refreshQueryResultsUploadButton() {
+  var notUploadedAnswersCount = queryAnswers.length - nextIndexToUpload;
+  $('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
+}
+
+$('#query-results-upload-button').on('click', uploadQueryResults);
+
+function uploadQueryResults() {
+  var answersToUpload = queryAnswers.slice(nextIndexToUpload);
+  nextIndexToUpload = queryAnswers.length;
+  
+  refreshQueryResultsUploadButton();
+  
+  $.ajax({
+    type: 'POST',
+    url: 'server.php?action=upload-query-results',
+    data: { 'answers': JSON.stringify(answersToUpload)},
+    dataType: 'json'
+  })
+  .done( function( data ) {
+      console.log('done');
+      console.log(data);
+  })
+  .fail( function( data ) {
+      console.log('fail');
+      console.log(data);
+  });
+}
 
 function QueryAnswer(word, correct) {
   this.word = word;

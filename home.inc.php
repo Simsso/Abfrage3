@@ -106,7 +106,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                             <table class="width-100">
                               <tr>
                                 <td><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
-                                <td id="query-question">word</td>
+                                <td id="query-question">&nbsp;</td>
                               </tr>
                               <tr>
                                 <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
@@ -128,7 +128,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                           <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                         </div>
 						<div class="box-body" data-start-state="expanded">
-                            <div id="query-results-upload"></div>
+                          <div id="query-results-upload">
+                              <p><input type="button" class="width-100" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                            <p>You can upload your answers (the information wether you answered the word correctly or not) to the cloud to make your next query more adjusted to your knowledge. No one else will be able to see your answers.</p>
+                          </div>
 						</div>
 					</div>
 				</div>
@@ -144,6 +147,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                           <table class="box-table clickable">
                             <tr class="active"><td>Random</td></tr>
                             <tr><td>Words under average</td></tr>
+                            <tr><td>Group words</td></tr>
                           </table>
 						</div>
 					</div>
