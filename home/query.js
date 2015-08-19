@@ -24,9 +24,29 @@ function refreshQueryLabelList(showLoadingInformation) {
     console.log(data);
     var dataJSON = jQuery.parseJSON(data); // parse JSON
     console.log(dataJSON); // debug
+    
+    // labels
     queryLabels = dataJSON.labels;
+    
+    // label list attachments
     queryAttachments = dataJSON.label_list_attachments;
-    queryLists = dataJSON.lists;
+    
+    // lists
+    queryLists = [];
+    for (var i = 0; i < dataJSON.lists.length; i++) {
+      queryLists.push(
+        new List(
+          dataJSON.lists[i].id, 
+          dataJSON.lists[i].name, 
+          dataJSON.lists[i].creator, 
+          dataJSON.lists[i].comment, 
+          dataJSON.lists[i].language1,
+          dataJSON.lists[i].language2, 
+          dataJSON.lists[i].creation_time, 
+          dataJSON.lists[i].words
+        )
+      );
+    }
     
     $('#query-selection').html('<div id="query-label-selection" style="width: calc(50% - 12.5px); float: left; "></div><div id="query-list-selection" style="width: calc(50% - 12.5px); float: right; "></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start query" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
     
@@ -244,10 +264,17 @@ function startQuery() {
     queryWords = queryWords.concat(getListById(querySelectedLists[i]).words);
   }
   
-  nextWord();
+  // array of ids of words selecte for the query
+  var wordIds = [];
+  for (var i = 0; i < queryWords.length; i++) {
+    wordIds.push(queryWords[i].id);
+  }
   
-  // $('#query-select-box img[data-action="collapse"]').trigger('collapse');
+  nextWord();
+
+  $('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
+  
 }
 
 function nextWord() {  
@@ -279,6 +306,8 @@ function nextWord() {
         
     setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
   }
+    
+  $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
 }
 
 function getNextWord() {
@@ -296,7 +325,7 @@ $('#query-answer').on('keypress', function(e) {
           $('#correct-answer').hide();
         }
         else {
-          queryAnswers.push(new QueryAnswer(currentWord.id, 1));
+          addQueryAnswer(currentWord, 1);
           refreshQueryResultsUploadButton();
         }
         
@@ -309,12 +338,20 @@ $('#query-answer').on('keypress', function(e) {
           $('#correct-answer').show().html(currentWordCorrectAnswer);
           $(this).select();
           queryWrongAnswerGiven = true;
-          queryAnswers.push(new QueryAnswer(currentWord.id, 0));
+          addQueryAnswer(currentWord, 0);
+          $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
           refreshQueryResultsUploadButton();
         }
       }
     }
 });
+
+function addQueryAnswer(word, answer) {
+  var answer = new QueryAnswer(word.id, answer);
+  queryAnswers.push(answer);
+  word.answers.push(answer);
+    
+}
       
 function checkAnswer(user, correct) {
   return (user.trim() == correct.trim());
@@ -340,19 +377,85 @@ function uploadQueryResults() {
     dataType: 'json'
   })
   .done( function( data ) {
-      console.log('done');
       console.log(data);
   })
   .fail( function( data ) {
-      console.log('fail');
       console.log(data);
   });
 }
 
-function QueryAnswer(word, correct) {
+function List(id, name, creator, comment, language1, language2, creation_time, words) {
+  this.id = id;
+  this.name = name;
+  this.creator = creator;
+  this.language1 = language1;
+  this.language2 = language2;
+  this.comment = comment;
+  this.creation_time = creation_time;
+  
+  this.words = [];
+  for (var i = 0; i < words.length; i++) {
+    this.words.push(new Word(words[i].id, words[i].list, words[i].language1, words[i].language2, words[i].answers)); 
+  }
+  
+  
+  // methods
+  
+  this.getName = function() {
+    return this.name;
+  }
+  
+  this.getKnownAverage = function() {
+    if (this.words.length === 0) return 0;
+    
+    var sum = 0.0;
+    for (var i = 0; i < this.words.length; i++) {
+      sum += this.words[i].getKnownAverage();
+    }
+    
+    return sum / this.words.length;
+  }
+}
+
+function Word(id, list, language1, language2, answers) {
+  this.id = id;
+  this.language1 = language1;
+  this.language2 = language2;
+  this.list = list;
+  
+  this.answers = [];
+  for (var i = 0; i < answers.length; i++) {
+    this.answers.push(new QueryAnswer(answers[i].word, answers[i].correct, answers[i].id, answers[i].time));
+  }
+  
+  
+  // methods
+  this.getKnownAverage = function() {
+    if (this.answers.length === 0) return 0;
+    
+    var knownCount = 0.0;
+    for (var i = 0; i < this.answers.length; i++) {
+      if (this.answers[i].correct === 1) {
+        knownCount++;
+      }
+    }
+    return knownCount / this.answers.length;
+  }
+}
+
+function QueryAnswer(word, correct, id, time) {
   this.word = word;
   this.correct = correct;
-  this.time = Date.seconds();
+      
+  if (time === undefined) 
+    this.time = Date.seconds();
+  else 
+    this.time = time;
+  
+  if (id === undefined) 
+    this.id = undefined;
+  else 
+    this.id = id;
 }
 
 

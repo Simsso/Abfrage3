@@ -61,6 +61,7 @@ Math.deg2rad = function(deg) {
 };
 
 
+
 // returns a default data string of type dd.mm.yyyy hh:mm:ss
 Date.prototype.toDefaultString = function() {
   return this.getDate() + "." + (this.getMonth()+1) + "." + this.getFullYear() + " " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
