@@ -28,7 +28,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 						<a href="#user"><img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/></a>
 					</li>
 					<li class="nav_settings nav-img-li" data-text="Settings">
-						<a href="#settings"><img src="img/settings.svg" class="nav-image" alt="Settings" title="Settings"/></a>
+						<a href="#settings"><img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/></a>
 					</li>
 					<li class="nav_logout nav-img-li" data-text="Logout">
 						<a href="/./server.php?action=logout"><img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/></a>
@@ -68,6 +68,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 				<div class="right-column">
 					<div class="box">
 						<div class="box-head">
+                            <img src="img/history.svg"/>
 							Recently used
 						</div>
 						<div class="box-body">
@@ -84,6 +85,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 				<div class="left-column">
 					<div class="box" id="query-select-box">
 						<div class="box-head">
+						  <img src="img/tags.svg" />
                           Select labels and word lists
                           <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
                           <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
@@ -95,18 +97,19 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   
 					<div class="box" id="query-box">
 						<div class="box-head">
+						  <img src="img/question.svg" />
                           Query
-                          <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
+                          <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
                         </div>
-						<div class="box-body" data-start-state="collapsed">
-                          <div id="query" class="display-none">
+						<div class="box-body" data-start-state="expanded">
+                          <div id="query">
                             <table class="width-100">
                               <tr>
-                                <td><span class="language" id="query-lang1">English</span>:&nbsp;</td>
-                                <td id="query-question">design</td>
+                                <td><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
+                                <td id="query-question">word</td>
                               </tr>
                               <tr>
-                                <td><span class="language" id="query-lang2">German</span>:&nbsp;</td>
+                                <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
                                 <td>
                                   <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
                                   <input type="text" id="query-answer" class="unremarkable width-100"/>
@@ -116,34 +119,57 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                           </div>
 						</div>
 					</div>
+                  
+                  
+					<div class="box" id="query-results-upload-box">
+						<div class="box-head">
+						  <img src="img/upload.svg" />
+                          Upload query results
+                          <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                        </div>
+						<div class="box-body" data-start-state="expanded">
+                            <div id="query-results-upload"></div>
+						</div>
+					</div>
 				</div>
+              
+              
 				<div class="right-column">
 					<div class="box">
 						<div class="box-head">
-							Query Algorithm
+						    <img src="img/algorithm.svg" />
+							Query algorithm
 						</div>
 						<div class="box-body">
-							<p>Random</p>
-                            <p>Words under average</p>
+                          <table class="box-table clickable">
+                            <tr class="active"><td>Random</td></tr>
+                            <tr><td>Words under average</td></tr>
+                          </table>
 						</div>
 					</div>
 					<div class="box">
 						<div class="box-head">
-							Query Settings
+						    <img src="img/settings.svg" />
+							Query settings
 						</div>
 						<div class="box-body">
-						  <p>Text box</p>
-                          <p>Buttons</p>
+                          <table class="box-table clickable">
+                            <tr class="active"><td>Text box</td></tr>
+                            <tr><td>Buttons</td></tr>
+                          </table>
 						</div>
 					</div>
 					<div class="box">
 						<div class="box-head">
-							Query Direction
+						    <img src="img/swap.svg" />
+							Query direction
 						</div>
 						<div class="box-body">
-                          <p>Both directions</p>
-                          <p>First language to second language</p>
-                          <p>Second language to first language</p>
+                          <table class="box-table clickable">
+                            <tr><td>First language to second language</td></tr>
+                            <tr><td>Second language to first language</td></tr>
+                            <tr class="active"><td>Both directions</td></tr>
+                          </table>
 						</div>
 					</div>
 				</div>
