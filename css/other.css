@@ -273,6 +273,9 @@ body > .main {
 .box .box-table.cursor-pointer td {
   cursor: pointer;
 }
+.box .box-table.cursor-pointer tr.cursor-default th, .box .box-table.cursor-pointer tr.cursor-default td {
+  cursor: default;
+}
 
 .box .box-table tr:hover {
   background-color: rgba(136, 149, 189, 0.05);
