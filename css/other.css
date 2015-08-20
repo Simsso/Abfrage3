@@ -269,9 +269,14 @@ body > .main {
   padding: 11px;
 }
 
-/*.box .box-table td:hover {
-box-shadow: inset 5px 0 0 #8892BF;
-}*/
+
+.box .box-table.cursor-pointer td {
+  cursor: pointer;
+}
+
+.box .box-table tr:hover {
+  background-color: rgba(136, 149, 189, 0.05);
+}
 
 .box .box-table tr:not(:first-child) td {
   border-top: 1px solid #8892BF;
@@ -292,7 +297,7 @@ box-shadow: inset 5px 0 0 #8892BF;
 .box-table.clickable td label {
   cursor: pointer;
 }
-.box-table.clickable td:hover {
+.box-table.clickable td:hover, .box-table.cursor-pointer tr:hover {
   color: #4F5B93;
 }
 
@@ -591,7 +596,7 @@ div.center {
   box-shadow: none !important;
 }
 
-.checkbox-wrapper {
+.cursor-pointer, .checkbox-wrapper {
   cursor: pointer;
 }
 
