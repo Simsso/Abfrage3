@@ -103,16 +103,34 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query">
-                  <table class="width-100">
+                  <div id="query-not-started-info">
+                    To start a test select labels and lists above and click the button "Start test".
+                  </div>
+                   
+                  <table class="width-100 display-none" id="query-content-table">
                     <tr>
-                      <td><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
+                      <td class="width-150px"><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
                       <td id="query-question">&nbsp;</td>
                     </tr>
                     <tr>
-                      <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
-                      <td>
+                      <td class="width-150px"><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
+                      <td id="query-answer-table-cell-text-box">
                         <input type="text" id="query-answer" class="unremarkable width-100"/>
                         <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
+                      </td>
+                      <td id="query-answer-table-cell-buttons" class="display-none">
+                        <table class="width-100">
+                          <tr>
+                            <td class="width-33"><input id="query-answer-known" type="button" value="I know!" class="height-50px width-100"/></td>
+                            <td class="width-33"><input id="query-answer-not-sure" type="button" value="Not sure..." class="height-50px width-100"/></td>
+                            <td class="width-33"><input id="query-answer-not-known" type="button" value="No idea." class="height-50px width-100"/></td>
+                          </tr>
+                        </table>
+                        <div id="query-answer-buttons"></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
                         <div id="query-word-mark"></div>
                       </td>
                     </tr>
@@ -130,7 +148,7 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-results-upload">
-                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
                   <p>You can upload your answers (the information about whether you answered the word correctly or not) to the cloud to make your next test better adjusted to your knowledge. No one else will be able to see your answers.</p>
                 </div>
               </div>
@@ -158,9 +176,9 @@ if (is_null($next_to_last_login)) {
                 Test settings
               </div>
               <div class="box-body">
-                <table class="box-table clickable" id="query-settings">
-                  <tr class="active"><td>Text box</td></tr>
-                  <tr><td>Buttons</td></tr>
+                <table class="box-table clickable" id="query-type">
+                  <tr class="active"><td><label data-type="0">Text box</label></td></tr>
+                  <tr><td><label data-type="1">Buttons</label></td></tr>
                 </table>
               </div>
             </div>

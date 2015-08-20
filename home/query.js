@@ -126,6 +126,15 @@ var QueryType = Object.freeze({
   Buttons: 1
 });
 
+var QueryAnswerState = Object.freeze({
+  Start: 0, 
+  NotSureClicked: 1,
+  Known: 2,
+  NotKnown: 3,
+  WaitToContinue: 4,
+  NotKnownClicked: 5
+});
+
 
 var queryLabels = null;
 var queryAttachments = null;
@@ -177,7 +186,7 @@ function refreshQueryLabelList(showLoadingInformation) {
       );
     }
 
-    $('#query-selection').html('<div id="query-label-selection" style="width: calc(50% - 12.5px); float: left; "></div><div id="query-list-selection" style="width: calc(50% - 12.5px); float: right; "></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start test" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
+    $('#query-selection').html('<div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start test" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
 
     // provide label selection
     $('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
@@ -257,7 +266,7 @@ function refreshQueryListSelection() {
   }
 
 
-  $('#query-list-selection').html('<table class="box-table clickable">' + html + '</table');
+  $('#query-list-selection').html('<table class="box-table clickable"><tr><th colspan="2">Lists</th></tr>' + html + '</table');
 
   // checkbox click event
   $('#query-list-selection label').click( function(){
@@ -332,7 +341,7 @@ function getHtmlTableOfLabelsQuery(queryLabels) {
   var html = getHtmlListOfLabelIdQuery(queryLabels, 0, 0);
 
   if (html.length > 0) {
-    html = '<table class="box-table clickable">' + html + '</table>';
+    html = '<table class="box-table clickable"><tr><th>Labels</th></tr>' + html + '</table>';
   }
   else {
     // if there was no code returned there are no labels to show
@@ -376,13 +385,23 @@ function getListById(id) {
 
 
 
-var queryWords = [], queryChosenAlgorithm = QueryAlgorithm.Random, queryChosenDirection = QueryDirection.Both, querySelectedType = QueryType.TextBox, queryRunning = false, 
-    currentWord = null, currentDirection = null, currentWordCorrectAnswer = null, queryWrongAnswerGiven = false;
-
-var queryAnswers = [], nextIndexToUpload = 0;
-
+var queryWords = [], // array of all words which the user selected for the query
+    queryChosenAlgorithm = QueryAlgorithm.Random, // the algorithm the user has chosen
+    queryChosenDirection = QueryDirection.Both, // the query direction the user has chosen
+    queryChosenType = QueryType.TextBox, // type (text box or buttons to answer the question)
+    queryRunning = false, // true if a query is running
+    currentWord = null, // reference to the Word object which is currently asked
+    currentDirection = null, // the query direction (0 or 1)
+    currentWordCorrectAnswer = null, // the string value containing the currect answer for the current word
+    queryWrongAnswerGiven = false, // true if the user already gave the wrong answer
+    queryAnswers = [], // array of answers the user already gave
+    nextIndexToUpload = 0, // first index of answers which has not been uploaded already (if queryAnswers[] contains 4 words and 3 of them have been uploaded the var will hav the value 3)
+    queryCurrentAnswerState = QueryAnswerState.Start; // query answer state
+    
+    
 function startQuery() {
-  $('#query').removeClass('display-none');
+  $('#query-not-started-info').addClass('display-none');
+  $('#query-content-table').removeClass('display-none');
   queryRunning = true;
 
   // produce one array containing all query words
@@ -404,35 +423,44 @@ function startQuery() {
 
 }
 
-function nextWord() {  
+function nextWord() {
+  queryCurrentAnswerState = QueryAnswerState.Start;
+  
+  queryWrongAnswerGiven = false;
+  
+  $('#query-answer-not-known').prop('disabled', false);
+  $('#query-answer-known').attr('value', 'I know!');
+  $('#query-answer-not-known').attr('value', 'No idea.');
+  $('#query-answer-buttons').hide();
+  $('#correct-answer').hide();
+  $('#query-answer-not-sure').prop('disabled', false);
+
+  
   currentWord = getNextWord();
   var listOfTheWord = getListById(currentWord.list);
 
-  if (querySelectedType == QueryType.TextBox) {
-    if (queryChosenDirection == QueryDirection.Both) { // both directions
-      currentDirection = Math.round(Math.random()); // get random direction
-    }
-    else {
-      currentDirection = queryChosenDirection;
-    }
-
-    // fill the question fields
-    if (currentDirection == QueryDirection.Ltr) {
-      $('#query-lang1').html(listOfTheWord.language1);
-      $('#query-lang2').html(listOfTheWord.language2);
-      $('#query-question').html(currentWord.language1);
-      currentWordCorrectAnswer = currentWord.language2;
-    }
-    else if (currentDirection == QueryDirection.Rtl) {
-      $('#query-lang1').html(listOfTheWord.language2);
-      $('#query-lang2').html(listOfTheWord.language1);
-      $('#query-question').html(currentWord.language2);
-      currentWordCorrectAnswer = currentWord.language1;
-    }
-
-
-    setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
+  if (queryChosenDirection == QueryDirection.Both) { // both directions
+    currentDirection = Math.round(Math.random()); // get random direction
   }
+  else {
+    currentDirection = queryChosenDirection;
+  }
+
+  // fill the question fields
+  if (currentDirection == QueryDirection.Ltr) {
+    $('#query-lang1').html(listOfTheWord.language1);
+    $('#query-lang2').html(listOfTheWord.language2);
+    $('#query-question').html(currentWord.language1);
+    currentWordCorrectAnswer = currentWord.language2;
+  }
+  else if (currentDirection == QueryDirection.Rtl) {
+    $('#query-lang1').html(listOfTheWord.language2);
+    $('#query-lang2').html(listOfTheWord.language1);
+    $('#query-question').html(currentWord.language2);
+    currentWordCorrectAnswer = currentWord.language1;
+  }
+  
+  setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
 
   $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
 }
@@ -447,33 +475,22 @@ function getNextWord() {
   }
 }
 
-
+// allow enter pressing to check the user's answer
 $('#query-answer').on('keypress', function(e) {
   if (e.which == 13) {
-    if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer
-      if (queryWrongAnswerGiven) {
-        queryWrongAnswerGiven = false;
-        $('#correct-answer').hide();
+    if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer  
+      if (queryCurrentAnswerState == QueryAnswerState.NotKnown || queryCurrentAnswerState == QueryAnswerState.NotSureClicked || queryCurrentAnswerState == QueryAnswerState.WaitToContinue) {
+        nextWord();
       }
       else {
-        addQueryAnswer(currentWord, 1);
-        
-        tryAutoUpload();
+        queryCurrentAnswerState = QueryAnswerState.Known;
+        processQueryCurrentAnswerState();
       }
-
-      $('#query-box').trigger('shadow-blink-green');
-
-      nextWord();
     }
     else { // wrong answer
-      if (!queryWrongAnswerGiven) { // show correct answer
-        $('#correct-answer').show().html(currentWordCorrectAnswer);
-        $(this).select();
-        queryWrongAnswerGiven = true;
-        addQueryAnswer(currentWord, 0);
-        $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
-        tryAutoUpload();
-      }
+      queryCurrentAnswerState = QueryAnswerState.NotKnown;
+      processQueryCurrentAnswerState();
+
     }
   }
 });
@@ -518,6 +535,66 @@ function uploadQueryResults() {
 }
 
 
+// query answer buttons events (know, not sure, don't know)
+$('#query-answer-known').on('click', function() {
+  // known button click event
+  if (queryCurrentAnswerState == QueryAnswerState.WaitToContinue || queryCurrentAnswerState == QueryAnswerState.NotKnown) {
+    nextWord();
+  }
+  else {
+    queryCurrentAnswerState = QueryAnswerState.Known;
+    processQueryCurrentAnswerState();
+  }
+});
+$('#query-answer-not-sure').on('click', function() {
+  // not sure button click event
+  queryCurrentAnswerState = QueryAnswerState.NotSureClicked;
+  processQueryCurrentAnswerState();
+});
+$('#query-answer-not-known').on('click', function() {
+  // not known button click event
+  queryCurrentAnswerState = QueryAnswerState.NotKnownClicked;
+  processQueryCurrentAnswerState();
+});
+
+function processQueryCurrentAnswerState() {
+  switch (queryCurrentAnswerState) {
+    case queryCurrentAnswerState.Start:
+      return;
+    case QueryAnswerState.Known:
+      $('#query-box').trigger('shadow-blink-green');
+      addQueryAnswer(currentWord, 1);
+      tryAutoUpload();
+      nextWord();
+      return;
+    case QueryAnswerState.NotSureClicked:
+      $('#query-answer-not-sure').prop('disabled', true);
+      $('#query-answer-known').attr('value', 'I knew that!');
+      $('#query-answer-not-known').attr('value', 'I didn\'t know that.');
+      showQuerySolution();
+      return;
+    case QueryAnswerState.NotKnownClicked:
+      queryCurrentAnswerState = QueryAnswerState.WaitToContinue;
+      // no break here
+    case QueryAnswerState.NotKnown:
+      $('#query-answer-not-known').prop('disabled', true);
+      $('#query-answer-not-sure').prop('disabled', true);
+      $('#query-answer-known').attr('value', 'Continue.');
+      $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
+      showQuerySolution();
+      addQueryAnswer(currentWord, 0);
+      tryAutoUpload();
+      return;
+  }
+}
+
+function showQuerySolution() {
+  $('#query-answer-buttons').show().html(currentWordCorrectAnswer);
+  $('#correct-answer').show().html(currentWordCorrectAnswer);
+  $('#query-answer').select();
+}
+
+
 
 
 
@@ -537,6 +614,30 @@ $('#query-direction label').on('click', function() {
   $(this).parent().parent().addClass('active');
   queryChosenDirection = parseInt($(this).data('direction'));
 });
+
+// query type
+$('#query-type label').on('click', function() {
+  $('#query-type tr').removeClass('active');
+  $(this).parent().parent().addClass('active');
+  setQueryType(parseInt($(this).data('type')));
+});
+
+function setQueryType(queryType) {
+  if (queryChosenType != queryType) {
+    queryChosenType = queryType;
+    
+    if (queryType == QueryType.Buttons) {
+      $('#query-answer-table-cell-text-box').hide();
+      $('#query-answer-table-cell-buttons').show();
+      
+    }
+    else if (queryType == QueryType.TextBox) {
+      $('#query-answer-table-cell-buttons').hide();
+      $('#query-answer-table-cell-text-box').show();
+      $('#query-answer').focus();
+    }
+  }
+}
 
 
 

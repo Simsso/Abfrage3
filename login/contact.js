@@ -16,8 +16,7 @@ $('#contact-form').on('submit', function(e) {
   $('#contact-submit').attr('value', 'Sending...');
 
   // send data to the server
-  $.post('server.php', {
-    action: 'contact',
+  $.post('server.php?action=contact', {
     name: $('#contact-name').val(),
     email: $('#contact-email').val(),
     subject: $('#contact-subject').val(),
