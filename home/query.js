@@ -199,16 +199,15 @@ function refreshQueryLabelList(showLoadingInformation) {
     $('#query-start-button').on('click', startQuery);
 
     // checkbox click event
-    $('#query-label-selection label').on('click', function(){
+    $('#query-label-selection tr').on('click', function(){
       // read label id from checkbox data tag
       var labelId = $(this).data('label-id');
-
       // checkbox has been unchecked
-      if($(this).data('checked') == 'true') {
+      if($(this).data('checked') === true) {
         removeLabelFromQuery(labelId);
       }
       // checkbox has been checked
-      else { 
+      else if ($(this).data('checked') === false) { 
         addLabelToQuery(labelId);
       }
     });
@@ -266,19 +265,19 @@ function refreshQueryListSelection() {
   }
 
 
-  $('#query-list-selection').html('<table class="box-table clickable"><tr><th colspan="2">Lists</th></tr>' + html + '</table');
+  $('#query-list-selection').html('<table class="box-table cursor-pointer"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
 
   // checkbox click event
-  $('#query-list-selection label').click( function(){
+  $('#query-list-selection tr').on('click', function(){
     // read list id from checkbox data tag
     var listId = $(this).data('list-id');
-
+    
     // checkbox has been unchecked
-    if($(this).data('checked') == 'true') {
+    if($(this).data('checked') === true) {
       removeListFromQuery(listId);
     }
     // checkbox has been checked
-    else { 
+    else if ($(this).data('checked') === false) { 
       addListToQuery(listId);
     }
   });
@@ -292,7 +291,7 @@ function addLabelToQuery(labelId) {
     }
   }
 
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').find('label').data('checked', 'true');
+  $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').data('checked', 'true');
   querySelectedLabel.push(labelId);
 }
 
@@ -303,24 +302,24 @@ function removeLabelFromQuery(labelId) {
       removeListFromQuery(queryAttachments[i].list);
     }
   }
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').removeClass('active').find('label').data('checked', 'false');
+  $('#query-label-selection tr[data-label-id=' + labelId + ']').removeClass('active').data('checked', 'false');
   querySelectedLabel.removeAll(labelId);
 }
 
 function addListToQuery(listId) {
   querySelectedLists.push(listId);
-  $('#query-list-selection label[data-list-id=' + listId + ']').data('checked', 'true').parent().parent().addClass('active');
+  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', 'true').addClass('active');
   checkStartQueryButtonEnable();
 }
 
 function removeListFromQuery(listId) {
   querySelectedLists.removeAll(listId);
-  $('#query-list-selection label[data-list-id=' + listId + ']').data('checked', 'false').parent().parent().removeClass('active');
+  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', 'false').removeClass('active');
   checkStartQueryButtonEnable();
 }
 
 function getListRow(list, selected) {
-  return '<tr' + (selected?'class="active"':'') + '><td><label class="checkbox-wrapper" data-list-id="' + list.id + '" data-checked="false">' + list.name + '</label></td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
+  return '<tr' + (selected?'class="active"':'') + ' data-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
 }
 
 function checkStartQueryButtonEnable() {
@@ -341,7 +340,7 @@ function getHtmlTableOfLabelsQuery(queryLabels) {
   var html = getHtmlListOfLabelIdQuery(queryLabels, 0, 0);
 
   if (html.length > 0) {
-    html = '<table class="box-table clickable"><tr><th>Labels</th></tr>' + html + '</table>';
+    html = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Labels</th></tr>' + html + '</table>';
   }
   else {
     // if there was no code returned there are no labels to show
@@ -370,7 +369,7 @@ function getSingleListElementOfLabelListQuery(label, indenting) {
   var subLabelsCount = numberOfSubLabels(queryLabels, label.id);
   var expanded = false; // show all labels collapsed
 
-  return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper" data-checked="false" data-label-id="' + label.id + '">' + label.name + '</label></td></tr>';
+  return '<tr data-checked="false" data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
 }
 
 function getListById(id) {
@@ -602,23 +601,23 @@ function showQuerySolution() {
 // settings (algorithm, direction and type)
 
 // query algorithm
-$('#query-algorithm label').on('click', function() {
+$('#query-algorithm tr').on('click', function() {
   $('#query-algorithm tr').removeClass('active');
-  $(this).parent().parent().addClass('active');
+  $(this).addClass('active');
   queryChosenAlgorithm = parseInt($(this).data('algorithm'));
 });
 
 // query direction
-$('#query-direction label').on('click', function() {
+$('#query-direction tr').on('click', function() {
   $('#query-direction tr').removeClass('active');
-  $(this).parent().parent().addClass('active');
+  $(this).addClass('active');
   queryChosenDirection = parseInt($(this).data('direction'));
 });
 
 // query type
-$('#query-type label').on('click', function() {
+$('#query-type tr').on('click', function() {
   $('#query-type tr').removeClass('active');
-  $(this).parent().parent().addClass('active');
+  $(this).addClass('active');
   setQueryType(parseInt($(this).data('type')));
 });
 

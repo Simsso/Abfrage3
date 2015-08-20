@@ -163,10 +163,10 @@ if (is_null($next_to_last_login)) {
                 Test algorithm
               </div>
               <div class="box-body">
-                <table class="box-table clickable" id="query-algorithm">
-                  <tr class="active"><td><label data-algorithm="0">Random</label></td></tr>
-                  <tr><td><label data-algorithm="1">Words under average</label></td></tr>
-                  <tr><td><label data-algorithm="2">Group words</label></td></tr>
+                <table class="box-table cursor-pointer" id="query-algorithm">
+                  <tr class="active" data-algorithm="0"><td>Random</td></tr>
+                  <tr data-algorithm="1"><td>Words under average</td></tr>
+                  <tr data-algorithm="2"><td>Group words</td></tr>
                 </table>
               </div>
             </div>
@@ -176,9 +176,9 @@ if (is_null($next_to_last_login)) {
                 Test settings
               </div>
               <div class="box-body">
-                <table class="box-table clickable" id="query-type">
-                  <tr class="active"><td><label data-type="0">Text box</label></td></tr>
-                  <tr><td><label data-type="1">Buttons</label></td></tr>
+                <table class="box-table cursor-pointer" id="query-type">
+                  <tr class="active" data-type="0"><td>Text box</td></tr>
+                  <tr><td data-type="1">Buttons</td></tr>
                 </table>
               </div>
             </div>
@@ -188,10 +188,10 @@ if (is_null($next_to_last_login)) {
                 Test direction
               </div>
               <div class="box-body">
-                <table class="box-table clickable" id="query-direction">
-                  <tr><td><label data-direction="0">First language to second language</label></td></tr>
-                  <tr><td><label data-direction="1">Second language to first language</label></td></tr>
-                  <tr class="active"><td><label data-direction="-1">Both directions</label></td></tr>
+                <table class="box-table cursor-pointer" id="query-direction">
+                  <tr><td data-direction="0">First language to second language</td></tr>
+                  <tr><td data-direction="1">Second language to first language</td></tr>
+                  <tr class="active" data-direction="-1"><td>Both directions</td></tr>
                 </table>
               </div>
             </div>
