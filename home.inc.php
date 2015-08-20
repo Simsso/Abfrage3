@@ -239,7 +239,7 @@ if (is_null($next_to_last_login)) {
               </div>
             </div>
 
-            <div class="box" id="word-list-label">
+            <div class="box" id="word-list-label" style="z-index: 105; ">
               <div class="box-head">
                 <img src="img/tags.svg" />
                 Labels
