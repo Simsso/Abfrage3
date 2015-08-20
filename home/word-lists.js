@@ -51,7 +51,7 @@ $('#word-list-add-form').on('submit', function(e) {
 
     refreshListOfWordLists(false, function() {
       // handle buttons and background colors indicating which list is currently shown
-      enableAllViewEditButtons();
+      setAllListRowsAsNotActive();
       // highlight the lists row by adding active class and hide button to view the list
       $('#list-of-word-lists tr[data-list-id=' + data.id + ']').addClass('active').find('input[type=button]').first().hide();
     }); // refresh the list of word lists without loading information
@@ -89,7 +89,7 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
       var output = "";
       // build HTML output string
       for (var i = 0; i < data.length; i++) { // add a row for each list
-        output += '<tr data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td><input type="button" class="inline" value="Edit" data-action="edit" data-list-id="' + data[i].id + '"/></td></tr>';
+        output += '<tr data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td></tr>';
       }
 
       // if there are no lists show the appropriate message
@@ -97,18 +97,18 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
         output = noWordListOutput;
       }
       else {
-        output = '<table class="box-table button-right-column"></tr>' + output + '</table>';
+        output = '<table class="box-table cursor-pointer"></tr>' + output + '</table>';
       }
 
       $('#list-of-word-lists').html(output); // update DOM with list of word lists
 
-      // add event listeners for buttons which have just been added
-      $('#list-of-word-lists input[type=button]').on('click', function() {
-        $button = $(this);
+      // add event listeners for rows which have just been added
+      $('#list-of-word-lists tr').on('click', function() {
+        $row = $(this);
 
-        if ($button.data('action') == 'edit') { // edit / show list button click
+        if ($row.data('action') == 'edit') { // edit / show list button click
           // edit / view call load word list function
-          loadWordList($button.data('list-id'), true, function() { }, true, true);
+          loadWordList($row.data('list-id'), true, function() { }, true, true);
         }
       });
     })
@@ -117,9 +117,8 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
 
 
 // handle buttons and background colors indicating which list is currently shown
-function enableAllViewEditButtons() {
+function setAllListRowsAsNotActive() {
   $('#list-of-shared-word-lists tr, #list-of-word-lists tr').removeClass('active'); // un-highlights all table rows
-  $('#list-of-shared-word-lists input[type=button], #list-of-word-lists input[type=button]').show(); // shows all hidden buttons
 }
 
 
@@ -149,34 +148,33 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
       // build HTML output string
       for (var i = 0; i < data.length; i++) {
         // add table row of a single shared list
-        output += '<tr data-list-id="' + data[i].id + '" data-sharing-id="' + data[i].sharing_id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
+        output += '<tr data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '" data-sharing-id="' + data[i].sharing_id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
         output += '<td>' + data[i].name + '</td>';
-        output += '<td><input type="button" class="inline" value="' + ((data[i].permissions == 1)?'Edit':'View') + '" data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '"/></td></tr>';
       }
       // if there are no shared lists show the appropriate message
       if (output.length == 0) {
         output = noSharedWordListOutput;
       }
       else {
-        output = '<table class="box-table button-right-column">' + output + '</table>';
+        output = '<table class="box-table cursor-pointer">' + output + '</table>';
       }
       $('#list-of-shared-word-lists').html(output); // update the DOM
 
-      // add event listeners for buttons inside the list
-      $('#list-of-shared-word-lists input[type=button]').on('click', function() {
-        $button = $(this);
+      // add event listeners for rows inside the list
+      $('#list-of-shared-word-lists tr').on('click', function() {
+        $row = $(this);
 
         // detect button type with the data-action="xxx" attribute
 
         // edit and view shared list button loadWordList method calls differentiate in the fourth parameter which tells the function if the list is editbable or can just be viewed
         // edit shared list button
-        if ($button.data('action') == 'edit') { // edit / show list button click
-          loadWordList($button.data('list-id'), true, function() { }, true, false);
+        if ($row.data('action') == 'edit') { // edit / show list button click
+          loadWordList($row.data('list-id'), true, function() { }, true, false);
         }
 
         // view shared list button
-        else if ($button.data('action') == 'view') { // edit / show list button click
-          loadWordList($button.data('list-id'), true, function() { }, false, false);
+        else if ($row.data('action') == 'view') { // edit / show list button click
+          loadWordList($row.data('list-id'), true, function() { }, false, false);
         }
       });
     })
@@ -214,7 +212,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
   }
 
   // handle buttons and background colors indicating which list is currently shown
-  enableAllViewEditButtons();
+  setAllListRowsAsNotActive();
   // highlight the lists row by adding active class and hide button to view the list
   $('#list-of-word-lists tr[data-list-id=' + id + '], #list-of-shared-word-lists tr[data-list-id=' + id + ']').addClass('active').find('input[type=button]').first().hide();
 
