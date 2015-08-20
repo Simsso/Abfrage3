@@ -421,7 +421,7 @@ function getTableRowOfWord(id, lang1, lang2, allowEdit) {
   return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="editSaveWord(event, ' + id + ')"></form></td>':'') + '</tr>';
 }
 
-// returnt the HTML table arount a given content of the word list
+// returns the HTML table arount a given content of the word list
 function getTableOfWordList(content, allowEdit, lang1, lang2) {
   return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
 }
@@ -790,7 +790,17 @@ function getLabelList(showLoadingInformation) {
 
 
     $('#list-labels-list').html(getEditableHtmlTableOfLabels(labels)); // update DOM
-
+    
+    
+    // open small menu for single label event trigger
+    $('#list-labels-list img.small-menu-open-image').on('click', function(e) {
+      $(this).next().toggleClass('display-none');
+      e.stopPropagation(); // prevent triggering click event on body which listens for click to close the popup
+    });
+    $('#list-labels-list .small-menu input').on('click', function(e) {
+      $(this).parents('.small-menu').addClass('display-none');
+    });
+    $('#list-labels-list .small-menu').on('click', function(e) { e.stopPropagation(); }); // prevent triggering click event on body which listens for click to close the popup
 
     // just added checkboxes event listener
     // the checkboxes allow the user to attach the list to a label by checking the checkbox
@@ -865,7 +875,7 @@ function getLabelList(showLoadingInformation) {
     // add sub label event listener
     $('.label-add-sub-label').on('click', function() {
       // show the "add sub label form" which is hidden in the following <tr>
-      $(this).hide().parent().parent().next().show().children().find('input[type=text]').first().focus();
+      $(this).hide().parent().parent().parent().next().show().children().find('input[type=text]').first().focus();
     });
 
     // label rename form event listener
@@ -881,7 +891,7 @@ function getLabelList(showLoadingInformation) {
       if ($button.data('action') == 'rename-edit') {
         var labelName = labels[getLabelIndexByLabelId(labels, labelId)].name;
         $firstCell.find('label span').html('');
-        $firstCell.append('<input type="text" class="inline" value="' + labelName + '" required="true"/>');
+        $firstCell.append('&nbsp;<input type="text" form="label-rename-form-' + labelId + '" class="inline" value="' + labelName + '" required="true"/>');
         $button.data('action', 'rename-save');
       }
 
@@ -944,6 +954,11 @@ function getLabelList(showLoadingInformation) {
   });
 }
 
+// close small menu for single label event trigger
+$('body').on('click', function() {
+  $('.small-menu').addClass('display-none');
+}); 
+
 
 function getEditableHtmlTableOfLabels(labels) {
   // method returns the HTML code of the label list
@@ -979,7 +994,11 @@ function getSingleListElementOfLabelList(label, indenting) {
   var subLabelsCount = numberOfSubLabels(labels, label.id);
   var expanded = expandedLabelsIds.contains(label.id), parentExpanded = expandedLabelsIds.contains(label.parent_label); // label is expanded?
 
-  return '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '"><form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td><td><input type="submit" form="label-rename-form-' + label.id + '" class="inline" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" />&nbsp;<input type="button" class="label-add-sub-label inline" value="Add sub-label"/>&nbsp;<form class="label-remove-form inline"><input type="hidden" class="label-remove-select inline" value="' + label.id + '"/><input class="label-remove-button inline" type="submit" value="Remove" /></form></td></tr>';
+  var output = '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '">';
+  output += '<form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form>';
+  output += '<td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td>';
+  output += '<td><img class="small-menu-open-image" src="img/menu-small.svg" /><div class="small-menu display-none"><input type="submit" class="width-100" form="label-rename-form-' + label.id + '" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" /><br><input type="button" class="label-add-sub-label width-100" value="Add sub-label"/><br><form class="label-remove-form inline"><input type="hidden" class="label-remove-select" value="' + label.id + '"/><input class="label-remove-button width-100" type="submit" value="Remove" /></form></td></div></tr>';
+  return output;
 }
 
 // returns the index of a label id in the given "labels" array

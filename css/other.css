@@ -5,6 +5,7 @@
   outline: none;
   word-wrap: break-word;
 
+  
   z-index: 100;
 
   /* Firefox */
@@ -405,6 +406,23 @@ div.right-column-img-wrapper {
   background-size: contain;
 }
 
+.small-menu {
+  padding: 15px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+}
+
+.small-menu input:not(:last-child) {
+  margin-bottom: 5px; 
+}
+
+.small-menu-open-image {
+  cursor: pointer;
+  height: 25px;
+  margin-top: -7px;
+  margin-bottom: -7px;
+}
+
 
 /* mobile menu */
 
@@ -486,6 +504,11 @@ body.mobile-menu-shown #main-wrapper {
 #query-list-selection {
   width: calc(50% - 12.5px); 
   float: right; 
+}
+
+.small-menu {
+  position: absolute;
+  right: 20px;
 }
 
 
