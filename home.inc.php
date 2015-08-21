@@ -17,22 +17,30 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <img class="logo" src="img/logo-46.png" />
           </a><br class="clear-both smaller-800">
           <ul class="nav left">
-            <li class="nav_home nav-img-li" data-text="Home">
-              <a href="#home"><img src="img/home.svg" class="nav-image" alt="Home" title="Home"/></a>
-            </li>
-            <li class="nav_query" data-text="Test"><a href="#query">Test</a></li>
-            <li class="nav_word-lists" data-text="Word lists"><a href="#word-lists">Word lists</a></li>
+            <a href="#home">
+              <li class="nav_home nav-img-li" data-text="Home">
+                <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+              </li>
+            </a>
+            <a href="#query"><li class="nav_query" data-text="Test">Test</li></a>
+            <a href="#word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
           </ul>
           <ul class="nav right">
-            <li class="nav_user nav-img-li" data-text="User">
-              <a href="#user"><img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/></a>
-            </li>
-            <li class="nav_settings nav-img-li" data-text="Settings">
-              <a href="#settings"><img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/></a>
-            </li>
-            <li class="nav_logout nav-img-li" data-text="Logout">
-              <a href="/./server.php?action=logout"><img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/></a>
-            </li>
+            <a href="#user">
+              <li class="nav_user nav-img-li" data-text="User">
+                <img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/>
+              </li>
+            </a>
+            <a href="#settings">
+              <li class="nav_settings nav-img-li" data-text="Settings">
+                <img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/>
+              </li>
+            </a>
+            <a href="server.php?action=logout">
+              <li class="nav_logout nav-img-li" data-text="Logout">
+                <img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/>
+              </li>
+            </a>
           </ul><br class="clear-both">
         </div>
       </nav>
@@ -102,7 +110,7 @@ if (is_null($next_to_last_login)) {
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
-                <div id="query">
+                <div id="query-div">
                   <div id="query-not-started-info">
                     To start a test select labels and lists above and click the button "Start test".
                   </div>
@@ -178,7 +186,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="query-type">
                   <tr class="active" data-type="0"><td>Text box</td></tr>
-                  <tr><td data-type="1">Buttons</td></tr>
+                  <tr data-type="1"><td>Buttons</td></tr>
                 </table>
               </div>
             </div>
@@ -189,8 +197,8 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="query-direction">
-                  <tr><td data-direction="0">First language to second language</td></tr>
-                  <tr><td data-direction="1">Second language to first language</td></tr>
+                  <tr data-direction="0"><td>First language to second language</td></tr>
+                  <tr data-direction="1"><td>Second language to first language</td></tr>
                   <tr class="active" data-direction="-1"><td>Both directions</td></tr>
                 </table>
               </div>
@@ -232,7 +240,7 @@ if (is_null($next_to_last_login)) {
                   </select>
                   <input id="share-list-submit" type="submit" value="Share"/>
                 </form>
-                <hr class="spacer-top-15 spacer-bottom-5">
+                <hr class="spacer-top-15">
                 <div id="list-sharings">
 
                 </div>
@@ -247,12 +255,6 @@ if (is_null($next_to_last_login)) {
                 <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
               </div>
               <div class="box-body" data-start-state="collapsed">
-                <!--<div id="label-add">
-
-
-
-<hr class="spacer-top-15 spacer-bottom-15">
-</div>-->
                 <div id="list-labels-list">
                 </div>
               </div>
@@ -272,7 +274,7 @@ if (is_null($next_to_last_login)) {
                     <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
                     <input id="words-add-button" type="submit" value="Add word"/>
                   </form>
-                  <hr class="spacer-top-15 spacer-bottom-5">
+                  <hr class="spacer-top-15">
                 </div>
                 <div id="words-in-list">
                 </div>
@@ -292,7 +294,7 @@ if (is_null($next_to_last_login)) {
                   <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
                   <input id="word-list-add-button" type="submit" value="Create list"/>
                 </form>
-                <hr class="spacer-top-15 spacer-bottom-5">
+                <hr class="spacer-top-15">
                 <div id="list-of-word-lists">
                 </div>
               </div>
@@ -329,7 +331,7 @@ if (is_null($next_to_last_login)) {
                   <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
                   <input id="user-add-button" type="submit" value="Add user"/>
                 </form>
-                <hr class="spacer-top-15 spacer-bottom-5">
+                <hr class="spacer-top-15">
                 <div id="people-you-have-added">
                 </div>
               </div>
@@ -359,58 +361,91 @@ if (is_null($next_to_last_login)) {
             <div class="box">
               <div class="box-head">Settings</div>
               <div class="box-body">
-                <table class="box-table">
-                  <tr><td>Profile</td></tr>
-                  <tr><td>Email notifications</td></tr>
-                  <tr><td>Account</td></tr>
+                <table class="box-table cursor-pointer" id="settings-menu">
+                  <tr data-page="profile"><td>Profile</td></tr>
+                  <tr data-page="email-notifications"><td>Email notifications</td></tr>
+                  <tr data-page="account"><td>Account</td></tr>
                 </table>
               </div>
             </div>
           </div>
-          <div class="right-column width-70">
-            <div class="box">
+          <div class="right-column width-70" id="settings-content">
+            <div class="box" data-page="profile">
               <div class="box-head">
                 Change name
               </div>
               <div class="box-body">
-                coming soon...
+                <div id="settings-name-response"></div>
+                <form id="settings-name">
+                  <input type="text" required="true" value="<? echo $user->firstname; ?>" id="settings-firstname" />&nbsp;
+                  <input type="text" required="true" value="<? echo $user->lastname; ?>" id="settings-lastname" />&nbsp;
+                  <input type="submit" value="Change name" id="settings-submit-button"/>&nbsp;
+                </form>
               </div>
             </div>
 
-            <div class="box">
+            <div class="box" data-page="profile">
               <div class="box-head">
                 Change password
               </div>
               <div class="box-body">
-                coming soon...
+                <div id="settings-password-response"></div>
+                <form id="settings-password">
+                  <table class="width-auto">
+                    <tr><td>Old password</td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
+                    <tr><td>New password</td><td><input id="settings-password-new" required="true" type="password"/></td></tr>
+                    <tr><td>Confirm new password</td><td><input id="settings-password-new-confirm" required="true" type="password"/></td></tr>
+                    <tr><td><input id="settings-password-button" type="submit" value="Change password" class="width-auto"/></td><td></td></tr>
+                  </table>
+                </form>
               </div>
             </div>
 
-            <div class="box">
+            <!--<div class="box" data-page="profile">
               <div class="box-head">
                 Change email-address
               </div>
               <div class="box-body">
-                coming soon...
+                <form id="settings-email">
+                  <input type="text" class="display-none"/>
+                  <input type="password" class="display-none"/>
+                  
+                  <input type="text" id="settings-email-new-email" value="<? echo $user->email; ?>" required="true"/>&nbsp;
+                  <input type="password" id="settings-email-password" placeholder="Password" required="true" />&nbsp;
+                  <input type="submit" id="settings-email-submit-button" value="Change email-address" />
+                </form>
+              </div>
+            </div>-->
+            
+            <div class="box" data-page="profile">
+              <div class="box-head">
+                NSA clause
+              </div>
+              <div class="box-body">
+                <input type="checkbox" disabled checked/>&nbsp;The NSA is allowed to spy me.
               </div>
             </div>
 
 
-            <div class="box">
+            <div class="box" data-page="email-notifications">
               <div class="box-head">
                 Email notifications
               </div>
               <div class="box-body">
-                coming soon...
+                Not available yet.
               </div>
             </div>
 
-            <div class="box">
+            <div class="box" data-page="account">
               <div class="box-head">
                 Delete account
               </div>
               <div class="box-body">
-                coming soon...
+                <div id="settings-delete-account-response"></div>
+                <form id="settings-delete-account-form">
+                  <input type="password" required="true" placeholder="Password" id="settings-delete-account-password" />&nbsp;
+                  <input type="button" value="Delete account" id="settings-delete-account-button" />
+                </form>
               </div>
             </div>
           </div>
@@ -418,7 +453,7 @@ if (is_null($next_to_last_login)) {
 
         <br class="clear-both hide-below-700">
 
-        <footer class="advertisment-bottom box">
+        <footer class="advertisement-bottom box display-none">
           <div class="box-body">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- Abfrage3 Bottom -->

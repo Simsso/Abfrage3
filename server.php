@@ -230,6 +230,25 @@ if (isset($_GET['action'])) {
     $count = Database::add_query_results($_SESSION['id'], $answers);
     echo '{"response":' . $count . '}';
     break;
+    
+    
+    // settings
+    
+    case 'set-name':
+    echo Database::set_name($_SESSION['id'], $_GET['firstname'], $_GET['lastname']);
+    break;
+    
+    case 'set-password':
+    echo Database::set_password($_SESSION['id'], $_POST['password_old'], $_POST['password_new'], $_POST['password_new_confirm']);
+    break;
+    
+    case 'set-email':
+    echo Database::set_email($_SESSION['id'], $_POST['email'], $_POST['password']);
+    break;
+    
+    case 'delete-account':
+    echo Database::delete_account($_SESSION['id'], $_POST['password']);
+    break;
   }
 } else {
   echo "Abfrage3 server is running.";
