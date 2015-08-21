@@ -27,9 +27,9 @@ $error_message = $codes[$status][1];
     <!-- disallow scaling to prevent auto-zoom when focusing input fields on mobile devices -->
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, user-scalable=0"/>
 
-    <link rel="stylesheet" type="text/css" href="css/basic.css" media="all" />
-    <link rel="stylesheet" type="text/css" href="css/other.css" media="all" />
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/basic.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="/css/other.css" media="all" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
 
     <style type="text/css">
       body > div {
@@ -55,7 +55,7 @@ $error_message = $codes[$status][1];
   <body>
     <div>
       <div>
-        <p><a href="/"><img src="img/logo-56.png"/></a></p>
+        <p><a href="/"><img src="/img/logo-56.png"/></a></p>
         <p><span id="error-code"><? echo $error_code; ?>.&nbsp;</span>That's an error.</p>
         <p id="error-message"><? echo $error_message; ?></p>
       </div>

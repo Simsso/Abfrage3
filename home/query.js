@@ -214,7 +214,8 @@ function refreshQueryLabelList(showLoadingInformation) {
 
     // expand functionallity
     // expand single labels
-    $('#query-label-selection .small-exp-col-icon').on('click', function() {
+    $('#query-label-selection .small-exp-col-icon').on('click', function(e) {
+      e.stopPropagation();
       var $this = $(this);
       var expand = ($this.data('state') == 'collapsed');
 
@@ -291,7 +292,7 @@ function addLabelToQuery(labelId) {
     }
   }
 
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').data('checked', 'true');
+  $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').data('checked', true);
   querySelectedLabel.push(labelId);
 }
 
@@ -302,19 +303,19 @@ function removeLabelFromQuery(labelId) {
       removeListFromQuery(queryAttachments[i].list);
     }
   }
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').removeClass('active').data('checked', 'false');
+  $('#query-label-selection tr[data-label-id=' + labelId + ']').removeClass('active').data('checked', false);
   querySelectedLabel.removeAll(labelId);
 }
 
 function addListToQuery(listId) {
   querySelectedLists.push(listId);
-  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', 'true').addClass('active');
+  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', true).addClass('active');
   checkStartQueryButtonEnable();
 }
 
 function removeListFromQuery(listId) {
   querySelectedLists.removeAll(listId);
-  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', 'false').removeClass('active');
+  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', false).removeClass('active');
   checkStartQueryButtonEnable();
 }
 
@@ -618,6 +619,7 @@ $('#query-direction tr').on('click', function() {
 $('#query-type tr').on('click', function() {
   $('#query-type tr').removeClass('active');
   $(this).addClass('active');
+  console.log($(this));
   setQueryType(parseInt($(this).data('type')));
 });
 

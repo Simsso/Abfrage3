@@ -421,7 +421,7 @@ function getTableRowOfWord(id, lang1, lang2, allowEdit) {
 
 // returns the HTML table arount a given content of the word list
 function getTableOfWordList(content, allowEdit, lang1, lang2) {
-  return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
+  return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold cursor-default"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
 }
 
 
@@ -517,6 +517,7 @@ function setWordListLanguages(id, lang1, lang2, callback) {
 
     }
   }).done(function(data) {
+    console.log(data);
     callback(data);
   });
 }
@@ -664,7 +665,7 @@ function refreshListSharings(showLoadingInformation, wordListId) {
           output += '<td><input type="button" class="inline" value="Stop sharing" data-action="delete-sharing" data-sharing-id="' + data[i].id + '"/></td></tr>';
         }
         // add table to output string
-        output = '<table class="box-table button-right-column"><tr class="bold"><td>Name</td><td>Permissions</td><td></td></tr>' + output + '</table>';
+        output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Permissions</td><td></td></tr>' + output + '</table>';
 
         $('#list-sharings').html(output); // display the output string
 
@@ -792,7 +793,8 @@ function getLabelList(showLoadingInformation) {
     
     // open small menu for single label event trigger
     $('#list-labels-list img.small-menu-open-image').on('click', function(e) {
-      $(this).next().toggleClass('display-none');
+      $('.small-menu').addClass('display-none');
+      $(this).next().removeClass('display-none');
       e.stopPropagation(); // prevent triggering click event on body which listens for click to close the popup
     });
     $('#list-labels-list .small-menu input').on('click', function(e) {

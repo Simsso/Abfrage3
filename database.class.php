@@ -119,7 +119,7 @@ class Database {
     return null;
   }
 
-  // conver a user email to the id of the user
+  // converts a user email to the id of the user
   static function email2id($email) {
     global $con;
 
@@ -127,6 +127,18 @@ class Database {
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return $row['id'];
+    }
+    return NULL;
+  }
+
+  // converts a user id to the email of the user
+  static function id2email($id) {
+    global $con;
+
+    $sql = "SELECT `email` FROM `user` WHERE `id` = '$id'";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      return $row['email'];
     }
     return NULL;
   }
@@ -529,7 +541,7 @@ class Database {
 		UPDATE `list`, `share`
 		SET `list`.`language1` = '".$language1."', `list`.`language2` = '".$language2."'
 		WHERE `list`.`id` = '".$list_id."' AND
-		(`list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "' OR `share`.`user` = '" . $user_id . "')";
+		`list`.`creator` = '" . $user_id . "' OR (`list`.`id` = `share`.`list` AND `share`.`user` = '" . $user_id . "' AND `share`.`permissions` = '1')";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -661,6 +673,60 @@ class Database {
       array_merge($answers, Answer::get_by_word_id($wordIds[$i]));
     }
     return $answers;
+  }
+  
+  
+  
+  // settings
+  
+  static function set_name($id, $firstname, $lastname) {
+    if (strlen($firstname) == 0 || strlen($lastname) == 0) {
+      return 0;
+    }
+    // update database
+    global $con;
+    $sql = "UPDATE `user` SET `firstname` = '".$firstname."', `lastname` = '".$lastname."' WHERE `id` = '".$id."'";
+    $query = mysqli_query($con, $sql);
+    return 1;
+  }
+  
+  static function set_password($id, $old_pw, $new_pw, $new_pw_confirm) {
+    if ($new_pw === $new_pw_confirm) {
+      $check_old_pw = self::check_login_data(self::id2email($id), $old_pw);
+      if ($check_old_pw === 1) {
+        if (Validation::is_password($new_pw)) {
+          $salt = rand(0, 999999);
+          $new_pw = sha1($salt . $new_pw);
+          unset($new_pw_confirm);
+          
+          // update database
+          global $con;
+          $sql = "UPDATE `user` SET `password` = '".$new_pw."', `salt` = '".$salt."' WHERE `id` = '".$id."'";
+          $query = mysqli_query($con, $sql);
+          return 1; // no error
+        } else {
+          return 5; // invalid new password
+        }
+      } else if ($check_old_pw === 0) {
+        return 3; // wrong old password given
+      } else if ($check_old_pw === 2) {
+        return 4; // email not confirmed
+      }
+    }
+    else {
+      return 2; // passwords not equal
+    }
+  }
+  
+  static function delete_account($id, $password) {
+    if (self::check_login_data(self::id2email($id), $password) !== 0) {
+        // update database
+        global $con;
+        $sql = "UPDATE `user` SET `active` = '0' WHERE `id` = '".$id."'";
+        $query = mysqli_query($con, $sql);
+        return 1; // no error
+    }
+    return 0;
   }
 }
 

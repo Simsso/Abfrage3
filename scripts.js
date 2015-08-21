@@ -43,7 +43,7 @@ var $menuIcons = $('#mobile-nav > div .nav-img-li');
 for (var i = 0; i < $menuIcons.length; i++) {
   var $currentMenuIcon = $menuIcons.eq(i);
   var text = $currentMenuIcon.data('text');
-  $currentMenuIcon.find('a').append('&nbsp;' + text);
+  $currentMenuIcon.append('&nbsp;' + text);
 }
 
 function toggleMenu() {
@@ -77,7 +77,7 @@ function hideMenu() {
 
 $('#head-nav').append('<img src="img/menu.svg" class="menu-button nav-image" onclick="toggleMenu()" />');
 
-$('#mobile-nav > div li a').on('click', hideMenu);
+$('#mobile-nav > div li').on('click', hideMenu);
 $(window).on('resize', function() {
   if (menuShown && $(window).width() > 700) {
     hideMenu();

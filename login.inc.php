@@ -11,15 +11,17 @@
             <img class="logo" src="img/logo-46.png" alt="Abfrage3" />
           </a><br class="clear-both smaller-800">
           <ul class="nav left">
-            <li class="nav_home nav-img-li" data-text="Home">
-              <a href="#home"><img src="img/home.svg" class="nav-image" alt="Home" title="Home"/></a>
-            </li>
+            <a href="#home">
+              <li class="nav_home nav-img-li" data-text="Home">
+                <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+              </li>
+            </a>
           </ul>
 
           <ul class="nav right">
-            <li class="nav_about" data-text="About"><a href="#about">About</a></li>
-            <li class="nav_contact" data-text="Contact"><a href="#contact">Contact</a></li>
-            <li class="nav_legal-info" data-text="Legal info"><a href="#legal-info">Legal info</a></li>
+            <a href="#about"><li class="nav_about" data-text="About">About</li></a>
+            <a href="#contact"><li class="nav_contact" data-text="Contact">Contact</li></a>
+            <a href="#legal-info"><li class="nav_legal-info" data-text="Legal info">Legal info</li></a>
           </ul><br class="clear-both">
         </div>
       </nav>
