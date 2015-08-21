@@ -375,10 +375,10 @@ if (is_null($next_to_last_login)) {
                 Change name
               </div>
               <div class="box-body">
-                <div id="settings-name-response"></div>
+                <p id="settings-name-response" class="display-none"></p>
                 <form id="settings-name">
-                  <input type="text" required="true" value="<? echo $user->firstname; ?>" id="settings-firstname" />&nbsp;
-                  <input type="text" required="true" value="<? echo $user->lastname; ?>" id="settings-lastname" />&nbsp;
+                  <input type="text" required="true" value="<? echo $user->firstname; ?>" placeholder="First name" id="settings-firstname" />&nbsp;
+                  <input type="text" required="true" value="<? echo $user->lastname; ?>" placeholder="Last name" id="settings-lastname" />&nbsp;
                   <input type="submit" value="Change name" id="settings-submit-button"/>&nbsp;
                 </form>
               </div>
@@ -389,7 +389,7 @@ if (is_null($next_to_last_login)) {
                 Change password
               </div>
               <div class="box-body">
-                <div id="settings-password-response"></div>
+                <p id="settings-password-response" class="display-none"></p>
                 <form id="settings-password">
                   <table class="width-auto">
                     <tr><td>Old password</td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
@@ -419,7 +419,7 @@ if (is_null($next_to_last_login)) {
             
             <div class="box" data-page="profile">
               <div class="box-head">
-                NSA clause
+                Secret service clause
               </div>
               <div class="box-body">
                 <input type="checkbox" disabled checked/>&nbsp;The NSA is allowed to spy me.
@@ -441,7 +441,8 @@ if (is_null($next_to_last_login)) {
                 Delete account
               </div>
               <div class="box-body">
-                <div id="settings-delete-account-response"></div>
+                <p>Be careful: This action can't be undone. Your shared lists will still be visible to other users. </p>
+                <p id="settings-delete-account-response" class="display-none"></p>
                 <form id="settings-delete-account-form">
                   <input type="password" required="true" placeholder="Password" id="settings-delete-account-password" />&nbsp;
                   <input type="button" value="Delete account" id="settings-delete-account-button" />

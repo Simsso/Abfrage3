@@ -57,7 +57,8 @@ class Database {
     global $con;
 
     $password_hash = sha1(self::get_salt_by_email($email) . $password);
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "' AND `password` = '" . $password_hash . "'";
+    unset($password);
+    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "' AND `password` = '" . $password_hash . "' AND `active` = '1'";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
@@ -720,11 +721,12 @@ class Database {
   
   static function delete_account($id, $password) {
     if (self::check_login_data(self::id2email($id), $password) !== 0) {
-        // update database
-        global $con;
-        $sql = "UPDATE `user` SET `active` = '0' WHERE `id` = '".$id."'";
-        $query = mysqli_query($con, $sql);
-        return 1; // no error
+      unset($password);
+      // update database
+      global $con;
+      $sql = "UPDATE `user` SET `active` = '0' WHERE `id` = '".$id."'";
+      $query = mysqli_query($con, $sql);
+      return 1; // no error
     }
     return 0;
   }
