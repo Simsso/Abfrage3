@@ -15,7 +15,7 @@ $('#settings-name').on('submit', function(e) {
   
   $('#settings-firstname, #settings-lastname').prop('disabled', true);
   $('#settings-submit-button').prop('disabled', true).attr('value', 'Changing name...');
-  $('#settings-name-response').html('');
+  $('#settings-name-response').html('').addClass('display-none');
   
   // send request
   jQuery.ajax('server.php', {
@@ -46,7 +46,7 @@ $('#settings-name').on('submit', function(e) {
         message = 'An unknown error occured.';
         break;
     }
-    $('#settings-name-response').html(message);
+    $('#settings-name-response').html(message).removeClass('display-none');
   });
 });
 
@@ -58,7 +58,7 @@ $('#settings-password').on('submit', function(e) {
   
   $('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', true);
   $('#settings-password-button').prop('disabled', true).attr('value', 'Changing password...');
-  $('#settings-password-response').html('');
+  $('#settings-password-response').html('').addClass('display-none');
   
   // send request
   jQuery.ajax('server.php?action=set-password', {
@@ -96,7 +96,7 @@ $('#settings-password').on('submit', function(e) {
         message = 'An unknown error occured.';
         break;
     }
-    $('#settings-password-response').html(message);
+    $('#settings-password-response').html(message).removeClass('display-none');
   });
 });
 
@@ -106,7 +106,7 @@ $('#settings-delete-account-form').on('submit', function(e) {
   
   $('#settings-delete-account-password').prop('disabled', true);
   $('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
-  $('#settings-delete-account-response').html('');
+  $('#settings-delete-account-response').html('').addClass('display-none');
   
   // send request
   jQuery.ajax('server.php?action=delete-account', {
@@ -127,7 +127,7 @@ $('#settings-delete-account-form').on('submit', function(e) {
       $('#settings-delete-account-password').prop('disabled', false).val('');
       $('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
       
-      $('#settings-delete-account-response').html((data === '0') ? 'The password is not correct.' : 'An unknown error occured.');
+      $('#settings-delete-account-response').html((data === '0') ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
     }
   });
 });
