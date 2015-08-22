@@ -89,20 +89,10 @@ if (is_null($next_to_last_login)) {
 
 
         <!-- Test -->
+        
+        
         <div id="content-query" data-page="query">
           <div class="left-column">
-            <div class="box" id="query-select-box">
-              <div class="box-head">
-                <img src="img/tags.svg" />
-                Select labels and word lists
-                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
-              </div>
-              <div class="box-body" data-start-state="expanded">
-                <div id="query-selection"></div>
-              </div>
-            </div>
-
             <div class="box" id="query-box">
               <div class="box-head">
                 <img src="img/question.svg" />
@@ -112,7 +102,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-body" data-start-state="expanded">
                 <div id="query-div">
                   <div id="query-not-started-info">
-                    To start a test select labels and lists above and click the button "Start test".
+                    To start a test select labels and lists below and click the button "Start test".
                   </div>
                    
                   <table class="width-100 display-none" id="query-content-table">
@@ -146,6 +136,18 @@ if (is_null($next_to_last_login)) {
                 </div>
               </div>
             </div>
+        
+            <div class="box" id="query-select-box">
+              <div class="box-head">
+                <img src="img/tags.svg" />
+                Select labels and word lists
+                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+              </div>
+              <div class="box-body" data-start-state="expanded">
+                <div id="query-selection"></div>
+              </div>
+            </div>
 
 
             <div class="box" id="query-results-upload-box">
@@ -173,7 +175,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="query-algorithm">
                   <tr class="active" data-algorithm="0"><td>Random</td></tr>
-                  <tr data-algorithm="1"><td>Words under average</td></tr>
+                  <tr data-algorithm="1"><td>Words below average</td></tr>
                   <tr data-algorithm="2"><td>Group words</td></tr>
                 </table>
               </div>
@@ -451,6 +453,13 @@ if (is_null($next_to_last_login)) {
             </div>
           </div>
         </div>
+
+
+        <?php
+include('html-include/legal-info.html');
+include('html-include/about.html');
+include('html-include/contact.html');
+        ?>
 
         <br class="clear-both hide-below-700">
 
