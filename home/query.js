@@ -186,7 +186,7 @@ function refreshQueryLabelList(showLoadingInformation) {
       );
     }
 
-    $('#query-selection').html('<div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both"><p><input id="query-start-button" type="button" value="Start test" class="spacer-top-15 width-100 height-50px font-size-20px" disabled="true"/></p>');
+    $('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
 
     // provide label selection
     $('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
