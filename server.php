@@ -249,7 +249,7 @@ if (isset($_GET['action'])) {
     // feed
     
     case 'get-feed':
-    echo json_encode(Database::get_feed($_SESSION['id']));
+    echo json_encode(Database::get_feed($_SESSION['id'], $_GET['since']));
   }
 } else {
   echo "Abfrage3 server is running.";
