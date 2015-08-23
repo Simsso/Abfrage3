@@ -75,13 +75,14 @@ if (is_null($next_to_last_login)) {
             
             <div class="box">
               <div class="box-head">
+                <img src="img/feed.svg" />
                 Feed
+                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
-              <div class="box-body">
-                <?php
-//echo Database::get_feed($_SESSION['id']);
-                ?>
-
+              <div class="box-body" data-start-state="expanded">
+                <div id="feed"></div>
+                <div class="text-align-center spacer-top-15"><input type="button" value="Load all" id="feed-load-all" /></div>
               </div>
             </div>
           </div>
@@ -500,6 +501,7 @@ include('html-include/footer.html');
 
 
     <!-- include scripts for every single page -->
+    <script src="home/home.js" type="text/javascript"></script>
     <script src="home/word-lists.js" type="text/javascript"></script>
     <script src="home/query.js" type="text/javascript"></script>
     <script src="home/user.js" type="text/javascript"></script>
