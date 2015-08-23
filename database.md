@@ -18,14 +18,16 @@ SET time_zone = "+00:00"; ```
 
 ### Table structure for table `answer`
 
-```sql CREATE TABLE `answer` (
+```sql 
+CREATE TABLE `answer` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL,
   `word` int(10) unsigned NOT NULL,
   `correct` tinyint(11) unsigned NOT NULL,
   `time` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1; ```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1; 
+```
 
 
 ### Table structure for table `favorite_list`
