@@ -216,7 +216,8 @@ class Database {
     $sql = "
 		SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `user`, `relationship`
-		WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '" . $id . "' AND `relationship`.`type` = 1";
+		WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '" . $id . "' AND `relationship`.`type` = 1
+        ORDER BY `user`.`firstname`, `user`.`lastname`";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -233,7 +234,8 @@ class Database {
     $sql = "
 		SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `user`, `relationship`
-		WHERE `user`.`id` = `relationship`.`user1` AND `relationship`.`user2` = '$id' AND `relationship`.`type` = 1";
+		WHERE `user`.`id` = `relationship`.`user1` AND `relationship`.`user2` = '$id' AND `relationship`.`type` = 1
+        ORDER BY `user`.`firstname`, `user`.`lastname`";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -343,7 +345,8 @@ class Database {
     $sql = "
 		SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time`
 		FROM `list`
-		WHERE `creator` = '$id' AND `active` = '1'";
+		WHERE `creator` = '$id' AND `active` = '1'
+        ORDER BY `name` ASC";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -420,8 +423,8 @@ class Database {
   static function add_word($user_id, $word_list_id, $lang1, $lang2) {
     global $con;
     // TODO check owner
-    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `time`)
-		VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "', '".time()."')";
+    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `time`, `user`)
+		VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "', '".time()."', '".$user_id."')";
     $query = mysqli_query($con, $sql);
     return mysqli_insert_id($con);
   }
@@ -439,7 +442,7 @@ class Database {
   static function remove_word($user_id, $word_id) {
     global $con;
     // TODO: add check if word is owned by $user_id
-    $sql = "UPDATE `word` SET `status` = '0', ´time` = '".time()."' WHERE `id` = '$word_id'";
+    $sql = "UPDATE `word` SET `status` = '0', ´time` = '".time()."' `user` = '".$user_id."'WHERE `id` = '$word_id'";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -447,7 +450,11 @@ class Database {
   // get list of shared word lists of user
   static function get_list_of_shared_word_lists_of_user($id) {
     global $con;
-    $sql = "SELECT `share`.`id` AS 'share_id', `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` FROM `share`, `list` WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = '$id' AND `list`.`active` = '1'";
+    $sql = "
+      SELECT `share`.`id` AS 'share_id', `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` 
+      FROM `share`, `list` 
+      WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = '$id' AND `list`.`active` = '1'
+      ORDER BY `list`.`name` ASC";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -465,7 +472,8 @@ class Database {
 		SELECT `share`.`id` AS 'share_id', `share`.`permissions`, `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `share`, `list`, `relationship`
 		WHERE `share`.`user` = '$id' AND `share`.`list` = `list`.`id` AND `list`.`active` = '1' AND `share`.`permissions` <> '0'
-		AND `relationship`.`user1` = '$id' AND `relationship`.`user2` = `list`.`creator` AND `relationship`.`type` = '1'";
+		  AND `relationship`.`user1` = '$id' AND `relationship`.`user2` = `list`.`creator` AND `relationship`.`type` = '1'
+        ORDER BY `list`.`name` ASC";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -515,10 +523,10 @@ class Database {
     $share_with_id = self::email2id($email);
 
     global $con;
-    $sql = "SELECT `share`.`id`, `share`.`permissions` FROM `share`, `list` WHERE `list`.`id` = '$word_list_id' AND `share`.`list` = `list`.`id` AND `list`.`creator` = '$list_owner' AND `list`.`active` = '1' AND `list`.`user` = '$share_with_id'";
+    $sql = "SELECT `share`.`id`, `share`.`list`, `share`.`permissions` FROM `share`, `list` WHERE `list`.`id` = '$word_list_id' AND `share`.`list` = `list`.`id` AND `list`.`creator` = '$list_owner' AND `list`.`active` = '1' AND `list`.`user` = '$share_with_id'";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      return new SharingInformation($row['id'], new SimpleUser($share_with_id, null, null, $email), $row['permissions']);
+      return new SharingInformation($row['id'], new SimpleUser($share_with_id, null, null, $email), $row['list'], $row['permissions']);
     }
   }
 
@@ -526,14 +534,14 @@ class Database {
   static function get_sharing_info_of_list($user_id, $word_list_id) {
     global $con;
     $sql = "
-		SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
+		SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `share`.`list`, `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `share`, `list`, `user`
-		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND
-		`list`.`id` = '$word_list_id' AND `list`.`creator` = '$user_id' AND `list`.`active` = '1' AND `share`.`permissions` <> '0'";
+		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = '$word_list_id' AND `list`.`creator` = '$user_id' AND `list`.`active` = '1' AND `share`.`permissions` <> '0'
+        ORDER BY `share`.`time` DESC";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
-      array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['permissions']));
+      array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['list'], $row['permissions']));
     }
     return $result;
   }
@@ -545,8 +553,7 @@ class Database {
     $sql = "
 		UPDATE `list`, `share`
 		SET `list`.`language1` = '".$language1."', `list`.`language2` = '".$language2."'
-		WHERE `list`.`id` = '".$list_id."' AND
-		`list`.`creator` = '" . $user_id . "' OR (`list`.`id` = `share`.`list` AND `share`.`user` = '" . $user_id . "' AND `share`.`permissions` = '1')";
+		WHERE `list`.`id` = '".$list_id."' AND `list`.`creator` = '" . $user_id . "' OR (`list`.`id` = `share`.`list` AND `share`.`user` = '" . $user_id . "' AND `share`.`permissions` = '1')";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -626,7 +633,7 @@ class Database {
   static function get_labels_of_user($user_id) {
     global $con;
 
-    $sql = "SELECT * FROM `label` WHERE `user` = '".$user_id."' AND `active` = '1'";
+    $sql = "SELECT * FROM `label` WHERE `user` = '".$user_id."' AND `active` = '1' ORDER BY `label`.`name` ASC";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -650,7 +657,8 @@ class Database {
         SELECT `label_attachment`.`id`, `label_attachment`.`list`, `label_attachment`.`label`, `label_attachment`.`active` 
         FROM `label_attachment`, `label`, `list` 
         WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = '".$id."' AND `label_attachment`.`list` = `list`.`id` AND 
-          `label_attachment`.`active` = '1' AND `label`.`active` = '1' AND `list`.`active` = '1'";
+          `label_attachment`.`active` = '1' AND `label`.`active` = '1' AND `list`.`active` = '1'
+        ORDER BY `label`.`name` ASC";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -737,17 +745,60 @@ class Database {
   
   
   // feed
-  static function get_feed($id) {
-    return new Feed($id);
+  static function get_feed($id, $since) {
+    if ($since == -1) {
+      $next_to_last_login = self::get_next_to_last_login_of_user($id);
+      if (is_null($next_to_last_login)) {
+        $since = 0;
+      } else {
+        $since = $next_to_last_login->date;
+      }
+    }
+    return new Feed($id, $since);
   }
 }
 
 class Feed {
   public $user;
+  public $sharedLists = array(); // another user has shared a list with you
+  public $addedWords = array(); // another user has added words to a list shared with you or owned by you
+  public $usersAdded = array(); // another user has added the user ($user)
   
-  function __construct($id) {
-    $this->user = $id;
-    // TODO
+  function __construct($id, $since) {
+    // $id is the user id for whom the feed is being created.
+    // $since is a UNIX-timestamp which limits the feed content. If e.g. a list has been shared before this time it will not appear in the feed.
+    $this->user = intval($id);
+    
+    global $con;
+    
+    // shared lists
+    $sql = "
+      SELECT `share`.`id`, `share`.`list`, `share`.`permissions`, `list`.`creator` 
+      FROM `share`, `list` 
+      WHERE `list`.`id` = `share`.`list` AND `share`.`user` = '".$id."' AND `share`.`permissions` <> '0' AND `share`.`time` >= '".$since."' 
+      ORDER BY `share`.`time` DESC";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push($this->sharedLists, new SharingInformation($row['id'], SimpleUser::get_by_id($row['creator']), $row['list'], $row['permissions']));
+    }
+    
+    // added words to lists shared with the user by other users
+    /*$sql = "";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      
+    }*/
+    
+    // users added
+    $sql = "
+      SELECT * 
+      FROM `relationship` 
+      WHERE `type` <> '0' AND `user2` = '".$id."' AND `time` >= '".$since."' 
+      ORDER BY `time` DESC";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push($this->usersAdded, SimpleUser::get_by_id($row['user1']));
+    }
   }
 }
 
@@ -1026,11 +1077,13 @@ class SharingInformation {
   public $id;
   public $user;
   public $permissions;
+  public $list;
 
-  public function __construct($id, SimpleUser $user, $permissions) {
+  public function __construct($id, SimpleUser $user, $list, $permissions) {
     $this->id = intval($id);
     $this->user = $user;
     $this->permissions = intval($permissions);
+    $this->list = BasicWordList::get_by_id($list);
   }
 }
 ?>
