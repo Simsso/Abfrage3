@@ -37,12 +37,7 @@ if (isset($_GET['action'])) {
       session_start();
       $_SESSION['id'] = $id;
 
-      // stay logged in
-      if ($_POST['stay-logged-in'] == 1) {
-        Database::stay_logged_in($_SESSION['id']);
-      }
-
-      Database::add_login($id);
+      Database::add_login($id, $_POST['stay-logged-in'] == 1);
       header("Location: /#home");
       exit();
     } else if ($result == 2) { // correct combination but email not comfirmed yet
@@ -249,6 +244,12 @@ if (isset($_GET['action'])) {
     case 'delete-account':
     echo Database::delete_account($_SESSION['id'], $_POST['password']);
     break;
+    
+    
+    // feed
+    
+    case 'get-feed':
+    echo json_encode(Database::get_feed($_SESSION['id']));
   }
 } else {
   echo "Abfrage3 server is running.";
