@@ -1,81 +1,46 @@
-# Abfrage3
-
-## Data base
-- phpMyAdmin SQL Dump
-- version 3.4.10.1deb1
-- http://www.phpmyadmin.net
-
-- Host: localhost
-- Generation Time: Aug 23, 2015 at 04:56 PM
-- Server version: 5.5.44
-- PHP Version: 5.3.10-1ubuntu3.19
-
-```sql 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00"; 
-```
+SET time_zone = "+00:00";
 
-- Database: `db142619x2289845`
-
-
-### Table structure for table `answer`
-
-```sql 
-CREATE TABLE `answer` (
+DROP TABLE IF EXISTS `answer`;
+CREATE TABLE IF NOT EXISTS `answer` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL,
   `word` int(10) unsigned NOT NULL,
   `correct` tinyint(3) unsigned NOT NULL,
   `time` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Query answers'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='query answers';
 
-
-### Table structure for table `favorite_list`
-
-```sql 
-CREATE TABLE `favorite_list` (
+DROP TABLE IF EXISTS `favorite_list`;
+CREATE TABLE IF NOT EXISTS `favorite_list` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL,
   `list` int(10) unsigned NOT NULL,
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List favorites of users'; 
-```
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List favorites of users';
 
-
-### Table structure for table `label`
-
-```sql 
-CREATE TABLE `label` (
+DROP TABLE IF EXISTS `label`;
+CREATE TABLE IF NOT EXISTS `label` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL,
   `name` text NOT NULL,
   `parent` int(11) DEFAULT NULL,
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Labels of lists from users'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Labels of lists from users';
 
-
-### Table structure for table `label_attachment`
-
-```sql 
-CREATE TABLE `label_attachment` (
+DROP TABLE IF EXISTS `label_attachment`;
+CREATE TABLE IF NOT EXISTS `label_attachment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(10) unsigned NOT NULL,
   `label` int(10) unsigned NOT NULL,
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Connects labels and lists'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Connects labels and lists';
 
-
-### Table structure for table `list`
-
-```sql 
-CREATE TABLE `list` (
+DROP TABLE IF EXISTS `list`;
+CREATE TABLE IF NOT EXISTS `list` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `creator` int(10) unsigned NOT NULL,
@@ -85,14 +50,10 @@ CREATE TABLE `list` (
   `creation_time` int(10) unsigned NOT NULL,
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Word lists'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Word lists';
 
-
-### Table structure for table `login`
-
-```sql 
-CREATE TABLE `login` (
+DROP TABLE IF EXISTS `login`;
+CREATE TABLE IF NOT EXISTS `login` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(11) unsigned NOT NULL,
   `time` int(11) unsigned NOT NULL,
@@ -100,42 +61,30 @@ CREATE TABLE `login` (
   `stay_logged_in_hash` text,
   `stay_logged_in_salt` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Login information'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Login information';
 
-
-### Table structure for table `relationship`
-
-```sql 
-CREATE TABLE `relationship` (
+DROP TABLE IF EXISTS `relationship`;
+CREATE TABLE IF NOT EXISTS `relationship` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user1` int(10) unsigned NOT NULL,
   `user2` int(10) unsigned NOT NULL,
   `time` int(10) unsigned NOT NULL,
   `type` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Relationships between users'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Relationships between users';
 
-
-### Table structure for table `share`
-
-```sql 
-CREATE TABLE `share` (
+DROP TABLE IF EXISTS `share`;
+CREATE TABLE IF NOT EXISTS `share` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL,
   `list` int(10) unsigned NOT NULL,
   `permissions` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `time` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Sharings of word lists'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Sharings of word lists';
 
-
-### Table structure for table `user`
-
-```sql 
-CREATE TABLE `user` (
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `firstname` text NOT NULL,
   `lastname` text NOT NULL,
@@ -148,13 +97,9 @@ CREATE TABLE `user` (
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Registered users';
-```
 
-
-### Table structure for table `word`
-
-```sql 
-CREATE TABLE `word` (
+DROP TABLE IF EXISTS `word`;
+CREATE TABLE IF NOT EXISTS `word` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(10) unsigned NOT NULL,
   `language1` text NOT NULL,
@@ -162,5 +107,4 @@ CREATE TABLE `word` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `time` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Words of lists'; 
-```
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Words of lists';
