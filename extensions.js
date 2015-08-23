@@ -35,6 +35,24 @@ Array.prototype.removeAll = function(obj) {
   }
 };
 
+// randomizes array element order in-place
+Array.prototype.shuffle = function() {
+  var swapIndex;
+  for (var i = 0; i < this.length; i++) {
+    swapIndex = Math.floor(Math.random() * this.length);
+    this.swap(i, swapIndex);
+  }
+  return this;
+};
+
+
+// swaps two elements
+Array.prototype.swap = function(a, b) {
+    var tmp = this[a];
+    this[a] = this[b];
+    this[b] = tmp;
+};
+
 
 // maps a value from two bounds to another two
 Math.map = function(x, in_min, in_max, out_min, out_max) {
