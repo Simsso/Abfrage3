@@ -188,6 +188,7 @@ if (is_null($next_to_last_login)) {
                 <table class="box-table cursor-pointer" id="query-algorithm">
                   <tr class="active" data-algorithm="0"><td>Random</td></tr>
                   <tr data-algorithm="1"><td>Words below average</td></tr>
+                  <tr data-algorithm="3"><td>In order</td></tr>
                   <tr data-algorithm="2"><td>Group words</td></tr>
                 </table>
               </div>
