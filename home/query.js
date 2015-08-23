@@ -90,6 +90,35 @@ Word.getKnownAverageOfArray = function(wordArray) {
 };
 
 
+// query algorithms
+function QueryAlgorithm() {}
+QueryAlgorithm.InOrder = function(words) {
+  this.index = -1;
+  this.words = words;
+  this.iterations = 0;
+  
+  this.getNextWord = function() {
+    if (this.words.length === 0) return undefined;
+    
+    if (this.words.length === this.index + 1) {
+      this.index = -1;
+      this.iterations++;
+    } 
+    this.index++;
+    return this.words[this.index];
+  }
+}
+Queyalgorithm.GroupWords = function(words, groupSize) {
+  this.index = 0;
+  this.words = words;
+  this.groupSize = (groupSize === undefined) ? 8 : groupSize;
+  
+  this.getNextWord = function() {
+    
+  }
+}
+
+
 // query answer
 function QueryAnswer(word, correct, id, time) {
   this.word = word;
@@ -109,10 +138,11 @@ function QueryAnswer(word, correct, id, time) {
 
 
 // enumerations
-var QueryAlgorithm = Object.freeze({
+var QueryAlgorithmEnum = Object.freeze({
   Random: 0, 
   UnderAverage: 1, 
-  Groups: 2
+  Groups: 2,
+  InOrder: 3
 });
 
 var QueryDirection = Object.freeze({
@@ -386,7 +416,7 @@ function getListById(id) {
 
 
 var queryWords = [], // array of all words which the user selected for the query
-    queryChosenAlgorithm = QueryAlgorithm.Random, // the algorithm the user has chosen
+    queryChosenAlgorithm = QueryAlgorithmEnum.Random, // the algorithm the user has chosen
     queryChosenDirection = QueryDirection.Both, // the query direction the user has chosen
     queryChosenType = QueryType.TextBox, // type (text box or buttons to answer the question)
     queryRunning = false, // true if a query is running
@@ -396,7 +426,8 @@ var queryWords = [], // array of all words which the user selected for the query
     queryWrongAnswerGiven = false, // true if the user already gave the wrong answer
     queryAnswers = [], // array of answers the user already gave
     nextIndexToUpload = 0, // first index of answers which has not been uploaded already (if queryAnswers[] contains 4 words and 3 of them have been uploaded the var will hav the value 3)
-    queryCurrentAnswerState = QueryAnswerState.Start; // query answer state
+    queryCurrentAnswerState = QueryAnswerState.Start, // query answer state
+    queryInOrderAlgorithm;
     
     
 function startQuery() {
@@ -415,6 +446,8 @@ function startQuery() {
   for (var j = 0; j < queryWords.length; j++) {
     wordIds.push(queryWords[j].id);
   }
+  
+  queryInOrderAlgorithm = new QueryAlgorithm.InOrder(queryWords);
 
   nextWord();
 
@@ -466,12 +499,14 @@ function nextWord() {
 }
 
 function getNextWord() {
-  if (queryChosenAlgorithm == QueryAlgorithm.Random) {
-    return Word.getRandomWordOfArray(queryWords);
-  }
-  else if (queryChosenAlgorithm == QueryAlgorithm.UnderAverage) {
-    var avg = Word.getKnownAverageOfArray(queryWords);
-    return Word.getWordKnownBelow(queryWords, avg);
+  switch (queryChosenAlgorithm) {
+    case QueryAlgorithmEnum.Random:
+      return Word.getRandomWordOfArray(queryWords);
+    case QueryAlgorithmEnum.UnderAverage:
+      var avg = Word.getKnownAverageOfArray(queryWords);
+      return Word.getWordKnownBelow(queryWords, avg);
+    case QueryAlgorithmEnum.InOrder:
+      return queryInOrderAlgorithm.getNextWord();
   }
 }
 
