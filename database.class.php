@@ -75,7 +75,7 @@ class Database {
     }
   }
 
-  static function stay_logged_in($id) {
+  static function stay_logged_in($login_id) {
     $salt = rand(0, 999999);
     $hash = sha1($salt . $id . $_SERVER['REMOTE_ADDR']);
 
@@ -86,7 +86,7 @@ class Database {
 
     // update database
     global $con;
-    $sql = "UPDATE `user` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = '".$id."'";
+    $sql = "UPDATE `login` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = '".$login_id."'";
     $query = mysqli_query($con, $sql);
   }
 
@@ -95,16 +95,16 @@ class Database {
     $stored_salt = 0;
 
     global $con;
-    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `user` WHERE `id` = '".$id."'";
+    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `login` WHERE `user` = '".$id."'";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $stored_hash = $row['stay_logged_in_hash'];
       $stored_salt = $row['stay_logged_in_salt'];
+      if ($stored_hash == sha1($stored_salt . $id . $_SERVER['REMOTE_ADDR']) && $stored_hash == $hash) {
+        return true;
+      }
     }
 
-    if ($stored_hash == sha1($stored_salt . $id . $_SERVER['REMOTE_ADDR']) && $stored_hash == $hash) {
-      return true;
-    }
     return false;
   }
 
@@ -164,13 +164,16 @@ class Database {
   }
 
   // add a login
-  static function add_login($id) {
+  static function add_login($id, $stay_logged_in) {
     global $con;
     $ip = $_SERVER['REMOTE_ADDR'];
     $time = time();
-
     $sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES ('" . $id . "', '" . $time . "', '" . $ip . "')";
     $query = mysqli_query($con, $sql);
+    
+    if ($stay_logged_in) {
+      self::stay_logged_in(mysqli_insert_id($con));
+    }
   }
 
   // returns true if the given user logs in for the first time
@@ -416,8 +419,9 @@ class Database {
   // add word
   static function add_word($user_id, $word_list_id, $lang1, $lang2) {
     global $con;
-    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`)
-		VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "')";
+    // TODO check owner
+    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `time`)
+		VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "', '".time()."')";
     $query = mysqli_query($con, $sql);
     return mysqli_insert_id($con);
   }
@@ -435,7 +439,7 @@ class Database {
   static function remove_word($user_id, $word_id) {
     global $con;
     // TODO: add check if word is owned by $user_id
-    $sql = "UPDATE `word` SET `status` = '0' WHERE `id` = '$word_id'";
+    $sql = "UPDATE `word` SET `status` = '0', ´time` = '".time()."' WHERE `id` = '$word_id'";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -483,11 +487,11 @@ class Database {
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
-      $sql = "INSERT INTO `share` (`user`, `list`, `permissions`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "')";
+      $sql = "INSERT INTO `share` (`user`, `list`, `permissions`, `time`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "', '" . time() . "')";
       $query = mysqli_query($con, $sql);
       return 1;
     } else {
-      $sql = "UPDATE `share` SET `permissions` = '$permissions' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "')";
+      $sql = "UPDATE `share` SET `permissions` = '$permissions', `time` = '" . time() . "' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "')";
       $query = mysqli_query($con, $sql);
       return 2;
     }
@@ -500,7 +504,7 @@ class Database {
 
     $sql = "
 		UPDATE `share`, `list`
-		SET `share`.`permissions` = '$permissions'
+		SET `share`.`permissions` = '$permissions', `share`.`time` = '".time()."'
 		WHERE `share`.`id` = '$id' AND (`list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "' OR `share`.`user` = '" . $user_id . "')";
     $query = mysqli_query($con, $sql);
     return 1;
@@ -729,6 +733,20 @@ class Database {
       return 1; // no error
     }
     return 0;
+  }
+  
+  
+  // feed
+  static function get_feed($id) {
+    return new Feed($id);
+  }
+}
+
+class Feed {
+  public $user;
+  
+  function __construct($id) {
+    $this->user = $id;
   }
 }
 

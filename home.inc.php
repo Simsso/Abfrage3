@@ -72,6 +72,18 @@ if (is_null($next_to_last_login)) {
 
               </div>
             </div>
+            
+            <div class="box">
+              <div class="box-head">
+                Feed
+              </div>
+              <div class="box-body">
+                <?php
+//echo Database::get_feed($_SESSION['id']);
+                ?>
+
+              </div>
+            </div>
           </div>
           <div class="right-column">
             <div class="box">
