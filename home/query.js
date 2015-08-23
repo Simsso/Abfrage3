@@ -108,10 +108,12 @@ QueryAlgorithm.InOrder = function(words) {
     return this.words[this.index];
   }
 }
-Queyalgorithm.GroupWords = function(words, groupSize) {
+QueryAlgorithm.GroupWords = function(words, groupSize) {
   this.index = 0;
-  this.words = words;
-  this.groupSize = (groupSize === undefined) ? 8 : groupSize;
+  this.words = words.slice().shuffle(); // shuffle a copy of the words array
+  this.currentGroup = new Array((groupSize === undefined) ? 8 : groupSize);
+  
+  // TODO: initialize current group var
   
   this.getNextWord = function() {
     
