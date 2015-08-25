@@ -1038,7 +1038,7 @@ function labelAttachedToList(list, labelId) {
 function getLabelIdsWithIndenting(labels, indenting) {
   var selectedLabels = new Array();
   for (var i = 0; i < labels.length; i++) {
-    if (getLabelIndenting(labels, i) == indenting) {
+    if (getLabelIndenting(labels, i) === indenting) {
       selectedLabels.push(labels[i].id);
     }
   }
@@ -1047,6 +1047,7 @@ function getLabelIdsWithIndenting(labels, indenting) {
 
 // returns the indenting of a label
 function getLabelIndenting(labels, index) {
+  if (labels[index] === undefined) return undefined;
   if (labels[index].parent_label == 0)
     return 0;
 

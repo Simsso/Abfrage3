@@ -21,14 +21,26 @@ function refreshFeed(showLoadingInformation, callback) {
     console.log(data); // debugging
     data = jQuery.parseJSON(data);
     console.log(data);
+    
+    data.events.sort(function(a, b) { // sort by time of feed events
+      if (a.time < b.time) return -1; 
+      if (a.time > b.time) return 1; 
+      return 0;
+    });
+    
+    
     var feedHtml = '';
     
-    for (var i = 0; i < data.sharedLists.length; i++) {
-      feedHtml += '<p>' + data.sharedLists[i].user.firstname + ' gave you permissions to ' + ((data.sharedLists[i].permissions == 1)?'edit':'view') + ' the list <span class="italic">' + data.sharedLists[i].list.name + '</span>.</p>';
-    }
-    
-    for (var i = 0; i < data.usersAdded.length; i++) {
-      feedHtml += '<p>' + data.usersAdded[i].firstname + ' has added you.</p>';
+    for (var i = data.events.length - 1; i >= 0; i--) { // go through the array the other way around to display newest first
+      var feedItem = data.events[i], info = data.events[i].info;
+      switch (feedItem.type) {
+        case 0: // user added
+          feedHtml += '<p>' + info.firstname + ' has added you.</p>';
+          break;
+        case 1: // shared list
+          feedHtml += '<p>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' the list <span class="italic">' + info.list.name + '</span>.</p>';
+          break;
+      }
     }
     
     if (feedHtml.length === 0) feedHtml = noFeedContent;

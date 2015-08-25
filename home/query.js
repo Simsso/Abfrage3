@@ -49,17 +49,20 @@ function Word(id, list, language1, language2, answers) {
 
 
   // methods
-  
   this.getKnownAverage = function() {
+    return this.getKnownAverageOverLastNAnswers(this.answers.length);
+  };
+  
+  this.getKnownAverageOverLastNAnswers = function(n) {
     if (this.answers.length === 0) return 0;
 
     var knownCount = 0.0;
-    for (var i = 0; i < this.answers.length; i++) {
+    for (var i = (this.answers.length - n); i < this.answers.length; i++) {
       if (this.answers[i].correct === 1) {
         knownCount++;
       }
     }
-    return knownCount / this.answers.length;
+    return knownCount / n;
   };
 }
 // static functions
@@ -106,19 +109,37 @@ QueryAlgorithm.InOrder = function(words) {
     } 
     this.index++;
     return this.words[this.index];
-  }
-}
-QueryAlgorithm.GroupWords = function(words, groupSize) {
+  };
+};
+QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
+  if (groupSize === undefined) groupSize = 8;
+  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = 6;
+  
+  this.groupSize = groupSize;
+  this.careAboutLastNAnswers = careAboutLastNAnswers;
   this.index = 0;
   this.words = words.slice().shuffle(); // shuffle a copy of the words array
-  this.currentGroup = new Array((groupSize === undefined) ? 8 : groupSize);
   
-  // TODO: initialize current group var
+  this.currentGroup = [];
+  
+  if (this.words.length <= groupSize) {
+    this.currentGroup = words.slice(0, groupSize); // TODO: check slice parameters
+  }
+  else { // there are not enough words given to perform a senseful GroupWords QueryAlgorithm
+    this.currentGroup = words;
+  }
+  
   
   this.getNextWord = function() {
-    
-  }
-}
+    // go through all words in the current group and check of words which are known
+    for (var i = 0; i < this.currentGroup.length; i++) {
+      if (this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1.0) {
+        // TODO
+      }
+    }
+    return Word.getRandomWordOfArray(this.currentGroup);
+  };
+};
 
 
 // query answer
@@ -233,7 +254,7 @@ function refreshQueryLabelList(showLoadingInformation) {
     // checkbox click event
     $('#query-label-selection tr').on('click', function(){
       // read label id from checkbox data tag
-      var labelId = $(this).data('label-id');
+      var labelId = $(this).data('query-label-id');
       // checkbox has been unchecked
       if($(this).data('checked') === true) {
         removeLabelFromQuery(labelId);
@@ -264,9 +285,6 @@ function refreshQueryLabelList(showLoadingInformation) {
           else { // collapse
             allFollowing.eq(i).hide();
             allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
-
-            // refresh array of expanded labels
-            expandedLabelsIds.removeAll(parseInt(allFollowing.eq(i).data('label-id')));
           }
         }
         i++;
@@ -324,7 +342,7 @@ function addLabelToQuery(labelId) {
     }
   }
 
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').addClass('active').data('checked', true);
+  $('#query-label-selection tr[data-query-label-id=' + labelId + ']').addClass('active').data('checked', true);
   querySelectedLabel.push(labelId);
 }
 
@@ -335,24 +353,24 @@ function removeLabelFromQuery(labelId) {
       removeListFromQuery(queryAttachments[i].list);
     }
   }
-  $('#query-label-selection tr[data-label-id=' + labelId + ']').removeClass('active').data('checked', false);
+  $('#query-label-selection tr[data-query-label-id=' + labelId + ']').removeClass('active').data('checked', false);
   querySelectedLabel.removeAll(labelId);
 }
 
 function addListToQuery(listId) {
   querySelectedLists.push(listId);
-  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', true).addClass('active');
+  $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
   checkStartQueryButtonEnable();
 }
 
 function removeListFromQuery(listId) {
   querySelectedLists.removeAll(listId);
-  $('#query-list-selection tr[data-list-id=' + listId + ']').data('checked', false).removeClass('active');
+  $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', false).removeClass('active');
   checkStartQueryButtonEnable();
 }
 
 function getListRow(list, selected) {
-  return '<tr' + (selected?'class="active"':'') + ' data-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
+  return '<tr' + (selected?'class="active"':'') + ' data-query-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
 }
 
 function checkStartQueryButtonEnable() {
@@ -402,7 +420,7 @@ function getSingleListElementOfLabelListQuery(label, indenting) {
   var subLabelsCount = numberOfSubLabels(queryLabels, label.id);
   var expanded = false; // show all labels collapsed
 
-  return '<tr data-checked="false" data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
+  return '<tr data-checked="false" data-query-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
 }
 
 function getListById(id) {
@@ -656,7 +674,6 @@ $('#query-direction tr').on('click', function() {
 $('#query-type tr').on('click', function() {
   $('#query-type tr').removeClass('active');
   $(this).addClass('active');
-  console.log($(this));
   setQueryType(parseInt($(this).data('type')));
 });
 
