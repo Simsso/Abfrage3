@@ -11,7 +11,13 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
       window[$(this).data('function-name')](true);
       break;
   }
+  
+  event.stopPropagation();
 }).show();
+
+$('.box .box-head').on('click', function(e) {
+  $(this).find('img.box-head-right-icon').last().trigger('expand');
+});
 
 $('.box .box-head img.box-head-right-icon').on('expand', function() {
   $(this).data('action', 'expand').trigger('click');

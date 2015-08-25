@@ -760,9 +760,7 @@ class Database {
 
 class Feed {
   public $user;
-  public $sharedLists = array(); // another user has shared a list with you
-  public $addedWords = array(); // another user has added words to a list shared with you or owned by you
-  public $usersAdded = array(); // another user has added the user ($user)
+  public $events = array();
   
   function __construct($id, $since) {
     // $id is the user id for whom the feed is being created.
@@ -773,13 +771,20 @@ class Feed {
     
     // shared lists
     $sql = "
-      SELECT `share`.`id`, `share`.`list`, `share`.`permissions`, `list`.`creator` 
+      SELECT `share`.`id`, `share`.`list`, `share`.`permissions`, `list`.`creator`, `share`.`time`
       FROM `share`, `list` 
       WHERE `list`.`id` = `share`.`list` AND `share`.`user` = '".$id."' AND `share`.`permissions` <> '0' AND `share`.`time` >= '".$since."' 
       ORDER BY `share`.`time` DESC";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      array_push($this->sharedLists, new SharingInformation($row['id'], SimpleUser::get_by_id($row['creator']), $row['list'], $row['permissions']));
+      array_push(
+        $this->events, 
+        new FeedItem(
+          FeedItemType::ListShared,
+          $row['time'],
+          new SharingInformation($row['id'], SimpleUser::get_by_id($row['creator']), $row['list'], $row['permissions'])
+        )
+      );
     }
     
     // added words to lists shared with the user by other users
@@ -791,15 +796,41 @@ class Feed {
     
     // users added
     $sql = "
-      SELECT * 
+      SELECT `user1`, `time`
       FROM `relationship` 
       WHERE `type` <> '0' AND `user2` = '".$id."' AND `time` >= '".$since."' 
       ORDER BY `time` DESC";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      array_push($this->usersAdded, SimpleUser::get_by_id($row['user1']));
+      array_push(
+        $this->events, 
+        new FeedItem(
+          FeedItemType::UserAdded,
+          $row['time'],
+          SimpleUser::get_by_id($row['user1'])
+        )
+      );
     }
   }
+}
+
+class FeedItem {
+  public $type;
+  public $time;
+  public $info;
+  
+  function __construct($type, $time, $info) {
+    $this->type = $type;
+    $this->time = $time;
+    $this->info = $info;
+  }
+}
+
+abstract class FeedItemType {
+  const UserAdded = 0;
+  const ListShared = 1;
+  const WordAdded = 2;
+  const WordDeleted = 3;
 }
 
 class Answer {
