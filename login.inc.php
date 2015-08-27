@@ -124,9 +124,9 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                       <td><input type="submit" value="Login"/></td>
                       <td></td>
                     </tr>
-                    <tr>
+                    <!--<tr>
                       <td colspan="2" style="padding-top: 5px; "><a href="#"><small>Forgot your password?</small></a></td>
-                    </tr>
+                    </tr>-->
                   </table>
                 </form>
               </div>

@@ -321,7 +321,7 @@ function refreshQueryListSelection() {
   // checkbox click event
   $('#query-list-selection tr').on('click', function(){
     // read list id from checkbox data tag
-    var listId = $(this).data('list-id');
+    var listId = $(this).data('query-list-id');
     
     // checkbox has been unchecked
     if($(this).data('checked') === true) {
