@@ -275,7 +275,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       }
 
       // add export button
-      wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="exportList()"/>';
+      //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="exportList()"/>';
 
       $('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
