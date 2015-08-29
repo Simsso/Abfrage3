@@ -25,8 +25,9 @@ class Database {
       $reg_time = time();
 
       global $con;
-      $sql = "INSERT INTO `user` (`firstname`, `lastname`, `email`, `password`, `salt`, `reg_time`, `email_confirmation_key`)
-			VALUES ('" . $firstname . "', '" . $lastname . "', '" . $email . "', '" . $password . "', '" . $salt . "', '" . $reg_time . "', '" . $email_confirmation_key . "')";
+      $sql = "
+        INSERT INTO `user` (`firstname`, `lastname`, `email`, `password`, `salt`, `reg_time`, `email_confirmation_key`)
+		  VALUES ('".$firstname."', '".$lastname."', '".$email."', '".$password."', ".$salt.", ".$reg_time.", '".$email_confirmation_key."');";
       $query = mysqli_query($con, $sql);
 
       // send email
@@ -38,7 +39,7 @@ class Database {
   // check if an email-address is available
   static function email_available($email) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."';";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
@@ -58,13 +59,13 @@ class Database {
 
     $password_hash = sha1(self::get_salt_by_email($email) . $password);
     unset($password);
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "' AND `password` = '" . $password_hash . "' AND `active` = '1'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `active` = 1;";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
       return 0;
     } else {
-      $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '" . $email . "' AND `password` = '" . $password_hash . "' AND `email_confirmed` = '0'";
+      $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `email_confirmed` = 0;";
       $query = mysqli_query($con, $sql);
       $count = mysqli_fetch_object($query)->count;
       if ($count == 1) {
@@ -86,7 +87,7 @@ class Database {
 
     // update database
     global $con;
-    $sql = "UPDATE `login` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = '".$login_id."'";
+    $sql = "UPDATE `login` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = ".$login_id.";";
     $query = mysqli_query($con, $sql);
   }
 
@@ -95,7 +96,7 @@ class Database {
     $stored_salt = 0;
 
     global $con;
-    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `login` WHERE `user` = '".$id."'";
+    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `login` WHERE `user` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $stored_hash = $row['stay_logged_in_hash'];
@@ -112,7 +113,7 @@ class Database {
   static function get_salt_by_email($email) {
     global $con;
 
-    $sql = "SELECT `salt` FROM `user` WHERE `email` = '$email'";
+    $sql = "SELECT `salt` FROM `user` WHERE `email` LIKE '".$email."';";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return $row['salt'];
@@ -124,7 +125,7 @@ class Database {
   static function email2id($email) {
     global $con;
 
-    $sql = "SELECT `id` FROM `user` WHERE `email` = '$email'";
+    $sql = "SELECT `id` FROM `user` WHERE `email` LIKE '".$email."';";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return $row['id'];
@@ -136,7 +137,7 @@ class Database {
   static function id2email($id) {
     global $con;
 
-    $sql = "SELECT `email` FROM `user` WHERE `id` = '$id'";
+    $sql = "SELECT `email` FROM `user` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return $row['email'];
@@ -152,11 +153,11 @@ class Database {
   // confirm email-address
   static function confirm_email($email, $key) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `email` = '$email' AND `email_confirmation_key` = '$key'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `email_confirmation_key` = ".$key.";";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 1) {
-      $sql = "UPDATE `user` SET `email_confirmed` = '1' WHERE `id` = '" . self::email2id($email) . "'";
+      $sql = "UPDATE `user` SET `email_confirmed` = 1 WHERE `id` = ".self::email2id($email).";";
       $query = mysqli_query($con, $sql);
       return TRUE;
     }
@@ -168,7 +169,7 @@ class Database {
     global $con;
     $ip = $_SERVER['REMOTE_ADDR'];
     $time = time();
-    $sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES ('" . $id . "', '" . $time . "', '" . $ip . "')";
+    $sql = "INSERT INTO `login` (`user`, `time`, `ip`) VALUES (".$id.", ".$time.", '".$ip."');";
     $query = mysqli_query($con, $sql);
     
     if ($stay_logged_in) {
@@ -179,7 +180,7 @@ class Database {
   // returns true if the given user logs in for the first time
   static function first_login_of_user($id) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user` WHERE `id` = '$id'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 1) {
@@ -191,7 +192,7 @@ class Database {
   // returns login object of the last login of a user
   static function get_last_login_of_user($id) {
     global $con;
-    $sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1";
+    $sql = "SELECT `id`, `user`, `time`, `ip` FROM `login` WHERE `user` = ".$id." ORDER BY `time` DESC LIMIT 1;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new Login($row['id'], $row['user'], $row['time'], $row['ip']);
@@ -202,7 +203,7 @@ class Database {
   // returns login object of the next to last login of a user
   static function get_next_to_last_login_of_user($id) {
     global $con;
-    $sql = "SELECT * FROM `login` WHERE `user` = '$id' ORDER BY `time` DESC LIMIT 1,2";
+    $sql = "SELECT `id`, `user`, `time`, `ip` FROM `login` WHERE `user` = ".$id." ORDER BY `time` DESC LIMIT 1,2;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new Login($row['id'], $row['user'], $row['time'], $row['ip']);
@@ -216,8 +217,8 @@ class Database {
     $sql = "
 		SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `user`, `relationship`
-		WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = '" . $id . "' AND `relationship`.`type` = 1
-        ORDER BY `user`.`firstname`, `user`.`lastname`";
+		WHERE `user`.`id` = `relationship`.`user2` AND `relationship`.`user1` = ".$id." AND `relationship`.`type` = 1
+        ORDER BY `user`.`firstname`, `user`.`lastname`;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -234,8 +235,8 @@ class Database {
     $sql = "
 		SELECT `user`.`id`, `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `user`, `relationship`
-		WHERE `user`.`id` = `relationship`.`user1` AND `relationship`.`user2` = '$id' AND `relationship`.`type` = 1
-        ORDER BY `user`.`firstname`, `user`.`lastname`";
+		WHERE `user`.`id` = `relationship`.`user1` AND `relationship`.`user2` = ".$id." AND `relationship`.`type` = 1
+        ORDER BY `user`.`firstname`, `user`.`lastname`;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -249,10 +250,10 @@ class Database {
   // returns true if users have added them both (bidirectional)
   static function users_have_added_them_both($user1, $user2) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user1` = '$user1' AND `user2` = '$user2' AND `relationship`.`type` = 1";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user1` = ".$user1." AND `user2` = ".$user2." AND `relationship`.`type` = 1;";
     $query = mysqli_query($con, $sql);
     if (mysqli_fetch_object($query)->count == 1) {
-      $sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user2` = '$user1' AND `user1` = '$user2' AND `relationship`.`type` = 1";
+      $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user2` = ".$user1." AND `user1` = ".$user2." AND `relationship`.`type` = 1;";
       $query = mysqli_query($con, $sql);
       if (mysqli_fetch_object($query)->count == 1) {
         return true;
@@ -264,7 +265,7 @@ class Database {
   // get number of registered users
   static function get_number_of_registered_users() {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `user`";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user`;";
     $query = mysqli_query($con, $sql);
     return mysqli_fetch_object($query)->count;
   }
@@ -273,7 +274,7 @@ class Database {
   static function get_number_of_logins_during_last_time($time_in_seconds) {
     $time_min = time() - $time_in_seconds;
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `login` WHERE `time` > '$time_min'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `login` WHERE `time` > ".$time_min.";";
     $query = mysqli_query($con, $sql);
     return mysqli_fetch_object($query)->count;
   }
@@ -292,11 +293,11 @@ class Database {
     $time = time();
     // check if the user is already added
     if (!self::user_already_have_relationship($id, $added_user_id)) {
-      $sql = "INSERT INTO `relationship` (`user1`, `user2`, `time`, `type`) VALUES ('$id', '$added_user_id', '$time', '1')";
+      $sql = "INSERT INTO `relationship` (`user1`, `user2`, `time`, `type`) VALUES (".$id.", ".$added_user_id.", ".$time.", 1);";
       $query = mysqli_query($con, $sql);
       return 1;
     } else {
-      $sql = "UPDATE `relationship` SET `type` = '1', `time`= '$time' WHERE `user1` = '$id' AND `user2` = '$added_user_id'";
+      $sql = "UPDATE `relationship` SET `type` = 1, `time`= ".$time." WHERE `user1` = ".$id." AND `user2` = ".$added_user_id.";";
       $query = mysqli_query($con, $sql);
       return 2;
     }
@@ -307,7 +308,7 @@ class Database {
   static function remove_user($user1, $user2) {
     global $con;
 
-    $sql = "UPDATE `relationship` SET `type` = '0' WHERE `user1` = '$user1' AND `user2` = '$user2'";
+    $sql = "UPDATE `relationship` SET `type` = 0 WHERE `user1` = ".$user1." AND `user2` = ".$user2.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -316,7 +317,7 @@ class Database {
   static function user_already_have_relationship($user1, $user2) {
     global $con;
 
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `relationship` WHERE `user1` = '$user1' AND `user2` = '$user2'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user1` = ".$user1." AND `user2` = ".$user2.";";
     $query = mysqli_query($con, $sql);
     if (mysqli_fetch_object($query)->count == 0) {
       return false;
@@ -331,7 +332,7 @@ class Database {
     // returns id and state
     global $con;
     $time = time();
-    $sql = "INSERT INTO `list` (`name`, `creator`, `creation_time`) VALUES ('$name', '$id', '$time')";
+    $sql = "INSERT INTO `list` (`name`, `creator`, `creation_time`) VALUES ('".$name."', ".$id.", ".$time.");";
     $query = mysqli_query($con, $sql);
 
     $result->state = 1;
@@ -345,8 +346,8 @@ class Database {
     $sql = "
 		SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time`
 		FROM `list`
-		WHERE `creator` = '$id' AND `active` = '1'
-        ORDER BY `name` ASC";
+		WHERE `creator` = ".$id." AND `active` = 1
+        ORDER BY `name` ASC;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -372,7 +373,7 @@ class Database {
     $sql = "
 		SELECT `list`.`id`, `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `list`, `share`
-		WHERE (`list`.`creator` = '" . $user_id . "' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND `list`.`id` = '" . $word_list_id . "'";
+		WHERE (`list`.`creator` = '".$user_id."' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND `list`.`id` = '".$word_list_id."'";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $list = new WordList(
@@ -393,7 +394,7 @@ class Database {
   static function rename_word_list($user_id, $word_list_id, $list_name) {
     global $con;
 
-    $sql = "UPDATE `list` SET `name` = '".$list_name."' WHERE `id` = '".$word_list_id."' AND `creator` = '".$user_id."'";
+    $sql = "UPDATE `list` SET `name` = '".$list_name."' WHERE `id` = ".$word_list_id." AND `creator` = ".$user_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -401,7 +402,7 @@ class Database {
   // get words of list
   static function get_words_of_list($list_id) {
     global $con;
-    $sql = "SELECT * FROM `word` WHERE `list` = '$list_id' AND `status` = '1' ORDER BY `id` DESC";
+    $sql = "SELECT `id`, `list`, `language1`, `language2` FROM `word` WHERE `list` = ".$list_id." AND `status` = 1 ORDER BY `id` DESC";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -414,7 +415,7 @@ class Database {
   static function delete_word_list($user_id, $word_list_id) {
     global $con;
 
-    $sql = "UPDATE `list` SET `active` = '0' WHERE `id` = '$word_list_id' AND `creator` = '$user_id'";
+    $sql = "UPDATE `list` SET `active` = 0 WHERE `id` = ".$word_list_id." AND `creator` = ".$user_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -424,7 +425,7 @@ class Database {
     global $con;
     // TODO check owner
     $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `time`, `user`)
-		VALUES ('" . $word_list_id . "', '" . $lang1 . "', '" . $lang2 . "', '".time()."', '".$user_id."')";
+		VALUES (".$word_list_id.", '".$lang1."', '".$lang2."', ".time().", ".$user_id.");";
     $query = mysqli_query($con, $sql);
     return mysqli_insert_id($con);
   }
@@ -433,7 +434,7 @@ class Database {
   static function update_word($user_id, $word_id, $lang1, $lang2) {
     global $con;
     // TODO: add check if word is owned by $user_id
-    $sql = "UPDATE `word` SET `language1` = '$lang1', `language2` = '$lang2' WHERE `id` = '$word_id'";
+    $sql = "UPDATE `word` SET `language1` = '".$lang1."', `language2` = '".$lang2."' WHERE `id` = ".$word_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -442,7 +443,7 @@ class Database {
   static function remove_word($user_id, $word_id) {
     global $con;
     // TODO: add check if word is owned by $user_id
-    $sql = "UPDATE `word` SET `status` = '0', ´time` = '".time()."' `user` = '".$user_id."'WHERE `id` = '$word_id'";
+    $sql = "UPDATE `word` SET `status` = 0, `time` = ".time().", `user` = ".$user_id." WHERE `id` = ".$word_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -453,8 +454,8 @@ class Database {
     $sql = "
       SELECT `share`.`id` AS 'share_id', `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time` 
       FROM `share`, `list` 
-      WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = '$id' AND `list`.`active` = '1'
-      ORDER BY `list`.`name` ASC";
+      WHERE `share`.`list` = `list`.`id` AND `list`.`creator` = ".$id." AND `list`.`active` = 1
+      ORDER BY `list`.`name` ASC;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -471,9 +472,9 @@ class Database {
     $sql = "
 		SELECT `share`.`id` AS 'share_id', `share`.`permissions`, `list`.`id` AS 'list_id', `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `share`, `list`, `relationship`
-		WHERE `share`.`user` = '$id' AND `share`.`list` = `list`.`id` AND `list`.`active` = '1' AND `share`.`permissions` <> '0'
-		  AND `relationship`.`user1` = '$id' AND `relationship`.`user2` = `list`.`creator` AND `relationship`.`type` = '1'
-        ORDER BY `list`.`name` ASC";
+		WHERE `share`.`user` = ".$id." AND `share`.`list` = `list`.`id` AND `list`.`active` = 1 AND `share`.`permissions` <> 0
+		  AND `relationship`.`user1` = ".$id." AND `relationship`.`user2` = `list`.`creator` AND `relationship`.`type` = 1
+        ORDER BY `list`.`name` ASC;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -491,15 +492,15 @@ class Database {
     if ($share_with_id == $user_id) return -1;
 
     global $con;
-    $sql = "SELECT COUNT(`id`) AS `count` FROM `share` WHERE `user` = '" . $share_with_id . "' AND `list` = '" . $word_list_id . "'";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `share` WHERE `user` = ".$share_with_id." AND `list` = ".$word_list_id.";";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
-      $sql = "INSERT INTO `share` (`user`, `list`, `permissions`, `time`) VALUES ('" . $share_with_id . "', '" . $word_list_id . "', '" . $permissions . "', '" . time() . "')";
+      $sql = "INSERT INTO `share` (`user`, `list`, `permissions`, `time`) VALUES (".$share_with_id.", ".$word_list_id.", ".$permissions.", ".time().");";
       $query = mysqli_query($con, $sql);
       return 1;
     } else {
-      $sql = "UPDATE `share` SET `permissions` = '$permissions', `time` = '" . time() . "' WHERE `list` = '" . $word_list_id . "' AND (`user` = '" . $share_with_id . "')";
+      $sql = "UPDATE `share` SET `permissions` = $permissions, `time` = ".time()." WHERE `list` = ".$word_list_id." AND (`user` = ".$share_with_id.");";
       $query = mysqli_query($con, $sql);
       return 2;
     }
@@ -512,8 +513,8 @@ class Database {
 
     $sql = "
 		UPDATE `share`, `list`
-		SET `share`.`permissions` = '$permissions', `share`.`time` = '".time()."'
-		WHERE `share`.`id` = '$id' AND (`list`.`id` = `share`.`list` AND `list`.`creator` = '" . $user_id . "' OR `share`.`user` = '" . $user_id . "')";
+		SET `share`.`permissions` = ".$permissions.", `share`.`time` = ".time()."
+		WHERE `share`.`id` = ".$id." AND (`list`.`id` = `share`.`list` AND `list`.`creator` = ".$user_id." OR `share`.`user` = ".$user_id.");";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -523,7 +524,10 @@ class Database {
     $share_with_id = self::email2id($email);
 
     global $con;
-    $sql = "SELECT `share`.`id`, `share`.`list`, `share`.`permissions` FROM `share`, `list` WHERE `list`.`id` = '$word_list_id' AND `share`.`list` = `list`.`id` AND `list`.`creator` = '$list_owner' AND `list`.`active` = '1' AND `list`.`user` = '$share_with_id'";
+    $sql = "
+      SELECT `share`.`id`, `share`.`list`, `share`.`permissions` 
+      FROM `share`, `list` 
+      WHERE `list`.`id` = ".$word_list_id." AND `share`.`list` = `list`.`id` AND `list`.`creator` = ".$list_owner." AND `list`.`active` = 1 AND `list`.`user` = ".$share_with_id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new SharingInformation($row['id'], new SimpleUser($share_with_id, null, null, $email), $row['list'], $row['permissions']);
@@ -536,8 +540,8 @@ class Database {
     $sql = "
 		SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `share`.`list`, `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `share`, `list`, `user`
-		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = '$word_list_id' AND `list`.`creator` = '$user_id' AND `list`.`active` = '1' AND `share`.`permissions` <> '0'
-        ORDER BY `share`.`time` DESC";
+		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = ".$word_list_id." AND `list`.`creator` = ".$user_id." AND `list`.`active` = 1 AND `share`.`permissions` <> 0
+        ORDER BY `share`.`time` DESC;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -553,7 +557,7 @@ class Database {
     $sql = "
 		UPDATE `list`, `share`
 		SET `list`.`language1` = '".$language1."', `list`.`language2` = '".$language2."'
-		WHERE `list`.`id` = '".$list_id."' AND `list`.`creator` = '" . $user_id . "' OR (`list`.`id` = `share`.`list` AND `share`.`user` = '" . $user_id . "' AND `share`.`permissions` = '1')";
+		WHERE `list`.`id` = ".$list_id." AND `list`.`creator` = ".$user_id." OR (`list`.`id` = `share`.`list` AND `share`.`user` = ".$user_id." AND `share`.`permissions` = 1);";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -566,20 +570,20 @@ class Database {
     // TODO
     // check already existing
     $sql = "
-		SELECT COUNT(`id`) AS `count`
+		SELECT COUNT(`id`) AS 'count'
 		FROM `label`
-		WHERE `name` = '".$label_name."' AND `user` = '".$user_id."' AND `parent` = '".$parent_label_id."'";
+		WHERE `name` LIKE '".$label_name."' AND `user` = ".$user_id." AND `parent` = ".$parent_label_id.";";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
       // insert
       $sql = "INSERT INTO `label` (`user`, `name`, `parent`)
-			VALUES ('" . $user_id . "', '" . $label_name . "', '".$parent_label_id."')";
+			VALUES (".$user_id.", '".$label_name."', ".$parent_label_id.");";
       $query = mysqli_query($con, $sql);
       return mysqli_insert_id($con);
     } else {
       // update
-      $sql = "UPDATE `label` SET `active` = '1' WHERE `name` = '".$label_name."' AND `user` = '".$user_id."' AND `parent` = '".$parent_label_id."'";
+      $sql = "UPDATE `label` SET `active` = 1 WHERE `name` = '".$label_name."' AND `user` = ".$user_id." AND `parent` = ".$parent_label_id.";";
       $query = mysqli_query($con, $sql);
       return 1;
     }
@@ -588,19 +592,19 @@ class Database {
   // set label status
   static function set_label_status($user_id, $id, $status) {
     global $con;
-    $sql = "UPDATE `label` SET `active` = '".$status."' WHERE `id` = '".$id."' AND `user` = '".$user_id."'";
+    $sql = "UPDATE `label` SET `active` = ".$status." WHERE `id` = ".$id." AND `user` = ".$user_id.";";
     $query = mysqli_query($con, $sql);
 
     if ($status == 0) {
       // unset all label attachments
       $sql = "
 			UPDATE `label_attachment`, `label`
-			SET `label_attachment`.`active` = '0'
+			SET `label_attachment`.`active` = 0
 			WHERE `label`.`id` = `label_attachment`.`label` AND
-			`label`.`id` = '".$id."' AND `label`.`user` = '".$user_id."'";
+			`label`.`id` = ".$id." AND `label`.`user` = ".$user_id.";";
       $query = mysqli_query($con, $sql);
     }
-    return "user_id: " . $user_id . "; id: " . $id . "; status: " . $status . ";";
+    return "user_id: ".$user_id."; id: ".$id."; status: ".$status.";";
   }
 
   // set label list attachment
@@ -608,22 +612,24 @@ class Database {
     global $con;
     // check already attached
     $sql = "
-		SELECT COUNT(`label_attachment`.`id`) AS `count`
+		SELECT COUNT(`label_attachment`.`id`) AS 'count'
 		FROM `label_attachment`, `label`
 		WHERE `label_attachment`.`label` = `label`.`id` AND
-		`label`.`user` = '".$user_id."' AND `label`.`id` = '".$label_id."' AND `label_attachment`.`list` = '".$list_id."'";
+		`label`.`user` = ".$user_id." AND `label`.`id` = ".$label_id." AND `label_attachment`.`list` = ".$list_id.";";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
       // insert
       $sql = "INSERT INTO `label_attachment` (`list`, `label`, `active`)
-			VALUES ('" . $list_id . "', '" . $label_id . "', '".$attachment."')";
+			VALUES (".$list_id.", ".$label_id.", ".$attachment.");";
       $query = mysqli_query($con, $sql);
       return mysqli_insert_id($con);
     } else {
       // update
-      $sql = "UPDATE `label_attachment`, `label` SET `label_attachment`.`active` = '".$attachment."' WHERE `label_attachment`.`label` = `label`.`id` AND
-			`label`.`user` = '".$user_id."' AND `label`.`id` = '".$label_id."' AND `label_attachment`.`list` = '".$list_id."'";
+      $sql = "
+        UPDATE `label_attachment`, `label` 
+        SET `label_attachment`.`active` = ".$attachment." 
+        WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = ".$user_id." AND `label`.`id` = ".$label_id." AND `label_attachment`.`list` = ".$list_id.";";
       $query = mysqli_query($con, $sql);
       return 1;
     }
@@ -633,7 +639,7 @@ class Database {
   static function get_labels_of_user($user_id) {
     global $con;
 
-    $sql = "SELECT * FROM `label` WHERE `user` = '".$user_id."' AND `active` = '1' ORDER BY `label`.`name` ASC";
+    $sql = "SELECT * FROM `label` WHERE `user` = ".$user_id." AND `active` = 1 ORDER BY `label`.`name` ASC;";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -645,7 +651,7 @@ class Database {
   // rename label
   static function rename_label($user_id, $label_id, $label_name) {
     global $con;
-    $sql = "UPDATE `label` SET `name` = '".$label_name."' WHERE `id` = '".$label_id."' AND `user` = '".$user_id."'";
+    $sql = "UPDATE `label` SET `name` = '".$label_name."' WHERE `id` = ".$label_id." AND `user` = ".$user_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -656,9 +662,9 @@ class Database {
     $sql = "
         SELECT `label_attachment`.`id`, `label_attachment`.`list`, `label_attachment`.`label`, `label_attachment`.`active` 
         FROM `label_attachment`, `label`, `list` 
-        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = '".$id."' AND `label_attachment`.`list` = `list`.`id` AND 
-          `label_attachment`.`active` = '1' AND `label`.`active` = '1' AND `list`.`active` = '1'
-        ORDER BY `label`.`name` ASC";
+        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = ".$id." AND `label_attachment`.`list` = `list`.`id` AND 
+          `label_attachment`.`active` = 1 AND `label`.`active` = 1 AND `list`.`active` = 1
+        ORDER BY `label`.`name` ASC;";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -674,7 +680,7 @@ class Database {
     // add the whole array
     for ($i = 0; $i < count($data); $i++) {
       $sql = "INSERT INTO `answer` (`user`, `word`, `correct`, `time`)
-        VALUES ('" . $user . "', '" . $data[$i]['word'] . "', '" . $data[$i]['correct'] . "', '" . $data[$i]['time'] . "')";
+        VALUES (".$user.", '".$data[$i]['word']."', ".$data[$i]['correct'].", ".$data[$i]['time'].");";
       $query = mysqli_query($con, $sql);
     }
     return count($data);
@@ -698,7 +704,7 @@ class Database {
     }
     // update database
     global $con;
-    $sql = "UPDATE `user` SET `firstname` = '".$firstname."', `lastname` = '".$lastname."' WHERE `id` = '".$id."'";
+    $sql = "UPDATE `user` SET `firstname` = '".$firstname."', `lastname` = '".$lastname."' WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }
@@ -714,7 +720,7 @@ class Database {
           
           // update database
           global $con;
-          $sql = "UPDATE `user` SET `password` = '".$new_pw."', `salt` = '".$salt."' WHERE `id` = '".$id."'";
+          $sql = "UPDATE `user` SET `password` = '".$new_pw."', `salt` = ".$salt." WHERE `id` = ".$id.";";
           $query = mysqli_query($con, $sql);
           return 1; // no error
         } else {
@@ -736,7 +742,7 @@ class Database {
       unset($password);
       // update database
       global $con;
-      $sql = "UPDATE `user` SET `active` = '0' WHERE `id` = '".$id."'";
+      $sql = "UPDATE `user` SET `active` = 0 WHERE `id` = ".$id.";";
       $query = mysqli_query($con, $sql);
       return 1; // no error
     }
@@ -773,40 +779,80 @@ class Feed {
     $sql = "
       SELECT `share`.`id`, `share`.`list`, `share`.`permissions`, `list`.`creator`, `share`.`time`
       FROM `share`, `list` 
-      WHERE `list`.`id` = `share`.`list` AND `share`.`user` = '".$id."' AND `share`.`permissions` <> '0' AND `share`.`time` >= '".$since."' 
-      ORDER BY `share`.`time` DESC";
+      WHERE `list`.`id` = `share`.`list` AND `share`.`user` = ".$id." AND `share`.`permissions` <> 0 AND `share`.`time` >= ".$since."
+      ORDER BY `share`.`time` DESC;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       array_push(
         $this->events, 
         new FeedItem(
           FeedItemType::ListShared,
-          $row['time'],
+          intval($row['time']),
           new SharingInformation($row['id'], SimpleUser::get_by_id($row['creator']), $row['list'], $row['permissions'])
         )
       );
     }
     
-    // added words to lists shared with the user by other users
-    /*$sql = "";
+    // another user has added a word to his list which is shared with you
+    $sql = "
+      SELECT `list`.`creator`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
+      FROM `list`, `share`, `word` 
+      WHERE `share`.`user` = ".$id." AND `list`.`creator` = `word`.`user` AND 
+        `word`.`list` = `list`.`id` AND `share`.`list` = `list`.`id` AND
+        `list`.`active` <> 0 AND `share`.`permissions` <> 0 AND `word`.`status` <> 0 AND
+        `word`.`time` > ".$since."
+      GROUP BY `list`.`creator`
+      ORDER BY `word`.`time` ASC;
+    ";
     $query = mysqli_query($con, $sql);
+
     while ($row = mysqli_fetch_assoc($query)) {
-      
+      array_push(
+        $this->events, 
+        new FeedItem(
+          FeedItemType::WordAdded,
+          intval($row['time']),
+          new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['creator']))
+        )
+      );
+    }
+    
+    // another user has added a word to your word list
+    /*$sql = "
+      SELECT `list`.`creator`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
+      FROM `list`, `word` 
+      WHERE `word`.`list` = `list`.`id` AND `word`.`user` <> ".$id." AND `list`.`creator` = ".$id." AND
+        `list`.`active` <> 0 AND `word`.`status` <> 0 AND
+        `word`.`time` > ".$since."
+      GROUP BY `word`.`user`
+      ORDER BY `word`.`time` ASC;
+    ";
+    $query = mysqli_query($con, $sql);
+
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push(
+        $this->events, 
+        new FeedItem(
+          FeedItemType::WordAdded,
+          intval($row['time']),
+          new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['user']))
+        )
+      );
     }*/
     
     // users added
     $sql = "
       SELECT `user1`, `time`
       FROM `relationship` 
-      WHERE `type` <> '0' AND `user2` = '".$id."' AND `time` >= '".$since."' 
-      ORDER BY `time` DESC";
+      WHERE `type` <> 0 AND `user2` = ".$id." AND `time` >= ".$since."
+      ORDER BY `time` DESC;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       array_push(
         $this->events, 
         new FeedItem(
           FeedItemType::UserAdded,
-          $row['time'],
+          intval($row['time']),
           SimpleUser::get_by_id($row['user1'])
         )
       );
@@ -833,6 +879,20 @@ abstract class FeedItemType {
   const WordDeleted = 3;
 }
 
+class WordsAddedFeedItem {
+  public $amount;
+  public $list;
+  public $list_creator;
+  public $user;
+  
+  function __construct($amount, BasicWordList $list, SimpleUser $list_creator, SimpleUser $user) {
+    $this->amount = intval($amount);
+    $this->list = $list;
+    $this->list_creator = $list_creator;
+    $this->user = $user;
+  }
+}
+
 class Answer {
   public $id;
   public $user;
@@ -850,7 +910,7 @@ class Answer {
 
   static function get_by_id($id) {
     global $con;
-    $sql = "SELECT * FROM `answer` WHERE `id` = '".$id."'";
+    $sql = "SELECT * FROM `answer` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['time']);
@@ -892,7 +952,7 @@ class Label {
   public function get_by_id($id) {
     global $con;
 
-    $sql = "SELECT * FROM `label` WHERE `id` = '" . $id . "'";
+    $sql = "SELECT * FROM `label` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new Label($id, $row['name'], $row['user'], $row['parent_label'], $row['active']);
@@ -918,7 +978,7 @@ class SimpleUser {
   static function get_by_id($id) {
     global $con;
 
-    $sql = "SELECT `firstname`, `lastname`, `email` FROM `user` WHERE `id` = '" . $id . "'";
+    $sql = "SELECT `firstname`, `lastname`, `email` FROM `user` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new SimpleUser($id, $row['firstname'], $row['lastname'], $row['email']);
@@ -946,7 +1006,7 @@ class User extends SimpleUser {
   public function __construct($id) {
     global $con;
 
-    $sql = "SELECT * FROM `user` WHERE `id` = '" . $id . "'";
+    $sql = "SELECT * FROM `user` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $this->id = intval($id);
@@ -1012,7 +1072,7 @@ class BasicWordList {
   public function get_by_id($id) {
     global $con;
 
-    $sql = "SELECT * FROM `list` WHERE `id` = '" . $id . "'";
+    $sql = "SELECT * FROM `list` WHERE `id` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new BasicWordList($id, $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
@@ -1023,7 +1083,7 @@ class BasicWordList {
   public function load_words($loadAnswers, $user_id) {
     global $con;
 
-    $sql = "SELECT * FROM `word` WHERE `list` = '" . $this->id . "' AND `status` = '1'";
+    $sql = "SELECT * FROM `word` WHERE `list` = ".$this->id." AND `status` = 1;";
     $query = mysqli_query($con, $sql);
     $this->words = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -1053,10 +1113,10 @@ class WordList extends BasicWordList {
     $sql = "
 		SELECT `label`.`id`, `label`.`user`, `label`.`name`, `label`.`parent`
 		FROM `label`, `label_attachment`, `list`
-		WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = '".$user."' AND
-		`label`.`active` = '1' AND `label_attachment`.`active` = '1' AND
-		`label_attachment`.`list` = '".$id."'
-		GROUP BY `label`.`id`";
+		WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = ".$user." AND
+		`label`.`active` = 1 AND `label_attachment`.`active` = 1 AND
+		`label_attachment`.`list` = ".$id."
+		GROUP BY `label`.`id`;";
     $query = mysqli_query($con, $sql);
     $output = array();
     while ($row = mysqli_fetch_assoc($query)) {
@@ -1087,7 +1147,7 @@ class Word {
   function load_answers($user_id) {
     $this->answers = array();
     global $con;
-    $sql = "SELECT * FROM `answer` WHERE `user` = '".$user_id."' AND `word` = '".$this->id."'";
+    $sql = "SELECT * FROM `answer` WHERE `user` = ".$user_id." AND `word` = ".$this->id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       array_push($this->answers, new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['time']));
@@ -1096,7 +1156,7 @@ class Word {
 
   static function get_by_id($id) {
     global $con;
-    $sql = "SELECT * FROM `word` WHERE `id` = '$id' ORDER BY `id` DESC";
+    $sql = "SELECT * FROM `word` WHERE `id` = ".$id." ORDER BY `id` DESC;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       return new Word($id, $row['list'], $row['language1'], $row['language2']);

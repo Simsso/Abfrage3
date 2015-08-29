@@ -29,7 +29,7 @@ $('#settings-name').on('submit', function(e) {
 
     }
   }).done(function(data) {
-    console.log(data); // debug
+    data = handleAjaxResponse(data);
 
     $('#settings-firstname, #settings-lastname').prop('disabled', false);
     $('#settings-submit-button').prop('disabled', false).attr('value', 'Change name');
@@ -72,10 +72,10 @@ $('#settings-password').on('submit', function(e) {
 
     }
   }).done(function(data) {
-    console.log(data); // debug
+    data = handleAjaxResponse(data);
 
-  $('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', false).attr('value', '');
-  $('#settings-password-button').prop('disabled', false).attr('value', 'Change password');
+    $('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', false).attr('value', '');
+    $('#settings-password-button').prop('disabled', false).attr('value', 'Change password');
     
     var message = '';
     switch (data) {
@@ -118,7 +118,7 @@ $('#settings-delete-account-form').on('submit', function(e) {
 
     }
   }).done(function(data) {
-    console.log(data); // debug
+    data = handleAjaxResponse(data);
     
     if (data === '1') {
       window.location.replace('server.php?action=logout');

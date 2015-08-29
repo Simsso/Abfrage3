@@ -212,9 +212,8 @@ function refreshQueryLabelList(showLoadingInformation) {
 
     }
   }).done(function(data) {
-    console.log(data);
-    var dataJSON = jQuery.parseJSON(data); // parse JSON
-    console.log(dataJSON); // debug
+    var dataJSON = handleAjaxResponse(data);
+
 
     // labels
     queryLabels = dataJSON.labels;
@@ -579,13 +578,9 @@ function uploadQueryResults() {
     type: 'POST',
     url: 'server.php?action=upload-query-results',
     data: { 'answers': JSON.stringify(answersToUpload)},
-    dataType: 'json'
   })
   .done( function( data ) {
-    console.log(data);
-  })
-  .fail( function( data ) {
-    console.log(data);
+    handleAjaxResponse(data);
   });
 }
 

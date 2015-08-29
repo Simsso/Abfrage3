@@ -25,9 +25,9 @@ function addWordList(name, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debugging
-    data = jQuery.parseJSON(data); // parse JSON
+  }).done(function(data) {    data = handleAjaxResponse(data);
+
+
 
     callback(data);
   });
@@ -82,9 +82,9 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
       error: function(jqXHR, textStatus, errorThrown) {
 
       }
-    }).done(function(data) {
-      console.log(data); // debugging
-      data = jQuery.parseJSON(data); // parse JSON
+    }).done(function(data) {    
+      data = handleAjaxResponse(data);
+
 
       var output = "";
       // build HTML output string
@@ -140,9 +140,8 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
       error: function(jqXHR, textStatus, errorThrown) {
 
       }
-    }).done(function(data) {
-      console.log(data); // debug
-      data = jQuery.parseJSON(data); // parse JSON
+    }).done(function(data) {    
+      data = handleAjaxResponse(data);
 
       var output = "";
       // build HTML output string
@@ -228,9 +227,8 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       error: function(jqXHR, textStatus, errorThrown) {
 
       }
-    }).done(function(data) {
-      console.log(data); // debugging
-      data = jQuery.parseJSON(data); // parse JSON
+    }).done(function(data) {    
+      data = handleAjaxResponse(data);
 
       shownListData = data; // update the list data variable to the downloaded data
       shownListId = id;
@@ -495,9 +493,8 @@ function saveWord(id, lang1, lang2, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debug
-    callback(data);
+  }).done(function(data) {    
+      data = handleAjaxResponse(data);
   });
 }
 
@@ -516,9 +513,8 @@ function setWordListLanguages(id, lang1, lang2, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data);
-    callback(data);
+  }).done(function(data) {    
+      data = handleAjaxResponse(data);
   });
 }
 
@@ -540,8 +536,8 @@ function removeWord(id) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debugging
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
 
     // remove the row of the removed word from the DOM
     $row.remove();
@@ -565,7 +561,8 @@ function deleteWordList(id, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
     // remove the word list row from the DOM
     $('#list-of-word-lists-row-' + id).remove();
 
@@ -607,8 +604,8 @@ function addWord(lang1, lang2, allowEdit) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data);
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
 
     if ($('#word-list-table').length == 0) { // no words added yet
       var wordListHTML = getTableOfWordList("", allowEdit, shownListData.language1, shownListData.language2);
@@ -648,9 +645,8 @@ function refreshListSharings(showLoadingInformation, wordListId) {
       error: function(jqXHR, textStatus, errorThrown) {
 
       }
-    }).done(function(data) {
-      console.log(data); // debug
-      data = jQuery.parseJSON(data); // parse JSON
+    }).done(function(data) {    
+      data = handleAjaxResponse(data);
 
       if (data.length == 0) { // list not shared yet
         $('#list-sharings').html(listNotShared); // show appropriate message
@@ -732,9 +728,8 @@ function setSharingPermissionsBySharingId(sharingId, permissions, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debugging
-    data = jQuery.parseJSON(data); // parse JSON
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
 
     callback(data);
   });
@@ -754,9 +749,8 @@ function setSharingPermissions(listId, email, permissions, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data);
-    data = jQuery.parseJSON(data);
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
 
     callback(data);
   });
@@ -780,9 +774,8 @@ function getLabelList(showLoadingInformation) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debug
-    labels = jQuery.parseJSON(data); // parse JSON
+  }).done(function(data) {    
+    labels = handleAjaxResponse(data);
 
     // refreshQueryLabelSelection(labels);
 
@@ -1069,7 +1062,7 @@ function addLabel(listId, name, parentId, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
+    data = handleAjaxResponse(data);
     callback();
   });
 }
@@ -1103,7 +1096,7 @@ function setLabelListAttachment(labelId, listId, attachment, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
+    data = handleAjaxResponse(data);
     callback(data);
   });
 }
@@ -1120,7 +1113,7 @@ function removeLabel(labelId, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
+    data = handleAjaxResponse(data);
     callback(data);
   });
 }
@@ -1138,7 +1131,7 @@ function renameLabel(labelId, labelName, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
+    data = handleAjaxResponse(data);
     callback(data);
   });
 }
@@ -1156,7 +1149,7 @@ function renameList(listId, listName, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
+    data = handleAjaxResponse(data);
     callback(data);
   });
 }
