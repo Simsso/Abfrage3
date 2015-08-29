@@ -3,6 +3,12 @@ require('dbconnect.inc.php'); // include data base connection
 require('validation.class.php'); // include validation class to verify correctness of strings in general
 
 class Database {
+  static function log_server_request($user, $page) {
+    global $con;
+    $sql = "INSERT INTO `server_request` (`user`, `page`, `time`, `ip`) VALUES (".$user.", '".$page."', ".time().", '".$_SERVER['REMOTE_ADDR']."');";
+    $query = mysqli_query($con, $sql);
+  }
+  
   // register user
   static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
     if ($firstname == NULL) {
@@ -250,14 +256,13 @@ class Database {
   // returns true if users have added them both (bidirectional)
   static function users_have_added_them_both($user1, $user2) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user1` = ".$user1." AND `user2` = ".$user2." AND `relationship`.`type` = 1;";
+    $sql = "SELECT COUNT(`id`) AS 'count' 
+      FROM `relationship` 
+      WHERE `user1` = ".$user1." AND `user2` = ".$user2." AND `relationship`.`type` = 1 OR 
+        `user2` = ".$user1." AND `user1` = ".$user2." AND `relationship`.`type` = 1;";
     $query = mysqli_query($con, $sql);
-    if (mysqli_fetch_object($query)->count == 1) {
-      $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user2` = ".$user1." AND `user1` = ".$user2." AND `relationship`.`type` = 1;";
-      $query = mysqli_query($con, $sql);
-      if (mysqli_fetch_object($query)->count == 1) {
-        return true;
-      }
+    if (mysqli_fetch_object($query)->count == 2) {
+      return true;
     }
     return false;
   }
@@ -795,34 +800,11 @@ class Feed {
     
     // another user has added a word to his list which is shared with you
     $sql = "
-      SELECT `list`.`creator`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
+      SELECT `list`.`creator`, `word`.`user`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
       FROM `list`, `share`, `word` 
-      WHERE `share`.`user` = ".$id." AND `list`.`creator` = `word`.`user` AND 
+      WHERE `share`.`user` = ".$id." AND `word`.`user` <> ".$id." AND 
         `word`.`list` = `list`.`id` AND `share`.`list` = `list`.`id` AND
         `list`.`active` <> 0 AND `share`.`permissions` <> 0 AND `word`.`status` <> 0 AND
-        `word`.`time` > ".$since."
-      GROUP BY `list`.`creator`
-      ORDER BY `word`.`time` ASC;
-    ";
-    $query = mysqli_query($con, $sql);
-
-    while ($row = mysqli_fetch_assoc($query)) {
-      array_push(
-        $this->events, 
-        new FeedItem(
-          FeedItemType::WordAdded,
-          intval($row['time']),
-          new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['creator']))
-        )
-      );
-    }
-    
-    // another user has added a word to your word list
-    /*$sql = "
-      SELECT `list`.`creator`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
-      FROM `list`, `word` 
-      WHERE `word`.`list` = `list`.`id` AND `word`.`user` <> ".$id." AND `list`.`creator` = ".$id." AND
-        `list`.`active` <> 0 AND `word`.`status` <> 0 AND
         `word`.`time` > ".$since."
       GROUP BY `word`.`user`
       ORDER BY `word`.`time` ASC;
@@ -838,7 +820,33 @@ class Feed {
           new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['user']))
         )
       );
-    }*/
+    }
+    
+    // another user has added a word to your word list
+    $sql = "
+      SELECT `list`.`creator`, `word`.`user`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
+      FROM `list`, `word` 
+      WHERE `word`.`list` = `list`.`id` AND `word`.`user` <> ".$id." AND `list`.`creator` = ".$id." AND
+        `list`.`active` <> 0 AND `word`.`status` <> 0 AND
+        `word`.`time` > ".$since."
+      GROUP BY `word`.`user`
+      ORDER BY `word`.`time` ASC;
+    ";
+    $query = mysqli_query($con, $sql);
+
+    while ($row = mysqli_fetch_assoc($query)) {
+      if (intval($row['user']) === 0) {
+        continue;
+      }
+      array_push(
+        $this->events, 
+        new FeedItem(
+          FeedItemType::WordAdded,
+          intval($row['time']),
+          new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['user']))
+        )
+      );
+    }
     
     // users added
     $sql = "

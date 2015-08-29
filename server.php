@@ -1,4 +1,6 @@
 <?php
+$start_time = microtime(true); // measure execution time
+
 function session_required() {
   if (!isset($_SESSION['id'])) {
     Response::send("no session", "error");
@@ -7,9 +9,13 @@ function session_required() {
 
 class Response {
   static function send($data, $status = "success") {
+    global $start_time; // measure execution time
+    
     $obj = new stdClass();
     $obj->status = $status;
     $obj->data = $data;
+    $obj->action = $_GET['action'];
+    $obj->execution_time_ms = (microtime(true) - $start_time) * 1000;
     exit(json_encode($obj));
   }
 }
@@ -17,11 +23,24 @@ class Response {
 session_start();
 require('database.class.php');
 
-if (isset($_GET['action'])) {
-  switch($_GET['action']) {
 
+
+if (isset($_GET['action'])) {
+  
+  // log server requests
+  if (isset($_SESSION['id'])) {
+    Database::log_server_request($_SESSION['id'], $_GET['action']);
+  }
+  
+  switch($_GET['action']) {
     // outer functions (contact, login, logout, signup)
 
+    // session valid
+    case 'session-valid':
+    session_required();
+    Response::send(1);
+    break;
+    
     // contact
     case 'contact':
     require('mail.class.php');
@@ -304,25 +323,25 @@ if (isset($_GET['action'])) {
     // set name
     case 'set-name':
     session_required();
-    Response::send(Database::set_name($_SESSION['id'], $_GET['firstname'], $_GET['lastname']));
+    Response::send(Database::set_name($_SESSION['id'], Validation::format_text($_GET['firstname']), Validation::format_text($_GET['lastname'])));
     break;
     
     // set password
     case 'set-password':
     session_required();
-    Response::send(Database::set_password($_SESSION['id'], $_POST['password_old'], $_POST['password_new'], $_POST['password_new_confirm']));
+    Response::send(Database::set_password($_SESSION['id'], Validation::format_text($_POST['password_old']), Validation::format_text($_POST['password_new']), Validation::format_text($_POST['password_new_confirm'])));
     break;
     
     // set email
     case 'set-email':
     session_required();
-    Response::send(Database::set_email($_SESSION['id'], $_POST['email'], $_POST['password']));
+    Response::send(Database::set_email($_SESSION['id'], Validation::format_text($_POST['email']), Validation::format_text($_POST['password'])));
     break;
     
     // delete account
     case 'delete-account':
     session_required();
-    Response::send(Database::delete_account($_SESSION['id'], $_POST['password']));
+    Response::send(Database::delete_account($_SESSION['id'], Validation::format_text($_POST['password'])));
     break;
     
     
@@ -331,7 +350,7 @@ if (isset($_GET['action'])) {
     // get feed
     case 'get-feed':
     session_required();
-    Response::send(Database::get_feed($_SESSION['id'], $_GET['since']));
+    Response::send(Database::get_feed($_SESSION['id'], Validation::format_text($_GET['since'])));
     break;
   }
 } else {

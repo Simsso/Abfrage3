@@ -147,12 +147,13 @@ $(document).ajaxSuccess(function(event, req) {
 
 function handleAjaxResponse(data) {
   var obj = jQuery.parseJSON(data);
+  console.log(obj);
+
   if (obj.status === "success") {
-    console.log(obj.data);
+    //console.log(obj.data);
     return obj.data;
   }
   else if (obj.status === "error") {
-    console.log(obj);
     if (obj.data === "no session") {
       $('body').append(getLoadingFullscreenWithMessage("Your session has expired."));
       $('.sk-three-bounce.fullscreen').css('opacity', '1');

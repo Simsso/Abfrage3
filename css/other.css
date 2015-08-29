@@ -445,6 +445,15 @@ div.right-column-img-wrapper {
   margin-bottom: -7px;
 }
 
+.feed-table td:first-child {
+  text-align: center;
+  width: 20px;
+}
+.feed-table img {
+  height: 20px;
+  opacity: 0.9;
+}
+
 
 /* mobile menu */
 
