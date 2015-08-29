@@ -53,6 +53,35 @@ Array.prototype.swap = function(a, b) {
     this[b] = tmp;
 };
 
+// push elements of an array into another array
+Array.prototype.pushElements = function(array) {
+  for (var i = 0; i < array.length; i++) {
+    this.push(array[i]);
+  }
+};
+
+// convert a number to an English string
+Number.prototype.toEnglishString = function() {
+  if (this.valueOf() > 12) {
+    return this.toString();
+  }
+  
+  switch (this.valueOf()) {
+    case 0: return "zero";
+    case 1: return "one";
+    case 2: return "two";
+    case 3: return "three";
+    case 4: return "four";
+    case 5: return "five";
+    case 6: return "six";
+    case 7: return "seven";
+    case 8: return "eight";
+    case 9: return "nine";
+    case 10: return "ten";
+    case 11: return "eleven";
+    case 12: return "twelve";
+  }
+};
 
 // maps a value from two bounds to another two
 Math.map = function(x, in_min, in_max, out_min, out_max) {

@@ -197,7 +197,7 @@ function showNoListSelectedInfo() {
 
 
 // load word list
-function loadWordList(id, showLoadingInformation, callback, allowEdit, allowSharing) {
+function loadWordList(id, showLoadingInformation, callback, allowEdit, allowSharing, showWordListPage) {
   // show loading information
   if (showLoadingInformation) {
     $('#word-list-info .box-head > div').html("Loading...");
@@ -208,6 +208,12 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
     $('#word-list-sharing').hide();
     $('#word-list-label').hide();
     $('#word-list-title').hide();
+  }
+  
+  if (showWordListPage !== undefined) {
+    if (window.location.hash !== '#word-lists') {
+      window.location.hash = '#word-lists';
+    }
   }
 
   // handle buttons and background colors indicating which list is currently shown
@@ -495,6 +501,7 @@ function saveWord(id, lang1, lang2, callback) {
     }
   }).done(function(data) {    
       data = handleAjaxResponse(data);
+      callback(data);
   });
 }
 

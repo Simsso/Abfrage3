@@ -1,5 +1,5 @@
 var $feed = $('#feed'), 
-    noFeedContent = '<p>Nothing new to display here.</p>',
+    noFeedContent = '<p>Nothing new since last login.</p>',
     feedSince = -1; // since last login
 
 function refreshFeed(showLoadingInformation, callback) {
@@ -32,18 +32,20 @@ function refreshFeed(showLoadingInformation, callback) {
       var feedItem = data.events[i], info = data.events[i].info;
       switch (feedItem.type) {
         case 0: // user added
-          feedHtml += '<p>' + info.firstname + ' has added you.</p>';
+          feedHtml += '<tr><td><img src="img/users.svg"></td><td>' + info.firstname + ' has added you.</td></tr>';
           break;
         case 1: // shared list
-          feedHtml += '<p>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.</p>';
+          feedHtml += '<tr><td><img src="img/share.svg"></td><td>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.</td></tr>';
           break;
         case 2: // added word
-          feedHtml += '<p>' + info.user.firstname + ' has added ' + info.amount + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.user.id === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.</p>';
+          feedHtml += '<tr><td><img src="img/add.svg"></td><td>' + info.user.firstname + ' has added ' + info.amount.toEnglishString() + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.list.creator === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.</td></tr>';
           break;
       }
     }
     
     if (feedHtml.length === 0) feedHtml = noFeedContent;
+    else feedHtml = '<table class="feed-table box-table">' + feedHtml + '</table>';
+    
     $feed.html(feedHtml);
     
     if (callback !== undefined)

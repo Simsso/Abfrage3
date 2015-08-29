@@ -578,9 +578,13 @@ function uploadQueryResults() {
     type: 'POST',
     url: 'server.php?action=upload-query-results',
     data: { 'answers': JSON.stringify(answersToUpload)},
+    error: function(jqXHR, textStatus, errorThrown) {
+      queryAnswers.pushElements(answersToUpload);
+      refreshQueryResultsUploadButton();
+    }
   })
   .done( function( data ) {
-    handleAjaxResponse(data);
+    data = handleAjaxResponse(data);
   });
 }
 
