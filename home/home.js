@@ -18,10 +18,7 @@ function refreshFeed(showLoadingInformation, callback) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
-    data = jQuery.parseJSON(data);
-    console.log(data);
-    
+    data = handleAjaxResponse(data);
     data.events.sort(function(a, b) { // sort by time of feed events
       if (a.time < b.time) return -1; 
       if (a.time > b.time) return 1; 
@@ -38,7 +35,10 @@ function refreshFeed(showLoadingInformation, callback) {
           feedHtml += '<p>' + info.firstname + ' has added you.</p>';
           break;
         case 1: // shared list
-          feedHtml += '<p>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' the list <span class="italic">' + info.list.name + '</span>.</p>';
+          feedHtml += '<p>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.</p>';
+          break;
+        case 2: // added word
+          feedHtml += '<p>' + info.user.firstname + ' has added ' + info.amount + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.user.id === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.</p>';
           break;
       }
     }
@@ -46,7 +46,8 @@ function refreshFeed(showLoadingInformation, callback) {
     if (feedHtml.length === 0) feedHtml = noFeedContent;
     $feed.html(feedHtml);
     
-    callback(data);
+    if (callback !== undefined)
+      callback(data);
   });
 }
 

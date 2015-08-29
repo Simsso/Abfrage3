@@ -14,7 +14,7 @@ function addUser(email, callback) {
 
     }
   }).done(function(data) {
-    console.log(data);
+    data = handleAjaxResponse(data);
 
     // refresh both lists (added users and shared word lists) with and without loading information
     refreshListOfAddedUsers(false);
@@ -65,7 +65,7 @@ function removeUser(id) {
 
     }
   }).done(function(data) {
-    console.log(data); // log data for debugging
+    data = handleAjaxResponse(data);
 
     // remove row of the user who has just been deleted from the database
     $('#added-users-row-' + id).remove();
@@ -100,8 +100,8 @@ function refreshListOfAddedUsers(showLoadingInformation) {
 
     }
   }).done(function(data) {
-    console.log(data); // debugging
-    data = jQuery.parseJSON(data); // convert server response to useable JavaScript objects
+    data = handleAjaxResponse(data);
+
 
     var output = "";
     // get the html rows for the table
@@ -135,9 +135,9 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {
-    console.log(data); // debugging
-    data = jQuery.parseJSON(data); // convert server response to useable JavaScript objects
+  }).done(function(data) {    
+    data = handleAjaxResponse(data);
+
 
     var output = "";
     // create a string with all html rows of users who have added you

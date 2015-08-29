@@ -1,4 +1,19 @@
 <?php
+function session_required() {
+  if (!isset($_SESSION['id'])) {
+    Response::send("no session", "error");
+  }
+}
+
+class Response {
+  static function send($data, $status = "success") {
+    $obj = new stdClass();
+    $obj->status = $status;
+    $obj->data = $data;
+    exit(json_encode($obj));
+  }
+}
+
 session_start();
 require('database.class.php');
 
@@ -7,6 +22,7 @@ if (isset($_GET['action'])) {
 
     // outer functions (contact, login, logout, signup)
 
+    // contact
     case 'contact':
     require('mail.class.php');
 
@@ -21,7 +37,8 @@ if (isset($_GET['action'])) {
     echo "<p>Thanks for your approach!</p><p>Your message has been sent.</p>";
 
     break;
-
+    
+    // login
     case 'login':
     require('mail.class.php');
 
@@ -52,6 +69,7 @@ if (isset($_GET['action'])) {
     }
     break;
 
+    // logout
     case 'logout':
     session_destroy();
 
@@ -101,155 +119,220 @@ if (isset($_GET['action'])) {
 
     //users
 
+    // add user
     case 'add-user':
-    echo Database::add_user($_SESSION['id'], Validation::format_text($_GET['email']));
+    session_required();
+    Response::send(Database::add_user($_SESSION['id'], Validation::format_text($_GET['email'])));
     break;
 
+    // list of added users
     case 'list-of-added-users':
-    echo json_encode(Database::get_list_of_added_users_of_user($_SESSION['id']));
+    session_required();
+    Response::send(Database::get_list_of_added_users_of_user($_SESSION['id']));
     break;
 
+    // remove user
     case 'remove-user':
-    echo Database::remove_user($_SESSION['id'], Validation::format_text($_GET['id']));
+    session_required();
+    Response::send(Database::remove_user($_SESSION['id'], Validation::format_text($_GET['id'])));
     break;
 
+    // list of users who have added you
     case 'list-of-users-who-have-added-you':
-    echo json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id']));
+    session_required();
+    Response::send(Database::get_list_of_users_who_have_added_user($_SESSION['id']));
     break;
 
 
     // word lists
 
+    // add word list
     case 'add-word-list':
-    echo json_encode(Database::add_word_list($_SESSION['id'], Validation::format_text($_GET['name'])));
+    session_required();
+    Response::send(Database::add_word_list($_SESSION['id'], Validation::format_text($_GET['name'])));
     break;
 
+    // list of word lists
     case 'list-of-word-lists':
-    echo json_encode(Database::get_word_lists_of_user($_SESSION['id']));
+    session_required();
+    Response::send(Database::get_word_lists_of_user($_SESSION['id']));
     break;
 
+    // list of shared word lists with user
     case 'list-of-shared-word-lists-with-user':
-    echo json_encode(Database::get_list_of_shared_word_lists_with_user($_SESSION['id']));
+    session_required();
+    Response::send(Database::get_list_of_shared_word_lists_with_user($_SESSION['id']));
     break;
 
+    // get word list
     case 'get-word-list':
-    echo json_encode(Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
+    session_required();
+    Response::send(Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
     break;
 
+    // rename word list
     case 'rename-word-list':
-    echo Database::rename_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['word_list_name']));
+    session_required();
+    Response::send(Database::rename_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['word_list_name'])));
     break;
 
+    // delete word list
     case 'delete-word-list':
-    echo Database::delete_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']));
+    session_required();
+    Response::send(Database::delete_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
     break;
 
+    // set word list language
     case 'set-word-list-languages':
-    echo Database::set_word_list_languages($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']));
+    session_required();
+    Response::send(Database::set_word_list_languages($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2'])));
     break;
 
 
     // single word in word list
 
+    // add word
     case 'add-word':
-    echo Database::add_word($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']));
+    session_required();
+    Response::send(Database::add_word($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2'])));
     break;
 
+    // update word
     case 'update-word':
-    echo Database::update_word($_SESSION['id'], Validation::format_text($_GET['word_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']));
+    session_required();
+    Response::send(Database::update_word($_SESSION['id'], Validation::format_text($_GET['word_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2'])));
     break;
 
+    // remove word
     case 'remove-word':
-    echo Database::remove_word($_SESSION['id'], Validation::format_text($_GET['word_id']));
+    session_required();
+    Response::send(Database::remove_word($_SESSION['id'], Validation::format_text($_GET['word_id'])));
     break;
 
 
     // word list sharing
 
+    // share list
     case 'share-list':
-    echo Database::share_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']));
+    session_required();
+    Response::send(Database::share_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email'])));
     break;
 
+    // set sharing permissions
     case 'set-sharing-permissions':
-    echo Database::set_sharing_permissions($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']), Validation::format_text($_GET['permissions']));
+    session_required();
+    Response::send(Database::set_sharing_permissions($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']), Validation::format_text($_GET['permissions'])));
     break;
 
+    // set sharing permissions by sharing id
     case 'set-sharing-permissions-by-sharing-id':
-    echo Database::set_sharing_permissions_by_sharing_id($_SESSION['id'], Validation::format_text($_GET['sharing_id']), Validation::format_text($_GET['permissions']));
+    session_required();
+    Response::send(Database::set_sharing_permissions_by_sharing_id($_SESSION['id'], Validation::format_text($_GET['sharing_id']), Validation::format_text($_GET['permissions'])));
     break;
 
+    // get sharing permissions of list with user
     case 'get-sharing-perimssions-of-list-with_user':
-    echo json_encode(Database::get_sharing_perimssions_of_list_with_user($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email'])));
+    session_required();
+    Response::send(Database::get_sharing_perimssions_of_list_with_user($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email'])));
     break;
 
+    // get sharing info of list
     case 'get-sharing-info-of-list':
-    echo json_encode(Database::get_sharing_info_of_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
+    session_required();
+    Response::send(Database::get_sharing_info_of_list($_SESSION['id'], Validation::format_text($_GET['word_list_id'])));
     break;
 
 
     // word list labels
 
+    // add label
     case 'add-label':
-    echo Database::add_label($_SESSION['id'], Validation::format_text($_GET['label_name']), Validation::format_text($_GET['parent_label_id']));
+    session_required();
+    Response::send(Database::add_label($_SESSION['id'], Validation::format_text($_GET['label_name']), Validation::format_text($_GET['parent_label_id'])));
     break;
 
+    // remove label
     case 'remove-label':
-    echo Database::set_label_status($_SESSION['id'], Validation::format_text($_GET['label_id']), "0");
+    session_required();
+    Response::send(Database::set_label_status($_SESSION['id'], Validation::format_text($_GET['label_id']), "0"));
     break;
 
+    // set label list attachment
     case 'set-label-list-attachment':
-    echo Database::set_label_list_attachment($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['list_id']), Validation::format_text($_GET['attachment']));
+    session_required();
+    Response::send(Database::set_label_list_attachment($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['list_id']), Validation::format_text($_GET['attachment'])));
     break;
 
+    // get labels of user
     case 'get-labels-of-user':
-    echo json_encode(Database::get_labels_of_user($_SESSION['id']));
+    session_required();
+    Response::send(Database::get_labels_of_user($_SESSION['id']));
     break;
 
+    // rename label
     case 'rename-label':
-    echo Database::rename_label($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['label_name']));
+    session_required();
+    Response::send(Database::rename_label($_SESSION['id'], Validation::format_text($_GET['label_id']), Validation::format_text($_GET['label_name'])));
     break;
 
 
     // query
 
+    // get query data
     case 'get-query-data':
+    session_required();
     $result->labels = Database::get_labels_of_user($_SESSION['id']);
     $result->label_list_attachments = Database::get_label_list_attachments_of_user($_SESSION['id']);
     $result->lists = Database::get_query_lists_of_user($_SESSION['id']);
-    echo json_encode($result);
+    Response::send($result);
     break;
 
+    // upload query results
     case 'upload-query-results':
+    session_required();
     $rawJSON = stripslashes($_POST['answers']);
     $answers = json_decode($rawJSON, true);
     $count = Database::add_query_results($_SESSION['id'], $answers);
-    echo '{"response":' . $count . '}';
+    $response = new stdClass();
+    $response->count = $count;
+    Response::send($response);
     break;
     
     
     // settings
     
+    // set name
     case 'set-name':
-    echo Database::set_name($_SESSION['id'], $_GET['firstname'], $_GET['lastname']);
+    session_required();
+    Response::send(Database::set_name($_SESSION['id'], $_GET['firstname'], $_GET['lastname']));
     break;
     
+    // set password
     case 'set-password':
-    echo Database::set_password($_SESSION['id'], $_POST['password_old'], $_POST['password_new'], $_POST['password_new_confirm']);
+    session_required();
+    Response::send(Database::set_password($_SESSION['id'], $_POST['password_old'], $_POST['password_new'], $_POST['password_new_confirm']));
     break;
     
+    // set email
     case 'set-email':
-    echo Database::set_email($_SESSION['id'], $_POST['email'], $_POST['password']);
+    session_required();
+    Response::send(Database::set_email($_SESSION['id'], $_POST['email'], $_POST['password']));
     break;
     
+    // delete account
     case 'delete-account':
-    echo Database::delete_account($_SESSION['id'], $_POST['password']);
+    session_required();
+    Response::send(Database::delete_account($_SESSION['id'], $_POST['password']));
     break;
     
     
     // feed
     
+    // get feed
     case 'get-feed':
-    echo json_encode(Database::get_feed($_SESSION['id'], $_GET['since']));
+    session_required();
+    Response::send(Database::get_feed($_SESSION['id'], $_GET['since']));
+    break;
   }
 } else {
   echo "Abfrage3 server is running.";

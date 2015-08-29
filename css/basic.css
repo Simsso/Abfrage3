@@ -117,6 +117,8 @@ input[type=button].red:active, input[type=submit].red:active {
   padding-top: calc(25% - 9px);
   margin: 0 auto;
   opacity: 0;
+  font-size: 14pt;
+  color: #444444;
 }
 
 .sk-three-bounce .sk-child {

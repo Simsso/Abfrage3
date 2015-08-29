@@ -96,7 +96,9 @@ $(window).on('resize', function() {
 // loading animation
 var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
 var loadingFullscreen = '<div class="sk-three-bounce fullscreen"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
-
+function getLoadingFullscreenWithMessage(message) {
+  return '<div class="sk-three-bounce fullscreen">' + message + '<br><br><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
+}
 
 
 
@@ -138,10 +140,29 @@ var ajaxRequests = {
   refreshListSharings: new AjaxRequestsManager(true)
 };
 
-$(document).ajaxError(function() {
-  new Toast('An Ajax request failed.');
+$(document).ajaxSuccess(function(event, req) {
+  //console.log(event);
+  //console.log(req);
 });
 
+function handleAjaxResponse(data) {
+  var obj = jQuery.parseJSON(data);
+  if (obj.status === "success") {
+    console.log(obj.data);
+    return obj.data;
+  }
+  else if (obj.status === "error") {
+    console.log(obj);
+    if (obj.data === "no session") {
+      $('body').append(getLoadingFullscreenWithMessage("Your session has expired."));
+      $('.sk-three-bounce.fullscreen').css('opacity', '1');
+
+      setTimeout(function () {
+        window.location.replace('server.php?action=logout');
+      }, 2000);
+    }
+  }
+}
 
 
 // screenshot popups
@@ -221,6 +242,7 @@ $('#contact-form').on('submit', function(e) {
     subject: $('#contact-subject').val(),
     message: $('#contact-message').val()
   }).done(function(data) {
+    data = handleAjaxResponse(data);
     $('#contact-body').html(data); // after sending replace the form with the server response
   });
 });
