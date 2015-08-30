@@ -2,30 +2,30 @@
 <html>
   <? require('html-include/head.html'); ?>
   <body>
-    <div id="main-wrapper">
 
-      <!-- navigation -->
-      <nav id="head-nav" class="navbar">
-        <div class="navbar-inner content-width">
+    <!-- navigation -->
+    <nav id="head-nav" class="navbar">
+      <div class="navbar-inner content-width">
+        <a href="#home">
+          <img class="logo" src="img/logo.svg" alt="Abfrage3" />
+        </a><br class="clear-both smaller-800">
+        <ul class="nav left">
           <a href="#home">
-            <img class="logo" src="img/logo-46.png" alt="Abfrage3" />
-          </a><br class="clear-both smaller-800">
-          <ul class="nav left">
-            <a href="#home">
-              <li class="nav_home nav-img-li" data-text="Home">
-                <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
-              </li>
-            </a>
-          </ul>
+            <li class="nav_home nav-img-li" data-text="Home">
+              <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+            </li>
+          </a>
+        </ul>
 
-          <ul class="nav right">
-            <a href="#about"><li class="nav_about" data-text="About">About</li></a>
-            <a href="#contact"><li class="nav_contact" data-text="Contact">Contact</li></a>
-            <a href="#legal-info"><li class="nav_legal-info" data-text="Legal info">Legal info</li></a>
-          </ul><br class="clear-both">
-        </div>
-      </nav>
+        <ul class="nav right">
+          <a href="#about"><li class="nav_about" data-text="About">About</li></a>
+          <a href="#contact"><li class="nav_contact" data-text="Contact">Contact</li></a>
+          <a href="#legal-info"><li class="nav_legal-info" data-text="Legal info">Legal info</li></a>
+        </ul><br class="clear-both">
+      </div>
+    </nav>
 
+    <div id="main-wrapper">
 
 
       <div class="main content-width" id="main">
@@ -187,13 +187,14 @@ include('html-include/footer.html');
     </div>
 
 
-    <!-- basic scripts -->
-    <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="extensions.js" type="text/javascript"></script>
-    <script src="scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
 
 
-    <!-- single page application script -->
-    <script src="single-page-application.js" type="text/javascript"></script>
+      // single page application script
+      document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
+    </script>
   </body>
 </html>

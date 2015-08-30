@@ -103,7 +103,7 @@ function getLoadingFullscreenWithMessage(message) {
 
 
 // toast
-$('body').append('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 57px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; z-index: 1; "></div>');
+$('#main-wrapper').after('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 57px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; z-index: 1; "></div>');
 
 function Toast(text, ms) {
   this.ms = ms;
@@ -155,7 +155,7 @@ function handleAjaxResponse(data) {
   }
   else if (obj.status === "error") {
     if (obj.data === "no session") {
-      $('body').append(getLoadingFullscreenWithMessage("Your session has expired."));
+      $('#main-wrapper').after(getLoadingFullscreenWithMessage("Your session has expired."));
       $('.sk-three-bounce.fullscreen').css('opacity', '1');
 
       setTimeout(function () {
@@ -167,7 +167,7 @@ function handleAjaxResponse(data) {
 
 
 // screenshot popups
-$('body').append('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
+$('#main-wrapper').after('<table id="screenshot-popup-wrapper" style="z-index: 1000; height: 100%; width: 100%; position: fixed; top: 0px; left: 0px; display: none; background-color: rgba(0, 0, 0, 0.8); "><tbody><tr><td style="cursor: pointer; vertical-align: middle; text-align: center; "><img id="screenshot-popup-image" style="cursor: default; max-height: 80%; max-width: 80%; border: 1px solid black; box-shadow: 0 0 5px black; "><br><br><span style="color: white;" id="screenshot-description">Description</span></td></tr></tbody></table>');
 $('.screenshot').on('click', function() {
   $('#screenshot-popup-image').attr('src', $(this).attr('src').replace('.min', ''));
   $('#screenshot-description').html($(this).data('description'));
@@ -251,7 +251,7 @@ $('#contact-form').on('submit', function(e) {
 // submit forms loading screen
 // when submitting the login or sign up form show a nice loading screen
 $('form[data-submit-loading=true]').on('submit', function(e) {
-  $('body').append(loadingFullscreen);
+  $('#main-wrapper').after(loadingFullscreen);
   $('.sk-three-bounce.fullscreen').css('opacity', '1');
 
   // delay form submit
