@@ -8,43 +8,42 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 <html>
   <? require('html-include/head.html'); ?>
   <body>
-    <div id="main-wrapper">
-
-      <!-- navigation -->
-      <nav id="head-nav" class="navbar">
-        <div class="navbar-inner content-width">
+    <!-- navigation -->
+    <nav id="head-nav" class="navbar">
+      <div class="navbar-inner content-width">
+        <a href="#home">
+          <img class="logo" src="img/logo.svg" />
+        </a><br class="clear-both smaller-800">
+        <ul class="nav left">
           <a href="#home">
-            <img class="logo" src="img/logo-46.png" />
-          </a><br class="clear-both smaller-800">
-          <ul class="nav left">
-            <a href="#home">
-              <li class="nav_home nav-img-li" data-text="Home">
-                <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
-              </li>
-            </a>
-            <a href="#query"><li class="nav_query" data-text="Test">Test</li></a>
-            <a href="#word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
-          </ul>
-          <ul class="nav right">
-            <a href="#user">
-              <li class="nav_user nav-img-li" data-text="User">
-                <img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/>
-              </li>
-            </a>
-            <a href="#settings">
-              <li class="nav_settings nav-img-li" data-text="Settings">
-                <img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/>
-              </li>
-            </a>
-            <a href="server.php?action=logout">
-              <li class="nav_logout nav-img-li" data-text="Logout">
-                <img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/>
-              </li>
-            </a>
-          </ul><br class="clear-both">
-        </div>
-      </nav>
+            <li class="nav_home nav-img-li" data-text="Home">
+              <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+            </li>
+          </a>
+          <a href="#query"><li class="nav_query" data-text="Test">Test</li></a>
+          <a href="#word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
+        </ul>
+        <ul class="nav right">
+          <a href="#user">
+            <li class="nav_user nav-img-li" data-text="User">
+              <img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/>
+            </li>
+          </a>
+          <a href="#settings">
+            <li class="nav_settings nav-img-li" data-text="Settings">
+              <img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/>
+            </li>
+          </a>
+          <a href="server.php?action=logout">
+            <li class="nav_logout nav-img-li" data-text="Logout">
+              <img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/>
+            </li>
+          </a>
+        </ul><br class="clear-both">
+      </div>
+    </nav>
 
+    <div id="main-wrapper">
 
       <div class="main content-width" id="main">
         <div class="sk-three-bounce">
@@ -493,20 +492,23 @@ include('html-include/footer.html');
       ?>
     </div>
 
-    <!-- basic scripts -->
-    <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="extensions.js" type="text/javascript"></script>
-    <script src="scripts.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
 
 
-    <!-- include scripts for every single page -->
-    <script src="home/home.js" type="text/javascript"></script>
-    <script src="home/word-lists.js" type="text/javascript"></script>
-    <script src="home/query.js" type="text/javascript"></script>
-    <script src="home/user.js" type="text/javascript"></script>
-    <script src="home/settings.js" type="text/javascript"></script>
-
-    <!-- single page application script -->
-    <script src="single-page-application.js" type="text/javascript"></script>
+      // include scripts for every single page
+      document.write('\x3Cscript src="home/home.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="home/word-lists.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="home/query.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="home/user.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="home/settings.js" type="text/javascript">\x3C/script>');
+    
+      // single page appcliation script
+      document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
+    </script>
+    
   </body>
 </html>

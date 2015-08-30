@@ -159,7 +159,7 @@ class Database {
   // confirm email-address
   static function confirm_email($email, $key) {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `email_confirmation_key` = ".$key.";";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` = '".$email."' AND `email_confirmation_key` = '".$key."';";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 1) {
@@ -497,7 +497,7 @@ class Database {
     if ($share_with_id == $user_id) return -1;
 
     global $con;
-    $sql = "SELECT COUNT(`id`) AS 'count' FROM `share` WHERE `user` = ".$share_with_id." AND `list` = ".$word_list_id.";";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `share` WHERE `user` = '".$share_with_id."' AND `list` = '".$word_list_id."';";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 0) {
