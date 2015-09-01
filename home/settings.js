@@ -1,13 +1,42 @@
-// menu
-$('#settings-menu tr').on('click', function() {
-  $('#settings-menu tr').removeClass('active');
-  $(this).addClass('active');
-  $('#settings-content > div').addClass('display-none');
-  $('#settings-content > div[data-page=' + $(this).data('page') + ']').removeClass('display-none');
+// single page application allow url like
+// ...#settings/profile
+var shownSettingsSubPageName = undefined;
+$(window).on('page-settings', function(event, pageName, subPageName) {
+    console.log(pageName + "|" + subPageName);
+
+  if (subPageName === shownSettingsSubPageName) return; // nothing has changed - no reason to touch the DOM
+  
+  if (!subPageName) {
+    if (shownSettingsSubPageName) {
+      subPageName = shownSettingsSubPageName;
+    }
+    else {
+      subPageName = 'profile';
+    }
+  }
+  
+  showSettingsPage(subPageName);
+  location.hash = '#/settings/' + subPageName;
+  
+  // load sub page (if given by url) like /#/settings/profile
+  if (subPageName) {
+    showSettingsPage(subPageName);
+  }
 });
 
-$('#settings-menu tr').first().trigger('click');
 
+// menu
+function showSettingsPage(name) {
+  shownSettingsSubPageName = name;
+  $('#settings-menu tr').removeClass('active');
+  $('#settings-menu tr[data-page=' + name + ']').addClass('active');
+  $('#settings-content > div').addClass('display-none');
+  $('#settings-content > div[data-page=' + name + ']').removeClass('display-none');
+}
+
+$('#settings-menu tr').on('click', function() {
+  location.hash = '#/settings/' + $(this).data('page');
+});
 
 // change name
 $('#settings-name').on('submit', function(e) {
