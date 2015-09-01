@@ -30,17 +30,19 @@ function refreshFeed(showLoadingInformation, callback) {
     
     for (var i = data.events.length - 1; i >= 0; i--) { // go through the array the other way around to display newest first
       var feedItem = data.events[i], info = data.events[i].info;
+      feedHtml += '<tr><td>';
       switch (feedItem.type) {
         case 0: // user added
-          feedHtml += '<tr><td><img src="img/users.svg"></td><td>' + info.firstname + ' has added you.</td></tr>';
+          feedHtml += '<img src="img/users.svg"></td><td>' + info.firstname + ' has added you.';
           break;
         case 1: // shared list
           feedHtml += '<tr><td><img src="img/share.svg"></td><td>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.</td></tr>';
           break;
         case 2: // added word
-          feedHtml += '<tr><td><img src="img/add.svg"></td><td>' + info.user.firstname + ' has added ' + info.amount.toEnglishString() + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.list.creator === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.</td></tr>';
+          feedHtml += '<img src="img/add.svg"></td><td>' + info.user.firstname + ' has added ' + info.amount.toEnglishString() + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.list.creator === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.';
           break;
       }
+      feedHtml += '&nbsp;<span class="feed-time">' + (new Date(feedItem.time * 1000)).toDefaultString() + '</span></td></tr>';
     }
     
     if (feedHtml.length === 0) feedHtml = noFeedContent;

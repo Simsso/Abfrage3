@@ -82,14 +82,14 @@ class Database {
     }
   }
 
-  static function stay_logged_in($login_id) {
+  static function stay_logged_in($login_id, $id) {
     $salt = rand(0, 999999);
-    $hash = sha1($salt . $id . $_SERVER['REMOTE_ADDR']);
+    $hash = sha1($salt . $id);
 
     // store the hash
     setcookie("stay_logged_in_hash", $hash, time() + 3600 * 24 * 31, '/'); // set cookie for one month
     // store the user's id
-    setcookie("stay_logged_in_id", $id, time() + 3600 * 24 * 31, '/'); // set cookie for one month
+    setcookie("stay_logged_in_id", $id . "", time() + 3600 * 24 * 31, '/'); // set cookie for one month
 
     // update database
     global $con;
@@ -107,7 +107,7 @@ class Database {
     while ($row = mysqli_fetch_assoc($query)) {
       $stored_hash = $row['stay_logged_in_hash'];
       $stored_salt = $row['stay_logged_in_salt'];
-      if ($stored_hash == sha1($stored_salt . $id . $_SERVER['REMOTE_ADDR']) && $stored_hash == $hash) {
+      if ($stored_hash == sha1($stored_salt . $id) && $stored_hash == $hash) {
         return true;
       }
     }
@@ -179,7 +179,7 @@ class Database {
     $query = mysqli_query($con, $sql);
     
     if ($stay_logged_in) {
-      self::stay_logged_in(mysqli_insert_id($con));
+      self::stay_logged_in(mysqli_insert_id($con), $id);
     }
   }
 
@@ -806,7 +806,7 @@ class Feed {
         `word`.`list` = `list`.`id` AND `share`.`list` = `list`.`id` AND
         `list`.`active` <> 0 AND `share`.`permissions` <> 0 AND `word`.`status` <> 0 AND
         `word`.`time` > ".$since."
-      GROUP BY `word`.`user`
+      GROUP BY `word`.`list`, `word`.`user`
       ORDER BY `word`.`time` ASC;
     ";
     $query = mysqli_query($con, $sql);
@@ -829,7 +829,7 @@ class Feed {
       WHERE `word`.`list` = `list`.`id` AND `word`.`user` <> ".$id." AND `list`.`creator` = ".$id." AND
         `list`.`active` <> 0 AND `word`.`status` <> 0 AND
         `word`.`time` > ".$since."
-      GROUP BY `word`.`user`
+      GROUP BY `word`.`list`, `word`.`user`
       ORDER BY `word`.`time` ASC;
     ";
     $query = mysqli_query($con, $sql);

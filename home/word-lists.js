@@ -13,6 +13,15 @@ var labels = null; // stores the labels of the user
 var expandedLabelsIds = []; // stores which labels were expanded to expand them after refreshing the label HTML element
 
 
+// single page application allow url like
+// ...#settings/profile
+var shownSettingsSubPageName = undefined;
+$(window).on('page-word-lists', function(event, pageName, subPageName) {
+  // TODO
+});
+
+
+
 
 // adds a new word list
 function addWordList(name, callback) {
@@ -93,7 +102,7 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
       }
 
       // if there are no lists show the appropriate message
-      if (output.length == 0) {
+      if (output.length === 0) {
         output = noWordListOutput;
       }
       else {
@@ -151,7 +160,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
         output += '<td>' + data[i].name + '</td>';
       }
       // if there are no shared lists show the appropriate message
-      if (output.length == 0) {
+      if (output.length === 0) {
         output = noSharedWordListOutput;
       }
       else {
@@ -161,7 +170,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
 
       // add event listeners for rows inside the list
       $('#list-of-shared-word-lists tr').on('click', function() {
-        $row = $(this);
+        var $row = $(this);
 
         // detect button type with the data-action="xxx" attribute
 
@@ -210,7 +219,8 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
     $('#word-list-title').hide();
   }
   
-  if (showWordListPage !== undefined) {
+  // a call of this method can force to show the page "word lists" with the parameter showWordListPage
+  if (showWordListPage === true) {
     if (window.location.hash !== '#word-lists') {
       window.location.hash = '#word-lists';
     }
@@ -255,14 +265,14 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
         wordListInfoBoxBody += '<p>' + data.creator.firstname + ' ' + data.creator.lastname + ' shares this list with you.</p>';
         wordListInfoBoxBody += '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + data.creator.firstname + '\'s list.</p>';
         // add hide button
-        wordListInfoBoxBody += '<input type="button" class="inline" value="Hide list" id="hide-shown-word-list"/>'
+        wordListInfoBoxBody += '<input type="button" class="inline" value="Hide list" id="hide-shown-word-list"/>';
       }
       else {
         // list owner
         wordListInfoBoxBody += '<p>You own this list.</p>';
         wordListInfoBoxBody += '<p><form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + shownListData.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form></p>';
         // add delete button
-        wordListInfoBoxBody += '<input type="button" class="inline" value="Delete list" id="delete-shown-word-list"/>'
+        wordListInfoBoxBody += '<input type="button" class="inline" value="Delete list" id="delete-shown-word-list"/>';
       }
 
       // var creationTime = new Date(parseInt(data.creation_time) * 1000);
@@ -298,7 +308,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       }
 
       // list of words
-      if (data.words.length == 0) { // no words added yet
+      if (data.words.length === 0) { // no words added yet
         $('#words-in-list').html((allowEdit)?noWordsInList:noWordsInListDisallowEdit);
       }
       else {
@@ -431,7 +441,7 @@ function getTableOfWordList(content, allowEdit, lang1, lang2) {
 
 // export word list
 function exportList(list) {
-  if (list == undefined)
+  if (list === undefined)
     list = shownListData;
 
   var output = "";
@@ -614,7 +624,7 @@ function addWord(lang1, lang2, allowEdit) {
   }).done(function(data) {    
     data = handleAjaxResponse(data);
 
-    if ($('#word-list-table').length == 0) { // no words added yet
+    if ($('#word-list-table').length === 0) { // no words added yet
       var wordListHTML = getTableOfWordList("", allowEdit, shownListData.language1, shownListData.language2);
       $('#words-in-list').html(wordListHTML);
     }
@@ -631,7 +641,7 @@ function addWord(lang1, lang2, allowEdit) {
 // refresh list sharings
 function refreshListSharings(showLoadingInformation, wordListId) {
   // set id parameter to the shown list id if undefined has been passed
-  if (wordListId == undefined)
+  if (wordListId === undefined)
     wordListId = shownListId;
 
   // show loading information
@@ -655,7 +665,7 @@ function refreshListSharings(showLoadingInformation, wordListId) {
     }).done(function(data) {    
       data = handleAjaxResponse(data);
 
-      if (data.length == 0) { // list not shared yet
+      if (data.length === 0) { // list not shared yet
         $('#list-sharings').html(listNotShared); // show appropriate message
       }
       else { // list shared with at least one user
@@ -926,7 +936,7 @@ function getLabelList(showLoadingInformation) {
       var allFollowing = $row.nextAll();
       var selfIndenting = $row.data('indenting');
       // show all following rows which have a higher indenting (are sub-labels) or don't have an indenting (are "add sub-label" formular rows)
-      while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') == undefined)) {
+      while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') === undefined)) {
         if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
           if (expand) // expand
             allFollowing.eq(i).show();
@@ -977,7 +987,7 @@ function getEditableHtmlTableOfLabels(labels) {
 // get HTML list of label id
 // returns the HTML list showing a label and it's sub-labels
 function getHtmlListOfLabelId(labels, id, indenting) {
-  var output = '<tr' + ((indenting == 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15 + ((indenting == 0) ? 0 : 16)) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;<input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
+  var output = '<tr' + ((indenting === 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15 + ((indenting === 0) ? 0 : 16)) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;<input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
   var labelIds = getLabelIdsWithIndenting(labels, indenting);
   for (var i = 0; i < labelIds.length; i++) {
     var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
@@ -994,9 +1004,9 @@ function getSingleListElementOfLabelList(label, indenting) {
   var subLabelsCount = numberOfSubLabels(labels, label.id);
   var expanded = expandedLabelsIds.contains(label.id), parentExpanded = expandedLabelsIds.contains(label.parent_label); // label is expanded?
 
-  var output = '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting == 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '">';
+  var output = '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '">';
   output += '<form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form>';
-  output += '<td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount == 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td>';
+  output += '<td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; " id="label-rename-table-cell-' + label.id + '">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;<label class="checkbox-wrapper"><input type="checkbox" data-label-id="' + label.id + '" ' + (labelAttachedToList(shownListData, label.id)?'checked="true"':'') + '/><span>&nbsp;' + label.name + '</span></label></td>';
   output += '<td><img class="small-menu-open-image" src="img/menu-small.svg" /><div class="small-menu display-none"><input type="submit" class="width-100" form="label-rename-form-' + label.id + '" id="label-rename-button-' + label.id + '" data-action="rename-edit" value="Rename" /><br><input type="button" class="label-add-sub-label width-100" value="Add sub-label"/><br><form class="label-remove-form inline"><input type="hidden" class="label-remove-select" value="' + label.id + '"/><input class="label-remove-button width-100" type="submit" value="Remove" /></form></td></div></tr>';
   return output;
 }
@@ -1036,7 +1046,7 @@ function labelAttachedToList(list, labelId) {
 
 // returns all label ids with a specified indenting
 function getLabelIdsWithIndenting(labels, indenting) {
-  var selectedLabels = new Array();
+  var selectedLabels = [];
   for (var i = 0; i < labels.length; i++) {
     if (getLabelIndenting(labels, i) === indenting) {
       selectedLabels.push(labels[i].id);
@@ -1048,7 +1058,7 @@ function getLabelIdsWithIndenting(labels, indenting) {
 // returns the indenting of a label
 function getLabelIndenting(labels, index) {
   if (labels[index] === undefined) return undefined;
-  if (labels[index].parent_label == 0)
+  if (labels[index].parent_label === 0)
     return 0;
 
   return getLabelIndenting(labels, getLabelIndexByLabelId(labels, labels[index].parent_label)) + 1;
@@ -1086,7 +1096,7 @@ function detachListFromLabel(labelId, listId, callback) {
 
 // set label list attachment (0 = detached; 1 = attached)
 function setLabelListAttachment(labelId, listId, attachment, callback) {
-  if (listId == undefined) {
+  if (listId === undefined) {
     listId = shownListId;
   }
 

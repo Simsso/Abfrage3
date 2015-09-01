@@ -65,22 +65,22 @@ Number.prototype.toEnglishString = function() {
   if (this.valueOf() > 12) {
     return this.toString();
   }
-  
-  switch (this.valueOf()) {
-    case 0: return "zero";
-    case 1: return "one";
-    case 2: return "two";
-    case 3: return "three";
-    case 4: return "four";
-    case 5: return "five";
-    case 6: return "six";
-    case 7: return "seven";
-    case 8: return "eight";
-    case 9: return "nine";
-    case 10: return "ten";
-    case 11: return "eleven";
-    case 12: return "twelve";
-  }
+  var strings = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+  return strings[this.valueOf()];
+};
+
+// convert a number to a English month name abbreviation
+Number.prototype.toMonthAbbreviation = function() {
+  if (this.valueOf() > 12) return undefined;
+  var monthNames = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dez"];
+  return monthNames[this.valueOf()];
+};
+
+// add leading zeros to a number
+Number.prototype.addLeadingZeros = function(n) {
+  var s = this.valueOf() + "";
+  while (s.length < n) s = "0" + s;
+  return s;
 };
 
 // maps a value from two bounds to another two
@@ -111,7 +111,12 @@ Math.deg2rad = function(deg) {
 
 // returns a default data string of type dd.mm.yyyy hh:mm:ss
 Date.prototype.toDefaultString = function() {
-  return this.getDate() + "." + (this.getMonth()+1) + "." + this.getFullYear() + " " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
+  return this.getDate().addLeadingZeros(2) + ". " + 
+    (this.getMonth()+1).toMonthAbbreviation() + " " + 
+    this.getFullYear().addLeadingZeros(4) + " " + 
+    this.getHours().addLeadingZeros(2) + ":" + 
+    this.getMinutes().addLeadingZeros(2) + ":" + 
+    this.getSeconds().addLeadingZeros(2);
 };
 
 // returns the current time in milliseconds

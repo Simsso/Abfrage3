@@ -11,25 +11,25 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
     <!-- navigation -->
     <nav id="head-nav" class="navbar">
       <div class="navbar-inner content-width">
-        <a href="#home">
+        <a href="#/home">
           <img class="logo" src="img/logo.svg" />
         </a><br class="clear-both smaller-800">
         <ul class="nav left">
-          <a href="#home">
+          <a href="#/home">
             <li class="nav_home nav-img-li" data-text="Home">
               <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
             </li>
           </a>
-          <a href="#query"><li class="nav_query" data-text="Test">Test</li></a>
-          <a href="#word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
+          <a href="#/query"><li class="nav_query" data-text="Test">Test</li></a>
+          <a href="#/word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
         </ul>
         <ul class="nav right">
-          <a href="#user">
+          <a href="#/user">
             <li class="nav_user nav-img-li" data-text="User">
               <img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/>
             </li>
           </a>
-          <a href="#settings">
+          <a href="#/settings">
             <li class="nav_settings nav-img-li" data-text="Settings">
               <img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/>
             </li>
