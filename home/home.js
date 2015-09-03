@@ -1,3 +1,9 @@
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+/* global loading: false */
+/* global handleAjaxResponse: false */
+
 var $feed = $('#feed'), 
     noFeedContent = '<p>Nothing new since last login.</p>',
     feedSince = -1; // since last login
@@ -7,7 +13,7 @@ function refreshFeed(showLoadingInformation, callback) {
     $feed.html(loading);
   }
 
-  // send request
+  // send request to get the feed
   jQuery.ajax('server.php', {
     data: {
       action: 'get-feed',
@@ -31,20 +37,24 @@ function refreshFeed(showLoadingInformation, callback) {
     for (var i = data.events.length - 1; i >= 0; i--) { // go through the array the other way around to display newest first
       var feedItem = data.events[i], info = data.events[i].info;
       feedHtml += '<tr><td>';
+      
+      // depending on the type of the feed item show a different text and a different image
       switch (feedItem.type) {
         case 0: // user added
           feedHtml += '<img src="img/users.svg"></td><td>' + info.firstname + ' has added you.';
           break;
         case 1: // shared list
-          feedHtml += '<tr><td><img src="img/share.svg"></td><td>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.</td></tr>';
+          feedHtml += '<img src="img/share.svg"></td><td>' + info.user.firstname + ' gave you permissions to ' + ((info.permissions == 1)?'edit':'view') + ' their list <span class="italic">' + info.list.name + '</span>.';
           break;
         case 2: // added word
           feedHtml += '<img src="img/add.svg"></td><td>' + info.user.firstname + ' has added ' + info.amount.toEnglishString() + ' word' + ((info.amount !== 1) ? 's' : '') + ' to ' + ((info.user.id === info.list.creator) ? 'their' : ((info.list.creator === data.user) ? 'your' : info.list_creator.firstname + '\'s')) + ' list <span class="italic">' + info.list.name + '</span>.';
           break;
       }
+      // time of the feed element
       feedHtml += '&nbsp;<span class="feed-time">' + (new Date(feedItem.time * 1000)).toDefaultString() + '</span></td></tr>';
     }
     
+    // nothing in the feed
     if (feedHtml.length === 0) feedHtml = noFeedContent;
     else feedHtml = '<table class="feed-table box-table">' + feedHtml + '</table>';
     
@@ -55,6 +65,7 @@ function refreshFeed(showLoadingInformation, callback) {
   });
 }
 
+// button load whole feed event listener
 $('#feed-load-all').on('click', function() {
   $('#feed-load-all').prop('disabled', true).attr('value', 'Loading all...');
   feedSince = 0;
@@ -63,4 +74,6 @@ $('#feed-load-all').on('click', function() {
   });
 });
 
-refreshFeed(true, function() {});
+
+// initial loading
+refreshFeed(true);

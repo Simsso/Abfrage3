@@ -3,7 +3,11 @@ require('dbconnect.inc.php'); // include data base connection
 require('validation.class.php'); // include validation class to verify correctness of strings in general
 
 class Database {
+  const STAY_LOGGED_IN_DURATION = 3600 * 24 * 31;
+  
+  // log server request
   static function log_server_request($user, $page) {
+    // inserts a new server request into the server_request table
     global $con;
     $sql = "INSERT INTO `server_request` (`user`, `page`, `time`, `ip`) VALUES (".$user.", '".$page."', ".time().", '".$_SERVER['REMOTE_ADDR']."');";
     $query = mysqli_query($con, $sql);
@@ -11,6 +15,8 @@ class Database {
   
   // register user
   static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
+    // registers a new user
+    // if data is invalid the function throws exceptions
     if ($firstname == NULL) {
       throw new Exception("No first name given");
     } else if ($lastname == NULL) {
@@ -55,7 +61,7 @@ class Database {
     }
   }
 
-  // checks a email password combination
+  // checks an email password combination
   // returns:
   // 0: wrong combination
   // 1: right combination
@@ -63,51 +69,64 @@ class Database {
   static function check_login_data($email, $password) {
     global $con;
 
+    // generate password hash by password and salt stored in the user table
     $password_hash = sha1(self::get_salt_by_email($email) . $password);
-    unset($password);
+    unset($password); // delete password variable after useage
+    
+    // check how many table entries fit the email and password
+    // password hash comparison with "LIKE BINARY" to make sure both are exactly equal
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `active` = 1;";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
-    if ($count == 0) {
+    if ($count == 0) { // if no entry exists which fits email and password return 0
       return 0;
-    } else {
-      $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `email_confirmed` = 0;";
+    } else { // an entry which fits email and password exists
+      // check if the user has already confirmed their email address
+      $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `active` = 1 AND `email_confirmed` = 0;";
       $query = mysqli_query($con, $sql);
       $count = mysqli_fetch_object($query)->count;
-      if ($count == 1) {
+      if ($count == 1) { // email has not been confirmed
         return 2;
-      } else {
+      } else { // email has been confirmed
         return 1;
       }
     }
   }
 
+  // stay logged in
   static function stay_logged_in($login_id, $id) {
+    // $login_id is the id of a table row in the table login
+    // the login table stores every single login
+    
+    // generate salt
     $salt = rand(0, 999999);
-    $hash = sha1($salt . $id);
+    $hash = sha1($salt . $id); // key to identify the user later by their cookie
 
-    // store the hash
-    setcookie("stay_logged_in_hash", $hash, time() + 3600 * 24 * 31, '/'); // set cookie for one month
-    // store the user's id
-    setcookie("stay_logged_in_id", $id . "", time() + 3600 * 24 * 31, '/'); // set cookie for one month
+    // store the hash on the users machine
+    setcookie("stay_logged_in_hash", $hash, time() + self::STAY_LOGGED_IN_DURATION, '/'); // set cookie for one month
+    // store the user's id on their machine
+    setcookie("stay_logged_in_id", $id . "", time() + self::STAY_LOGGED_IN_DURATION, '/'); // set cookie for one month
 
-    // update database
+    // update database with hash and salt
     global $con;
     $sql = "UPDATE `login` SET `stay_logged_in_hash` = '".$hash."', `stay_logged_in_salt` = '".$salt."' WHERE `id` = ".$login_id.";";
     $query = mysqli_query($con, $sql);
   }
 
+  // check stay logged in
   static function check_stay_logged_in($id, $hash) {
+    // checks if a user id is staying logged in with the given hash
     $stored_hash = "";
     $stored_salt = 0;
 
     global $con;
-    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `login` WHERE `user` = ".$id.";";
+    // accept only login which are not to old (see STAY_LOGGED_IN_DURATION constant)
+    $sql = "SELECT `stay_logged_in_hash`, `stay_logged_in_salt` FROM `login` WHERE `user` = ".$id." AND `time` > " . (time() - self::STAY_LOGGED_IN_DURATION) . ";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $stored_hash = $row['stay_logged_in_hash'];
       $stored_salt = $row['stay_logged_in_salt'];
-      if ($stored_hash == sha1($stored_salt . $id) && $stored_hash == $hash) {
+      if ($stored_hash == sha1($stored_salt . $id) && $stored_hash == $hash) { // compare users cookie values with the database values
         return true;
       }
     }
@@ -115,8 +134,10 @@ class Database {
     return false;
   }
 
-  // read the user specifict salt used to do the password hash
+  // get salt by email
   static function get_salt_by_email($email) {
+    // read the user specifict salt used to do the password hash
+
     global $con;
 
     $sql = "SELECT `salt` FROM `user` WHERE `email` LIKE '".$email."';";
@@ -127,8 +148,11 @@ class Database {
     return null;
   }
 
-  // converts a user email to the id of the user
+  // email to id
   static function email2id($email) {
+    // converts a user email to the id of the user
+    // both id and email are indivitual to every user
+    
     global $con;
 
     $sql = "SELECT `id` FROM `user` WHERE `email` LIKE '".$email."';";
@@ -158,11 +182,13 @@ class Database {
 
   // confirm email-address
   static function confirm_email($email, $key) {
+    // update data base to email_confirmed = 1 if the key is correct
+    
     global $con;
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` = '".$email."' AND `email_confirmation_key` = '".$key."';";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
-    if ($count == 1) {
+    if ($count == 1) { // the given key exists
       $sql = "UPDATE `user` SET `email_confirmed` = 1 WHERE `id` = ".self::email2id($email).";";
       $query = mysqli_query($con, $sql);
       return TRUE;
@@ -798,7 +824,7 @@ class Feed {
       );
     }
     
-    // another user has added a word to his list which is shared with you
+    // another user has added a word to a list which is shared with you
     $sql = "
       SELECT `list`.`creator`, `word`.`user`, COUNT(`word`.`id`) AS 'amount', MIN(`word`.`time`) AS 'time', `list`.`id`
       FROM `list`, `share`, `word` 

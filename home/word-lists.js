@@ -1,3 +1,10 @@
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+/* global loading: false */
+/* global handleAjaxResponse: false */
+/* global ajaxRequests: false */
+
 // const strings
 var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
 var noSharedWordListOutput = '<p>There are no shared lists to show.</p>';
@@ -14,8 +21,7 @@ var expandedLabelsIds = []; // stores which labels were expanded to expand them 
 
 
 // single page application allow url like
-// ...#settings/profile
-var shownSettingsSubPageName = undefined;
+// ...#/word-lists/4 (<-- id)
 $(window).on('page-word-lists', function(event, pageName, subPageName) {
   // TODO
 });
@@ -113,7 +119,7 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
 
       // add event listeners for rows which have just been added
       $('#list-of-word-lists tr').on('click', function() {
-        $row = $(this);
+        var $row = $(this);
 
         if ($row.data('action') == 'edit') { // edit / show list button click
           // edit / view call load word list function
@@ -453,7 +459,8 @@ function exportList(list) {
   }
 
   // save the text
-  saveTextAsFile(output, list.name + '.txt');
+  // saveTextAsFile(output, list.name + '.txt');
+  // TODO
 }
 
 
@@ -686,7 +693,7 @@ function refreshListSharings(showLoadingInformation, wordListId) {
         // stop sharing button
         $('#list-sharings input[type=button]').on('click', function() {
 
-          $button = $(this);
+          var $button = $(this);
           $button.prop('disabled', true).attr('value', 'Stopping sharing...'); // change button value and disable button
 
           // send message to server to stop sharing of the list
@@ -840,9 +847,9 @@ function getLabelList(showLoadingInformation) {
       e.preventDefault();
 
       // disable form elements
-      $button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
-      $nameInput = $(this).children('.label-add-name').prop('disabled', true);
-      $parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
+      var $button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
+      var $nameInput = $(this).children('.label-add-name').prop('disabled', true);
+      var $parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
 
       expandedLabelsIds.push(parseInt($parentSelect.val())); // expand parent label of newly added label
       

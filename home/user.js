@@ -1,3 +1,10 @@
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+/* global loading: false */
+/* global handleAjaxResponse: false */
+/* global refreshListOfSharedWordLists: false */
+
 // const strings
 var noUsersAddedOutput = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
 var noUsersHaveAddedYouOutput = '<p class="spacer-top-15">No users have added you yet.</p>';
@@ -22,7 +29,7 @@ function addUser(email, callback) {
 
     callback(data);
   });
-};
+}
 
 // event listener for submit of form to add a new user
 $('#user-add-form').on('submit', function(e) {
@@ -41,10 +48,10 @@ $('#user-add-form').on('submit', function(e) {
 
     // handle response string
     var responseString;
-    if (data == -1) responseString = "Email-address does not exist.";
-    else if (data == 0) responseString =  "You have already added this user.";
-    else if (data == 1) responseString =  "User has been added.";
-    else if (data == 2) responseString =  "You can not add yourself.";
+    if (data === -1) responseString = "Email-address does not exist.";
+    else if (data === 0) responseString =  "You have already added this user.";
+    else if (data === 1) responseString =  "User has been added.";
+    else if (data === 2) responseString =  "You can not add yourself.";
     else responseString = "An unknown error occured.";
     $('#user-add-message').html(responseString);
   });
@@ -110,7 +117,7 @@ function refreshListOfAddedUsers(showLoadingInformation) {
     }
 
     // if no users have been added yet show the appropriate message
-    if (output.length == 0) {
+    if (output.length === 0) {
       output = noUsersAddedOutput;
     }
     else { // table head is only visible if users have been added
@@ -146,7 +153,7 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
     }
 
     // show appropriate message if there are no users who have added you
-    if (output.length == 0) {
+    if (output.length === 0) {
       output = noUsersHaveAddedYouOutput;
     }
 
@@ -160,7 +167,7 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
     // add event listener for newly added buttons
     $('#people-who-have-added-you input[type=button]').on('click', function() {
       // buttons function is adding users
-      $button = $(this);
+      var $button = $(this);
       $button.prop('disabled', true).val('Adding...'); // disable button and change value
 
       // call actual function to update the database

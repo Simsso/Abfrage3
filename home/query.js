@@ -1,5 +1,10 @@
-// constructors
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+/* global loading: false */
+/* global handleAjaxResponse: false */
 
+// constructors
 
 // word list
 function List(id, name, creator, comment, language1, language2, creation_time, words) {

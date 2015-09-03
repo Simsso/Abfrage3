@@ -2,8 +2,6 @@
 // ...#settings/profile
 var shownSettingsSubPageName = undefined;
 $(window).on('page-settings', function(event, pageName, subPageName) {
-    console.log(pageName + "|" + subPageName);
-
   if (subPageName === shownSettingsSubPageName) return; // nothing has changed - no reason to touch the DOM
   
   if (!subPageName) {

@@ -1,13 +1,18 @@
-// box head right icons
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+
+// box head right icons (like reload, expand and collapse)
 $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {
-    case 'expand':
+    case 'expand': // expand
       $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
       break;
-    case 'collapse':
+    case 'collapse': // collapse
       $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
       break;
-    case 'refresh':
+      
+    case 'refresh': // refresh
       window[$(this).data('function-name')](true);
       break;
   }
@@ -15,22 +20,26 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   event.stopPropagation();
 }).show();
 
+// allow expanding by clicking on the box head
 $('.box .box-head').on('click', function(e) {
   $(this).find('img.box-head-right-icon').last().trigger('expand');
 });
 
+// expand can be triggered (custom jQuery event)
 $('.box .box-head img.box-head-right-icon').on('expand', function() {
   $(this).data('action', 'expand').trigger('click');
 });
 
+// collapse can be triggered (custom jQuery event)
 $('.box .box-head img.box-head-right-icon').on('collapse', function() {
   $(this).data('action', 'collapse').trigger('click');
 });
 
 
 // box shadow blinking
+// used for example when a word has been aswered correctly
 $('.box').on('shadow-blink-green', function() {
-  $this = $(this).find('.box-body');
+  var $this = $(this).find('.box-body');
   $this.addClass('green-shadow');
   setTimeout(function() {
     $this.removeClass('green-shadow');
@@ -42,6 +51,7 @@ $('.box').on('shadow-blink-green', function() {
 // mobile menu
 var menuShown = false;
 
+// add mobile menu html to body element
 $('body').prepend('<nav id="mobile-nav"><div></div></nav>');
 $('#mobile-nav > div').html($('.navbar-inner.content-width').html()).find('*').show();
 
@@ -93,11 +103,11 @@ $(window).on('resize', function() {
 
 
 
-// loading animation
-var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
-var loadingFullscreen = '<div class="sk-three-bounce fullscreen"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
+// loading animation html
+var loading = '<div class="sk-three-bounce"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>';
+var loadingFullscreen = '<div class="sk-three-bounce fullscreen"><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>';
 function getLoadingFullscreenWithMessage(message) {
-  return '<div class="sk-three-bounce fullscreen">' + message + '<br><br><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>'
+  return '<div class="sk-three-bounce fullscreen">' + message + '<br><br><div class="sk-child sk-bounce1"></div><div class="sk-child sk-bounce2"></div><div class="sk-child sk-bounce3"></div></div>';
 }
 
 
@@ -109,8 +119,9 @@ function Toast(text, ms) {
   this.ms = ms;
   this.text = text;
 
-  if (!ms)
-    var ms = 5000;
+  if (ms === undefined) {
+    ms = 5000;
+  }
   $('#toast').promise().done(function() {
     $(this).html(text).fadeIn().delay(ms).fadeOut();
   });
@@ -122,7 +133,7 @@ function Toast(text, ms) {
 // manages Ajax requests of the same type and can make sure that there is only one running at the same time
 function AjaxRequestsManager(onlyOne) {
   this.onlyOne = onlyOne;
-  this.list = new Array();
+  this.list = [];
   this.add = function (ajaxRequest) {
     if (this.onlyOne) {
       while (this.list.length > 0) {
@@ -275,8 +286,8 @@ function saveTextAsFile(text, fileName) {
 
 // Google analytics
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);
                         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-37082212-1', 'auto');

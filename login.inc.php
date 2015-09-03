@@ -40,6 +40,11 @@
           <div class="left-column">
             <?php
 
+// general information about things like
+//  - sign up success
+//  - login success
+//  - email confirmation success
+
 $infobox_green_red = NULL;
 $infobox_header = NULL;
 $infobox_body = NULL;
@@ -80,10 +85,10 @@ if($_GET['email_confirmation_key'] && $_GET['email']) {
 
 if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox_header)) {
   echo '
-						<div class="box">
-						<div class="box-head ' . $infobox_green_red . '">' . $infobox_header . '</div>
-						<div class="box-body">' . $infobox_body . '</div>
-						</div>';
+    <div class="box">
+    <div class="box-head ' . $infobox_green_red . '">' . $infobox_header . '</div>
+    <div class="box-body">' . $infobox_body . '</div>
+    </div>';
 }
             ?>
             <div class="box">
@@ -172,6 +177,7 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
 
 
         <?php
+// include legal info, about and contact html code
 include('html-include/legal-info.html');
 include('html-include/about.html');
 include('html-include/contact.html');
@@ -186,7 +192,7 @@ include('html-include/footer.html');
       ?>
     </div>
 
-
+    <!-- add scripts to the DOM -->
     <script type="text/javascript">
       document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');

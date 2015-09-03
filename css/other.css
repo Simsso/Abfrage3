@@ -1,3 +1,5 @@
+/* website specific css file */
+
 * {
   margin: 0;
   padding: 0;
@@ -8,6 +10,8 @@
   
   z-index: 100;
 
+  
+  /* set transition to any element */
   /* Firefox */
   -moz-transition: all .2s ease-in;
   /* WebKit */
@@ -22,12 +26,6 @@ html, body, #main-wrapper {
   background-color: #ECEFF1;
 }
 
-#main-wrapper {
-  position: relative;
-  min-height: calc(100% - 60px);
-  padding-top: 60px;
-}
-
 html {
   height: 100%;
 }
@@ -38,6 +36,15 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
 }
+
+#main-wrapper {
+  position: relative;
+  min-height: calc(100% - 60px);
+  padding-top: 60px;
+}
+
+
+/* footer */
 
 .footer {
   text-align: center;
@@ -57,12 +64,6 @@ body {
   margin: 8px auto;
 }
 
-.float-right {
-  float: right;
-}
-.float-left {
-  float: left;
-}
 
 .icon-button {
   width: 32px;
@@ -202,6 +203,9 @@ body > .main {
   margin-bottom: 57px;
   margin-bottom: 25px;
 }
+
+
+/* box */
 
 .box {
   position: relative;
@@ -346,6 +350,8 @@ body > .main {
   width: calc(70% - 25px);
 }
 
+
+
 form table {
   width: 100%;
 }
@@ -394,7 +400,7 @@ div.right-column-img-wrapper {
   left: 0;
   right: 0;
   box-shadow: 0 0 5px #000000;
-  transition: opacity 1s;
+  transition: opacity 0.5s;
 }
 
 .cookie-header table {
@@ -504,8 +510,6 @@ div.right-column-img-wrapper {
   text-decoration: none;
 }
 
-
-
 #mobile-nav > div li.visited {
   color: white;
   font-weight: bold;
@@ -518,6 +522,8 @@ body.mobile-menu-shown {
 body.mobile-menu-shown #main-wrapper {
   transform: translate3d(256px, 0px, 0px);
 }
+
+
 
 .advertisement-bottom {
   margin-top: 25px;
@@ -567,42 +573,9 @@ body.mobile-menu-shown #main-wrapper {
   -o-user-select: none;
   user-select: none;
 }
-.initial-width {
-  width: initial;
-}
-.initial-height {
-  height: initial;
-}
-
-.display-block {
-  display: block;
-}
-.display-none {
-  display: none;
-}
-
-.text-align-center {
-  text-align: center;
-}
-
-.italic {
-  font-style: italic;
-}
 
 .cc_banner {
   border-bottom: 3px solid black;
-}
-
-.width100 {
-  width: 100%;
-}
-
-.clear-both {
-  clear: both;
-}
-
-div.center {
-  margin: auto;
 }
 
 .smaller-800 {
@@ -649,28 +622,8 @@ input[type=text]:first-child:last-child {
   width: calc(100% - 16px);
 }
 
-.width-100 {
-  width: 100%;
-}
-
-.width-33 {
-  width: 33.3333%;
-}
-
-.width-100px {
-  width: 100px;
-}
-
-.height-50px {
-  height: 50px;
-}
-
 .font-size-20px {
   font-size: 20px !important;
-}
-
-.inline {
-  display: inline;
 }
 
 .height-hidden {

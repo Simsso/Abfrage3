@@ -1,6 +1,9 @@
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+
 // single page app
-var shownPageName = undefined, 
-    shownHashName = undefined, 
+var shownPageName, shownHashName, 
     pageTitle = {
       'home': 'Home',
       'query': 'Test',

@@ -89,8 +89,8 @@ class Default_Client_HTML_Mail extends HTML_Mail {
 		<hr style="margin-top: 50px; background-color: #777777; height: 1px; border: 0; "/>
 		<p style="font-size: 80%; text-align: center">
 		<a href="http://abfrage3.simsso.de">Website</a> &middot;
-		<a href="http://abfrage3.simsso.de#imprint">Imprint</a> &middot;
-		<a href="http://abfrage3.simsso.de#contact">Contact</a>
+		<a href="http://abfrage3.simsso.de/#/imprint">Imprint</a> &middot;
+		<a href="http://abfrage3.simsso.de/#/contact">Contact</a>
 		</p>
 		</div>
 		</body>
