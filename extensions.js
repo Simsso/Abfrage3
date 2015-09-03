@@ -53,14 +53,14 @@ Array.prototype.swap = function(a, b) {
     this[b] = tmp;
 };
 
-// push elements of an array into another array
+// pushes elements of an array into another array
 Array.prototype.pushElements = function(array) {
   for (var i = 0; i < array.length; i++) {
     this.push(array[i]);
   }
 };
 
-// convert a number to an English string
+// converts a number to an English string
 Number.prototype.toEnglishString = function() {
   if (this.valueOf() > 12) {
     return this.toString();
@@ -69,14 +69,14 @@ Number.prototype.toEnglishString = function() {
   return strings[this.valueOf()];
 };
 
-// convert a number to a English month name abbreviation
+// converts a number to a English month name abbreviation
 Number.prototype.toMonthAbbreviation = function() {
   if (this.valueOf() > 12) return undefined;
   var monthNames = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dez"];
-  return monthNames[this.valueOf()];
+  return monthNames[this.valueOf() - 1];
 };
 
-// add leading zeros to a number
+// adds leading zeros to a number
 Number.prototype.addLeadingZeros = function(n) {
   var s = this.valueOf() + "";
   while (s.length < n) s = "0" + s;

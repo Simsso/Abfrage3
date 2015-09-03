@@ -1,5 +1,5 @@
 <?php
-require('mail.class.php');
+require('mail.class.php'); // include email class
 $user = Database::get_user_by_id($_SESSION['id']);
 $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 ?>
@@ -63,7 +63,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <?php
 if (is_null($next_to_last_login)) {
   // first login
-  echo '<p>Welcome to Abfrage3! <a href="#word-lists">Start by creating a new word list.</a></p>';
+  echo '<p>Welcome to Abfrage3! <a href="#/word-lists">Start by creating a new word list.</a></p>';
 } else {
   echo '<p>Last login at ' . $next_to_last_login->get_date_string() . ' from IP-address ' . $next_to_last_login->ip . '</p>';
 }
@@ -469,6 +469,7 @@ if (is_null($next_to_last_login)) {
 
 
         <?php
+// include legal info, about and contact html code
 include('html-include/legal-info.html');
 include('html-include/about.html');
 include('html-include/contact.html');
@@ -476,7 +477,7 @@ include('html-include/contact.html');
 
         <br class="clear-both hide-below-700">
 
-        <!--<footer class="advertisement-bottom box display-none">
+        <footer class="advertisement-bottom box display-none">
           <div class="box-body">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9727315436627573" data-ad-slot="4992943646" data-ad-format="auto"></ins>
@@ -484,7 +485,7 @@ include('html-include/contact.html');
               (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
           </div>
-        </footer>-->
+        </footer>
       </div>
 
       <?php
@@ -492,7 +493,7 @@ include('html-include/footer.html');
       ?>
     </div>
 
-
+    <!-- add scripts to the DOM -->
     <script type="text/javascript">
       document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');

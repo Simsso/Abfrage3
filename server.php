@@ -1,31 +1,42 @@
 <?php
 $start_time = microtime(true); // measure execution time
 
+// session required
 function session_required() {
+  // cancels script execution when the session cookie is not set
+  // returns an "no session" error
   if (!isset($_SESSION['id'])) {
     Response::send("no session", "error");
   }
 }
 
+// response class
 class Response {
+  // default status is "success"
   static function send($data, $status = "success") {
-    global $start_time; // measure execution time
+    global $start_time; // measure execution time variable
     
+    // response object
     $obj = new stdClass();
-    $obj->status = $status;
-    $obj->data = $data;
-    $obj->action = $_GET['action'];
-    $obj->execution_time_ms = (microtime(true) - $start_time) * 1000;
-    exit(json_encode($obj));
+    $obj->status = $status; // status: "success" or "error"
+    $obj->data = $data; // data: the actual data
+    $obj->action = $_GET['action']; // the action which has been done (like "get-word-list")
+    $obj->execution_time_ms = (microtime(true) - $start_time) * 1000; // measured execution time (debugging purposes)
+    
+    // JSON encode response object
+    // echo it by passing it to the exit() function
+    // stop script execution by calling exit()
+    exit(json_encode($obj)); 
   }
 }
 
-session_start();
-require('database.class.php');
+
+session_start(); // start session
+require('database.class.php'); // include database class
 
 
 
-if (isset($_GET['action'])) {
+if (isset($_GET['action'])) { // check whether the user request type was passed
   
   // log server requests
   if (isset($_SESSION['id'])) {
@@ -74,7 +85,7 @@ if (isset($_GET['action'])) {
       $_SESSION['id'] = $id;
 
       Database::add_login($id, $_POST['stay-logged-in'] == 1);
-      header("Location: /#home");
+      header("Location: /#/home");
       exit();
     } else if ($result == 2) { // correct combination but email not comfirmed yet
       $user = Database::get_user_by_id($id);
@@ -127,9 +138,11 @@ if (isset($_GET['action'])) {
     }
 
     if ($signup_success) {
+      // forward and pass information as URL parameters
       header("Location: /?signup_success=" . (($signup_success)?"true":"false") . "&email=" . $email . "&firstname=" . $firstname);
       exit();
     } else {
+      // forward and pass information as URL parameters
       header("Location: /?signup_success=" . (($signup_success)?"true":"false") . "&firstname=" . $firstname . "&lastname=" . $lastname . "&email=" . $email . "&signup_message=" . $message);
       exit();
     }
@@ -354,6 +367,7 @@ if (isset($_GET['action'])) {
     break;
   }
 } else {
+  // dummy response showing that the server is online
   echo "Abfrage3 server is running.";
 }
 exit();

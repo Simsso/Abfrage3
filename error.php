@@ -1,5 +1,10 @@
 <?php
+// error page
+
+// read error status code
 $status = $_SERVER['REDIRECT_STATUS'];
+
+// array which stores the description for some error codes in an array with two elements (short description, long description)
 $codes = array(
   400 => array('400 Bad Request', 'The server cannot or will not process the request due to something that is perceived to be a client error.'),
   401 => array('401 Unauthorized', 'An authentication is required and has failed or has not yet been provided.'),
@@ -11,6 +16,8 @@ $codes = array(
   502 => array('502 Bad Gateway', 'The server received an invalid response from the upstream server while trying to fulfill the request.'),
   504 => array('504 Gateway Timeout', 'The upstream server failed to send a request in the time allowed by the server.'),
 );
+
+// read the data from the array to use it later in HTML
 $error_code = $codes[$status][0];
 $error_message = $codes[$status][1];
 ?>
