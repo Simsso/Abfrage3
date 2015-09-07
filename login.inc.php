@@ -92,18 +92,237 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
 }
             ?>
             <div class="box">
-              <div class="box-head">What is Abfrage3?</div>
-              <div class="box-body">
-                <p>Abfrage3 is a web tool allowing users to enter vocabulary, share word lists and learn another language.</p>
-                <p>The website is still under heavy development and therefore not fully functional.</p>
-              </div>
-            </div>
+              <div class="box-body tour-container font-size-100">
+                <div class="text-align-center">
+                  <h2>Welcome to</h2>
+                  <p>
+                    <img src="img/logo-56.png"/>
+                  </p>
+                  <p>
+                    Abfrage3 is an online vokabulary trainer with functionality to create, share and organize word lists. 
+                  </p>
+                  <p>
+                    <img src="/img/mockup-image.jpg" class="full-width">
+                  </p>
+                  <p class="italic">Here is how it works:</p>
+                </div>
 
-            <div class="box">
-              <div class="box-head">Stats</div>
-              <div class="box-body">
-                <p>Number of registered users: <? echo Database::get_number_of_registered_users(); ?></p>
-                <p>Number of logins during the last 24 hours: <? echo Database::get_number_of_logins_during_last_time(24 * 60 * 60); ?></p>
+
+                <div class="tour-element">
+                  <hr class="spacer-30">
+                  <h2>Create lists and add words</h2>
+                  <div>
+                    <div class="col-l">
+                      <p>Define a name and create a new list for your words.</p>
+                    </div>
+                    <div class="col-r">
+                      <div class="box">
+                        <div class="box-head">
+                          <img src="img/server.svg">
+                          Your word lists
+                        </div>
+                        <div class="box-body">
+                          <input id="word-list-add-name" type="text" placeholder="Word list name">
+                          <input id="word-list-add-button" type="button" value="Create list">
+                          <hr class="spacer-top-15">
+                          <div id="list-of-word-lists"><table class="box-table cursor-pointer"><tbody><tr><td>My first word list</td></tr><tr><td>Difficult new words</td></tr></tbody></table></div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+
+                    <div class="col-l">
+                      <p>Add words to your lists to learn them later.</p>
+                      <p>If you already have some words, e.g. in a file, you can simply import them.</p>
+                    </div>
+                    <div class="col-r">
+                      <div class="box">
+                        <div class="box-head">
+                          <img src="img/grid.svg">
+                          Words
+                        </div>
+                        <div class="box-body">
+                          <div id="words-add">
+                            <div id="words-add-message"></div>
+                            <input id="words-add-language1" type="text" placeholder="German">
+                            <input id="words-add-language2" type="text" placeholder="English">
+                            <input id="words-add-button" type="button" value="Add word">
+                            <hr class="spacer-top-15">
+                          </div>
+                          <div id="words-in-list">
+                            <table id="word-list-table" class="box-table button-right-column">
+                              <tbody>
+                                <tr class="bold cursor-default"><td>German</td><td>English</td><td></td></tr>
+                                <tr><td>abwechslungsreich</td><td>diversified</td><td><input type="button" class="inline" value="Edit">&nbsp;<input type="button" class="inline" value="Remove"></td></tr>
+                                <tr><td>Vorschlag</td><td>proposal</td><td><input type="button" class="inline" value="Edit">&nbsp;<input type="button" class="inline" value="Remove"></td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+                  </div>
+                </div>
+
+
+                <div class="tour-element">
+                  <hr class="spacer-30">
+                  <h2>Learn words</h2>
+                  <div>
+                    <div class="col-l">
+                      <p>Learn the added words using the <span class="italic">Test</span> feature. Your answers (correct or not) will be saved to personalize your tests.</p>
+                      <p>You can select different algorithms e.g. <span class="italic">Random</span> or <span class="italic">Below average</span> to make the test even more efficient.</p>
+                    </div>
+                    <div class="col-r">
+                      <div class="box" id="query-box">
+                        <div class="box-head">
+                          <img src="img/question.svg">
+                          Test
+                        </div>
+                        <div class="box-body">
+                          <div id="query-div">
+                            <table class="width-100" id="query-content-table">
+                              <tbody>
+                                <tr>
+                                  <td class="width-150px"><span class="language" id="query-lang1">English</span>:&nbsp;</td>
+                                  <td id="query-question">swift</td>
+                                </tr>
+                                <tr>
+                                  <td class="width-150px"><span class="language" id="query-lang2">German</span>:&nbsp;</td>
+                                  <td id="query-answer-table-cell-text-box">
+                                    <input type="text" id="query-answer" class="unremarkable width-100">
+                                    <div id="correct-answer" class="display-none unselectable" unselectable="on" style="display: none;"></div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+
+                    <div class="col-l">
+                      <p>To lazy to type? Use buttons to learn the words instead of typing the answer every time.</p>
+                    </div>
+                    <div class="col-r">
+                      <div class="box" id="query-box">
+                        <div class="box-body">
+                          <div id="query-div">
+                            <table class="width-100" id="query-content-table">
+                              <tbody>
+                                <tr>
+                                  <td class="width-150px"><span class="language" id="query-lang1">English</span>:&nbsp;</td>
+                                  <td id="query-question">leverage</td>
+                                </tr>
+                                <tr>
+                                  <td class="width-150px"><span class="language" id="query-lang2">German</span>:&nbsp;</td>
+                                  <td id="query-answer-table-cell-buttons" class="display-none" style="display: table-cell;">
+                                    <table class="width-100">
+                                      <tbody>
+                                        <tr>
+                                          <td class="width-33"><input id="query-answer-known" type="button" value="I know!" class="height-50px width-100"></td>
+                                          <td class="width-33"><input id="query-answer-not-sure" type="button" value="Not sure..." class="height-50px width-100"></td>
+                                          <td class="width-33"><input id="query-answer-not-known" type="button" value="No idea." class="height-50px width-100"></td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    <div id="query-answer-buttons" style="display: none;"></div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+                  </div>
+                </div>
+
+
+                <div class="tour-element">
+                  <hr class="spacer-30">
+                  <h2>Share your word lists</h2>
+                  <div>
+                    <div class="col-l">
+                      <p>To share lists with other users add them by their email-address and define whether they have permissions to view or edit the list.</p>
+                      <p>Keep in mind: To prevent spamming, other users can only see lists you've shared with them, if they have added you in the <span class="italic">Users</span> section.</p>
+
+                    </div>
+                    <div class="col-r">
+                      <div class="box" id="word-list-sharing" style="display: block;">
+                        <div class="box-head">
+                          <img src="img/share.svg">
+                          Share
+                        </div>
+                        <div class="box-body">
+                          <input id="share-list-other-user-email" type="text" placeholder="Email-address" required="true">
+                          <select id="share-list-permissions" required="true">
+                            <option value="2">Can view</option>
+                            <option value="1">Can edit</option>
+                          </select>
+                          <input id="share-list-submit" type="button" value="Share">
+                          <hr class="spacer-top-15">
+                          <div id="list-sharings">
+                            <table class="box-table button-right-column">
+                              <tbody>
+                                <tr class="bold cursor-default"><td>Name</td><td>Permissions</td><td></td></tr>
+                                <tr><td>My classmate</td><td>Can view</td><td><input type="button" class="inline" value="Stop sharing"></td></tr>
+                                <tr><td>Another guy</td><td>Can edit</td><td><input type="button" class="inline" value="Stop sharing"></td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+
+                    <div class="col-l">
+                      <p>Add other users to see lists they've shared with you.</p>
+                    </div>
+                    <div class="col-r">
+                      <div class="box">
+                        <div class="box-head">
+                          <img src="img/users.svg">
+                          People you've added
+                        </div>
+                        <div class="box-body" data-start-state="expanded">
+                          <div id="user-add-message"></div>
+                          <input id="user-add-email" type="email" placeholder="Email-address" required="true">
+                          <input id="user-add-button" type="button" value="Add user">
+                          <hr class="spacer-top-15">
+                          <div id="people-you-have-added">
+                            <table class="box-table button-right-column">
+                              <tbody>
+                                <tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>
+                                <tr><td>My classmate</td><td>bla@gmail.com</td><td><input type="button" class="inline" value="Remove"></td></tr>
+                                <tr><td>Another guy</td><td>email2@gmail.com</td><td><input type="button" class="inline" value="Remove"></td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br class="clear-both">
+                  </div>
+                </div>
+
+
+                <!--<div class="tour-element">
+<hr class="spacer-30">
+<h2></h2>
+<div>
+<div class="col-l">
+<p></p>
+</div>
+<div class="col-r">
+
+</div>
+<br class="clear-both">
+</div>
+</div>-->
               </div>
             </div>
           </div>
@@ -130,8 +349,8 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                       <td></td>
                     </tr>
                     <!--<tr>
-                      <td colspan="2" style="padding-top: 5px; "><a href="#"><small>Forgot your password?</small></a></td>
-                    </tr>-->
+<td colspan="2" style="padding-top: 5px; "><a href="#"><small>Forgot your password?</small></a></td>
+</tr>-->
                   </table>
                 </form>
               </div>

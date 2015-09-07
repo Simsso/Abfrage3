@@ -3,7 +3,7 @@ require('dbconnect.inc.php'); // include data base connection
 require('validation.class.php'); // include validation class to verify correctness of strings in general
 
 class Database {
-  const STAY_LOGGED_IN_DURATION = 3600 * 24 * 31;
+  const STAY_LOGGED_IN_DURATION = 32678400;
   
   // log server request
   static function log_server_request($user, $page) {
@@ -132,6 +132,19 @@ class Database {
     }
 
     return false;
+  }
+  
+  static function refresh_session_if_staying_logged_in() {
+    if (!isset($_SESSION['id']) && isset($_COOKIE['stay_logged_in_hash']) && isset($_COOKIE['stay_logged_in_id'])) {
+      // no session running but user has cookies indicating that he stayed logged in
+
+      // confirm if the user stayed logged in
+      if (Database::check_stay_logged_in($_COOKIE['stay_logged_in_id'], $_COOKIE['stay_logged_in_hash'])) {
+        // the user stayed logged in
+        // set the session cookie with the users id
+        $_SESSION['id'] = $_COOKIE['stay_logged_in_id'];
+      }
+    }
   }
 
   // get salt by email
@@ -838,12 +851,18 @@ class Feed {
     $query = mysqli_query($con, $sql);
 
     while ($row = mysqli_fetch_assoc($query)) {
+      if ($row['user'] == 0) continue;
+      
       array_push(
         $this->events, 
         new FeedItem(
           FeedItemType::WordAdded,
           intval($row['time']),
-          new WordsAddedFeedItem($row['amount'], BasicWordList::get_by_id($row['id']), SimpleUser::get_by_id($row['creator']), SimpleUser::get_by_id($row['user']))
+          new WordsAddedFeedItem(
+            $row['amount'], 
+            BasicWordList::get_by_id($row['id']), 
+            SimpleUser::get_by_id($row['creator']), 
+            SimpleUser::get_by_id($row['user']))
         )
       );
     }

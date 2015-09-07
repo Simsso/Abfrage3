@@ -3,6 +3,8 @@ $start_time = microtime(true); // measure execution time
 
 // session required
 function session_required() {
+  // if the session has expired set the cookie again
+  Database::refresh_session_if_staying_logged_in();
   // cancels script execution when the session cookie is not set
   // returns an "no session" error
   if (!isset($_SESSION['id'])) {
