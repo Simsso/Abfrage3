@@ -157,22 +157,29 @@ $(document).ajaxSuccess(function(event, req) {
 });
 
 function handleAjaxResponse(data) {
-  var obj = jQuery.parseJSON(data);
-  console.log(obj);
+  try { // try because parseJSON could cause an exception
+    var obj = jQuery.parseJSON(data);
+    console.log(obj);
 
-  if (obj.status === "success") {
-    //console.log(obj.data);
-    return obj.data;
-  }
-  else if (obj.status === "error") {
-    if (obj.data === "no session") {
-      $('#main-wrapper').after(getLoadingFullscreenWithMessage("Your session has expired."));
-      $('.sk-three-bounce.fullscreen').css('opacity', '1');
-
-      setTimeout(function () {
-        window.location.replace('server.php?action=logout');
-      }, 2000);
+    if (obj.status === "success") {
+      //console.log(obj.data);
+      return obj.data;
     }
+    else if (obj.status === "error") {
+      if (obj.data === "no session") {
+        $('#main-wrapper').after(getLoadingFullscreenWithMessage("Your session has expired."));
+        $('.sk-three-bounce.fullscreen').css('opacity', '1');
+
+        setTimeout(function () {
+          window.location.replace('server.php?action=logout');
+        }, 2000);
+      }
+    }
+  }
+  catch (e) {
+    // will be cought if server response is e.g. a PHP error
+    // log it for debugging purpose
+    console.log(data);
   }
 }
 

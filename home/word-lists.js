@@ -381,7 +381,7 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
         });
       });
 
-      // change language form
+      // change language form event listener
       $('#change-language-form').on('submit', function(e) {
         e.preventDefault();
 
@@ -538,7 +538,8 @@ function setWordListLanguages(id, lang1, lang2, callback) {
 
     }
   }).done(function(data) {    
-      data = handleAjaxResponse(data);
+    data = handleAjaxResponse(data);
+    callback(data);
   });
 }
 

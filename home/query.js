@@ -519,6 +519,7 @@ function nextWord() {
   
   setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
 
+  // known average for single word information
   $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
 }
 
