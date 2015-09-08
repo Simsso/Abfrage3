@@ -73,7 +73,7 @@ function showMenu() {
 
   menuShown = true;
   $('body').addClass('mobile-menu-shown');
-  $('.menu-button').attr('src', 'img/menu-close.svg');
+  $('.menu-button').attr('src', 'img/menu-back.svg');
 
   setTimeout(function() {
     $('#main-wrapper').on('click', function() {
