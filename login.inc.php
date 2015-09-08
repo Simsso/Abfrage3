@@ -344,7 +344,7 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                       <td><input type="password" name="password" placeholder="" required="required"/></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;Stay logged in</label></td>  
+                      <td colspan="2" class="padding-v-6"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;Stay logged in</label></td>  
                     </tr>
                     <tr>
                       <td><input type="submit" value="Login"/></td>

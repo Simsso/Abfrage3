@@ -676,6 +676,11 @@ body.mobile-menu-shown #main-wrapper {
   margin-bottom: 15px;
 }
 
+.padding-v-6 {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
 .width-150, .width-150px {
   width: 150px;
 }
