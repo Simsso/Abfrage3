@@ -1,6 +1,13 @@
+/* jshint browser: true */
+/* global jQuery: false */
+/* global $: false */
+/* global MessageBox: false */
+/* global loading: false */
+/* global handleAjaxResponse: false */
+
 // single page application allow url like
 // ...#settings/profile
-var shownSettingsSubPageName = undefined;
+var shownSettingsSubPageName;
 $(window).on('page-settings', function(event, pageName, subPageName) {
   if (subPageName === shownSettingsSubPageName) return; // nothing has changed - no reason to touch the DOM
   
@@ -131,30 +138,39 @@ $('#settings-password').on('submit', function(e) {
 $('#settings-delete-account-form').on('submit', function(e) {
   e.preventDefault();
   
-  $('#settings-delete-account-password').prop('disabled', true);
-  $('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
-  $('#settings-delete-account-response').html('').addClass('display-none');
-  
-  // send request
-  jQuery.ajax('server.php?action=delete-account', {
-    data: {
-      password: $('#settings-delete-account-password').val()
-    },
-    type: 'POST',
-    error: function(jqXHR, textStatus, errorThrown) {
-
-    }
-  }).done(function(data) {
-    data = handleAjaxResponse(data);
-    
-    if (data === '1') {
-      window.location.replace('server.php?action=logout');
-    } 
-    else {
-      $('#settings-delete-account-password').prop('disabled', false).val('');
-      $('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
+  var messageBox = new MessageBox();
+  messageBox.setTitle('Delete account');
+  messageBox.setContent('Are you sure you want to delete your account?');
+  messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+  messageBox.setCallback(function(button) {
+    if (button === 'Yes') {
+      $('#settings-delete-account-password').prop('disabled', true);
+      $('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
+      $('#settings-delete-account-response').html('').addClass('display-none');
       
-      $('#settings-delete-account-response').html((data === '0') ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
+      // send request
+      jQuery.ajax('server.php?action=delete-account', {
+        data: {
+          password: $('#settings-delete-account-password').val()
+        },
+        type: 'POST',
+        error: function(jqXHR, textStatus, errorThrown) {
+
+        }
+      }).done(function(data) {
+        data = handleAjaxResponse(data);
+
+        if (data === 1) {
+          window.location.replace('server.php?action=logout');
+        } 
+        else {
+          $('#settings-delete-account-password').prop('disabled', false).val('');
+          $('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
+
+          $('#settings-delete-account-response').html((data === 0) ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
+        }
+      });
     }
   });
+  messageBox.show();
 });

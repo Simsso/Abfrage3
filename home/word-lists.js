@@ -1,6 +1,7 @@
 /* jshint browser: true */
 /* global jQuery: false */
 /* global $: false */
+/* global MessageBox: false */
 /* global loading: false */
 /* global handleAjaxResponse: false */
 /* global ajaxRequests: false */
@@ -330,30 +331,50 @@ function loadWordList(id, showLoadingInformation, callback, allowEdit, allowShar
       // events
       // delete word list
       $('#delete-shown-word-list').on('click', function() {
-        $(this).prop('disabled', true).attr('value', 'Deleting...');
+        // show message box
+        var messageBox = new MessageBox();
+        messageBox.setTitle('Delete word list');
+        messageBox.setContent('Do you want to delete the word list <span class="italic">' + shownListData.name + '</span>?');
+        messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+        messageBox.setCallback(function(button) {
+          if (button === 'Yes') {
+            $(this).prop('disabled', true).attr('value', 'Deleting...');
 
-        // call delete word list function and pass id of the list which will be deleted
-        deleteWordList(shownListId, function() {
-          showNoListSelectedInfo(); // show the message that no list is shown at the moment
+            // call delete word list function and pass id of the list which will be deleted
+            deleteWordList(shownListId, function() {
+              showNoListSelectedInfo(); // show the message that no list is shown at the moment
+            });
+          }
         });
+        messageBox.show();
       });
 
       // hide word list (stop sharing)
       $('#hide-shown-word-list').on('click', function() {
-        $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
-        var sharingId = $('tr[data-list-id=' + shownListId + ']').data('sharing-id');
-        // send server request to hide the shared list
-        setSharingPermissionsBySharingId(sharingId, 0, function() {
-          $('#list-of-shared-word-lists-row-' + sharingId).remove();
+        // show message box
+        var messageBox = new MessageBox();
+        messageBox.setTitle('Hide word list');
+        messageBox.setContent('Do you want to hide the word list <span class="italic">' + shownListData.name + '</span>?');
+        messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+        messageBox.setCallback(function(button) {
+          if (button === 'Yes') {
+            $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
+            var sharingId = $('tr[data-list-id=' + shownListId + ']').data('sharing-id');
+            // send server request to hide the shared list
+            setSharingPermissionsBySharingId(sharingId, 0, function() {
+              $('#list-of-shared-word-lists-row-' + sharingId).remove();
 
-          // still rows left?
-          if ($('#list-of-shared-word-lists tr').length == 1) {
-            $('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
+              // still rows left?
+              if ($('#list-of-shared-word-lists tr').length == 1) {
+                $('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
+              }
+
+              // because the shown list has just been removed update the screen to show the appropriate message
+              showNoListSelectedInfo();
+            });
           }
-
-          // because the shown list has just been removed update the screen to show the appropriate message
-          showNoListSelectedInfo();
         });
+        messageBox.show();
       });
 
       // rename form

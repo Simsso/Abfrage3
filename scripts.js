@@ -246,7 +246,10 @@ $('#contact-form').on('submit', function(e) {
   var botQuestion = $('#contact-bot-question').html().split(' + ');
   if (parseInt(botQuestion[0]) + parseInt(botQuestion[1]) != $('#contact-bot-protection').val())
   {
-    alert("You haven't answered the bot question correctly."); // inform the user
+    var messageBox = new MessageBox();
+    messageBox.setTitle('Bot question');
+    messageBox.setContent('You haven\'t answered the bot question correctly.');
+    messageBox.show();
     return; // abort sending
   }
 

@@ -790,6 +790,14 @@ input[type=text]:first-child:last-child {
   }
 }
 
+@media screen and (max-width: 500px) {
+  /* show home-page tour columns as one column */
+  .tour-element .col-l, .tour-element .col-r {
+    float: none;
+    width: 100%;
+  }
+}
+
 
 @-webkit-keyframes slideDown {
   0% { -webkit-transform: translateY(-50px); }

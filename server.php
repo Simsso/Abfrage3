@@ -66,7 +66,7 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     $mail = new Mail(Mail::DEFAULT_SENDER_EMAIL, $mail, null, $subject, $message);
     $mail->send();
 
-    echo "<p>Thanks for your approach!</p><p>Your message has been sent.</p>";
+    Response::send("<p>Thanks for your approach!</p><p>Your message has been sent.</p>");
 
     break;
     
