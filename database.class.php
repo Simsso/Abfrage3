@@ -417,7 +417,9 @@ class Database {
     $sql = "
 		SELECT `list`.`id`, `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `list`, `share`
-		WHERE (`list`.`creator` = '".$user_id."' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND `list`.`id` = '".$word_list_id."'";
+		WHERE (`list`.`creator` = '".$user_id."' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND 
+          `list`.`id` = '".$word_list_id."' AND 
+          `list`.`active` = 1";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $list = new WordList(
@@ -432,8 +434,9 @@ class Database {
       $list->set_labels(WordList::get_labels_of_list($user_id, $word_list_id));
       return $list;
     }
+    return NULL;
   }
-
+  
   // rename word list
   static function rename_word_list($user_id, $word_list_id, $list_name) {
     global $con;
@@ -1148,6 +1151,20 @@ class BasicWordList {
       }
       array_push($this->words, $word);
     }
+  }
+  
+  // get editing permissions for user
+  public function get_editing_permissions_for_user($id) {
+    // returns true if the user given via $id has permissions to edit the list
+    // returns false if the user has no permissions to edit but permissions to view or no permissions at all
+    
+    global $con;
+    
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `share` WHERE `list` = ".$this->id." AND `user` = ".$id." AND `permissions` = 2;";
+    $query = mysqli_query($con, $sql);
+    $count = mysqli_fetch_object($query)->count;
+    
+    return ($count == 0);
   }
 }
 

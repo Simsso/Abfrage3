@@ -278,7 +278,7 @@ if (is_null($next_to_last_login)) {
             <div class="box" id="word-list-info-words">
               <div class="box-head">
                 <img src="img/grid.svg" />
-                Words
+                Words (<span id="shown-word-list-words-count">0</span>)
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">

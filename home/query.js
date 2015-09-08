@@ -141,7 +141,6 @@ QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
       if (this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1) {
         // a word is known
         this.index++; // increment the pointer which indicates where the this.currentGroup ends in the this.words array
-        console.log("------------------> took the next word!!");
         if (this.index >= this.words.length) { // gone through all words 
           this.index = 0; // reset index and restart at the beginning
         }
@@ -482,7 +481,6 @@ function startQuery() {
   queryInOrderAlgorithm = new QueryAlgorithm.InOrder(queryWords);
   queryGroupWordsAlgorithm = new QueryAlgorithm.GroupWords(queryWords);
 
-  console.log("b");
   nextWord();
 
   //$('#query-select-box img[data-action="collapse"]').trigger('collapse');
@@ -543,9 +541,6 @@ function getNextWord() {
     case QueryAlgorithmEnum.InOrder:
       return queryInOrderAlgorithm.getNextWord();
     case QueryAlgorithmEnum.GroupWords:
-      for (var i = 0; i < queryGroupWordsAlgorithm.currentGroup.length; i++) {
-        console.log(queryGroupWordsAlgorithm.currentGroup[i].getKnownAverageOverLastNAnswers(queryGroupWordsAlgorithm.careAboutLastNAnswers) + ' ' + queryGroupWordsAlgorithm.currentGroup[i].language1);
-      }
       return queryGroupWordsAlgorithm.getNextWord();
   }
 }
@@ -555,7 +550,6 @@ $('#query-answer').on('keypress', function(e) {
   if (e.which == 13) {
     if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer  
       if (queryCurrentAnswerState == QueryAnswerState.NotKnown || queryCurrentAnswerState == QueryAnswerState.NotSureClicked || queryCurrentAnswerState == QueryAnswerState.WaitToContinue) {
-        console.log("c");
         nextWord();
       }
       else {
@@ -618,7 +612,6 @@ function uploadQueryResults() {
 $('#query-answer-known').on('click', function() {
   // known button click event
   if (queryCurrentAnswerState == QueryAnswerState.WaitToContinue || queryCurrentAnswerState == QueryAnswerState.NotKnown) {
-    console.log("d");
     nextWord();
   }
   else {
@@ -645,7 +638,6 @@ function processQueryCurrentAnswerState() {
       $('#query-box').trigger('shadow-blink-green');
       addQueryAnswer(currentWord, 1);
       tryAutoUpload();
-      console.log("a");
       nextWord();
       return;
     case QueryAnswerState.NotSureClicked:
