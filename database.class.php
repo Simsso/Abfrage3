@@ -30,7 +30,7 @@ class Database {
     } else if (!self::email_available($email)) {
       throw new Exception("Email already in use");
     } else {
-      $salt = rand(0, 999999);
+      $salt = rand(0, 999999999);
       $password = sha1($salt . $password);
       unset($confirmpassword);
       $email_confirmation_key = sha1($salt . $email . $password);
@@ -99,7 +99,7 @@ class Database {
     // the login table stores every single login
     
     // generate salt
-    $salt = rand(0, 999999);
+    $salt = rand(0, 999999999);
     $hash = sha1($salt . $id); // key to identify the user later by their cookie
 
     // store the hash on the users machine
@@ -758,7 +758,7 @@ class Database {
       $check_old_pw = self::check_login_data(self::id2email($id), $old_pw);
       if ($check_old_pw === 1) {
         if (Validation::is_password($new_pw)) {
-          $salt = rand(0, 999999);
+          $salt = rand(0, 999999999);
           $new_pw = sha1($salt . $new_pw);
           unset($new_pw_confirm);
           
