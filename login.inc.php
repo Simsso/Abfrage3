@@ -94,12 +94,16 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
             <div class="box">
               <div class="box-body tour-container font-size-100">
                 <div class="text-align-center">
-                  <h2>Welcome to</h2>
-                  <p>
-                    <img src="img/logo-56.png"/>
-                  </p>
+                  <table class="width-100 headline spacer-15">
+                    <tr>
+                      <td><h2>Welcome to&nbsp;</h2></td>
+                      <td><img src="img/logo-46.png"/></td>
+                    </tr>
+                  </table>
                   <p>
                     Abfrage3 is an online vokabulary trainer with functionality to create, share and organize word lists. 
+                    Its purpose is to make learning vocabulary of a foreign language more efficient.
+                    The website is still under heavy development so some features might not work as expected.
                   </p>
                   <p>
                     <img src="/img/mockup-image.jpg" class="full-width">
@@ -122,10 +126,10 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                           Your word lists
                         </div>
                         <div class="box-body">
-                          <input id="word-list-add-name" type="text" placeholder="Word list name">
-                          <input id="word-list-add-button" type="button" value="Create list">
+                          <input type="text" placeholder="Word list name">
+                          <input type="button" value="Create list">
                           <hr class="spacer-top-15">
-                          <div id="list-of-word-lists"><table class="box-table cursor-pointer"><tbody><tr><td>My first word list</td></tr><tr><td>Difficult new words</td></tr></tbody></table></div>
+                          <div><table class="box-table cursor-pointer"><tbody><tr><td>My first word list</td></tr><tr><td>Difficult new words</td></tr></tbody></table></div>
                         </div>
                       </div>
                     </div>
@@ -142,15 +146,14 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                           Words
                         </div>
                         <div class="box-body">
-                          <div id="words-add">
-                            <div id="words-add-message"></div>
-                            <input id="words-add-language1" type="text" placeholder="German">
-                            <input id="words-add-language2" type="text" placeholder="English">
-                            <input id="words-add-button" type="button" value="Add word">
+                          <div>
+                            <input type="text" placeholder="German">
+                            <input type="text" placeholder="English">
+                            <input type="button" value="Add word">
                             <hr class="spacer-top-15">
                           </div>
-                          <div id="words-in-list">
-                            <table id="word-list-table" class="box-table button-right-column">
+                          <div>
+                            <table class="box-table button-right-column">
                               <tbody>
                                 <tr class="bold cursor-default"><td>German</td><td>English</td><td></td></tr>
                                 <tr><td>abwechslungsreich</td><td>diversified</td><td><input type="button" class="inline" value="Edit">&nbsp;<input type="button" class="inline" value="Remove"></td></tr>
@@ -181,18 +184,17 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                           Test
                         </div>
                         <div class="box-body">
-                          <div id="query-div">
-                            <table class="width-100" id="query-content-table">
+                          <div>
+                            <table class="width-100">
                               <tbody>
                                 <tr>
-                                  <td class="width-150px"><span class="language" id="query-lang1">English</span>:&nbsp;</td>
+                                  <td class="width-150px"><span class="language">English</span>:&nbsp;</td>
                                   <td id="query-question">swift</td>
                                 </tr>
                                 <tr>
-                                  <td class="width-150px"><span class="language" id="query-lang2">German</span>:&nbsp;</td>
-                                  <td id="query-answer-table-cell-text-box">
+                                  <td class="width-150px"><span class="language">German</span>:&nbsp;</td>
+                                  <td>
                                     <input type="text" id="query-answer" class="unremarkable width-100">
-                                    <div id="correct-answer" class="display-none unselectable" unselectable="on" style="display: none;"></div>
                                   </td>
                                 </tr>
                               </tbody>
