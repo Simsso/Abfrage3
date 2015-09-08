@@ -60,6 +60,7 @@ function Word(id, list, language1, language2, answers) {
   
   this.getKnownAverageOverLastNAnswers = function(n) {
     if (this.answers.length === 0) return 0;
+    if (n > this.answers.length) return Math.map(this.getKnownAverage(), 0, 1, 0, this.answers.length / n);
 
     var knownCount = 0.0;
     for (var i = (this.answers.length - n); i < this.answers.length; i++) {
@@ -71,10 +72,6 @@ function Word(id, list, language1, language2, answers) {
   };
 }
 // static functions
-Word.getRandomWordOfArray = function(wordArray) {
-  if (wordArray.length === 0) return undefined;
-  return wordArray[Math.round(Math.random() * (wordArray.length - 1))];
-};
 Word.getWordKnownBelow = function(wordArray, percentage) {
   var wordsBelow = [];
   // search for all words below given percentage
@@ -84,7 +81,7 @@ Word.getWordKnownBelow = function(wordArray, percentage) {
     }
   }
   
-  return Word.getRandomWordOfArray(wordsBelow);
+  return wordsBelow.getRandomElement();
 };
 Word.getKnownAverageOfArray = function(wordArray) {
   if (wordArray.length === 0) return 0;
@@ -100,6 +97,7 @@ Word.getKnownAverageOfArray = function(wordArray) {
 
 // query algorithms
 function QueryAlgorithm() {}
+
 QueryAlgorithm.InOrder = function(words) {
   this.index = -1;
   this.words = words;
@@ -116,19 +114,21 @@ QueryAlgorithm.InOrder = function(words) {
     return this.words[this.index];
   };
 };
+
 QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
-  if (groupSize === undefined) groupSize = 8;
-  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = 6;
+  if (groupSize === undefined) groupSize = 6;
+  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = 4;
   
   this.groupSize = groupSize;
   this.careAboutLastNAnswers = careAboutLastNAnswers;
-  this.index = 0;
   this.words = words.slice().shuffle(); // shuffle a copy of the words array
+  this.index = (groupSize < this.words.length) ? groupSize : 0;
+  this.lastReturnedWord = null;
   
   this.currentGroup = [];
   
-  if (this.words.length <= groupSize) {
-    this.currentGroup = words.slice(0, groupSize); // TODO: check slice parameters
+  if (this.words.length > groupSize) {
+    this.currentGroup = this.words.slice(0, groupSize); // TODO: check slice parameters
   }
   else { // there are not enough words given to perform a senseful GroupWords QueryAlgorithm
     this.currentGroup = words;
@@ -138,11 +138,18 @@ QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
   this.getNextWord = function() {
     // go through all words in the current group and check of words which are known
     for (var i = 0; i < this.currentGroup.length; i++) {
-      if (this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1.0) {
-        // TODO
+      if (this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1) {
+        // a word is known
+        this.index++; // increment the pointer which indicates where the this.currentGroup ends in the this.words array
+        console.log("------------------> took the next word!!");
+        if (this.index >= this.words.length) { // gone through all words 
+          this.index = 0; // reset index and restart at the beginning
+        }
+        this.currentGroup[i] = this.words[this.index];
       }
     }
-    return Word.getRandomWordOfArray(this.currentGroup);
+    
+    return this.currentGroup.getRandomElement();
   };
 };
 
@@ -169,7 +176,7 @@ function QueryAnswer(word, correct, id, time) {
 var QueryAlgorithmEnum = Object.freeze({
   Random: 0, 
   UnderAverage: 1, 
-  Groups: 2,
+  GroupWords: 2,
   InOrder: 3
 });
 
@@ -451,7 +458,8 @@ var queryWords = [], // array of all words which the user selected for the query
     queryAnswers = [], // array of answers the user already gave
     nextIndexToUpload = 0, // first index of answers which has not been uploaded already (if queryAnswers[] contains 4 words and 3 of them have been uploaded the var will hav the value 3)
     queryCurrentAnswerState = QueryAnswerState.Start, // query answer state
-    queryInOrderAlgorithm;
+    queryInOrderAlgorithm, 
+    queryGroupWordsAlgorithm;
     
     
 function startQuery() {
@@ -472,7 +480,9 @@ function startQuery() {
   }
   
   queryInOrderAlgorithm = new QueryAlgorithm.InOrder(queryWords);
+  queryGroupWordsAlgorithm = new QueryAlgorithm.GroupWords(queryWords);
 
+  console.log("b");
   nextWord();
 
   //$('#query-select-box img[data-action="collapse"]').trigger('collapse');
@@ -526,12 +536,17 @@ function nextWord() {
 function getNextWord() {
   switch (queryChosenAlgorithm) {
     case QueryAlgorithmEnum.Random:
-      return Word.getRandomWordOfArray(queryWords);
+      return queryWords.getRandomElement();
     case QueryAlgorithmEnum.UnderAverage:
       var avg = Word.getKnownAverageOfArray(queryWords);
       return Word.getWordKnownBelow(queryWords, avg);
     case QueryAlgorithmEnum.InOrder:
       return queryInOrderAlgorithm.getNextWord();
+    case QueryAlgorithmEnum.GroupWords:
+      for (var i = 0; i < queryGroupWordsAlgorithm.currentGroup.length; i++) {
+        console.log(queryGroupWordsAlgorithm.currentGroup[i].getKnownAverageOverLastNAnswers(queryGroupWordsAlgorithm.careAboutLastNAnswers) + ' ' + queryGroupWordsAlgorithm.currentGroup[i].language1);
+      }
+      return queryGroupWordsAlgorithm.getNextWord();
   }
 }
 
@@ -540,6 +555,7 @@ $('#query-answer').on('keypress', function(e) {
   if (e.which == 13) {
     if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer  
       if (queryCurrentAnswerState == QueryAnswerState.NotKnown || queryCurrentAnswerState == QueryAnswerState.NotSureClicked || queryCurrentAnswerState == QueryAnswerState.WaitToContinue) {
+        console.log("c");
         nextWord();
       }
       else {
@@ -548,6 +564,10 @@ $('#query-answer').on('keypress', function(e) {
       }
     }
     else { // wrong answer
+      if (queryCurrentAnswerState == QueryAnswerState.NotKnown) { // answer already shown and already saved that the user didn't know the word
+        return;
+      }
+      
       queryCurrentAnswerState = QueryAnswerState.NotKnown;
       processQueryCurrentAnswerState();
 
@@ -560,7 +580,6 @@ function addQueryAnswer(word, correct) {
   var answer = new QueryAnswer(word.id, correct);
   queryAnswers.push(answer);
   word.answers.push(answer);
-
 }
 
 function checkAnswer(user, correct) {
@@ -599,6 +618,7 @@ function uploadQueryResults() {
 $('#query-answer-known').on('click', function() {
   // known button click event
   if (queryCurrentAnswerState == QueryAnswerState.WaitToContinue || queryCurrentAnswerState == QueryAnswerState.NotKnown) {
+    console.log("d");
     nextWord();
   }
   else {
@@ -625,6 +645,7 @@ function processQueryCurrentAnswerState() {
       $('#query-box').trigger('shadow-blink-green');
       addQueryAnswer(currentWord, 1);
       tryAutoUpload();
+      console.log("a");
       nextWord();
       return;
     case QueryAnswerState.NotSureClicked:

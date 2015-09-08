@@ -705,9 +705,11 @@ class Database {
 
     $sql = "
         SELECT `label_attachment`.`id`, `label_attachment`.`list`, `label_attachment`.`label`, `label_attachment`.`active` 
-        FROM `label_attachment`, `label`, `list` 
-        WHERE `label`.`id` = `label_attachment`.`label` AND `label`.`user` = ".$id." AND `label_attachment`.`list` = `list`.`id` AND 
-          `label_attachment`.`active` = 1 AND `label`.`active` = 1 AND `list`.`active` = 1
+        FROM `label_attachment`, `label`, `list`, `share`
+        WHERE (`label`.`id` = `label_attachment`.`label` AND `label`.`user` = ".$id." AND `label_attachment`.`list` = `list`.`id` AND 
+          `label_attachment`.`active` = 1 AND `label`.`active` = 1 AND `list`.`active` = 1) AND 
+          (`list`.`creator` = ".$id." OR (`share`.`user` = ".$id." AND `share`.`permissions` <> 0 AND `share`.`list` = `label_attachment`.`list`))
+        GROUP BY `label_attachment`.`id`
         ORDER BY `label`.`name` ASC;";
     $query = mysqli_query($con, $sql);
     $output = array();

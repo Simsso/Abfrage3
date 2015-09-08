@@ -60,6 +60,12 @@ Array.prototype.pushElements = function(array) {
   }
 };
 
+// returns a random elemenf from an array 
+Array.prototype.getRandomElement = function() {
+  if (this.length === 0) return undefined;
+  return this[Math.round(Math.random() * (this.length - 1))];
+};
+
 // converts a number to an English string
 Number.prototype.toEnglishString = function() {
   if (this.valueOf() > 12) {
