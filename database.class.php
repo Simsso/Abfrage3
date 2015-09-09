@@ -171,7 +171,7 @@ class Database {
     $sql = "SELECT `id` FROM `user` WHERE `email` LIKE '".$email."';";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      return $row['id'];
+      return intval($row['id']);
     }
     return NULL;
   }
@@ -300,10 +300,17 @@ class Database {
       WHERE `user1` = ".$user1." AND `user2` = ".$user2." AND `relationship`.`type` = 1 OR 
         `user2` = ".$user1." AND `user1` = ".$user2." AND `relationship`.`type` = 1;";
     $query = mysqli_query($con, $sql);
-    if (mysqli_fetch_object($query)->count == 2) {
-      return true;
-    }
-    return false;
+    return (mysqli_fetch_object($query)->count == 2);
+  }
+  
+  // user has added user
+  static function user_has_added_user($user1, $user2) {
+    global $con;
+    $sql = "SELECT COUNT(`id`) AS 'count' 
+      FROM `relationship` 
+      WHERE `user1` = ".$user1." AND `user2` = ".$user2." AND `relationship`.`type` = 1;";
+    $query = mysqli_query($con, $sql);
+    return (mysqli_fetch_object($query)->count == 1);
   }
 
   // get number of registered users
@@ -412,8 +419,15 @@ class Database {
   }
 
   // get specific word list
-  static function get_word_list($user_id, $word_list_id) {
+  static function get_word_list($user_id, $word_list_id, $log) {
     global $con;
+    
+    if ($log === true) {
+      $sql = "INSERT INTO `list_usage` (`user`, `list`, `time`)
+          VALUES (".$user_id.", ".$word_list_id.", ".time().");";
+      $query = mysqli_query($con, $sql);
+    }
+    
     $sql = "
 		SELECT `list`.`id`, `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `list`, `share`
@@ -796,6 +810,25 @@ class Database {
       return 1; // no error
     }
     return 0;
+  }
+  
+  
+  // recently used
+  static function get_last_used_n_lists_of_user($id, $limit) {
+    global $con;
+    $lists = array();
+    $sql = "
+      SELECT `list_usage`.`list` 
+      FROM `list_usage`, `list` 
+      WHERE `list_usage`.`user` = ".$id." AND `list_usage`.`list` = `list`.`id` AND `list`.`active` = 1
+      GROUP BY `list_usage`.`list`
+      ORDER BY MAX(`list_usage`.`time`) DESC
+      LIMIT 0 , ".$limit.";";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push($lists, BasicWordList::get_by_id($row['list']));
+    }
+    return $lists;
   }
   
   
