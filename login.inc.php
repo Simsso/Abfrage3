@@ -413,15 +413,8 @@ include('html-include/footer.html');
       ?>
     </div>
 
-    <!-- add scripts to the DOM -->
     <script type="text/javascript">
-      document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
-
-
-      // single page application script
+      document.write('\x3Cscript src="all-pages.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
     </script>
   </body>
