@@ -172,7 +172,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-body" data-start-state="expanded">
                 <div id="query-results-upload">
                   <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
-                  <p>You can upload your answers (the information about whether you answered the word correctly or not) to the cloud to make your next test better adjusted to your knowledge. No one else will be able to see your answers.</p>
+                  <p>You can upload your answers (the information about whether you answered the word correctly or not) to the data base to make your next test better adjusted to your knowledge.</p>
                 </div>
               </div>
             </div>
@@ -187,10 +187,10 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="query-algorithm">
-                  <tr class="active" data-algorithm="0"><td>Random</td></tr>
+                  <tr data-algorithm="0"><td>Random</td></tr>
                   <tr data-algorithm="1"><td>Words below average</td></tr>
                   <tr data-algorithm="3"><td>In order</td></tr>
-                  <tr data-algorithm="2"><td>Group words</td></tr>
+                  <tr data-algorithm="2" class="active"><td>Group words</td></tr>
                 </table>
               </div>
             </div>

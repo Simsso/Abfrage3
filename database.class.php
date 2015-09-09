@@ -602,7 +602,7 @@ class Database {
 		SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `share`.`list`, `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
 		FROM `share`, `list`, `user`
 		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = ".$word_list_id." AND `list`.`creator` = ".$user_id." AND `list`.`active` = 1 AND `share`.`permissions` <> 0
-        ORDER BY `share`.`time` DESC;";
+        ORDER BY `user`.`firstname` ASC, `user`.`lastname` ASC;";
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {

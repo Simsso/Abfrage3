@@ -796,6 +796,11 @@ input[type=text]:first-child:last-child {
 }
 
 @media screen and (max-width: 500px) {
+  
+  .tour-container h2 {
+    font-size: 22px;
+  }
+  
   /* show home-page tour columns as one column */
   .tour-element .col-l, .tour-element .col-r {
     float: none;
