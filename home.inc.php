@@ -90,9 +90,10 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/history.svg"/>
                 Recently used
+                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshRecentlyUsed" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
-              <div class="box-body">
-                coming soon...
+              <div class="box-body" data-start-state="expanded" id="recently-used">
               </div>
             </div>
 

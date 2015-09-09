@@ -6,6 +6,7 @@
 /* global handleAjaxResponse: false */
 /* global ajaxRequests: false */
 /* global noWordInList: false */
+/* global refreshRecentlyUsed: false */
 
 // const strings
 var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
@@ -35,7 +36,7 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
       return;
     }
     else {
-      showNoListSelectedInfo();
+      showNoListSelectedInfo(true);
     }
   }
   else {
@@ -96,13 +97,15 @@ $('#word-list-add-form').on('submit', function(e) {
 
 
 // refresh list of word lists
-function refreshListOfWordLists(showLoadingInformation, callback) {
+function refreshListOfWordLists(showLoadingInformation, callback, firstCall) {
+  if (firstCall === undefined) firstCall = false;
+
   // loading information
   if (showLoadingInformation)
     $('#list-of-word-lists').html(loading);
 
   // reset all table row highlights and hidden buttons indicating which list is selected
-  showNoListSelectedInfo();
+  showNoListSelectedInfo(!firstCall);
 
   // add the Ajax-request to the request manager to make sure that there is only one ajax request of this type running at one moment
   ajaxRequests.loadListOfWordLists.add(
@@ -121,7 +124,7 @@ function refreshListOfWordLists(showLoadingInformation, callback) {
       var output = "";
       // build HTML output string
       for (var i = 0; i < data.length; i++) { // add a row for each list
-        output += '<tr data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td></tr>';
+        output += '<tr ' + ((data[i].id == shownListId) ? 'class="active" ' : '') + 'data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td></tr>';
       }
 
       // if there are no lists show the appropriate message
@@ -150,11 +153,13 @@ function setAllListRowsAsNotActive() {
 
 
 // refresh list of shared word lists (with the user)
-function refreshListOfSharedWordLists(showLoadingInformation) {
+function refreshListOfSharedWordLists(showLoadingInformation, firstCall) {
+  if (firstCall === undefined) firstCall = false;
+  
   if (showLoadingInformation)
     $('#list-of-shared-word-lists').html(loading);
 
-  showNoListSelectedInfo();
+  showNoListSelectedInfo(!firstCall);
 
 
   // add the Ajax-request to the request manager to make sure that there is only one ajax request of this type running at one moment
@@ -174,7 +179,7 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
       // build HTML output string
       for (var i = 0; i < data.length; i++) {
         // add table row of a single shared list
-        output += '<tr data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '" data-sharing-id="' + data[i].sharing_id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
+        output += '<tr ' + ((data[i].id == shownListId) ? 'class="active" ' : '') + 'data-action="' + ((data[i].permissions == 1)?'edit':'view') + '" data-list-id="' + data[i].id + '" data-sharing-id="' + data[i].sharing_id + '" id="list-of-shared-word-lists-row-' + data[i].sharing_id + '">';
         output += '<td>' + data[i].name + '</td>';
       }
       // if there are no shared lists show the appropriate message
@@ -196,9 +201,13 @@ function refreshListOfSharedWordLists(showLoadingInformation) {
 
 
 // show the information that no list is selected and update the vars
-function showNoListSelectedInfo() {
+function showNoListSelectedInfo(updateHash) {
   shownListId = -1;
   shownListData = null;
+  
+  if (updateHash === true) {
+    window.location.hash = '#/word-lists';
+  }
 
   $('#word-list-info .box-head > div').html("Word lists");
   $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to get started.</p>');
@@ -236,6 +245,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
   // highlight the lists row by adding active class and hide button to view the list
   $('#list-of-word-lists tr[data-list-id=' + id + '], #list-of-shared-word-lists tr[data-list-id=' + id + ']').addClass('active').find('input[type=button]').first().hide();
 
+  shownListId = id;
 
   // add the Ajax-request to the request manager to make sure that there is only one ajax request of this type running at one moment
   ajaxRequests.loadWordList.add(
@@ -251,6 +261,9 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
     }).done(function(data) {    
       data = handleAjaxResponse(data);
 
+      // refresh list of recently used lists
+      refreshRecentlyUsed(false);
+      
       shownListData = data.list; // update the list data variable to the downloaded data
       
       // list doesn't exist or no permissions or deleted
@@ -261,7 +274,6 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       
       var allowEdit = data.allowEdit;
       var allowSharing = data.allowSharing;
-      shownListId = id;
 
       // because the default value of language1 and language2 in the data base is nothing set it to "First language" and "Second language"
       // those vars are title of the bottom table, placeholder in the change language form and placeholder in the add new words form
@@ -351,7 +363,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
 
             // call delete word list function and pass id of the list which will be deleted
             deleteWordList(shownListId, function() {
-              showNoListSelectedInfo(); // show the message that no list is shown at the moment
+              showNoListSelectedInfo(true); // show the message that no list is shown at the moment
             });
           }
         });
@@ -379,7 +391,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
               }
 
               // because the shown list has just been removed update the screen to show the appropriate message
-              showNoListSelectedInfo();
+              showNoListSelectedInfo(true);
             });
           }
         });
@@ -784,7 +796,8 @@ $('#share-list-form').on('submit', function(e) {
   $('#share-list-submit').prop('disabled', true).attr('value', 'Sharing...');
 
   // send message to server
-  setSharingPermissions(shownListId, $('#share-list-other-user-email').val(), $('#share-list-permissions').val(), function() {
+  var email = $('#share-list-other-user-email').val();
+  setSharingPermissions(shownListId, email, $('#share-list-permissions').val(), function(data) {
     // finished callback
 
     // re-enable the form elements
@@ -794,6 +807,21 @@ $('#share-list-form').on('submit', function(e) {
 
     // refresh the list of sharings without loading information
     refreshListSharings(false, shownListId);
+    
+    // user doesn't exist
+    if (data.set_permissions === -1) {
+      var messageBox = new MessageBox();
+      messageBox.setTitle('Not shared');
+      messageBox.setContent('Found no user with the given email-address (<span class="italic">' + email + '</span>).');
+      messageBox.show();
+    }
+    // user hasn't added you
+    /*else if (!data.user_has_added_you) {
+      var messageBox = new MessageBox();
+      messageBox.setTitle('Not shared yet');
+      messageBox.setContent('The other user can\'t see the list until they adds you in the Users section.');
+      messageBox.show();
+    }*/
   });
 });
 
@@ -1239,6 +1267,5 @@ function renameList(listId, listName, callback) {
 
 
 // refresh functions
-showNoListSelectedInfo();
-refreshListOfWordLists(true);
-refreshListOfSharedWordLists(true);
+refreshListOfWordLists(true, undefined, true);
+refreshListOfSharedWordLists(true, true);

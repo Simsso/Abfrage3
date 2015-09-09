@@ -204,7 +204,7 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     $res = new stdClass();
     
     // actual list data
-    $res->list = Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']));
+    $res->list = Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), true);
     if ($res->list !== NULL) { // list is null if it doesn't exist of has been deleted
       // stores whether the requesting unser is the list creator
       $res->allowSharing = ($_SESSION['id'] == $res->list->creator->id);
@@ -267,7 +267,17 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     // set sharing permissions
     case 'set-sharing-permissions':
     session_required();
-    Response::send(Database::set_sharing_permissions($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['email']), Validation::format_text($_GET['permissions'])));
+    $res = new stdClass();
+    $email = Validation::format_text($_GET['email']);
+    $id = Database::email2id($email);
+    if ($id == NULL) {
+      $res->set_permissions = -1;
+      //$res->user_has_added_you = 0;
+    } else {
+      $res->set_permissions = Database::set_sharing_permissions($_SESSION['id'], Validation::format_text($_GET['word_list_id']), $email, Validation::format_text($_GET['permissions']));
+      //$res->user_has_added_you = Database::user_has_added_user($email, $_SESSION['id']);
+    }
+    Response::send($res);
     break;
 
     // set sharing permissions by sharing id
@@ -370,6 +380,12 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     session_required();
     Response::send(Database::delete_account($_SESSION['id'], Validation::format_text($_POST['password'])));
     break;
+    
+    
+    // last used lists
+    case 'get-last-used-n-lists':
+    session_required();
+    Response::send(Database::get_last_used_n_lists_of_user($_SESSION['id'], Validation::format_text($_GET['limit'])));
     
     
     // feed
