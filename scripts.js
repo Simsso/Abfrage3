@@ -1,3 +1,7 @@
+$(window).load(function() {
+    window.loaded = true;
+});
+
 // box head right icons (like reload, expand and collapse)
 $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {
@@ -211,25 +215,19 @@ function readCookie(key)
   return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
 }
 
-setTimeout(function() {
+(function(){
   if (readCookie('accepted_cookies') != 'true') {
     // show cookie message
-    $('#main').append('<footer id="cookie-header" class="cookie-header box" style="display: none; opacity: 0; "><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
-
-    $('#cookie-header').css('display', 'block');
-    setTimeout(function() {
-      $('#cookie-header').css('opacity', '1');
-    },  1);
+    $('#main').append('<footer id="cookie-header" class="cookie-header box display-none"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
 
     $('#cookie-got-it-button').on('click', function() {
       $(this).prop('disabled', true);
       setCookie('accepted_cookies', 'true', 10000);
       $('#cookie-header').css('opacity', 0);
-      setTimeout(function() { $('#cookie-header').remove(); }, 200);
+      setTimeout(function() { $('#cookie-header').remove(); }, 500);
     });
   }
-}, 1000);
-
+})();
 
 // contact form submit event lsitener
 $('#contact-form').on('submit', function(e) {
@@ -276,6 +274,40 @@ $('form[data-submit-loading=true]').on('submit', function(e) {
     form.submit();
   }, 500);
 });
+
+
+
+// advertisement
+
+var adsLoaded = false;
+function showAds() {
+  adsEnabled = true;
+  if (window.loaded) {
+    $('.advertisement-bottom').show();
+    loadAds();
+  }
+  else {
+    $(window).load(function() {
+      loadAds();
+    });
+  }
+}
+
+function hideAds() {
+  adsEnabled = false;
+  $('.advertisement-bottom').hide();
+}
+
+function loadAds() {
+  if (!adsLoaded) {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  }
+  adsLoaded = true;
+}
+
+if (adsEnabled) {
+  showAds();
+}
 
 
 // save text as file

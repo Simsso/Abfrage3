@@ -1,6 +1,7 @@
 <?php
 require('mail.class.php'); // include email class
 $user = Database::get_user_by_id($_SESSION['id']);
+$user_settings = Database::get_user_settings($_SESSION['id']);
 $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 ?>
 
@@ -59,7 +60,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head">
                 Hey <? echo $user->firstname; ?>!
               </div>
-              <div class="box-body">
+              <!--<div class="box-body">
                 <?php
 if (is_null($next_to_last_login)) {
   // first login
@@ -69,7 +70,7 @@ if (is_null($next_to_last_login)) {
 }
                 ?>
 
-              </div>
+              </div>-->
             </div>
             
             <div class="box">
@@ -454,6 +455,13 @@ if (is_null($next_to_last_login)) {
             </div>
 
             <div class="box" data-page="account">
+              <div class="box-head">Advertisement</div>
+              <div class="box-body">
+                <label><input type="checkbox" id="enable-ads-checkbox" <? echo ($user_settings->ads_enabled ? 'checked' : ''); ?>/>&nbsp;Load and show advertisement</label>
+              </div>
+            </div>
+
+            <div class="box" data-page="account">
               <div class="box-head">
                 Delete account
               </div>
@@ -471,31 +479,27 @@ if (is_null($next_to_last_login)) {
 
 
         <?php
-// include legal info, about and contact html code
-include('html-include/legal-info.html');
-include('html-include/about.html');
-include('html-include/contact.html');
+          // include legal info, about and contact html code
+          include('html-include/legal-info.html');
+          include('html-include/about.html');
+          include('html-include/contact.html');
         ?>
 
         <br class="clear-both hide-below-700">
 
-        <footer class="advertisement-bottom box display-none">
-          <div class="box-body">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9727315436627573" data-ad-slot="4992943646" data-ad-format="auto"></ins>
-            <script>
-              window.onload = function () {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              };
-            </script>
-          </div>
-        </footer>
+        <?php
+          include('html-include/advertisement.html');
+        ?>
       </div>
 
       <?php
-include('html-include/footer.html');
+        include('html-include/footer.html');
       ?>
     </div>
+
+    <script type="text/javascript">
+      var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
+    </script>
 
     <!-- add scripts to the DOM -->
     <script type="text/javascript">

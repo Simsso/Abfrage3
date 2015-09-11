@@ -42,6 +42,12 @@ class Database {
 		  VALUES ('".$firstname."', '".$lastname."', '".$email."', '".$password."', ".$salt.", ".$reg_time.", '".$email_confirmation_key."');";
       $query = mysqli_query($con, $sql);
 
+      $user_id = mysqli_insert_id($con);
+      // create settings table entry
+      $sql = "INSERT INTO `user_settings` (`user`) VALUES (".$user_id.");";
+      $query = mysqli_query($con, $sql);
+
+
       // send email
       Mail::get_email_confirmation_mail($firstname, $email, $email_confirmation_key)->send();
       return TRUE;
@@ -433,7 +439,7 @@ class Database {
 		FROM `list`, `share`
 		WHERE (`list`.`creator` = '".$user_id."' OR `share`.`user` = '".$user_id."' AND `share`.`list` = '".$word_list_id."') AND 
           `list`.`id` = '".$word_list_id."' AND 
-          `list`.`active` = 1";
+          `list`.`active` = 1 AND `share`.`permissions` <> 0";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $list = new WordList(
@@ -844,6 +850,22 @@ class Database {
     }
     return new Feed($id, $since);
   }
+
+
+  // settings
+
+  // get user settings
+  static function get_user_settings($id) {
+    return UserSettings::get_by_id($id);
+  }
+
+  // set ads enabled
+  static function set_ads_enabled($id, $ads_enabled) {
+    global $con;
+    $sql = "UPDATE `user_settings` SET `ads_enabled` = ".(($ads_enabled == 'false') ? 0 : 1)." WHERE `user` = ".$id.";";
+    $query = mysqli_query($con, $sql);
+    return ($ads_enabled == 'true') ? TRUE : FALSE;
+  }
 }
 
 class Feed {
@@ -1083,6 +1105,10 @@ class SimpleUser {
   public function get_next_to_last_login() {
     return Database::get_next_to_last_login_of_user($this->id);
   }
+
+  public function get_settings() {
+    return UserSettings::get_by_id($this->id);
+  }
 }
 
 
@@ -1111,6 +1137,28 @@ class User extends SimpleUser {
       $this->email_confirmation_key = $row['email_confirmation_key'];
     }
   }
+}
+
+class UserSettings {
+  public $user;
+  public $ads_enabled;
+
+  public function __construct($user, $ads_enabled) {
+    $this->user = $user;
+    $this->ads_enabled = $ads_enabled;
+  }
+
+  public function get_by_id($id) {
+    global $con;
+
+    $sql = "SELECT * FROM `user_settings` WHERE `user` = ".$id.";";
+    $query = mysqli_query($con, $sql);
+    while ($row = mysqli_fetch_assoc($query)) {
+      return new UserSettings($id, ($row['ads_enabled'] == 0) ? FALSE : TRUE);
+    }
+    return NULL;
+  }
+
 }
 
 class Login {

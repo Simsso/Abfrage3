@@ -12,14 +12,10 @@
 
   
   /* set transition to any element */
-  /* Firefox */
-  -moz-transition: all .2s ease-in;
-  /* WebKit */
+  /*-moz-transition: all .2s ease-in;
   -webkit-transition: all .2s ease-in;
-  /* Opera */
   -o-transition: all .2s ease-in;
-  /* Standard */
-  transition: all .2s ease-in;
+  transition: all .2s ease-in;*/
 }
 
 html, body, #main-wrapper {
@@ -772,6 +768,10 @@ input[type=text]:first-child:last-child {
   .box {
     margin-top: 10px;
   }
+
+  .main.content-width {
+    padding-bottom: 90px;
+  }
   
   .left-column, .right-column {
     float: none;
@@ -814,8 +814,22 @@ input[type=text]:first-child:last-child {
   }
 }
 
+
+
+/* very small smartphones */
+
 @media screen and (max-width: 500px) {
   
+  .box .box-table:not(.no-flex) td {
+    display: flex;
+  }
+
+  /* additional border for all rows having more than one td child */
+  .box .box-table:not(.no-flex) tr:not(:last-child) td:last-child:not(:first-child) {
+    border-bottom: 1px solid #8892BF;
+  }
+
+
   .tour-container h2 {
     font-size: 22px;
   }
