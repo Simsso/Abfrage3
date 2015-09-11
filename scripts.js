@@ -214,14 +214,12 @@ function readCookie(key)
 setTimeout(function() {
   if (readCookie('accepted_cookies') != 'true') {
     // show cookie message
-    $('#main-wrapper').prepend('<div id="cookie-header" class="cookie-header" style="display: none; opacity: 0"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></div>');
+    $('#main').append('<footer id="cookie-header" class="cookie-header box" style="display: none; opacity: 0; "><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
 
+    $('#cookie-header').css('display', 'block');
     setTimeout(function() {
-      $('#cookie-header').css('display', 'block');
-      setTimeout(function() {
-        $('#cookie-header').css('opacity', '1');
-      },  1);
-    }, 1500);
+      $('#cookie-header').css('opacity', '1');
+    },  1);
 
     $('#cookie-got-it-button').on('click', function() {
       $(this).prop('disabled', true);
