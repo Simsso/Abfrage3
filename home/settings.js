@@ -167,3 +167,35 @@ $('#settings-delete-account-form').on('submit', function(e) {
   });
   messageBox.show();
 });
+
+
+
+// ads enabled
+function setAdsEnabled(adsEnabled) {
+  // send request
+  jQuery.ajax('server.php', {
+    data: {
+      action: 'set-ads-enabled',
+      ads_enabled: adsEnabled
+    },
+    type: 'GET',
+    error: function(jqXHR, textStatus, errorThrown) {
+
+    }
+  }).done(function(data) {
+    data = handleAjaxResponse(data);
+
+    // hide or show ads depending on the settings
+    if (adsEnabled) {
+      showAds();
+    } 
+    else {
+      hideAds();
+    }
+  });
+}
+
+// checkbox event listener for changing ads enabled settings
+$('#enable-ads-checkbox').on('change', function() {
+  setAdsEnabled(this.checked);
+});

@@ -84,7 +84,7 @@ function refreshRecentlyUsed(showLoadingInformation) {
   jQuery.ajax('server.php', {
     data: {
       action: 'get-last-used-n-lists',
-      limit: 15
+      limit: 8
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {

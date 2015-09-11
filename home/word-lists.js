@@ -258,7 +258,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       
       // list doesn't exist or no permissions or deleted
       if (shownListData === null) {
-        window.location.hash = '#/word-lists';
+        showNoListSelectedInfo(true); // update hash to /#/word-lists because the list is not available
         return;
       }
       
@@ -615,7 +615,7 @@ function removeWord(id) {
 
     // show special message if no word is left
     if ($('#word-list-table tr').length == 1) {
-      $('#word-list-table').html(noWordInList);
+      $('#word-list-table').html(noWordsInList);
     }
   });
 }
@@ -634,6 +634,9 @@ function deleteWordList(id, callback) {
     }
   }).done(function(data) {    
     data = handleAjaxResponse(data);
+
+    refreshRecentlyUsed(false);
+
     // remove the word list row from the DOM
     $('#list-of-word-lists-row-' + id).remove();
 
@@ -641,6 +644,8 @@ function deleteWordList(id, callback) {
     if ($('#list-of-word-lists tr').length == 1) {
       $('#list-of-word-lists').html(noWordListOutput);
     }
+
+
     callback();
   });
 }
@@ -831,6 +836,8 @@ function setSharingPermissionsBySharingId(sharingId, permissions, callback) {
     }
   }).done(function(data) {    
     data = handleAjaxResponse(data);
+
+    refreshRecentlyUsed(false);
 
     callback(data);
   });
@@ -1059,7 +1066,7 @@ function getEditableHtmlTableOfLabels(labels) {
   var html = getHtmlListOfLabelId(labels, 0, 0);
 
   if (html.length > 0) {
-    html = '<table class="box-table button-right-column">' + html + '</table>';
+    html = '<table class="box-table button-right-column no-flex">' + html + '</table>';
   }
   else {
     // if there was no code returned there are no labels to show
@@ -1251,6 +1258,7 @@ function renameList(listId, listName, callback) {
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
+    refreshRecentlyUsed(false);
     callback(data);
   });
 }

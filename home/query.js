@@ -43,7 +43,7 @@ function Word(id, list, language1, language2, answers) {
 
   this.answers = [];
   for (var i = 0; i < answers.length; i++) {
-    this.answers.push(new QueryAnswer(answers[i].word, answers[i].correct, answers[i].id, answers[i].time));
+    this.answers.push(new QueryAnswer(answers[i].word, answers[i].correct, answers[i].type, answers[i].direction, answers[i].id, answers[i].time));
   }
 
 
@@ -148,9 +148,11 @@ QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
 
 
 // query answer
-function QueryAnswer(word, correct, id, time) {
+function QueryAnswer(word, correct, type, direction, id, time) {
   this.word = word;
   this.correct = correct;
+  this.type = type;
+  this.direction = direction;
 
   if (time === undefined) 
     this.time = Date.seconds();
@@ -320,7 +322,7 @@ function refreshQueryListSelection() {
   }
 
 
-  $('#query-list-selection').html('<table class="box-table cursor-pointer"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
+  $('#query-list-selection').html('<table class="box-table cursor-pointer no-flex"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
 
   // checkbox click event
   $('#query-list-selection tr').on('click', function(){
@@ -451,7 +453,7 @@ var queryWords = [], // array of all words which the user selected for the query
     queryChosenType = QueryType.TextBox, // type (text box or buttons to answer the question)
     queryRunning = false, // true if a query is running
     currentWord = null, // reference to the Word object which is currently asked
-    currentDirection = null, // the query direction (0 or 1)
+    queryCurrentDirection = null, // the query direction (0 or 1)
     currentWordCorrectAnswer = null, // the string value containing the currect answer for the current word
     queryWrongAnswerGiven = false, // true if the user already gave the wrong answer
     queryAnswers = [], // array of answers the user already gave
@@ -509,20 +511,20 @@ function nextWord() {
   var listOfTheWord = getListById(currentWord.list);
 
   if (queryChosenDirection == QueryDirection.Both) { // both directions
-    currentDirection = Math.round(Math.random()); // get random direction
+    queryCurrentDirection = Math.round(Math.random()); // get random direction
   }
   else {
-    currentDirection = queryChosenDirection;
+    queryCurrentDirection = queryChosenDirection;
   }
 
   // fill the question fields
-  if (currentDirection == QueryDirection.Ltr) {
+  if (queryCurrentDirection == QueryDirection.Ltr) {
     $('#query-lang1').html(listOfTheWord.language1);
     $('#query-lang2').html(listOfTheWord.language2);
     $('#query-question').html(currentWord.language1);
     currentWordCorrectAnswer = currentWord.language2;
   }
-  else if (currentDirection == QueryDirection.Rtl) {
+  else if (queryCurrentDirection == QueryDirection.Rtl) {
     $('#query-lang1').html(listOfTheWord.language2);
     $('#query-lang2').html(listOfTheWord.language1);
     $('#query-question').html(currentWord.language2);
@@ -575,7 +577,7 @@ $('#query-answer').on('keypress', function(e) {
 
 // push into arrays whether the user has answered correctly
 function addQueryAnswer(word, correct) {
-  var answer = new QueryAnswer(word.id, correct);
+  var answer = new QueryAnswer(word.id, correct, queryChosenType, queryCurrentDirection); 
   queryAnswers.push(answer);
   refreshQueryResultsUploadCounter();
   word.answers.push(answer);

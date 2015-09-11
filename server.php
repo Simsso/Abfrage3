@@ -395,6 +395,15 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     session_required();
     Response::send(Database::get_feed($_SESSION['id'], Validation::format_text($_GET['since'])));
     break;
+
+
+    // settings
+
+    // set allow advertisement
+    case 'set-ads-enabled':
+    session_required();
+    Response::send(Database::set_ads_enabled($_SESSION['id'], Validation::format_text($_GET['ads_enabled'])));
+    break;
   }
 } else {
   // dummy response showing that the server is online
