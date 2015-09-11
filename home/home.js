@@ -1,10 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-/* global loading: false */
-/* global handleAjaxResponse: false */
-
-
 // feed
 
 var $feed = $('#feed'), 

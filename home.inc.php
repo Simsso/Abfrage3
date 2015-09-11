@@ -172,6 +172,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-body" data-start-state="expanded">
                 <div id="query-results-upload">
                   <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <p id="query-results-upload-counter">Uploaded 0/0 test answers.</p>
                   <p>You can upload your answers (the information about whether you answered the word correctly or not) to the data base to make your next test better adjusted to your knowledge.</p>
                 </div>
               </div>
@@ -213,8 +214,8 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="query-direction">
-                  <tr data-direction="0"><td>First language to second language</td></tr>
-                  <tr data-direction="1"><td>Second language to first language</td></tr>
+                  <tr data-direction="0"><td><span data-value="first-language-information">First language</span> to <span data-value="second-language-information">Second language</span></td></tr>
+                  <tr data-direction="1"><td><span data-value="second-language-information">Second language</span> to <span data-value="first-language-information">First language</span></td></tr>
                   <tr class="active" data-direction="-1"><td>Both directions</td></tr>
                 </table>
               </div>

@@ -1,13 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-/* global MessageBox: false */
-/* global loading: false */
-/* global handleAjaxResponse: false */
-/* global ajaxRequests: false */
-/* global noWordInList: false */
-/* global refreshRecentlyUsed: false */
-
 // const strings
 var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
 var noSharedWordListOutput = '<p>There are no shared lists to show.</p>';
