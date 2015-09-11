@@ -71,26 +71,26 @@ class Default_Client_HTML_Mail extends HTML_Mail {
     $body ='
 		<html>
 		<body style="font-family: arial; background-color: #ECEFF1; margin: 0; padding: 0;">
-		<nav style="position: relative;
-		height: 56px;
+		<div style="position: relative;
 		width: 100%;
-		padding: 25px;
+		padding: 20px 50px;
 		background-color: #8892BF;
 		border-style: solid;
 		border-width: 0 0 6px 0;
 		border-color: #4F5B93;">
-		<div><a href="http://abfrage3.simsso.de"><img src="http://abfrage3.simsso.de/img/logo-56.png" style="margin-left: 5px;" alt="Abfrage3"></a></div>
-		</nav>
+		<div><a href="http://abfrage3.simsso.de"><img src="http://abfrage3.simsso.de/img/logo-46.png" alt="Abfrage3"></a></div>
+		</div>
 		<div style="padding: 20px 50px;">
 		<h4>' . $subject . '</h4>
 		<h3>Hey ' . $name . '!</h3>
 		<p>' . $text . '</p>
-		<p>Best regards, <br>Your Abfrage3 Team</p>
+		<p>Best regards, <br>Your Abfrage3-Team</p>
 		<hr style="margin-top: 50px; background-color: #777777; height: 1px; border: 0; "/>
 		<p style="font-size: 80%; text-align: center">
-		<a href="http://abfrage3.simsso.de">Website</a> &middot;
-		<a href="http://abfrage3.simsso.de/#/imprint">Imprint</a> &middot;
-		<a href="http://abfrage3.simsso.de/#/contact">Contact</a>
+    <a href="http://abfrage3.simsso.de" style="text-decoration: none; ">Website</a> &middot;
+    <a href="http://abfrage3.simsso.de/#/about" style="text-decoration: none; ">About</a> &middot;
+		<a href="http://abfrage3.simsso.de/#/contact" style="text-decoration: none; ">Contact</a> &middot;
+    <a href="http://abfrage3.simsso.de/#/legal-info" style="text-decoration: none; ">Legal info</a>
 		</p>
 		</div>
 		</body>
@@ -99,4 +99,10 @@ class Default_Client_HTML_Mail extends HTML_Mail {
     parent::__construct($to, self::DEFAULT_SENDER_EMAIL, null, $subject, $body);
   }
 }
+
+if ($_GET['test'] === 'default-client-html-mail') {
+  $a = new Default_Client_HTML_Mail('timo.denk@simsso.de', 'Test', 'Timo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam feugiat consequat elit quis tincidunt. Etiam neque augue, blandit at porta ut, laoreet in ante. Suspendisse potenti. Vivamus sit amet turpis sit amet lectus tempus venenatis. Pellentesque fermentum at erat non porta. Fusce mi neque, lobortis id libero quis, lobortis lobortis turpis. Praesent enim leo, laoreet in molestie at, sodales et magna. Fusce placerat finibus massa. Curabitur convallis pellentesque diam quis eleifend. Suspendisse potenti. Phasellus dapibus mollis turpis elementum pharetra. Donec nec libero a elit tempor imperdiet nec vitae dui. Nullam consequat turpis lorem, et porttitor mauris aliquam vel.');
+  $a->send();
+}
+
 ?>

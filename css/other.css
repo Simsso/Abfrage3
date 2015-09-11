@@ -45,13 +45,35 @@ body {
 
 a {
   text-decoration: none;
+  color: rgb(0, 0, 180);
 }
 
 a:hover {
   color: #0000FF;
 }
 
+a:active {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: rgb(0, 0, 180);
+}
+
 /* footer */
+
+#footer-wrapper {
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  max-height: 80px;
+}
+
+#footer-wrapper > div.box {
+  position: relative;
+  left: -50%;
+}
 
 .footer {
   text-align: center;
@@ -107,7 +129,7 @@ ul.social-icons li {
   margin: auto;
 }
 .main.content-width {
-  padding-bottom: 25px;
+  padding-bottom: 105px;
 }
 
 .navbar {

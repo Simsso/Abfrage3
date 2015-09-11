@@ -1,7 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-
 // box head right icons (like reload, expand and collapse)
 $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {

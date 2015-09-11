@@ -1,10 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-/* global loading: false */
-/* global handleAjaxResponse: false */
-/* global refreshListOfSharedWordLists: false */
-
 // const strings
 var noUsersAddedOutput = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
 var noUsersHaveAddedYouOutput = '<p class="spacer-top-15">No users have added you yet.</p>';

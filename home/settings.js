@@ -1,10 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-/* global MessageBox: false */
-/* global loading: false */
-/* global handleAjaxResponse: false */
-
 // single page application allow url like
 // ...#settings/profile
 var shownSettingsSubPageName;

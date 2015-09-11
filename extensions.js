@@ -23,6 +23,7 @@ Array.prototype.remove = function(obj) {
   if (index != -1) {
     this.splice(index, 1);
   }
+  return this;
 };
 
 // removes all occurences of the given object in an array
@@ -33,6 +34,7 @@ Array.prototype.removeAll = function(obj) {
       i--;
     }
   }
+  return this;
 };
 
 // randomizes array element order in-place
@@ -48,9 +50,10 @@ Array.prototype.shuffle = function() {
 
 // swaps two elements
 Array.prototype.swap = function(a, b) {
-    var tmp = this[a];
-    this[a] = this[b];
-    this[b] = tmp;
+  var tmp = this[a];
+  this[a] = this[b];
+  this[b] = tmp;
+  return this;
 };
 
 // pushes elements of an array into another array
@@ -89,6 +92,31 @@ Number.prototype.addLeadingZeros = function(n) {
   return s;
 };
 
+// sets a single bit
+Number.prototype.setBit = function(x) {
+  return this.valueOf() | 1 << x;
+};
+
+// clear a single bit
+Number.prototype.clearBit = function(x) {
+  return this.valueOf() & ~(1 << x);
+};
+
+// toggles a single bit
+Number.prototype.toggleBit = function(x) {
+  return this.valueOf() ^ 1 << x;
+};
+
+// get a single bit
+Number.prototype.getBit = function(x) {
+  return (this.valueOf() >> x) & 1;
+};
+
+// check a single bit agains value
+Number.prototype.changeBitTo = function(x, value) {
+  return this.valueOf() ^ (-value ^ this.valueOf()) & (1 << x);
+};
+
 // maps a value from two bounds to another two
 Math.map = function(x, in_min, in_max, out_min, out_max) {
   return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min;
@@ -121,8 +149,7 @@ Date.prototype.toDefaultString = function() {
     (this.getMonth()+1).toMonthAbbreviation() + " " + 
     this.getFullYear().addLeadingZeros(4) + " " + 
     this.getHours().addLeadingZeros(2) + ":" + 
-    this.getMinutes().addLeadingZeros(2) + ":" + 
-    this.getSeconds().addLeadingZeros(2);
+    this.getMinutes().addLeadingZeros(2);
 };
 
 // returns the current time in milliseconds

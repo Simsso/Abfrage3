@@ -1,7 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-
 // single page app
 var shownPageName, shownHashName, 
     pageTitle = {

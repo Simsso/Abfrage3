@@ -1,9 +1,3 @@
-/* jshint browser: true */
-/* global jQuery: false */
-/* global $: false */
-/* global loading: false */
-/* global handleAjaxResponse: false */
-
 // constructors
 
 // word list
@@ -368,15 +362,21 @@ function removeLabelFromQuery(labelId) {
 }
 
 function addListToQuery(listId) {
-  querySelectedLists.push(listId);
+  querySelectedLists.push(getListById(listId));
   $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
   checkStartQueryButtonEnable();
+
+  // update information about the language of the selected words
+  updateQueryListLanguageInformation(getLanguagesOfWordLists(querySelectedLists));
 }
 
 function removeListFromQuery(listId) {
-  querySelectedLists.removeAll(listId);
+  querySelectedLists.removeAll(getListById(listId));
   $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', false).removeClass('active');
   checkStartQueryButtonEnable();
+
+  // update information about the language of the selected words
+  updateQueryListLanguageInformation(getLanguagesOfWordLists(querySelectedLists));
 }
 
 function getListRow(list, selected) {
@@ -469,8 +469,12 @@ function startQuery() {
   // produce one array containing all query words
   queryWords = [];
   for (var i = 0; i < querySelectedLists.length; i++) {
-    queryWords = queryWords.concat(getListById(querySelectedLists[i]).words);
+    queryWords = queryWords.concat(querySelectedLists[i].words);
   }
+
+
+  // update information about the language of the selected words
+  updateQueryListLanguageInformation(getLanguagesOfWordLists(getListsOfWords(queryWords)));
 
   // array of ids of words selecte for the query
   var wordIds = [];
@@ -525,7 +529,7 @@ function nextWord() {
     currentWordCorrectAnswer = currentWord.language1;
   }
   
-  setTimeout(function() {$('#query-answer').val('').focus(); }, 10);
+  $('#query-answer').val('').focus();
 
   // known average for single word information
   $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
@@ -573,6 +577,7 @@ $('#query-answer').on('keypress', function(e) {
 function addQueryAnswer(word, correct) {
   var answer = new QueryAnswer(word.id, correct);
   queryAnswers.push(answer);
+  refreshQueryResultsUploadCounter();
   word.answers.push(answer);
 }
 
@@ -585,9 +590,21 @@ function refreshQueryResultsUploadButton() {
   $('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
 }
 
+function refreshQueryResultsUploadCounter() {
+  $('#query-results-upload-counter').html('Uploaded ' + nextIndexToUpload + '/' + queryAnswers.length + ' test answers.');
+}
+
 $('#query-results-upload-button').on('click', uploadQueryResults);
 
+
+// upload query results
 function uploadQueryResults() {
+  // uploads the query results
+  // queryAnswers[] stores all answers
+  // nextIndexToUpload points to the first element in queryAnswers which has not been uploaded yet
+
+
+  var startedUploadIndex = nextIndexToUpload; 
   var answersToUpload = queryAnswers.slice(nextIndexToUpload);
   nextIndexToUpload = queryAnswers.length;
 
@@ -598,12 +615,16 @@ function uploadQueryResults() {
     url: 'server.php?action=upload-query-results',
     data: { 'answers': JSON.stringify(answersToUpload)},
     error: function(jqXHR, textStatus, errorThrown) {
+      // remove the (because of the errror) not uploaded answers and append them to the array again to ensure they will be re-uploaded later
+      queryAnswers.splice(startedUploadIndex, answersToUpload.length);
+      nextIndexToUpload -= answersToUpload.length;
       queryAnswers.pushElements(answersToUpload);
       refreshQueryResultsUploadButton();
     }
   })
   .done( function( data ) {
     data = handleAjaxResponse(data);
+    refreshQueryResultsUploadCounter();
   });
 }
 
@@ -732,6 +753,59 @@ $('#query-results-auto-upload').on('click', function() {
   if (autoUploadEnabled()) 
     uploadQueryResults();
 });
+
+
+
+// update query list language information
+function updateQueryListLanguageInformation(languages) {
+  if (languages[0] === undefined || languages[1] === undefined) {
+    languages = ["First language", "Second language"];
+  }
+
+  $('span[data-value="first-language-information"]').html(languages[0]);
+  $('span[data-value="second-language-information"]').html(languages[1]);
+}
+
+
+
+// get lists of words
+function getListsOfWords(word) {
+  // pass an array of words and the function will return an array of lists which belongs to the words
+
+  var list = [];
+
+  for (var i = 0; i < word.length; i++) {
+    var listOfCurrentWord = getListById(word[i].list);
+    if (!list.contains(listOfCurrentWord)) {
+      list.push(listOfCurrentWord);
+    }
+  }
+
+  return list;
+}
+
+
+
+// detect languages of word lists
+function getLanguagesOfWordLists(list) {
+  // returns an array with two elements containing the two languages of the given word lists
+  // if the lists have different language it will return [undefined, undefined]
+
+  // no lists given
+  if (list.length === 0) 
+    return [undefined, undefined];
+
+  // set languages to values of the first list
+  var language = [list[0].language1, list[0].language2];
+
+  // iterate through all lists to check if they fit the languages of the first list in the array
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].language1 != language[0] || list[i].language2 != language[1])
+      return [undefined, undefined];
+  }
+
+  return language;
+}
 
 
 
