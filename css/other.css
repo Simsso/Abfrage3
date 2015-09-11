@@ -41,6 +41,7 @@ body {
   position: relative;
   min-height: calc(100% - 60px);
   padding-top: 60px;
+  width: 100%;
 }
 
 a {
@@ -63,7 +64,7 @@ a:visited {
 /* footer */
 
 #footer-wrapper {
-  width: 100%;
+  width: 50%;
   position: absolute;
   left: 50%;
   bottom: 0;
@@ -72,7 +73,8 @@ a:visited {
 
 #footer-wrapper > div.box {
   position: relative;
-  left: -50%;
+  left: -100%;
+  width: 200%;
 }
 
 .footer {
@@ -432,13 +434,8 @@ div.right-column-img-wrapper {
   background: #222222;
   border-bottom: 1px solid #000000;
   padding: 25px 0 30px;
-  position: fixed;
   width: 100%;
   z-index: 110;
-  bottom: -5px;
-  left: 0;
-  right: 0;
-  box-shadow: 0 0 5px #000000;
   transition: opacity 0.5s;
 }
 
@@ -610,7 +607,7 @@ div.right-column-img-wrapper {
 }
 
 body.mobile-menu-shown {
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 body.mobile-menu-shown #main-wrapper {

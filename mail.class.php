@@ -73,19 +73,19 @@ class Default_Client_HTML_Mail extends HTML_Mail {
 		<body style="font-family: arial; background-color: #ECEFF1; margin: 0; padding: 0;">
 		<div style="position: relative;
 		width: 100%;
-		padding: 20px 50px;
+		padding: 20px;
 		background-color: #8892BF;
 		border-style: solid;
 		border-width: 0 0 6px 0;
 		border-color: #4F5B93;">
-		<div><a href="http://abfrage3.simsso.de"><img src="http://abfrage3.simsso.de/img/logo-46.png" alt="Abfrage3"></a></div>
+		<div><a href="http://abfrage3.simsso.de"><img src="http://abfrage3.simsso.de/img/logo-46.png" alt="Abfrage3" style="margin: 0 30px;"></a></div>
 		</div>
 		<div style="padding: 20px 50px;">
 		<h4>' . $subject . '</h4>
 		<h3>Hey ' . $name . '!</h3>
 		<p>' . $text . '</p>
 		<p>Best regards, <br>Your Abfrage3-Team</p>
-		<hr style="margin-top: 50px; background-color: #777777; height: 1px; border: 0; "/>
+		<hr style="margin-top: 30px; background-color: #777777; height: 1px; border: 0; "/>
 		<p style="font-size: 80%; text-align: center">
     <a href="http://abfrage3.simsso.de" style="text-decoration: none; ">Website</a> &middot;
     <a href="http://abfrage3.simsso.de/#/about" style="text-decoration: none; ">About</a> &middot;
@@ -104,5 +104,7 @@ if ($_GET['test'] === 'default-client-html-mail') {
   $a = new Default_Client_HTML_Mail('timo.denk@simsso.de', 'Test', 'Timo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam feugiat consequat elit quis tincidunt. Etiam neque augue, blandit at porta ut, laoreet in ante. Suspendisse potenti. Vivamus sit amet turpis sit amet lectus tempus venenatis. Pellentesque fermentum at erat non porta. Fusce mi neque, lobortis id libero quis, lobortis lobortis turpis. Praesent enim leo, laoreet in molestie at, sodales et magna. Fusce placerat finibus massa. Curabitur convallis pellentesque diam quis eleifend. Suspendisse potenti. Phasellus dapibus mollis turpis elementum pharetra. Donec nec libero a elit tempor imperdiet nec vitae dui. Nullam consequat turpis lorem, et porttitor mauris aliquam vel.');
   $a->send();
 }
+
+
 
 ?>
