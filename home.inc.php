@@ -13,7 +13,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
     <nav id="head-nav" class="navbar">
       <div class="navbar-inner content-width">
         <a href="#/home">
-          <img class="logo" src="img/logo.svg" />
+          <img class="logo" src="img/logo-46.png" />
         </a><br class="clear-both smaller-800">
         <ul class="nav left">
           <a href="#/home">

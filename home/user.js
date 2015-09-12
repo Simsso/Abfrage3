@@ -80,7 +80,7 @@ function removeUser(id) {
     refreshListOfUsersWhoHaveAddedYou(false);
 
     // refresh list of shared word lists because some items might be not there anymore
-    refreshListOfSharedWordLists(true);
+    refreshListOfSharedWordLists(true, true);
   });
 }
 
