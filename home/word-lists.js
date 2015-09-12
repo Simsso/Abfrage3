@@ -1264,6 +1264,48 @@ function renameList(listId, listName, callback) {
 }
 
 
+// parses word array from string
+//
+// @param string string: raw data of the words like "meaning 1 (languageSeparator) meaning 2 (wordSeparator) next word (languageSeparator) blabla (wordSeparator)"
+// @param string wordSeparator: string separating single words e.g. "\n"
+// @param string languageSeparator: string separating the two languages of a word 
+// @param int|undefined listId: can be the list id of the word objects which will be returned
+//
+// @return object: attributes store the actual data
+// @return array object.word: array of type Word containig the parsed words
+// @return array object.error: array of all rows which have not been parsed because of syntax errors
+function loadWordArrayFromString(string, wordSeparator, languageSeparator, listId) {
+  var notImported = [], word = [];
+
+  var line = string.split(wordSeparator);
+  for (var i = 0; i < line.length; i++) {
+    var meaning = line[i].split(languageSeparator);
+    if (meaning.length !== 2) { // no valid word found error
+      notImported.push(line[i]);
+      continue; // next iteration
+    }   
+    else {
+      meaning[0] = meaning[0].trim();
+      meaning[1] = meaning[1].trim();
+
+      if (meaning[0].length === 0 && meaning[1].length === 0) {
+        // both words don't have a content
+        notImported.push(line[i]);
+        continue;
+      }
+      else {
+        word.push(new Word(undefined, listId, meaning[0], meaning[1], []));
+      }
+    }
+  }
+
+  return {
+    word: word,
+    error: notImported
+  };
+}
+
+
 // refresh functions
 refreshListOfWordLists(true, undefined, true);
 refreshListOfSharedWordLists(true, true);

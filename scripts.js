@@ -305,7 +305,7 @@ function loadAds() {
   adsLoaded = true;
 }
 
-if (adsEnabled) {
+if (typeof adsEnabled !== 'undefined' && adsEnabled === true) {
   showAds();
 }
 
