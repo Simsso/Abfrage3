@@ -26,30 +26,30 @@ $(window).on('page-settings', function(event, pageName, subPageName) {
 // menu
 function showSettingsPage(name) {
   shownSettingsSubPageName = name;
-  $('#settings-menu tr').removeClass('active');
-  $('#settings-menu tr[data-page=' + name + ']').addClass('active');
-  $('#settings-content > div').addClass('display-none');
-  $('#settings-content > div[data-page=' + name + ']').removeClass('display-none');
+  $(page['settings']).find('#settings-menu tr').removeClass('active');
+  $(page['settings']).find('#settings-menu tr[data-page=' + name + ']').addClass('active');
+  $(page['settings']).find('#settings-content > div').addClass('display-none');
+  $(page['settings']).find('#settings-content > div[data-page=' + name + ']').removeClass('display-none');
 }
 
-$('#settings-menu tr').on('click', function() {
+$(page['settings']).find('#settings-menu tr').on('click', function() {
   location.hash = '#/settings/' + $(this).data('page');
 });
 
 // change name
-$('#settings-name').on('submit', function(e) {
+$(page['settings']).find('#settings-name').on('submit', function(e) {
   e.preventDefault();
   
-  $('#settings-firstname, #settings-lastname').prop('disabled', true);
-  $('#settings-submit-button').prop('disabled', true).attr('value', 'Changing name...');
-  $('#settings-name-response').html('').addClass('display-none');
+  $(page['settings']).find('#settings-firstname, #settings-lastname').prop('disabled', true);
+  $(page['settings']).find('#settings-submit-button').prop('disabled', true).attr('value', 'Changing name...');
+  $(page['settings']).find('#settings-name-response').html('').addClass('display-none');
   
   // send request
   jQuery.ajax('server.php', {
     data: {
       action: 'set-name',
-      firstname: $('#settings-firstname').val(),
-      lastname: $('#settings-lastname').val()
+      firstname: $(page['settings']).find('#settings-firstname').val(),
+      lastname: $(page['settings']).find('#settings-lastname').val()
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -58,8 +58,8 @@ $('#settings-name').on('submit', function(e) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
-    $('#settings-firstname, #settings-lastname').prop('disabled', false);
-    $('#settings-submit-button').prop('disabled', false).attr('value', 'Change name');
+    $(page['settings']).find('#settings-firstname, #settings-lastname').prop('disabled', false);
+    $(page['settings']).find('#settings-submit-button').prop('disabled', false).attr('value', 'Change name');
     
     var message = '';
     switch (data) {
@@ -73,26 +73,26 @@ $('#settings-name').on('submit', function(e) {
         message = 'An unknown error occured.';
         break;
     }
-    $('#settings-name-response').html(message).removeClass('display-none');
+    $(page['settings']).find('#settings-name-response').html(message).removeClass('display-none');
   });
 });
 
 
 
 // change password
-$('#settings-password').on('submit', function(e) {
+$(page['settings']).find('#settings-password').on('submit', function(e) {
   e.preventDefault();
   
-  $('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', true);
-  $('#settings-password-button').prop('disabled', true).attr('value', 'Changing password...');
-  $('#settings-password-response').html('').addClass('display-none');
+  $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', true);
+  $(page['settings']).find('#settings-password-button').prop('disabled', true).attr('value', 'Changing password...');
+  $(page['settings']).find('#settings-password-response').html('').addClass('display-none');
   
   // send request
   jQuery.ajax('server.php?action=set-password', {
     data: {
-      password_old: $('#settings-password-old').val(),
-      password_new: $('#settings-password-new').val(),
-      password_new_confirm: $('#settings-password-new-confirm').val()
+      password_old: $(page['settings']).find('#settings-password-old').val(),
+      password_new: $(page['settings']).find('#settings-password-new').val(),
+      password_new_confirm: $(page['settings']).find('#settings-password-new-confirm').val()
     },
     type: 'POST',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -101,8 +101,8 @@ $('#settings-password').on('submit', function(e) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
-    $('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', false).attr('value', '');
-    $('#settings-password-button').prop('disabled', false).attr('value', 'Change password');
+    $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', false).attr('value', '');
+    $(page['settings']).find('#settings-password-button').prop('disabled', false).attr('value', 'Change password');
     
     var message = '';
     switch (data) {
@@ -123,12 +123,12 @@ $('#settings-password').on('submit', function(e) {
         message = 'An unknown error occured.';
         break;
     }
-    $('#settings-password-response').html(message).removeClass('display-none');
+    $(page['settings']).find('#settings-password-response').html(message).removeClass('display-none');
   });
 });
 
 // change name
-$('#settings-delete-account-form').on('submit', function(e) {
+$(page['settings']).find('#settings-delete-account-form').on('submit', function(e) {
   e.preventDefault();
   
   var messageBox = new MessageBox();
@@ -137,14 +137,14 @@ $('#settings-delete-account-form').on('submit', function(e) {
   messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
   messageBox.setCallback(function(button) {
     if (button === 'Yes') {
-      $('#settings-delete-account-password').prop('disabled', true);
-      $('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
-      $('#settings-delete-account-response').html('').addClass('display-none');
+      $(page['settings']).find('#settings-delete-account-password').prop('disabled', true);
+      $(page['settings']).find('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
+      $(page['settings']).find('#settings-delete-account-response').html('').addClass('display-none');
       
       // send request
       jQuery.ajax('server.php?action=delete-account', {
         data: {
-          password: $('#settings-delete-account-password').val()
+          password: $(page['settings']).find('#settings-delete-account-password').val()
         },
         type: 'POST',
         error: function(jqXHR, textStatus, errorThrown) {
@@ -157,10 +157,10 @@ $('#settings-delete-account-form').on('submit', function(e) {
           window.location.replace('server.php?action=logout');
         } 
         else {
-          $('#settings-delete-account-password').prop('disabled', false).val('');
-          $('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
+          $(page['settings']).find('#settings-delete-account-password').prop('disabled', false).val('');
+          $(page['settings']).find('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
 
-          $('#settings-delete-account-response').html((data === 0) ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
+          $(page['settings']).find('#settings-delete-account-response').html((data === 0) ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
         }
       });
     }
@@ -196,6 +196,6 @@ function setAdsEnabled(adsEnabled) {
 }
 
 // checkbox event listener for changing ads enabled settings
-$('#enable-ads-checkbox').on('change', function() {
+$(page['settings']).find('#enable-ads-checkbox').on('change', function() {
   setAdsEnabled(this.checked);
 });

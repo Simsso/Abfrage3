@@ -1,6 +1,6 @@
 // feed
 
-var $feed = $('#feed'), 
+var $feed = $(page['home']).find('#feed'), 
     noFeedContent = '<p>Nothing new since last login.</p>',
     feedSince = -1; // since last login
 
@@ -62,11 +62,11 @@ function refreshFeed(showLoadingInformation, callback) {
 }
 
 // button load whole feed event listener
-$('#feed-load-all').on('click', function() {
-  $('#feed-load-all').prop('disabled', true).attr('value', 'Loading all...');
+$(page['home']).find('#feed-load-all').on('click', function() {
+  $(page['home']).find('#feed-load-all').prop('disabled', true).attr('value', 'Loading all...');
   feedSince = 0;
   refreshFeed(false, function() {
-    $('#feed-load-all').hide();
+    $(page['home']).find('#feed-load-all').hide();
   });
 });
 
@@ -74,7 +74,7 @@ $('#feed-load-all').on('click', function() {
 
 // recently used
 
-var $recentlyUsed = $('#recently-used'), noRecentlyUsed = '<p>No recently used lists found.</p>';
+var $recentlyUsed = $(page['home']).find('#recently-used'), noRecentlyUsed = '<p>No recently used lists found.</p>';
 
 function refreshRecentlyUsed(showLoadingInformation) {
   if (showLoadingInformation) 

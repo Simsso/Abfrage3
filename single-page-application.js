@@ -13,18 +13,18 @@ var shownPageName, shownHashName,
       'legal-info': 'Legal info'
     };
 
-var pageElements = {}, pageElementsParent = document.getElementById('main');
+var page = {}, pageElementsParent = document.getElementById('main');
 (function() {
   var jQueryPageElement = $('#main').children('div');
   for (var i = 0;  i < jQueryPageElement.length; i++) {
     var id = jQueryPageElement.eq(i).attr('id');
     if (id !== undefined && id.substring(0, 8) === 'content-') {
-      pageElements[id.substring(8)] = jQueryPageElement[i];
+      page[id.substring(8)] = jQueryPageElement[i];
     }
   }
 
-  for (var page in pageElements) {
-    pageElementsParent.removeChild(pageElements[page]);
+  for (var singlePage in page) {
+    pageElementsParent.removeChild(page[singlePage]);
   }
 })();
 
@@ -39,7 +39,7 @@ var updatePageContent = function () {
   var pageName = (firstPart.length === 0) ? "home" : firstPart;
 
 
-  if (pageElements[pageName] === undefined) { // given page doesn't exist
+  if (page[pageName] === undefined) { // given page doesn't exist
     // forward to home page
     pageName = "home";
   }
@@ -59,7 +59,7 @@ var updatePageContent = function () {
   if (shownPageName === pageName) return;
   
   if (shownPageName !== undefined) {
-    pageElementsParent.removeChild(pageElements[shownPageName]);
+    pageElementsParent.removeChild(page[shownPageName]);
   }
   
   shownPageName = pageName;
@@ -67,7 +67,7 @@ var updatePageContent = function () {
   
   // mark nav element as visisted (class active)
   $('.nav_' + pageName).addClass('visited');
-  pageElementsParent.insertBefore(pageElements[pageName], pageElementsParent.firstChild); // show the div containing the requested page
+  pageElementsParent.insertBefore(page[pageName], pageElementsParent.firstChild); // show the div containing the requested page
   window.scrollTo(0, 0); // scroll to the top
   
   $(((typeof adsEnabled !== 'undefined' && adsEnabled) ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();
