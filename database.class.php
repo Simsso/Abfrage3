@@ -428,12 +428,6 @@ class Database {
   static function get_word_list($user_id, $word_list_id, $log) {
     global $con;
     
-    if ($log === true) {
-      $sql = "INSERT INTO `list_usage` (`user`, `list`, `time`)
-          VALUES (".$user_id.", ".$word_list_id.", ".time().");";
-      $query = mysqli_query($con, $sql);
-    }
-    
     $sql = "
 		SELECT `list`.`id`, `list`.`name`, `list`.`creator`, `list`.`comment`, `list`.`language1`, `list`.`language2`, `list`.`creation_time`
 		FROM `list`, `share`
@@ -452,6 +446,15 @@ class Database {
         $row['creation_time'],
         self::get_words_of_list($row['id']));
       $list->set_labels(WordList::get_labels_of_list($user_id, $word_list_id));
+
+
+      // log the list access inside the loop to make sure it is only logged if the user has actually access to the list
+      if ($log === true) {
+        $sql = "INSERT INTO `list_usage` (`user`, `list`, `time`)
+            VALUES (".$user_id.", ".$word_list_id.", ".time().");";
+        $query = mysqli_query($con, $sql);
+      }
+
       return $list;
     }
     return NULL;

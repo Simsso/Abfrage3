@@ -137,7 +137,7 @@ function getLoadingFullscreenWithMessage(message) {
 
 
 // toast
-$('#main-wrapper').after('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 57px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; z-index: 1; "></div>');
+$('#main-wrapper').after('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 57px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; "></div>');
 
 function Toast(text, ms) {
   this.ms = ms;
@@ -175,10 +175,6 @@ var ajaxRequests = {
   refreshListSharings: new AjaxRequestsManager(true)
 };
 
-$(document).ajaxSuccess(function(event, req) {
-  //console.log(event);
-  //console.log(req);
-});
 
 function handleAjaxResponse(data) {
   try { // try because parseJSON could cause an exception
@@ -186,7 +182,6 @@ function handleAjaxResponse(data) {
     console.log(obj);
 
     if (obj.status === "success") {
-      //console.log(obj.data);
       return obj.data;
     }
     else if (obj.status === "error") {
@@ -345,10 +340,6 @@ function saveTextAsFile(text, fileName) {
 
 
 // Google analytics
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);
-                        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-37082212-1', 'auto');
 ga('send', 'pageview');

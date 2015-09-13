@@ -479,13 +479,14 @@ if (is_null($next_to_last_login)) {
 
 
         <?php
-          // include legal info, about and contact html code
+          // include legal info, about, contact, tour and advertisement HTML code
           include('html-include/legal-info.html');
           include('html-include/about.html');
           include('html-include/contact.html');
+          include('html-include/tour.html');
         ?>
 
-        <br class="clear-both hide-below-700">
+        <br class="clear-both">
 
         <?php
           include('html-include/advertisement.html');
@@ -498,6 +499,7 @@ if (is_null($next_to_last_login)) {
     </div>
 
     <script type="text/javascript">
+      // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
     </script>
 

@@ -10,7 +10,8 @@ var shownPageName, shownHashName,
       'settings': 'Settings',
       'about': 'About',
       'contact': 'Contact',
-      'legal-info': 'Legal info'
+      'legal-info': 'Legal info',
+      'tour': 'Tour'
     };
 
 var page = {}, pageElementsParent = document.getElementById('main');
@@ -52,7 +53,7 @@ var updatePageContent = function () {
   if (shownHashName === hash) return;
   shownHashName = hash; // the hash has changed
 
-  // allow sub pages to process the hash change 
+  // allow sub pages to process the hash change
   $(window).trigger('page-' + pageName, [pageName, subPageName]);
   
   // don't touch the DOM if the page (first part of the has) is already shown
@@ -76,4 +77,4 @@ var updatePageContent = function () {
 // hashchange event listener
 $(window).on('hashchange', updatePageContent);
 
-updatePageContent(); // update when loading the page
+$(document).ready(updatePageContent); // update when loading the page

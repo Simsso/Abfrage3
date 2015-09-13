@@ -3,7 +3,7 @@
 var shownSettingsSubPageName;
 $(window).on('page-settings', function(event, pageName, subPageName) {
   if (subPageName === shownSettingsSubPageName) return; // nothing has changed - no reason to touch the DOM
-  
+
   if (!subPageName) {
     if (shownSettingsSubPageName) {
       subPageName = shownSettingsSubPageName;
