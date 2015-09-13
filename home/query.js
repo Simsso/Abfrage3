@@ -206,7 +206,7 @@ var querySelectedLists = [];
 // get label list of user
 function refreshQueryLabelList(showLoadingInformation) {
   if (showLoadingInformation) {
-    $('#query-selection').html(loading);
+    $(page['query']).find('#query-selection').html(loading);
   }
 
   // send request
@@ -245,20 +245,20 @@ function refreshQueryLabelList(showLoadingInformation) {
       );
     }
 
-    $('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
+    $(page['query']).find('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
 
     // provide label selection
-    $('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
+    $(page['query']).find('#query-label-selection').html(getHtmlTableOfLabelsQuery(queryLabels));
 
     // provide list selection
     refreshQueryListSelection();
 
 
     // start query button click event
-    $('#query-start-button').on('click', startQuery);
+    $(page['query']).find('#query-start-button').on('click', startQuery);
 
     // checkbox click event
-    $('#query-label-selection tr').on('click', function(){
+    $(page['query']).find('#query-label-selection tr').on('click', function(){
       // read label id from checkbox data tag
       var labelId = $(this).data('query-label-id');
       // checkbox has been unchecked
@@ -273,7 +273,7 @@ function refreshQueryLabelList(showLoadingInformation) {
 
     // expand functionallity
     // expand single labels
-    $('#query-label-selection .small-exp-col-icon').on('click', function(e) {
+    $(page['query']).find('#query-label-selection .small-exp-col-icon').on('click', function(e) {
       e.stopPropagation();
       var $this = $(this);
       var expand = ($this.data('state') == 'collapsed');
@@ -322,10 +322,10 @@ function refreshQueryListSelection() {
   }
 
 
-  $('#query-list-selection').html('<table class="box-table cursor-pointer no-flex"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
+  $(page['query']).find('#query-list-selection').html('<table class="box-table cursor-pointer no-flex"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
 
   // checkbox click event
-  $('#query-list-selection tr').on('click', function(){
+  $(page['query']).find('#query-list-selection tr').on('click', function(){
     // read list id from checkbox data tag
     var listId = $(this).data('query-list-id');
     
@@ -348,7 +348,7 @@ function addLabelToQuery(labelId) {
     }
   }
 
-  $('#query-label-selection tr[data-query-label-id=' + labelId + ']').addClass('active').data('checked', true);
+  $(page['query']).find('#query-label-selection tr[data-query-label-id=' + labelId + ']').addClass('active').data('checked', true);
   querySelectedLabel.push(labelId);
 }
 
@@ -359,13 +359,13 @@ function removeLabelFromQuery(labelId) {
       removeListFromQuery(queryAttachments[i].list);
     }
   }
-  $('#query-label-selection tr[data-query-label-id=' + labelId + ']').removeClass('active').data('checked', false);
+  $(page['query']).find('#query-label-selection tr[data-query-label-id=' + labelId + ']').removeClass('active').data('checked', false);
   querySelectedLabel.removeAll(labelId);
 }
 
 function addListToQuery(listId) {
   querySelectedLists.push(getListById(listId));
-  $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
+  $(page['query']).find('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
   checkStartQueryButtonEnable();
 
   // update information about the language of the selected words
@@ -374,7 +374,7 @@ function addListToQuery(listId) {
 
 function removeListFromQuery(listId) {
   querySelectedLists.removeAll(getListById(listId));
-  $('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', false).removeClass('active');
+  $(page['query']).find('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', false).removeClass('active');
   checkStartQueryButtonEnable();
 
   // update information about the language of the selected words
@@ -386,7 +386,7 @@ function getListRow(list, selected) {
 }
 
 function checkStartQueryButtonEnable() {
-  $('#query-start-button').prop('disabled', querySelectedLists.length === 0);
+  $(page['query']).find('#query-start-button').prop('disabled', querySelectedLists.length === 0);
 }
 
 function compareListsByName(a, b) {
@@ -464,8 +464,8 @@ var queryWords = [], // array of all words which the user selected for the query
     
     
 function startQuery() {
-  $('#query-not-started-info').addClass('display-none');
-  $('#query-content-table').removeClass('display-none');
+  $(page['query']).find('#query-not-started-info').addClass('display-none');
+  $(page['query']).find('#query-content-table').removeClass('display-none');
   queryRunning = true;
 
   // produce one array containing all query words
@@ -489,8 +489,8 @@ function startQuery() {
 
   nextWord();
 
-  //$('#query-select-box img[data-action="collapse"]').trigger('collapse');
-  $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
+  //$(page['query']).find('#query-select-box img[data-action="collapse"]').trigger('collapse');
+  $(page['query']).find('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 
 }
 
@@ -499,12 +499,12 @@ function nextWord() {
   
   queryWrongAnswerGiven = false;
   
-  $('#query-answer-not-known').prop('disabled', false);
-  $('#query-answer-known').attr('value', 'I know!');
-  $('#query-answer-not-known').attr('value', 'No idea.');
-  $('#query-answer-buttons').hide();
-  $('#correct-answer').hide();
-  $('#query-answer-not-sure').prop('disabled', false);
+  $(page['query']).find('#query-answer-not-known').prop('disabled', false);
+  $(page['query']).find('#query-answer-known').attr('value', 'I know!');
+  $(page['query']).find('#query-answer-not-known').attr('value', 'No idea.');
+  $(page['query']).find('#query-answer-buttons').hide();
+  $(page['query']).find('#correct-answer').hide();
+  $(page['query']).find('#query-answer-not-sure').prop('disabled', false);
 
   
   currentWord = getNextWord();
@@ -519,22 +519,22 @@ function nextWord() {
 
   // fill the question fields
   if (queryCurrentDirection == QueryDirection.Ltr) {
-    $('#query-lang1').html(listOfTheWord.language1);
-    $('#query-lang2').html(listOfTheWord.language2);
-    $('#query-question').html(currentWord.language1);
+    $(page['query']).find('#query-lang1').html(listOfTheWord.language1);
+    $(page['query']).find('#query-lang2').html(listOfTheWord.language2);
+    $(page['query']).find('#query-question').html(currentWord.language1);
     currentWordCorrectAnswer = currentWord.language2;
   }
   else if (queryCurrentDirection == QueryDirection.Rtl) {
-    $('#query-lang1').html(listOfTheWord.language2);
-    $('#query-lang2').html(listOfTheWord.language1);
-    $('#query-question').html(currentWord.language2);
+    $(page['query']).find('#query-lang1').html(listOfTheWord.language2);
+    $(page['query']).find('#query-lang2').html(listOfTheWord.language1);
+    $(page['query']).find('#query-question').html(currentWord.language2);
     currentWordCorrectAnswer = currentWord.language1;
   }
   
-  $('#query-answer').val('').focus();
+  $(page['query']).find('#query-answer').val('').focus();
 
   // known average for single word information
-  $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
+  $(page['query']).find('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
 }
 
 function getNextWord() {
@@ -552,7 +552,7 @@ function getNextWord() {
 }
 
 // allow enter pressing to check the user's answer
-$('#query-answer').on('keypress', function(e) {
+$(page['query']).find('#query-answer').on('keypress', function(e) {
   if (e.which == 13) {
     if (checkAnswer($(this).val(), currentWordCorrectAnswer)) { // correct answer  
       if (queryCurrentAnswerState == QueryAnswerState.NotKnown || queryCurrentAnswerState == QueryAnswerState.NotSureClicked || queryCurrentAnswerState == QueryAnswerState.WaitToContinue) {
@@ -589,14 +589,14 @@ function checkAnswer(user, correct) {
 
 function refreshQueryResultsUploadButton() {
   var notUploadedAnswersCount = queryAnswers.length - nextIndexToUpload;
-  $('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
+  $(page['query']).find('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
 }
 
 function refreshQueryResultsUploadCounter() {
-  $('#query-results-upload-counter').html('Uploaded ' + nextIndexToUpload + '/' + queryAnswers.length + ' test answers.');
+  $(page['query']).find('#query-results-upload-counter').html('Uploaded ' + nextIndexToUpload + '/' + queryAnswers.length + ' test answers.');
 }
 
-$('#query-results-upload-button').on('click', uploadQueryResults);
+$(page['query']).find('#query-results-upload-button').on('click', uploadQueryResults);
 
 
 // upload query results
@@ -632,7 +632,7 @@ function uploadQueryResults() {
 
 
 // query answer buttons events (know, not sure, don't know)
-$('#query-answer-known').on('click', function() {
+$(page['query']).find('#query-answer-known').on('click', function() {
   // known button click event
   if (queryCurrentAnswerState == QueryAnswerState.WaitToContinue || queryCurrentAnswerState == QueryAnswerState.NotKnown) {
     nextWord();
@@ -642,12 +642,12 @@ $('#query-answer-known').on('click', function() {
     processQueryCurrentAnswerState();
   }
 });
-$('#query-answer-not-sure').on('click', function() {
+$(page['query']).find('#query-answer-not-sure').on('click', function() {
   // not sure button click event
   queryCurrentAnswerState = QueryAnswerState.NotSureClicked;
   processQueryCurrentAnswerState();
 });
-$('#query-answer-not-known').on('click', function() {
+$(page['query']).find('#query-answer-not-known').on('click', function() {
   // not known button click event
   queryCurrentAnswerState = QueryAnswerState.NotKnownClicked;
   processQueryCurrentAnswerState();
@@ -658,25 +658,25 @@ function processQueryCurrentAnswerState() {
     case queryCurrentAnswerState.Start:
       return;
     case QueryAnswerState.Known:
-      $('#query-box').trigger('shadow-blink-green');
+      $(page['query']).find('#query-box').trigger('shadow-blink-green');
       addQueryAnswer(currentWord, 1);
       tryAutoUpload();
       nextWord();
       return;
     case QueryAnswerState.NotSureClicked:
-      $('#query-answer-not-sure').prop('disabled', true);
-      $('#query-answer-known').attr('value', 'I knew that!');
-      $('#query-answer-not-known').attr('value', 'I didn\'t know that.');
+      $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
+      $(page['query']).find('#query-answer-known').attr('value', 'I knew that!');
+      $(page['query']).find('#query-answer-not-known').attr('value', 'I didn\'t know that.');
       showQuerySolution();
       return;
     case QueryAnswerState.NotKnownClicked:
       queryCurrentAnswerState = QueryAnswerState.WaitToContinue;
       // no break here
     case QueryAnswerState.NotKnown:
-      $('#query-answer-not-known').prop('disabled', true);
-      $('#query-answer-not-sure').prop('disabled', true);
-      $('#query-answer-known').attr('value', 'Continue.');
-      $('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
+      $(page['query']).find('#query-answer-not-known').prop('disabled', true);
+      $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
+      $(page['query']).find('#query-answer-known').attr('value', 'Continue.');
+      $(page['query']).find('#query-word-mark').html(Math.round(currentWord.getKnownAverage() * 100) + "%");
       showQuerySolution();
       addQueryAnswer(currentWord, 0);
       tryAutoUpload();
@@ -685,9 +685,9 @@ function processQueryCurrentAnswerState() {
 }
 
 function showQuerySolution() {
-  $('#query-answer-buttons').show().html(currentWordCorrectAnswer);
-  $('#correct-answer').show().html(currentWordCorrectAnswer);
-  $('#query-answer').select();
+  $(page['query']).find('#query-answer-buttons').show().html(currentWordCorrectAnswer);
+  $(page['query']).find('#correct-answer').show().html(currentWordCorrectAnswer);
+  $(page['query']).find('#query-answer').select();
 }
 
 
@@ -698,22 +698,22 @@ function showQuerySolution() {
 // settings (algorithm, direction and type)
 
 // query algorithm
-$('#query-algorithm tr').on('click', function() {
-  $('#query-algorithm tr').removeClass('active');
+$(page['query']).find('#query-algorithm tr').on('click', function() {
+  $(page['query']).find('#query-algorithm tr').removeClass('active');
   $(this).addClass('active');
   queryChosenAlgorithm = parseInt($(this).data('algorithm'));
 });
 
 // query direction
-$('#query-direction tr').on('click', function() {
-  $('#query-direction tr').removeClass('active');
+$(page['query']).find('#query-direction tr').on('click', function() {
+  $(page['query']).find('#query-direction tr').removeClass('active');
   $(this).addClass('active');
   queryChosenDirection = parseInt($(this).data('direction'));
 });
 
 // query type
-$('#query-type tr').on('click', function() {
-  $('#query-type tr').removeClass('active');
+$(page['query']).find('#query-type tr').on('click', function() {
+  $(page['query']).find('#query-type tr').removeClass('active');
   $(this).addClass('active');
   setQueryType(parseInt($(this).data('type')));
 });
@@ -723,14 +723,14 @@ function setQueryType(queryType) {
     queryChosenType = queryType;
     
     if (queryType == QueryType.Buttons) {
-      $('#query-answer-table-cell-text-box').hide();
-      $('#query-answer-table-cell-buttons').show();
+      $(page['query']).find('#query-answer-table-cell-text-box').hide();
+      $(page['query']).find('#query-answer-table-cell-buttons').show();
       
     }
     else if (queryType == QueryType.TextBox) {
-      $('#query-answer-table-cell-buttons').hide();
-      $('#query-answer-table-cell-text-box').show();
-      $('#query-answer').focus();
+      $(page['query']).find('#query-answer-table-cell-buttons').hide();
+      $(page['query']).find('#query-answer-table-cell-text-box').show();
+      $(page['query']).find('#query-answer').focus();
     }
   }
 }
@@ -748,10 +748,10 @@ function tryAutoUpload() {
 }
 
 function autoUploadEnabled() {
-  return $('#query-results-auto-upload').is(':checked');
+  return $(page['query']).find('#query-results-auto-upload').is(':checked');
 }
 
-$('#query-results-auto-upload').on('click', function() {
+$(page['query']).find('#query-results-auto-upload').on('click', function() {
   if (autoUploadEnabled()) 
     uploadQueryResults();
 });
@@ -764,8 +764,8 @@ function updateQueryListLanguageInformation(languages) {
     languages = ["First language", "Second language"];
   }
 
-  $('span[data-value="first-language-information"]').html(languages[0]);
-  $('span[data-value="second-language-information"]').html(languages[1]);
+  $(page['query']).find('span[data-value="first-language-information"]').html(languages[0]);
+  $(page['query']).find('span[data-value="second-language-information"]').html(languages[1]);
 }
 
 

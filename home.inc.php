@@ -507,7 +507,9 @@ if (is_null($next_to_last_login)) {
       document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
-
+    
+      // single page appcliation script
+      document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
 
       // include scripts for every single page
       document.write('\x3Cscript src="home/home.js" type="text/javascript">\x3C/script>');
@@ -515,9 +517,6 @@ if (is_null($next_to_last_login)) {
       document.write('\x3Cscript src="home/query.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="home/user.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="home/settings.js" type="text/javascript">\x3C/script>');
-    
-      // single page appcliation script
-      document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
     </script>
     
   </body>
