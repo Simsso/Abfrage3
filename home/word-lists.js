@@ -57,26 +57,26 @@ function addWordList(name, callback) {
 }
 
 // event listener for form which adds new word lists
-$('#word-list-add-form').on('submit', function(e) {
+$(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
   // dont visit action="..." page
   e.preventDefault();
 
   // disable button and text box to prevent resubmission
-  $('#word-list-add-name').prop('disabled', true);
-  $('#word-list-add-button').prop('disabled', true).attr('value', 'Creating list...');
+  $(page['word-lists']).find('#word-list-add-name').prop('disabled', true);
+  $(page['word-lists']).find('#word-list-add-button').prop('disabled', true).attr('value', 'Creating list...');
 
   // call the server contacting function
-  addWordList($('#word-list-add-name').val(), function(data) {
+  addWordList($(page['word-lists']).find('#word-list-add-name').val(), function(data) {
     // finished callback
     // re-enable the button and the text box
-    $('#word-list-add-name').prop('disabled', false).val('');
-    $('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
+    $(page['word-lists']).find('#word-list-add-name').prop('disabled', false).val('');
+    $(page['word-lists']).find('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
 
     refreshListOfWordLists(false, function() {
       // handle buttons and background colors indicating which list is currently shown
       setAllListRowsAsNotActive();
       // highlight the lists row by adding active class and hide button to view the list
-      $('#list-of-word-lists tr[data-list-id=' + data.id + ']').addClass('active').find('input[type=button]').first().hide();
+      $(page['word-lists']).find('#list-of-word-lists tr[data-list-id=' + data.id + ']').addClass('active').find('input[type=button]').first().hide();
     }); // refresh the list of word lists without loading information
 
     // load the word list which has just been added
@@ -92,7 +92,7 @@ function refreshListOfWordLists(showLoadingInformation, callback, firstCall) {
 
   // loading information
   if (showLoadingInformation)
-    $('#list-of-word-lists').html(loading);
+    $(page['word-lists']).find('#list-of-word-lists').html(loading);
 
   // reset all table row highlights and hidden buttons indicating which list is selected
   showNoListSelectedInfo(!firstCall);
@@ -125,10 +125,10 @@ function refreshListOfWordLists(showLoadingInformation, callback, firstCall) {
         output = '<table class="box-table cursor-pointer"></tr>' + output + '</table>';
       }
 
-      $('#list-of-word-lists').html(output); // update DOM with list of word lists
+      $(page['word-lists']).find('#list-of-word-lists').html(output); // update DOM with list of word lists
 
       // add event listeners for rows which have just been added
-      $('#list-of-word-lists tr').on('click', function() {
+      $(page['word-lists']).find('#list-of-word-lists tr').on('click', function() {
         window.location.hash = '#/word-lists/' + $(this).data('list-id');
       });
     })
@@ -138,7 +138,7 @@ function refreshListOfWordLists(showLoadingInformation, callback, firstCall) {
 
 // handle buttons and background colors indicating which list is currently shown
 function setAllListRowsAsNotActive() {
-  $('#list-of-shared-word-lists tr, #list-of-word-lists tr').removeClass('active'); // un-highlights all table rows
+  $(page['word-lists']).find('#list-of-shared-word-lists tr, #list-of-word-lists tr').removeClass('active'); // un-highlights all table rows
 }
 
 
@@ -147,7 +147,7 @@ function refreshListOfSharedWordLists(showLoadingInformation, firstCall) {
   if (firstCall === undefined) firstCall = false;
   
   if (showLoadingInformation)
-    $('#list-of-shared-word-lists').html(loading);
+    $(page['word-lists']).find('#list-of-shared-word-lists').html(loading);
 
   showNoListSelectedInfo(!firstCall);
 
@@ -179,10 +179,10 @@ function refreshListOfSharedWordLists(showLoadingInformation, firstCall) {
       else {
         output = '<table class="box-table cursor-pointer">' + output + '</table>';
       }
-      $('#list-of-shared-word-lists').html(output); // update the DOM
+      $(page['word-lists']).find('#list-of-shared-word-lists').html(output); // update the DOM
 
       // add event listeners for rows inside the list
-      $('#list-of-shared-word-lists tr').on('click', function() {
+      $(page['word-lists']).find('#list-of-shared-word-lists tr').on('click', function() {
         window.location.hash = '#/word-lists/' + $(this).data('list-id');
       });
     })
@@ -199,12 +199,12 @@ function showNoListSelectedInfo(updateHash) {
     window.location.hash = '#/word-lists';
   }
 
-  $('#word-list-info .box-head > div').html("Word lists");
-  $('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to get started.</p>');
-  $('#word-list-info-words').hide();
-  $('#word-list-title').hide();
-  $('#word-list-sharing').hide();
-  $('#word-list-label').hide();
+  $(page['word-lists']).find('#word-list-info .box-head > div').html("Word lists");
+  $(page['word-lists']).find('#word-list-info .box-body').html('<p class="spacer-30">Create or select a word list to get started.</p>');
+  $(page['word-lists']).find('#word-list-info-words').hide();
+  $(page['word-lists']).find('#word-list-title').hide();
+  $(page['word-lists']).find('#word-list-sharing').hide();
+  $(page['word-lists']).find('#word-list-label').hide();
 }
 
 
@@ -213,14 +213,14 @@ function showNoListSelectedInfo(updateHash) {
 function loadWordList(id, showLoadingInformation, showWordListPage) {
   // show loading information
   if (showLoadingInformation) {
-    $('#word-list-info .box-head > div').html("Loading...");
-    $('#word-list-info .box-body').html(loading);
+    $(page['word-lists']).find('#word-list-info .box-head > div').html("Loading...");
+    $(page['word-lists']).find('#word-list-info .box-body').html(loading);
 
     // hide all divs which will later show things like words, sharings, labels and the list name while the list loads
-    $('#word-list-info-words').hide();
-    $('#word-list-sharing').hide();
-    $('#word-list-label').hide();
-    $('#word-list-title').hide();
+    $(page['word-lists']).find('#word-list-info-words').hide();
+    $(page['word-lists']).find('#word-list-sharing').hide();
+    $(page['word-lists']).find('#word-list-label').hide();
+    $(page['word-lists']).find('#word-list-title').hide();
   }
   
   // a call of this method can force to show the page "word lists" with the parameter showWordListPage
@@ -233,7 +233,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
   // handle buttons and background colors indicating which list is currently shown
   setAllListRowsAsNotActive();
   // highlight the lists row by adding active class and hide button to view the list
-  $('#list-of-word-lists tr[data-list-id=' + id + '], #list-of-shared-word-lists tr[data-list-id=' + id + ']').addClass('active').find('input[type=button]').first().hide();
+  $(page['word-lists']).find('#list-of-word-lists tr[data-list-id=' + id + '], #list-of-shared-word-lists tr[data-list-id=' + id + ']').addClass('active').find('input[type=button]').first().hide();
 
   shownListId = id;
 
@@ -271,8 +271,8 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       if (!shownListData.language2) shownListData.language2 = "Second language";
 
       // info box head and list name box
-      $('#word-list-title .box-head').html(shownListData.name);
-      $('#word-list-info .box-head > div').html("General");
+      $(page['word-lists']).find('#word-list-title .box-head').html(shownListData.name);
+      $(page['word-lists']).find('#word-list-info .box-head > div').html("General");
 
       // info box body
       // add content depending on the users permissions (sharing and editing)
@@ -307,27 +307,27 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       // add export button
       //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="exportList()"/>';
 
-      $('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
+      $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
 
-      $('#words-add-language1').attr('placeholder', shownListData.language1);
-      $('#words-add-language2').attr('placeholder', shownListData.language2);
+      $(page['word-lists']).find('#words-add-language1').attr('placeholder', shownListData.language1);
+      $(page['word-lists']).find('#words-add-language2').attr('placeholder', shownListData.language2);
 
       // sharing box
       if (allowSharing) {
         // refresh sharing box with loading information
         refreshListSharings(true, shownListData.id);
-        $('#word-list-sharing').show();
+        $(page['word-lists']).find('#word-list-sharing').show();
       }
       else {
-        $('#word-list-sharing').hide();
+        $(page['word-lists']).find('#word-list-sharing').hide();
       }
 
       // list of words
-      $('#shown-word-list-words-count').html(shownListData.words.length); // update word count
+      $(page['word-lists']).find('#shown-word-list-words-count').html(shownListData.words.length); // update word count
       
       if (shownListData.words.length === 0) { // no words added yet
-        $('#words-in-list').html((allowEdit)?noWordsInList:noWordsInListDisallowEdit);
+        $(page['word-lists']).find('#words-in-list').html((allowEdit)?noWordsInList:noWordsInListDisallowEdit);
       }
       else {
         // add words of the list to the DOM
@@ -336,12 +336,12 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
           wordListHTML += getTableRowOfWord(shownListData.words[i].id, shownListData.words[i].language1, shownListData.words[i].language2, allowEdit);
         }
         wordListHTML = getTableOfWordList(wordListHTML, allowEdit, shownListData.language1, shownListData.language2);
-        $('#words-in-list').html(wordListHTML);
+        $(page['word-lists']).find('#words-in-list').html(wordListHTML);
       }
 
       // events
       // delete word list
-      $('#delete-shown-word-list').on('click', function() {
+      $(page['word-lists']).find('#delete-shown-word-list').on('click', function() {
         // show message box
         var messageBox = new MessageBox();
         messageBox.setTitle('Delete word list');
@@ -361,7 +361,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       });
 
       // hide word list (stop sharing)
-      $('#hide-shown-word-list').on('click', function() {
+      $(page['word-lists']).find('#hide-shown-word-list').on('click', function() {
         // show message box
         var messageBox = new MessageBox();
         messageBox.setTitle('Hide word list');
@@ -370,14 +370,14 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
         messageBox.setCallback(function(button) {
           if (button === 'Yes') {
             $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
-            var sharingId = $('tr[data-list-id=' + shownListId + ']').data('sharing-id');
+            var sharingId = $(page['word-lists']).find('tr[data-list-id=' + shownListId + ']').data('sharing-id');
             // send server request to hide the shared list
             setSharingPermissionsBySharingId(sharingId, 0, function() {
-              $('#list-of-shared-word-lists-row-' + sharingId).remove();
+              $(page['word-lists']).find('#list-of-shared-word-lists-row-' + sharingId).remove();
 
               // still rows left?
-              if ($('#list-of-shared-word-lists tr').length == 1) {
-                $('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
+              if ($(page['word-lists']).find('#list-of-shared-word-lists tr').length == 1) {
+                $(page['word-lists']).find('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
               }
 
               // because the shown list has just been removed update the screen to show the appropriate message
@@ -389,11 +389,11 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       });
 
       // rename form
-      $('#rename-list-form').on('submit', function(e) {
+      $(page['word-lists']).find('#rename-list-form').on('submit', function(e) {
         e.preventDefault();
 
         // disable button and inputs
-        var $nameInput = $('#rename-list-name'), $submitButton = $('#rename-list-button');
+        var $nameInput = $(page['word-lists']).find('#rename-list-name'), $submitButton = $(page['word-lists']).find('#rename-list-button');
         $nameInput.prop('disabled', true);
         $submitButton.prop('disabled', true).attr('value', 'Renaming...');
 
@@ -408,17 +408,17 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
           shownListData.name = newListName;
 
           // update the information where the list name was shown
-          $('#word-list-title .box-head').html(newListName); // on top of the page
-          $('#list-of-word-lists-row-' + shownListId).children().first().html(newListName); // inside the list of word lists
+          $(page['word-lists']).find('#word-list-title .box-head').html(newListName); // on top of the page
+          $(page['word-lists']).find('#list-of-word-lists-row-' + shownListId).children().first().html(newListName); // inside the list of word lists
         });
       });
 
       // change language form event listener
-      $('#change-language-form').on('submit', function(e) {
+      $(page['word-lists']).find('#change-language-form').on('submit', function(e) {
         e.preventDefault();
 
         // disable inputs and button
-        var $lang1Input = $('#word-list-language1'), $lang2Input = $('#word-list-language2'), $submitButton = $('#word-list-languages-button');
+        var $lang1Input = $(page['word-lists']).find('#word-list-language1'), $lang2Input = $(page['word-lists']).find('#word-list-language2'), $submitButton = $(page['word-lists']).find('#word-list-languages-button');
         $lang1Input.prop('disabled', true);
         $lang2Input.prop('disabled', true);
         $submitButton.prop('disabled', true).attr('value', 'Editing languages...');
@@ -440,28 +440,28 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
 
           // update the information where the list languages were shown
           // placeholder of word add form
-          $('#words-add-language1').attr('placeholder', lang1);
-          $('#words-add-language2').attr('placeholder', lang2);
+          $(page['word-lists']).find('#words-add-language1').attr('placeholder', lang1);
+          $(page['word-lists']).find('#words-add-language2').attr('placeholder', lang2);
           // word list table head
-          $('#word-list-table').find('td').eq(0).html(lang1);
-          $('#word-list-table').find('td').eq(1).html(lang2);
+          $(page['word-lists']).find('#word-list-table').find('td').eq(0).html(lang1);
+          $(page['word-lists']).find('#word-list-table').find('td').eq(1).html(lang2);
         });
       });
 
 
 
       // show divs which have been updated above
-      $('#word-list-title').show();
-      $('#word-list-info-words').show();
+      $(page['word-lists']).find('#word-list-title').show();
+      $(page['word-lists']).find('#word-list-info-words').show();
 
       if (allowEdit)
-        $('#words-add').show();
+        $(page['word-lists']).find('#words-add').show();
       else
-        $('#words-add').hide();
+        $(page['word-lists']).find('#words-add').hide();
 
       // update label list with loading information
       getLabelList(true);
-      $('#word-list-label').show();
+      $(page['word-lists']).find('#word-list-label').show();
     })
   );
 }
@@ -501,7 +501,7 @@ function editSaveWord(event, id) {
   event.preventDefault(); // stop form submission
 
   // jQuery vars of the important elements
-  var $row = $('#word-row-' + id); // the HTML row (<tr>)
+  var $row = $(page['word-lists']).find('#word-row-' + id); // the HTML row (<tr>)
   var $editSaveButton = $row.find('input[type=submit]'); // the button (<input type="button"/>)
   var $cell1 = $row.children().eq(0), $cell2 = $row.children().eq(1); // the first cell in the words table row (<td>)
 
@@ -518,7 +518,7 @@ function editSaveWord(event, id) {
   // save button
   else {
     // disable the form elements
-    var $lang1Input = $('#word-edit-input-language1-' + id), $lang2Input = $('#word-edit-input-language2-' + id);
+    var $lang1Input = $(page['word-lists']).find('#word-edit-input-language1-' + id), $lang2Input = $(page['word-lists']).find('#word-edit-input-language2-' + id);
     $lang1Input.prop('disabled', true);
     $lang2Input.prop('disabled', true);
     $editSaveButton.prop('disabled', true).attr('value', 'Saving...');
@@ -581,7 +581,7 @@ function removeWord(id) {
   var listId = shownListId;
   
   // update button
-  var $row = $('#word-row-' + id);
+  var $row = $(page['word-lists']).find('#word-row-' + id);
   var $removeButton = $row.find('* input[type=button]');
   $removeButton.prop('disabled', true).attr('value', 'Removing...');
 
@@ -607,15 +607,15 @@ function removeWord(id) {
       }
     }
     
-    $('#shown-word-list-words-count').html(shownListData.words.length); // update word count
+    $(page['word-lists']).find('#shown-word-list-words-count').html(shownListData.words.length); // update word count
 
 
     // remove the row of the removed word from the DOM
     $row.remove();
 
     // show special message if no word is left
-    if ($('#word-list-table tr').length == 1) {
-      $('#word-list-table').html(noWordsInList);
+    if ($(page['word-lists']).find('#word-list-table tr').length == 1) {
+      $(page['word-lists']).find('#word-list-table').html(noWordsInList);
     }
   });
 }
@@ -638,11 +638,11 @@ function deleteWordList(id, callback) {
     refreshRecentlyUsed(false);
 
     // remove the word list row from the DOM
-    $('#list-of-word-lists-row-' + id).remove();
+    $(page['word-lists']).find('#list-of-word-lists-row-' + id).remove();
 
     // no list table row anymore (except from the th)
-    if ($('#list-of-word-lists tr').length == 1) {
-      $('#list-of-word-lists').html(noWordListOutput);
+    if ($(page['word-lists']).find('#list-of-word-lists tr').length == 1) {
+      $(page['word-lists']).find('#list-of-word-lists').html(noWordListOutput);
     }
 
 
@@ -652,15 +652,15 @@ function deleteWordList(id, callback) {
 
 
 // add new word form submit event listener
-$('#words-add-form').on('submit', function(e) {
+$(page['word-lists']).find('#words-add-form').on('submit', function(e) {
   e.preventDefault();
 
   // read input fields
-  var lang1 = $('#words-add-language1').val(), lang2 = $('#words-add-language2').val();
+  var lang1 = $(page['word-lists']).find('#words-add-language1').val(), lang2 = $(page['word-lists']).find('#words-add-language2').val();
 
   // clear input fields and focus the first one to allow the user to enter the next word immediately
-  $('#words-add-language1').val('').focus();
-  $('#words-add-language2').val('');
+  $(page['word-lists']).find('#words-add-language1').val('').focus();
+  $(page['word-lists']).find('#words-add-language2').val('');
 
   // send word to the server
   addWord(lang1, lang2, true);
@@ -694,16 +694,16 @@ function addWord(lang1, lang2, allowEdit) {
       answers: null
     });
 
-    $('#shown-word-list-words-count').html(shownListData.words.length); // update word count
+    $(page['word-lists']).find('#shown-word-list-words-count').html(shownListData.words.length); // update word count
 
     
-    if ($('#word-list-table').length === 0) { // no words added yet
+    if ($(page['word-lists']).find('#word-list-table').length === 0) { // no words added yet
       var wordListHTML = getTableOfWordList("", allowEdit, shownListData.language1, shownListData.language2);
-      $('#words-in-list').html(wordListHTML);
+      $(page['word-lists']).find('#words-in-list').html(wordListHTML);
     }
 
     // add word row to the list of words
-    $('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2, allowEdit));
+    $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(getTableRowOfWord(data, lang1, lang2, allowEdit));
 
     // new Toast('The word "' + lang1 + '" - "' + lang2 + '" has been added successfully.');
   });
@@ -718,9 +718,9 @@ function refreshListSharings(showLoadingInformation, wordListId) {
     wordListId = shownListId;
 
   // show loading information
-  $('#word-list-sharing').show();
+  $(page['word-lists']).find('#word-list-sharing').show();
   if (showLoadingInformation) {
-    $('#list-sharings').html(loading);
+    $(page['word-lists']).find('#list-sharings').html(loading);
   }
 
 
@@ -739,7 +739,7 @@ function refreshListSharings(showLoadingInformation, wordListId) {
       data = handleAjaxResponse(data);
 
       if (data.length === 0) { // list not shared yet
-        $('#list-sharings').html(listNotShared); // show appropriate message
+        $(page['word-lists']).find('#list-sharings').html(listNotShared); // show appropriate message
       }
       else { // list shared with at least one user
         var output = "";
@@ -753,11 +753,11 @@ function refreshListSharings(showLoadingInformation, wordListId) {
         // add table to output string
         output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Permissions</td><td></td></tr>' + output + '</table>';
 
-        $('#list-sharings').html(output); // display the output string
+        $(page['word-lists']).find('#list-sharings').html(output); // display the output string
 
         // event listeners for the buttons just added
         // stop sharing button
-        $('#list-sharings input[type=button]').on('click', function() {
+        $(page['word-lists']).find('#list-sharings input[type=button]').on('click', function() {
 
           var $button = $(this);
           $button.prop('disabled', true).attr('value', 'Stopping sharing...'); // change button value and disable button
@@ -766,11 +766,11 @@ function refreshListSharings(showLoadingInformation, wordListId) {
           setSharingPermissionsBySharingId($button.data('sharing-id'), 0, function() {
 
             // remove the row from the table
-            $('#list-shared-with-row-' + $button.data('sharing-id')).remove();
+            $(page['word-lists']).find('#list-shared-with-row-' + $button.data('sharing-id')).remove();
 
             // still rows left?
-            if ($('#list-sharings tr').length == 1) {
-              $('#list-sharings').html(listNotShared);
+            if ($(page['word-lists']).find('#list-sharings tr').length == 1) {
+              $(page['word-lists']).find('#list-sharings').html(listNotShared);
             }
           });
         });
@@ -781,24 +781,24 @@ function refreshListSharings(showLoadingInformation, wordListId) {
 
 
 // share list form submit event listener
-$('#share-list-form').on('submit', function(e) {
+$(page['word-lists']).find('#share-list-form').on('submit', function(e) {
   // dont visit action="..." page
   e.preventDefault();
 
   // disable form elements
-  $('#share-list-other-user-email').prop('disabled', true);
-  $('#share-list-permissions').prop('disabled', true);
-  $('#share-list-submit').prop('disabled', true).attr('value', 'Sharing...');
+  $(page['word-lists']).find('#share-list-other-user-email').prop('disabled', true);
+  $(page['word-lists']).find('#share-list-permissions').prop('disabled', true);
+  $(page['word-lists']).find('#share-list-submit').prop('disabled', true).attr('value', 'Sharing...');
 
   // send message to server
-  var email = $('#share-list-other-user-email').val();
-  setSharingPermissions(shownListId, email, $('#share-list-permissions').val(), function(data) {
+  var email = $(page['word-lists']).find('#share-list-other-user-email').val();
+  setSharingPermissions(shownListId, email, $(page['word-lists']).find('#share-list-permissions').val(), function(data) {
     // finished callback
 
     // re-enable the form elements
-    $('#share-list-other-user-email').prop('disabled', false).val('');
-    $('#share-list-permissions').prop('disabled', false);
-    $('#share-list-submit').prop('disabled', false).attr('value', 'Share');
+    $(page['word-lists']).find('#share-list-other-user-email').prop('disabled', false).val('');
+    $(page['word-lists']).find('#share-list-permissions').prop('disabled', false);
+    $(page['word-lists']).find('#share-list-submit').prop('disabled', false).attr('value', 'Share');
 
     // refresh the list of sharings without loading information
     refreshListSharings(false, shownListId);
@@ -871,7 +871,7 @@ function setSharingPermissions(listId, email, permissions, callback) {
 // get label list of user
 function getLabelList(showLoadingInformation) {
   if (showLoadingInformation)
-    $('#list-labels-list').html(loading);
+    $(page['word-lists']).find('#list-labels-list').html(loading);
 
   // send request
   jQuery.ajax('server.php', {
@@ -889,23 +889,23 @@ function getLabelList(showLoadingInformation) {
 
 
 
-    $('#list-labels-list').html(getEditableHtmlTableOfLabels(labels)); // update DOM
+    $(page['word-lists']).find('#list-labels-list').html(getEditableHtmlTableOfLabels(labels)); // update DOM
     
     
     // open small menu for single label event trigger
-    $('#list-labels-list img.small-menu-open-image').on('click', function(e) {
-      $('.small-menu').addClass('display-none');
+    $(page['word-lists']).find('#list-labels-list img.small-menu-open-image').on('click', function(e) {
+      $(page['word-lists']).find('.small-menu').addClass('display-none');
       $(this).next().removeClass('display-none');
       e.stopPropagation(); // prevent triggering click event on body which listens for click to close the popup
     });
-    $('#list-labels-list .small-menu input').on('click', function(e) {
+    $(page['word-lists']).find('#list-labels-list .small-menu input').on('click', function(e) {
       $(this).parents('.small-menu').addClass('display-none');
     });
-    $('#list-labels-list .small-menu').on('click', function(e) { e.stopPropagation(); }); // prevent triggering click event on body which listens for click to close the popup
+    $(page['word-lists']).find('#list-labels-list .small-menu').on('click', function(e) { e.stopPropagation(); }); // prevent triggering click event on body which listens for click to close the popup
 
     // just added checkboxes event listener
     // the checkboxes allow the user to attach the list to a label by checking the checkbox
-    $('#list-labels-list input[type=checkbox]').click( function(){
+    $(page['word-lists']).find('#list-labels-list input[type=checkbox]').click( function(){
       // read label id from checkbox data tag
       var labelId = $(this).data('label-id');
 
@@ -927,7 +927,7 @@ function getLabelList(showLoadingInformation) {
 
 
     // add new label form event listener
-    $('.label-add-form').on('submit', function(e) {
+    $(page['word-lists']).find('.label-add-form').on('submit', function(e) {
       e.preventDefault();
 
       // disable form elements
@@ -950,7 +950,7 @@ function getLabelList(showLoadingInformation) {
     });
 
     // remove label form submit event listener
-    $('.label-remove-form').on('submit', function(e) {
+    $(page['word-lists']).find('.label-remove-form').on('submit', function(e) {
       e.preventDefault();
 
       // update form children
@@ -974,19 +974,19 @@ function getLabelList(showLoadingInformation) {
     });
 
     // add sub label event listener
-    $('.label-add-sub-label').on('click', function() {
+    $(page['word-lists']).find('.label-add-sub-label').on('click', function() {
       // show the "add sub label form" which is hidden in the following <tr>
       $(this).hide().parent().parent().parent().next().show().children().find('input[type=text]').first().focus();
     });
 
     // label rename form event listener
-    $('.label-rename-form').on('submit', function(e) {
+    $(page['word-lists']).find('.label-rename-form').on('submit', function(e) {
       e.preventDefault();
 
       // get label id from data tag of the form
       var labelId = $(this).data('label-id');
-      var $button = $('#label-rename-button-' + labelId);
-      var $firstCell = $('#label-rename-table-cell-' + labelId);
+      var $button = $(page['word-lists']).find('#label-rename-button-' + labelId);
+      var $firstCell = $(page['word-lists']).find('#label-rename-table-cell-' + labelId);
 
       // edit name
       if ($button.data('action') == 'rename-edit') {
@@ -1018,7 +1018,7 @@ function getLabelList(showLoadingInformation) {
 
 
     // expand single labels
-    $('#list-labels-list .small-exp-col-icon').on('click', function() {
+    $(page['word-lists']).find('#list-labels-list .small-exp-col-icon').on('click', function() {
       var $this = $(this);
       var expand = ($this.data('state') == 'collapsed');
 
@@ -1057,7 +1057,7 @@ function getLabelList(showLoadingInformation) {
 
 // close small menu for single label event trigger
 $('body').on('click', function() {
-  $('.small-menu').addClass('display-none');
+  $(page['word-lists']).find('.small-menu').addClass('display-none');
 }); 
 
 

@@ -1,3 +1,5 @@
+function SinglePageApplication() {};
+
 // single page app
 var shownPageName, shownHashName, 
     pageTitle = {
@@ -11,6 +13,23 @@ var shownPageName, shownHashName,
       'legal-info': 'Legal info'
     };
 
+var page = {}, pageElementsParent = document.getElementById('main');
+(function() {
+  var jQueryPageElement = $('#main').children('div');
+  for (var i = 0;  i < jQueryPageElement.length; i++) {
+    var id = jQueryPageElement.eq(i).attr('id');
+    if (id !== undefined && id.substring(0, 8) === 'content-') {
+      page[id.substring(8)] = jQueryPageElement[i];
+    }
+  }
+
+  for (var singlePage in page) {
+    pageElementsParent.removeChild(page[singlePage]);
+  }
+})();
+
+
+
 var updatePageContent = function () {
 
   // read page name from URL
@@ -19,7 +38,8 @@ var updatePageContent = function () {
   var subPageName = hash.substring(firstPart.length + 1, hash.length);
   var pageName = (firstPart.length === 0) ? "home" : firstPart;
 
-  if ($('#content-' + pageName).length === 0) { // given page doesn't exist
+
+  if (page[pageName] === undefined) { // given page doesn't exist
     // forward to home page
     pageName = "home";
   }
@@ -35,19 +55,19 @@ var updatePageContent = function () {
   // allow sub pages to process the hash change 
   $(window).trigger('page-' + pageName, [pageName, subPageName]);
   
-
   // don't touch the DOM if the page (first part of the has) is already shown
   if (shownPageName === pageName) return;
   
+  if (shownPageName !== undefined) {
+    pageElementsParent.removeChild(page[shownPageName]);
+  }
+  
   shownPageName = pageName;
-  
-  
-  $('#main').children('div').hide(); // hide all pages
   $('li').removeClass('visited'); // unmark the navigation element
   
   // mark nav element as visisted (class active)
   $('.nav_' + pageName).addClass('visited');
-  $('#content-' + pageName).show(); // show the div containing the requested page
+  pageElementsParent.insertBefore(page[pageName], pageElementsParent.firstChild); // show the div containing the requested page
   window.scrollTo(0, 0); // scroll to the top
   
   $(((typeof adsEnabled !== 'undefined' && adsEnabled) ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();

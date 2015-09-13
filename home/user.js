@@ -25,19 +25,19 @@ function addUser(email, callback) {
 }
 
 // event listener for submit of form to add a new user
-$('#user-add-form').on('submit', function(e) {
+$(page['user']).find('#user-add-form').on('submit', function(e) {
   // dont visit action="..." page
   e.preventDefault();
 
   // disable button to avoid resubmission
-  $('#user-add-email').prop('disabled', true);
-  $('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
+  $(page['user']).find('#user-add-email').prop('disabled', true);
+  $(page['user']).find('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
 
   // call actual add user function and pass required information (email address of user to add)
-  addUser($('#user-add-email').val(), function(data) {
+  addUser($(page['user']).find('#user-add-email').val(), function(data) {
     // re-enable button and input field to allow adding another user
-    $('#user-add-email').prop('disabled', false).val('');
-    $('#user-add-button').prop('disabled', false).attr('value', 'Add user');
+    $(page['user']).find('#user-add-email').prop('disabled', false).val('');
+    $(page['user']).find('#user-add-button').prop('disabled', false).attr('value', 'Add user');
 
     // handle response string
     var responseString;
@@ -46,14 +46,14 @@ $('#user-add-form').on('submit', function(e) {
     else if (data === 1) responseString =  "User has been added.";
     else if (data === 2) responseString =  "You can not add yourself.";
     else responseString = "An unknown error occured.";
-    $('#user-add-message').html(responseString);
+    $(page['user']).find('#user-add-message').html(responseString);
   });
 });
 
 // removes a user by his id
 function removeUser(id) {
   // disable buton to avoid resubmission
-  $('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
+  $(page['user']).find('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
 
   jQuery.ajax('server.php', {
     data: {
@@ -68,12 +68,12 @@ function removeUser(id) {
     data = handleAjaxResponse(data);
 
     // remove row of the user who has just been deleted from the database
-    $('#added-users-row-' + id).remove();
+    $(page['user']).find('#added-users-row-' + id).remove();
 
     // update div
     // if no added users are left show the appropriate message
-    if ($('#people-you-have-added tr').length == 1) {
-      $('#people-you-have-added').html(noUsersAddedOutput);
+    if ($(page['user']).find('#people-you-have-added tr').length == 1) {
+      $(page['user']).find('#people-you-have-added').html(noUsersAddedOutput);
     }
 
     // refresh the other list without loading information
@@ -89,7 +89,7 @@ function removeUser(id) {
 function refreshListOfAddedUsers(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
-    $('#people-you-have-added').html(loading);
+    $(page['user']).find('#people-you-have-added').html(loading);
 
   jQuery.ajax('server.php', {
     data: {
@@ -117,7 +117,7 @@ function refreshListOfAddedUsers(showLoadingInformation) {
       output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
     }
 
-    $('#people-you-have-added').html(output); // update the html element with the list
+    $(page['user']).find('#people-you-have-added').html(output); // update the html element with the list
   });
 }
 
@@ -125,7 +125,7 @@ function refreshListOfAddedUsers(showLoadingInformation) {
 function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
-    $('#people-who-have-added-you').html(loading);
+    $(page['user']).find('#people-who-have-added-you').html(loading);
 
   jQuery.ajax('server.php', {
     data: {
@@ -155,10 +155,10 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
       output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
     }
 
-    $('#people-who-have-added-you').html(output); // update DOM
+    $(page['user']).find('#people-who-have-added-you').html(output); // update DOM
 
     // add event listener for newly added buttons
-    $('#people-who-have-added-you input[type=button]').on('click', function() {
+    $(page['user']).find('#people-who-have-added-you input[type=button]').on('click', function() {
       // buttons function is adding users
       var $button = $(this);
       $button.prop('disabled', true).val('Adding...'); // disable button and change value
