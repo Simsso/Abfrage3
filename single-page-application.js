@@ -50,7 +50,7 @@ var updatePageContent = function () {
   $('#content-' + pageName).show(); // show the div containing the requested page
   window.scrollTo(0, 0); // scroll to the top
   
-  $((adsEnabled ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();
+  $(((typeof adsEnabled !== 'undefined' && adsEnabled) ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();
 };
 
 // hashchange event listener

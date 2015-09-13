@@ -255,7 +255,14 @@ function refreshQueryLabelList(showLoadingInformation) {
 
 
     // start query button click event
-    $('#query-start-button').on('click', startQuery);
+    $('#query-start-button').on('click', function() {
+      if (queryRunning) {
+        stopQuery();
+      }
+      else {
+        startQuery();
+      }
+    });
 
     // checkbox click event
     $('#query-label-selection tr').on('click', function(){
@@ -382,7 +389,7 @@ function removeListFromQuery(listId) {
 }
 
 function getListRow(list, selected) {
-  return '<tr' + (selected?'class="active"':'') + ' data-query-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + ' word' + ((list.words.length == 1) ? '': 's') + '</td></tr>';
+  return '<tr' + (selected?'class="active"':'') + ' data-query-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + '</td></tr>';
 }
 
 function checkStartQueryButtonEnable() {
@@ -464,9 +471,11 @@ var queryWords = [], // array of all words which the user selected for the query
     
     
 function startQuery() {
+  queryRunning = true;
+
+  $('#query-start-button').attr('value', 'Stop test');
   $('#query-not-started-info').addClass('display-none');
   $('#query-content-table').removeClass('display-none');
-  queryRunning = true;
 
   // produce one array containing all query words
   queryWords = [];
@@ -492,6 +501,14 @@ function startQuery() {
   //$('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 
+}
+
+function stopQuery() {
+  queryRunning = false;
+
+  $('#query-start-button').attr('value', 'Start test');
+  $('#query-not-started-info').removeClass('display-none');
+  $('#query-content-table').addClass('display-none');
 }
 
 function nextWord() {

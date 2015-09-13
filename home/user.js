@@ -18,7 +18,7 @@ function addUser(email, callback) {
 
     // refresh both lists (added users and shared word lists) with and without loading information
     refreshListOfAddedUsers(false);
-    refreshListOfSharedWordLists(true);
+    refreshListOfSharedWordLists(true, true);
 
     callback(data);
   });

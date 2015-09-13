@@ -38,6 +38,8 @@ body {
   min-height: calc(100% - 60px);
   padding-top: 60px;
   width: 100%;
+
+  transition: transform ease-in 0.2s;
 }
 
 a {
@@ -240,7 +242,6 @@ body > .main {
 
 .box {
   position: relative;
-  overflow: hidden;
   margin: 25px 0 0 0;
   text-align: left;
   color: #263238;
@@ -514,8 +515,8 @@ div.right-column-img-wrapper {
 }
 
 .tour-container img.full-width {
-  margin-left: -30px;
-  width: calc(100% + 60px);
+  margin-left: -15px;
+  width: calc(100% + 30px);
 }
 
 .tour-container table.headline {
@@ -605,11 +606,9 @@ div.right-column-img-wrapper {
 body.mobile-menu-shown {
   /*overflow: hidden;*/
 }
-
 body.mobile-menu-shown #main-wrapper {
   transform: translate3d(256px, 0px, 0px);
 }
-
 
 
 .advertisement-bottom {
@@ -765,6 +764,9 @@ input[type=text]:first-child:last-child {
 
 /* mobile */
 @media screen and (max-width: 700px) {
+  .navbar {
+    background-color: #8892BF;
+  }
   .box {
     margin-top: 10px;
   }
