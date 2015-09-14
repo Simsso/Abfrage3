@@ -194,11 +194,14 @@ ul.social-icons li {
   right: 0;
   float: right;
 }
+.navbar .navbar-inner .nav li, .navbar .navbar-inner .nav a {
+  float: left;
+}
+
 .navbar .navbar-inner .nav li {
   padding: 22px 10px 18px;
   line-height: 16px;
   font-size: 16px;
-  float: left;
 }
 .navbar .navbar-inner .nav li.visited {
   background: #4F5B93;
