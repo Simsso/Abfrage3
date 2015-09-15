@@ -1,3 +1,6 @@
+"use strict";
+
+// window load event listener
 $(window).load(function() {
     window.loaded = true;
 });
@@ -55,19 +58,24 @@ var menuShown = false;
 $('body').prepend('<nav id="mobile-nav"><div></div></nav>');
 $('#mobile-nav > div').html($('.navbar-inner.content-width').html()).find('*').show();
 
-var $menuIcons = $('#mobile-nav > div .nav-img-li');
-for (var i = 0; i < $menuIcons.length; i++) {
-  var $currentMenuIcon = $menuIcons.eq(i);
-  var text = $currentMenuIcon.data('text');
-  $currentMenuIcon.append('&nbsp;' + text);
+var menuIcons = $('#mobile-nav > div .nav-img-li');
+for (var i = 0; i < menuIcons.length; i++) {
+  var currentMenuIcon = menuIcons.eq(i);
+  var text = currentMenuIcon.data('text');
+  currentMenuIcon.append('&nbsp;' + text);
 }
 
+
+// toggle mobile menu
 function toggleMenu() {
   if (menuShown)
     hideMenu();
   else
     showMenu();
 }
+
+
+// show mobile menu
 function showMenu() {
   if (menuShown) return;
 
@@ -97,6 +105,8 @@ function showMenu() {
   });
 }
 
+
+// hide mobile menu
 function hideMenu() {
   if (!menuShown) return;
 
@@ -139,6 +149,14 @@ function getLoadingFullscreenWithMessage(message) {
 // toast
 $('#main-wrapper').after('<div id="toast" style="transition: opacity 0s; position: fixed; bottom: 57px; left: calc(50% - 200px); width: 400px; color: white; padding: 10px; border: 1px solid #4F5B93; box-shadow: 1px 1px 3px #4F5B93; background-color: #8892BF; overflow: hidden; text-align: center; display: none; "></div>');
 
+// Toast
+// 
+// calling
+// @code new Toast("message"); 
+// will make a toast appear on the bottom of the scrren including the passed string
+//
+// @param string text: the text to show
+// @param int|undefined ms: milliseconds to show the message (default 5000) 
 function Toast(text, ms) {
   this.ms = ms;
   this.text = text;
@@ -176,9 +194,34 @@ var ajaxRequests = {
 };
 
 
+// handle ajax response data
+//
+// This function is called every time an Ajax-request has been done. This is to make sure every Ajax request is logged into the console and parsing is not decentral.
+// The Abfrage3 server always (except from PHP errors) responds with an JSON string created like so:
+//
+// @code  // response object
+//        $obj = new stdClass();
+//        $obj->status = $status; // status: "success" or "error"
+//        $obj->data = $data; // data: the actual data
+//        $obj->action = $_GET['action']; // the action which has been done (like "get-word-list")
+//        $obj->execution_time_ms = (microtime(true) - $start_time) * 1000; // measured execution time (debugging purposes)
+//
+//        // JSON encode response object
+//        // echo it by passing it to the exit() function
+//        // stop script execution by calling exit()
+//        exit(json_encode($obj)); 
+//
+// The information of this object is being parsed to an JavaScript object and will be logged. 
+// If the sent status is "success" the function will return the parsed data object.
+// If something went wrong e.g. the server responds with an PHP error the try {} will fail and the whole response string will be logged inside the catch block.
+// In latter case the returned value will be undefined.
+//
+// @param string|undefined data: server response string (JSON) or undefined in case the passed data is not valid
+// 
+// @return object: parsed server response (JSON) as a JavaScript object
 function handleAjaxResponse(data) {
-  try { // try because parseJSON could cause an exception
-    var obj = jQuery.parseJSON(data);
+  try { // try because parsing JSON could cause an exception
+    var obj = JSON.parse(data);
     console.log(obj);
 
     if (obj.status === "success") {
@@ -221,13 +264,24 @@ $(document).keyup(function(e) {
 
 
 
-// cookies
+// set cookie
+//
+// @param string cname: name
+// @param string cvalue: cooke value
+// @param int exdays: expiration days
 function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
   var expires = "expires="+d.toUTCString();
   document.cookie = cname + "=" + cvalue + "; " + expires;
 }
+
+
+// read cookie
+//
+// @param string key: name of the cookie
+//
+// @return string: cookie value
 function readCookie(key)
 {
   var result;
@@ -299,6 +353,8 @@ $('form[data-submit-loading=true]').on('submit', function(e) {
 // advertisement
 
 var adsLoaded = false;
+
+// show ads
 function showAds() {
   adsEnabled = true;
   if (window.loaded) {
@@ -312,11 +368,13 @@ function showAds() {
   }
 }
 
+// hide ads
 function hideAds() {
   adsEnabled = false;
   $('.advertisement-bottom').hide();
 }
 
+// load ads
 function loadAds() {
   if (!adsLoaded) {
     (adsbygoogle = window.adsbygoogle || []).push({});
@@ -330,6 +388,9 @@ if (typeof adsEnabled !== 'undefined' && adsEnabled === true) {
 
 
 // save text as file
+//
+// @param string text: file content
+// @param string fileName: file name
 function saveTextAsFile(text, fileName) {
   var textFileAsBlob = new Blob([text], {type:'text/plain'});
   var tmpDownloadLink = document.createElement("a");

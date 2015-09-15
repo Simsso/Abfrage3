@@ -1,8 +1,15 @@
+"use strict";
+
 // const strings
 var noUsersAddedOutput = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
 var noUsersHaveAddedYouOutput = '<p class="spacer-top-15">No users have added you yet.</p>';
 
+// add user
+//
 // add a new user by email address
+// 
+// @param string email: user to add
+// @param function callback: callback with request response data passed
 function addUser(email, callback) {
   jQuery.ajax('server.php', {
     data: {
@@ -50,7 +57,12 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
   });
 });
 
-// removes a user by his id
+
+// remove user
+//
+// removes a user by their id
+// 
+// @param int id: user id
 function removeUser(id) {
   // disable buton to avoid resubmission
   $(page['user']).find('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
@@ -85,7 +97,9 @@ function removeUser(id) {
 }
 
 
-// list of added users
+// refresh list of added users
+//
+// @param bool showLoadingInformation: defines whether the loading animation is shown or not
 function refreshListOfAddedUsers(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
@@ -121,7 +135,9 @@ function refreshListOfAddedUsers(showLoadingInformation) {
   });
 }
 
-// list of users who have added you
+// refresh list of users who have added you
+//
+// @param bool showLoadingInformation: defines whether the loading animation is shown or not
 function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)

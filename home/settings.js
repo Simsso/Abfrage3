@@ -1,3 +1,5 @@
+"use strict";
+
 // single page application allow url like
 // ...#settings/profile
 var shownSettingsSubPageName;
@@ -23,7 +25,12 @@ $(window).on('page-settings', function(event, pageName, subPageName) {
 });
 
 
-// menu
+// show settings page
+//
+// the page "Settings" has a sub-structure of multiple settings-pages (e.g. "Account", "Profile", ...)
+// the method shows the passed page
+// 
+// @param string name: name of the settings-sub-page to show
 function showSettingsPage(name) {
   shownSettingsSubPageName = name;
   $(page['settings']).find('#settings-menu tr').removeClass('active');
@@ -32,11 +39,12 @@ function showSettingsPage(name) {
   $(page['settings']).find('#settings-content > div[data-page=' + name + ']').removeClass('display-none');
 }
 
+// settings sub-pages menu event listener
 $(page['settings']).find('#settings-menu tr').on('click', function() {
   location.hash = '#/settings/' + $(this).data('page');
 });
 
-// change name
+// change name form event listener
 $(page['settings']).find('#settings-name').on('submit', function(e) {
   e.preventDefault();
   
@@ -79,7 +87,7 @@ $(page['settings']).find('#settings-name').on('submit', function(e) {
 
 
 
-// change password
+// change password form event listener
 $(page['settings']).find('#settings-password').on('submit', function(e) {
   e.preventDefault();
   
@@ -127,10 +135,13 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
   });
 });
 
-// change name
+
+
+// delete account form event listener
 $(page['settings']).find('#settings-delete-account-form').on('submit', function(e) {
   e.preventDefault();
   
+  // message box to make sure that no one accidentally deletes an account
   var messageBox = new MessageBox();
   messageBox.setTitle('Delete account');
   messageBox.setContent('Are you sure you want to delete your account?');
@@ -170,7 +181,9 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
 
 
 
-// ads enabled
+// set ads enabled
+//
+// @param bool adsEnabled: ads enabled or not
 function setAdsEnabled(adsEnabled) {
   // send request
   jQuery.ajax('server.php', {

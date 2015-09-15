@@ -1,12 +1,22 @@
+"use strict";
+
 // feed
 
-var $feed = $(page['home']).find('#feed'), 
+// feed HTML element
+var feed = $(page['home']).find('#feed'), 
     noFeedContent = '<p>Nothing new since last login.</p>',
-    feedSince = -1; // since last login
+    feedSince = -1; // show the feed since unix time (-1 = since last login)
 
+
+// refresh feed
+//
+// refreshes the feed DOM element
+//
+// @param bool showLoadingInformation: defines whether the loading animation is shown or not
+// @param function|undefined callback: callback with Ajax-request response as first parameter
 function refreshFeed(showLoadingInformation, callback) {
   if (showLoadingInformation) {
-    $feed.html(loading);
+    feed.html(loading);
   }
 
   // send request to get the feed
@@ -21,7 +31,9 @@ function refreshFeed(showLoadingInformation, callback) {
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
-    data.events.sort(function(a, b) { // sort by time of feed events
+
+    // sort feed events by time
+    data.events.sort(function(a, b) { 
       if (a.time < b.time) return -1; 
       if (a.time > b.time) return 1; 
       return 0;
@@ -30,7 +42,8 @@ function refreshFeed(showLoadingInformation, callback) {
     
     var feedHtml = '';
     
-    for (var i = data.events.length - 1; i >= 0; i--) { // go through the array the other way around to display newest first
+    // go through the array the other way around to display newest first
+    for (var i = data.events.length - 1; i >= 0; i--) { 
       var feedItem = data.events[i], info = data.events[i].info;
       feedHtml += '<tr><td>';
       
@@ -54,7 +67,7 @@ function refreshFeed(showLoadingInformation, callback) {
     if (feedHtml.length === 0) feedHtml = noFeedContent;
     else feedHtml = '<table class="feed-table box-table">' + feedHtml + '</table>';
     
-    $feed.html(feedHtml);
+    feed.html(feedHtml);
     
     if (callback !== undefined)
       callback(data);
@@ -74,11 +87,16 @@ $(page['home']).find('#feed-load-all').on('click', function() {
 
 // recently used
 
-var $recentlyUsed = $(page['home']).find('#recently-used'), noRecentlyUsed = '<p>No recently used lists found.</p>';
+var recentlyUsedElement = $(page['home']).find('#recently-used'), noRecentlyUsed = '<p>No recently used lists found.</p>';
 
+// refresh recently used
+//
+// refreshes the div content showing the recently used lists of a user 
+//
+// @param bool showLoadingInformation: defines whether the loading animation is shown or not
 function refreshRecentlyUsed(showLoadingInformation) {
   if (showLoadingInformation) 
-    $recentlyUsed.html(loading);
+    recentlyUsedElement.html(loading);
   
   // send request to get the feed
   jQuery.ajax('server.php', {
@@ -93,17 +111,25 @@ function refreshRecentlyUsed(showLoadingInformation) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
     
+    // no recently used lists
     if (data.length === 0) {
-      $recentlyUsed.html(noRecentlyUsed);
+      recentlyUsedElement.html(noRecentlyUsed);
     }
     else {
+      // add a table
       var html = '<table class="box-table cursor-pointer">';
+
+      // iterate through all recently used lists and add <tr> element
       for (var i = 0; i < data.length; i++) {
         html += '<tr data-list-id="' + data[i].id + '"><td>' + data[i].name + '</td></tr>';
       }
       html += '</table>';
-      $recentlyUsed.html(html);
-      $recentlyUsed.find('tr').on('click', function() {
+
+      // update the DOM
+      recentlyUsedElement.html(html);
+
+      // add event listener to make lists clickable (link to #/word-lists/xxx)
+      recentlyUsedElement.find('tr').on('click', function() {
         window.location.href = '#/word-lists/' + $(this).data('list-id');
       });
     }
