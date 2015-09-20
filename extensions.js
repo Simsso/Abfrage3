@@ -19,8 +19,8 @@ Array.prototype.contains = function(obj) {
 
 // removes the first occurence of the given object in an array
 Array.prototype.remove = function(obj) {
-  var index = this.indexOf(obj) != -1;
-  if (index != -1) {
+  var index = this.indexOf(obj);
+  if (index !== -1) {
     this.splice(index, 1);
   }
   return this;

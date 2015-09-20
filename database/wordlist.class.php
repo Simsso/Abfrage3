@@ -40,10 +40,10 @@ class BasicWordList {
     return null;
   }
 
-  public function load_words($loadAnswers, $user_id) {
+  public function load_words($loadAnswers, $user_id, $order) {
     global $con;
 
-    $sql = "SELECT * FROM `word` WHERE `list` = ".$this->id." AND `status` = 1;";
+    $sql = "SELECT * FROM `word` WHERE `list` = ".$this->id." AND `status` = 1 ORDER BY `word`.`id` ".$order.";";
     $query = mysqli_query($con, $sql);
     $this->words = array();
     while ($row = mysqli_fetch_assoc($query)) {

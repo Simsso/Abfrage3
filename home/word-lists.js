@@ -280,8 +280,22 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
 
       // refresh list of recently used lists
       refreshRecentlyUsed(false);
+
+      // update the list data variable to the downloaded data
+      shownListData = new List(
+          data.list.id, 
+          data.list.name, 
+          data.list.creator, 
+          data.list.comment, 
+          data.list.language1,
+          data.list.language2, 
+          data.list.creationTime, 
+          data.list.words
+        );
       
-      shownListData = data.list; // update the list data variable to the downloaded data
+      shownListData.labels = data.list.labels;
+      
+      console.log(linkLoadedWordList(shownListData));
       
       // list doesn't exist or no permissions or deleted
       if (shownListData === null) {
@@ -426,7 +440,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
 
         var newListName = nameInput.val();
         // send information to the server
-        renameList(shownListId, newListName, function(shownListData) {
+        renameList(shownListId, newListName, function(data) {
           // re-enable button and inputs
           nameInput.prop('disabled', false);
           submitButton.prop('disabled', false).attr('value', 'Rename');
@@ -573,6 +587,7 @@ function editSaveWord(event, id) {
 
 
 // save word
+//
 // saves changed made to a word into the database
 //
 // @param int id: id of the word

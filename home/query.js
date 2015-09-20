@@ -200,7 +200,7 @@ QueryAlgorithm.InOrder = function(words) {
 QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
   if (groupSize === undefined) groupSize = 6;
   if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = 4;
-  
+
   this.groupSize = groupSize;
   this.careAboutLastNAnswers = careAboutLastNAnswers;
   this.words = words.slice().shuffle(); // shuffle a copy of the words array
@@ -234,7 +234,10 @@ QueryAlgorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
       }
     }
     
-    return this.currentGroup.getRandomElement();
+    // select a random word but don't return the last asked word
+    var nextWord = this.currentGroup.slice().remove(this.lastReturnedWord).getRandomElement();
+    this.lastReturnedWord = nextWord;
+    return nextWord;
   };
 };
 
@@ -633,7 +636,7 @@ function getListById(id) {
 
 
 var queryWords = [], // array of all words which the user selected for the query
-    queryChosenAlgorithm = QueryAlgorithmEnum.Random, // the algorithm the user has chosen
+    queryChosenAlgorithm = QueryAlgorithmEnum.GroupWords, // the algorithm the user has chosen
     queryChosenDirection = QueryDirection.Both, // the query direction the user has chosen
     queryChosenType = QueryType.TextBox, // type (text box or buttons to answer the question)
     queryRunning = false, // true if a query is running
@@ -1076,6 +1079,32 @@ function getLanguagesOfWordLists(list) {
   }
 
   return language;
+}
+
+
+
+// link loaded word list
+//
+// when the user loads a word list it will refer to the same object as the query list
+// this makes sure that changes will also affect the current query and will not require a full reload
+// if the list doesn't exist in the array at all it will be pushed (this might be the case when the user creates a new list)
+//
+// @param List list: the list to link
+//
+// @return bool: whether the list has been linked
+function linkLoadedWordList(list) {
+  if (queryLists === null) return false;
+
+  for (var i = queryLists.length - 1; i >= 0; i--) {
+    if (queryLists[i].id === list.id) {
+      console.log(queryLists[i]);
+      console.log(list);
+      queryLists[i] = list;
+      return true;
+    }
+  };
+  queryLists.push(list);
+  return true;
 }
 
 
