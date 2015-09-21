@@ -65,7 +65,7 @@ function refreshFeed(showLoadingInformation, callback) {
     
     // nothing in the feed
     if (feedHtml.length === 0) feedHtml = noFeedContent;
-    else feedHtml = '<table class="feed-table box-table">' + feedHtml + '</table>';
+    else feedHtml = '<table class="feed-table box-table no-flex">' + feedHtml + '</table>';
     
     feed.html(feedHtml);
     

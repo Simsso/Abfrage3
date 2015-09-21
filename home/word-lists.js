@@ -295,7 +295,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       
       shownListData.labels = data.list.labels;
       
-      console.log(linkLoadedWordList(shownListData));
+      Query.linkLoadedWordList(shownListData);
       
       // list doesn't exist or no permissions or deleted
       if (shownListData === null) {
@@ -468,7 +468,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
         var lang1 = lang1Input.val(), lang2 = lang2Input.val();
 
         // send information to the server
-        setWordListLanguages(shownListId, lang1, lang2, function(shownListData) {
+        setWordListLanguages(shownListId, lang1, lang2, function() {
 
           // re-enable inputs and buttons
           lang1Input.prop('disabled', false);
