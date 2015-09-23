@@ -142,9 +142,10 @@ if (is_null($next_to_last_login)) {
                       </td>
                     </tr>
                     <tr>
-                      <td>
-                        <div id="query-word-mark"></div>
-                      </td>
+                      <td id="query-word-stats" colspan="2"></td>
+                    </tr>
+                    <tr>
+                      <td id="query-selected-words-stats" colspan="2"></td>
                     </tr>
                   </table>
                 </div>

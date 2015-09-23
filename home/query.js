@@ -2,6 +2,8 @@
 
 var Query = {};
 
+Query.CONSIDERNANSWERS = 5;
+
 // constructors
 
 // List
@@ -49,14 +51,7 @@ List.prototype.getName = function() {
 //
 // @return float: known average of the list
 List.prototype.getKnownAverage = function() {
-  if (this.words.length === 0) return 0;
 
-  var sum = 0.0;
-  for (var i = 0; i < this.words.length; i++) {
-    sum += this.words[i].getKnownAverage();
-  }
-
-  return sum / this.words.length;
 };
 
 
@@ -104,9 +99,12 @@ function Word(id, list, language1, language2, answers) {
 // goes through all answers and determines how often the word has been known
 // if it has been known 3 time in 4 queries the return value will be 0.75
 //
+// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
+//
 // @return float: known average of the word
-Word.prototype.getKnownAverage = function() {
-  return this.getKnownAverageOverLastNAnswers(this.answers.length);
+Word.prototype.getKnownAverage = function(ignoreAnswers) {
+  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
+  return this.getKnownAverageOverLastNAnswers(this.answers.length, ignoreAnswers);
 };
 
 
@@ -115,19 +113,70 @@ Word.prototype.getKnownAverage = function() {
 // goes through the last n answers and determines how often the word has been known
 //
 // @param int n: number of answers to consider 
+// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
 //
 // @return float: known average of the word considering the last n answers
-Word.prototype.getKnownAverageOverLastNAnswers = function(n) {
+Word.prototype.getKnownAverageOverLastNAnswers = function(n, ignoreAnswers) {
+  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
   if (this.answers.length === 0) return 0;
-  if (n > this.answers.length) return Math.map(this.getKnownAverage(), 0, 1, 0, this.answers.length / n);
+
+  if (this.answers.length < n) n = this.answers.length; // call requests more answers than the word even has
+  var minIndex = this.answers.length - n, validAnswers = 0, iterations = 0;
+  for (var i = this.answers.length - 1; i >= minIndex && i >= 0; i--) {
+    if (ignoreAnswers.contains(this.answers[i])) {
+      minIndex--;
+    }
+    else {
+      validAnswers++;
+    } 
+    iterations++;
+  }
+
+  if (validAnswers === 0) return 0;
 
   var knownCount = 0.0;
-  for (var i = (this.answers.length - n); i < this.answers.length; i++) {
+  for (var i = this.answers.length - 1; i >= this.answers.length - iterations; i--) {
+    if (ignoreAnswers.contains(this.answers[i])) {
+      continue;
+    }
     if (this.answers[i].correct === 1) {
       knownCount++;
     }
   }
-  return knownCount / n;
+  return knownCount / validAnswers;
+
+  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
+  if (this.answers.length === 0) return 0;
+
+  var iterations = 0, consideredAnswers = 0;
+  var minIndex = this.answers.length - n;
+  for (var i = this.answers.length - 1; i >= minIndex && i >= 0; i--) {
+    if (ignoreAnswers.contains(this.answers[i])) {
+      minIndex--;
+    }
+    else {
+      consideredAnswers++;
+    }
+    iterations++;
+  }
+  if (consideredAnswers === 0) return 0;
+
+  n = iterations;
+
+  if (n > this.answers.length) {
+    return Math.map(this.getKnownAverage(ignoreAnswers), 0, 1, 0, this.answers.length / n);
+  }
+
+  var knownCount = 0.0;
+  for (var i = (this.answers.length - 1); i >= minIndex && i >= 0; i--) {
+    if (ignoreAnswers.contains(this.answers[i])) {
+      continue;
+    }
+    if (this.answers[i].correct === 1) {
+      knownCount++;
+    }
+  }
+  return knownCount / consideredAnswers;
 };
 
 
@@ -153,14 +202,37 @@ Word.getWordKnownBelow = function(wordArray, percentage) {
 // get known average of array
 //
 // @param Word[] wordArray: array of words to consider
+// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
 // 
 // @return float: known average of the words in the given array
-Word.getKnownAverageOfArray = function(wordArray) {
+Word.getKnownAverageOfArray = function(wordArray, ignoreAnswers) {
+  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
   if (wordArray.length === 0) return 0;
 
   var sum = 0.0;
   for (var i = 0; i < wordArray.length; i++) {
-    sum += wordArray[i].getKnownAverage();
+    sum += wordArray[i].getKnownAverage(ignoreAnswers);
+  }
+
+  return sum / wordArray.length;
+};
+
+
+
+// get known average of array over last n ansers
+//
+// @param Word[] wordArray: array of words to consider
+// @param int n: number of answers per word to care about
+// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
+// 
+// @return float: known average of the words in the given array
+Word.getKnownAverageOfArrayOverLastNAnswers = function(wordArray, n, ignoreAnswers) {
+  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
+  if (wordArray.length === 0) return 0;
+
+  var sum = 0.0;
+  for (var i = 0; i < wordArray.length; i++) {
+    sum += wordArray[i].getKnownAverageOverLastNAnswers(n, ignoreAnswers);
   }
 
   return sum / wordArray.length;
@@ -209,10 +281,10 @@ Query.Algorithm.InOrder.prototype.getNextWord = function() {
 // @param int groupSize: size of the group which will be asked at the same time
 // @param int careAboutLastNAnswers: number of answers to consider when defining whether a word is known or not
 //
-// @return Query.Algorithm.GrouWords: query algorithm object
+// @return Query.Algorithm.GroupWords: query algorithm object
 Query.Algorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
   if (groupSize === undefined) groupSize = 6;
-  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = 4;
+  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = Query.CONSIDERNANSWERS;
 
   this.groupSize = groupSize;
   this.careAboutLastNAnswers = careAboutLastNAnswers;
@@ -248,6 +320,7 @@ Query.Algorithm.GroupWords.prototype.getNextWord = function() {
   }
   
   // select a random word but don't return the last asked word
+  if (this.currentGroup.length === 1) return this.currentGroup[0];
   var nextWord = this.currentGroup.slice().remove(this.lastReturnedWord).getRandomElement();
   this.lastReturnedWord = nextWord;
   return nextWord;
@@ -282,6 +355,12 @@ function QueryAnswer(word, correct, type, direction, id, time) {
   else 
     this.id = id;
 }
+
+QueryAnswer.sortByTime = function(a, b) {
+  if (a.time < b.time) return -1;
+  if (a.time > b.time) return 1;
+  return 0;
+};
 
 
 
@@ -368,6 +447,16 @@ Query.refreshLabelList = function(showLoadingInformation) {
         )
       );
     }
+
+
+    // fill query all answers array
+    for (var i = 0; i < Query.lists.length; i++) {
+      for (var j = 0; j < Query.lists[i].words.length; j++) {
+        Query.allAnswers.pushElements(Query.lists[i].words[j].answers);
+      }
+    }
+
+    Query.allAnswers.sort(QueryAnswer.sortByTime);
 
     $(page['query']).find('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
 
@@ -559,7 +648,7 @@ Query.checkStartButtonEnable = function() {
   for (var i = Query.selectedLists.length - 1; i >= 0; i--) {
       wordSum += Query.selectedLists[i].words.length;
   };  
-  $(page['query']).find('#query-start-button').prop('disabled', wordSum === 0);
+  $(page['query']).find('#query-start-button').prop('disabled', wordSum === 0 && !Query.running);
 }
 
 
@@ -648,10 +737,12 @@ Query.currentWord = null; // reference to the Word object which is currently ask
 Query.currentDirection = null; // the query direction (0 or 1)
 Query.correctAnswer = null; // the string value containing the currect answer for the current word
 Query.answers = []; // array of answers the user already gave
+Query.allAnswers = []; // array of all answers (also those given in the past - those which have been downloaded)
+Query.selectedWordsAllAnswers = []; // array of all answers given to the selected words
 Query.nextIndexToUpload = 0; // first index of answers which has not been uploaded already (if Query.answers[] contains 4 words and 3 of them have been uploaded the var will hav the value 3)
 Query.currentAnswerState = Query.AnswerStateEnum.Start; // query answer state
-Query.InOrderAlgorithm; 
-Query.GroupWordsAlgorithm;
+Query.inOrderAlgorithm; 
+Query.groupWordsAlgorithm;
     
 
 // start query
@@ -671,6 +762,13 @@ Query.start = function() {
     Query.words = Query.words.concat(Query.selectedLists[i].words);
   }
 
+  // refresh array of selected words all answers
+  Query.selectedWordsAllAnswers = [];
+  Query.Drawing.storedDataOfQueryAnswers = [];
+  for (var i = 0; i < Query.words.length; i++) {
+    Query.selectedWordsAllAnswers.pushElements(Query.words[i].answers);
+  }
+  Query.selectedWordsAllAnswers.sort(QueryAnswer.sortByTime);
 
   // update information about the language of the selected words
   Query.updateQueryWordsLanguageInformation(Query.getLanguagesOfWordLists(Query.getListsOfWords(Query.words)));
@@ -681,8 +779,8 @@ Query.start = function() {
     wordIds.push(Query.words[j].id);
   }
   
-  Query.InOrderAlgorithm = new Query.Algorithm.InOrder(Query.words);
-  Query.GroupWordsAlgorithm = new Query.Algorithm.GroupWords(Query.words);
+  Query.inOrderAlgorithm = new Query.Algorithm.InOrder(Query.words);
+  Query.groupWordsAlgorithm = new Query.Algorithm.GroupWords(Query.words);
 
   Query.nextWord(); // actually start the query
 
@@ -704,6 +802,8 @@ Query.stop = function() {
   Query.selectedLabels = [];
   Query.refreshListSelection();
   $(page['query']).find('#query-label-selection tr').data('checked', false).removeClass('active');
+
+  Query.checkStartButtonEnable();
 }
 
 
@@ -748,8 +848,8 @@ Query.nextWord = function() {
   
   $(page['query']).find('#query-answer').val('').focus();
 
-  // known average for single word information
-  $(page['query']).find('#query-word-mark').html(Math.round(Query.currentWord.getKnownAverage() * 100) + "%");
+  Query.Stats.updateWordInformation(Query.currentWord);
+  Query.Stats.updateSelectedWordsInformation();
 }
 
 // get next word
@@ -765,9 +865,9 @@ Query.getNextWord = function() {
       var avg = Word.getKnownAverageOfArray(Query.words);
       return Word.getWordKnownBelow(Query.words, avg);
     case Query.AlgorithmEnum.InOrder:
-      return Query.InOrderAlgorithm.getNextWord();
+      return Query.inOrderAlgorithm.getNextWord();
     case Query.AlgorithmEnum.GroupWords:
-      return Query.GroupWordsAlgorithm.getNextWord();
+      return Query.groupWordsAlgorithm.getNextWord();
   }
 }
 
@@ -805,6 +905,8 @@ $(page['query']).find('#query-answer').on('keypress', function(e) {
 Query.addAnswer = function(word, correct) {
   var answer = new QueryAnswer(word.id, correct, Query.chosenType, Query.currentDirection); 
   Query.answers.push(answer);
+  Query.allAnswers.push(answer);
+  if (Query.words.contains(word)) Query.selectedWordsAllAnswers.push(answer);
   Query.refreshResultsUploadCounter();
   word.answers.push(answer);
 }
@@ -841,8 +943,6 @@ Query.refreshResultsUploadCounter = function() {
   $(page['query']).find('#query-results-upload-counter').html('Uploaded ' + Query.nextIndexToUpload + '/' + Query.answers.length + ' test answers.');
 }
 
-$(page['query']).find('#query-results-upload-button').on('click', Query.uploadResults);
-
 
 // upload query results
 //
@@ -872,7 +972,12 @@ Query.uploadResults = function() {
     data = handleAjaxResponse(data);
     Query.refreshResultsUploadCounter();
   });
-}
+};
+
+
+
+// upload query results button click event listener
+$(page['query']).find('#query-results-upload-button').on('click', Query.uploadResults);
 
 
 // query answer buttons events (know, not sure, don't know)
@@ -925,10 +1030,13 @@ Query.processCurrentAnswerState = function() {
       $(page['query']).find('#query-answer-not-known').prop('disabled', true);
       $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
       $(page['query']).find('#query-answer-known').attr('value', 'Continue.');
-      $(page['query']).find('#query-word-mark').html(Math.round(Query.currentWord.getKnownAverage() * 100) + "%");
+
       Query.showSolution();
       Query.addAnswer(Query.currentWord, 0);
       Query.tryAutoUpload();
+
+      Query.Stats.updateWordInformation(Query.currentWord);
+      Query.Stats.updateSelectedWordsInformation();
       return;
   }
 }
@@ -1116,6 +1224,140 @@ Query.linkLoadedWordList = function(list) {
 //
 // namespace for functions related to the drawing of the information how the user has answered a word or list in the past
 Query.Drawing = {};
+
+
+// query drawing get svg of word
+//
+// @param Word word: the word for which the svg will be generated
+//
+// @return string: the <svg> element
+Query.Drawing.getSvgOfWord = function(word) {
+  var svg = '<svg class="word-known-graph">';
+
+  if (word.answers.length > 0) {
+    // words answer array not empty
+
+    // add a single horziontal line if there is only one word
+    if (word.answers.length === 1) {
+      svg += '<line ';
+      svg += 'x1="0%" ';
+      svg += 'x2="100%" ';
+      svg += 'y1="' +  Math.map(word.answers[0].correct, 0, 1, 100, 0) + '%" ';
+      svg += 'y2="' +  Math.map(word.answers[0].correct, 0, 1, 100, 0) + '%" ';
+      svg += 'class="crisp" />';
+      svg += '<circle cx="50%" cy="' +  Math.map(word.answers[0].correct, 0, 1, 100, 0) + '%" r="4" />';
+    }
+    else {
+      for (var i = 0; i < word.answers.length; i++) {
+        // add a cicle for every answer
+        svg += '<circle ';
+        svg += 'cx="' + Math.map(i, 0, word.answers.length - 1, 0, 100) + '%" ';
+        svg += 'cy="' +  Math.map(word.answers[i].correct, 0, 1, 100, 0) + '%" ';
+        svg += ' r="4" />';
+
+        // connect all answer circles with lines
+        if (i > 0) {
+          var x1 = Math.map(i - 1, 0, word.answers.length - 1, 0, 100), x2 = Math.map(i, 0, word.answers.length - 1, 0, 100);
+          var y1 = Math.map(word.answers[i - 1].correct, 0, 1, 100, 0), y2 = Math.map(word.answers[i].correct, 0, 1, 100, 0);
+          svg += '<line ';
+          svg += 'x1="' +  x1 + '%" ';
+          svg += 'x2="' +  x2 + '%" ';
+          svg += 'y1="' +  y1 + '%" ';
+          svg += 'y2="' +  y2 + '%" ';
+          svg += ((y1 === y2) ? 'class="crisp" ': '') + '/>';
+        }
+      };
+    }
+  }
+  else {
+    // no answers
+    svg += '<text y="75%" text-anchor="right">No answers yet.</text>';
+  }
+
+  // return HTML-element
+  return svg + '</svg>'
+}
+
+
+// stored statistic data of query answers
+//
+// the diagram showing the knowledge of the word doesn't need to be redrawed every time
+// old values are stored in the array
+//
+// []{ x, y }
+Query.Drawing.storedDataOfQueryAnswers = [];
+
+
+// query drawing get svg of selected words (Query.words) array
+//
+// @return string: the <svg> element
+Query.Drawing.getSvgOfQueryAnswers = function() {
+  var svg = '<svg class="selected-words-avg-graph">', numberOfPoints = 100;
+  var maxX = (Query.selectedWordsAllAnswers.length > numberOfPoints) ? numberOfPoints : Query.selectedWordsAllAnswers.length;
+  var lastX, lastY;
+  for (var i = maxX - 1, j = 0; i >= 0 && maxX > 1; i--, j++) {
+    var x, y;
+
+    // check if the values have already been calculated
+    if (Query.Drawing.storedDataOfQueryAnswers.length > j) {
+      // the values have already been calculated
+      // load them from the array
+      x = Query.Drawing.storedDataOfQueryAnswers[j].x;
+      y = Query.Drawing.storedDataOfQueryAnswers[j].y;
+    }
+    else {
+      // calculate the values
+      x = Math.map(i, 0, maxX - 1, 100, 0);
+      var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, Query.selectedWordsAllAnswers.length - 1));
+      var ignoredAnswers = Query.selectedWordsAllAnswers.slice(Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers);
+      var average = Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS, ignoredAnswers);
+      y = Math.map(average, 0, 1, 100, 0);
+      Query.Drawing.storedDataOfQueryAnswers.push({x: x, y: y });
+    }
+
+    svg += '<circle cx="' + x + '%" cy="' + y + '%" r="1" />';
+    if (j > 0) {
+      // line can only be drawn between points (from the second iteration of the loop on)
+      svg += '<line x1="' + lastX + '%" x2="' + x + '%" y1="' + lastY + '%" y2="' + y + '%" />';
+    }
+    lastX = x;
+    lastY = y;
+  }
+  if (Query.selectedWordsAllAnswers.length === 0) {
+    svg += '<line x1="0%" x2="100%" y1="100%" y2="100%" />';
+  }
+  else if (Query.selectedWordsAllAnswers.length === 1) {
+    var y = Math.map(Query.selectedWordsAllAnswers[0].correct, 0, 1, 100, 0);
+    svg += '<line x1="0%" x2="100%" y1="' + y + '%" y2="' + y + '%" />';
+  }
+  return svg + '</svg>';
+};
+
+// query stats
+//
+// namespace for all funtions related to the statistics about words and lists shown during the query
+Query.Stats = {};
+
+
+
+
+// query stats update word information
+//
+// @param Word word: the word for which to show the stats
+Query.Stats.updateWordInformation = function(word) {
+  $(page['query']).find('#query-word-stats').html(Query.Drawing.getSvgOfWord(word));
+};
+
+
+// query stats update selected words informatino
+//
+// @param Word[] words: array of words for which to show the stats
+Query.Stats.updateSelectedWordsInformation = function() {
+  setTimeout(function() {
+    // setTimeout to make sure it donesn't block the UI
+    $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfQueryAnswers());
+  }, 5);
+};
 
 
 // initial loading

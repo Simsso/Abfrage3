@@ -1,4 +1,4 @@
-function SinglePageApplication() {};
+var SinglePageApplication = {}; // namespace
 
 // single page app
 var shownPageName, shownHashName, 
@@ -31,7 +31,7 @@ var page = {}, pageElementsParent = document.getElementById('main');
 
 
 
-var updatePageContent = function () {
+SinglePageApplication.updatePageContent = function () {
 
   // read page name from URL
   var hash = location.hash.slice(2);
@@ -74,7 +74,8 @@ var updatePageContent = function () {
   $(((typeof adsEnabled !== 'undefined' && adsEnabled) ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();
 };
 
-// hashchange event listener
-$(window).on('hashchange', updatePageContent);
-
-$(document).ready(updatePageContent); // update when loading the page
+$(document).ready(function() {
+  // hashchange event listener
+  $(window).on('hashchange', SinglePageApplication.updatePageContent);
+  SinglePageApplication.updatePageContent(); // update when loading the page
+});

@@ -20,7 +20,7 @@ class Word {
     $sql = "SELECT * FROM `answer` WHERE `user` = ".$user_id." AND `word` = ".$this->id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      array_push($this->answers, new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['time']));
+      array_push($this->answers, new Answer($row['id'], $row['user'], $row['word'], $row['correct'], $row['direction'], $row['type'], $row['time']));
     }
   }
 

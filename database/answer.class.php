@@ -5,13 +5,17 @@ class Answer {
   public $user;
   public $word;
   public $correct;
+  public $direction;
+  public $type;
   public $time;
 
-  function __construct($id, $user, $word, $correct, $time) {
+  function __construct($id, $user, $word, $correct, $direction, $type, $time) {
     $this->id = intval($id);
     $this->user = intval($user);
     $this->word = intval($word);
     $this->correct = intval($correct);
+    $this->direction = intval($direction);
+    $this->type = intval($type);
     $this->time = intval($time);
   }
 

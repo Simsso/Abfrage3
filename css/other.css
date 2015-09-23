@@ -560,6 +560,40 @@ div.right-column-img-wrapper {
   width: calc(70% - 40px);
 }
 
+svg line.crisp {
+  shape-rendering: crispEdges;
+}
+
+
+svg.word-known-graph, svg.selected-words-avg-graph {
+  padding: 5px;
+  width: calc(100% - 10px);
+}
+
+svg.word-known-graph circle, svg.selected-words-avg-graph circle {
+  fill: #4F5B93;
+}
+
+svg.word-known-graph line, svg.selected-words-avg-graph line {
+  stroke: #4F5B93;
+}
+
+svg.word-known-graph {
+  height: 28px;
+}
+
+svg.word-known-graph line {
+  stroke-width: 2px;
+}
+
+svg.selected-words-avg-graph { 
+  height: 150px;
+}
+
+svg.selected-words-avg-graph line { 
+  stroke-width: 2px;
+}
+
 
 /* mobile menu */
 

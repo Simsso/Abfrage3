@@ -222,6 +222,7 @@ var ajaxRequests = {
 function handleAjaxResponse(data) {
   try { // try because parsing JSON could cause an exception
     var obj = JSON.parse(data);
+    obj.rawSize = data.length;
     console.log(obj);
 
     if (obj.status === "success") {

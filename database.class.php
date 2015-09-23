@@ -761,8 +761,14 @@ class Database {
     global $con;
     // add the whole array
     for ($i = 0; $i < count($data); $i++) {
-      $sql = "INSERT INTO `answer` (`user`, `word`, `correct`, `time`)
-        VALUES (".$user.", '".$data[$i]['word']."', ".$data[$i]['correct'].", ".$data[$i]['time'].");";
+      $sql = "INSERT INTO `answer` (`user`, `word`, `correct`, `direction`, `type`, `time`)
+        VALUES (
+          ".$user.", 
+          ".$data[$i]['word'].", 
+          ".$data[$i]['correct'].", 
+          ".$data[$i]['direction'].", 
+          ".$data[$i]['type'].", 
+          ".$data[$i]['time'].");";
       $query = mysqli_query($con, $sql);
     }
     return count($data);
