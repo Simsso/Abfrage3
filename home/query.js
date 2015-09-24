@@ -2,9 +2,8 @@
 
 var Query = {};
 
+// default value of how man answers to consider when determining how well a word is known
 Query.CONSIDERNANSWERS = 5;
-
-// constructors
 
 // List
 //
@@ -110,7 +109,8 @@ Word.prototype.getKnownAverage = function(ignoreAnswers) {
 
 // get known average over last n answers
 //
-// goes through the last n answers and determines how often the word has been known
+// goes through the last n answers and determines how often the word has been known in average
+// if the word has been answers zero times the known average is defined as 0.0
 //
 // @param int n: number of answers to consider 
 // @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
@@ -144,39 +144,6 @@ Word.prototype.getKnownAverageOverLastNAnswers = function(n, ignoreAnswers) {
     }
   }
   return knownCount / validAnswers;
-
-  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
-  if (this.answers.length === 0) return 0;
-
-  var iterations = 0, consideredAnswers = 0;
-  var minIndex = this.answers.length - n;
-  for (var i = this.answers.length - 1; i >= minIndex && i >= 0; i--) {
-    if (ignoreAnswers.contains(this.answers[i])) {
-      minIndex--;
-    }
-    else {
-      consideredAnswers++;
-    }
-    iterations++;
-  }
-  if (consideredAnswers === 0) return 0;
-
-  n = iterations;
-
-  if (n > this.answers.length) {
-    return Math.map(this.getKnownAverage(ignoreAnswers), 0, 1, 0, this.answers.length / n);
-  }
-
-  var knownCount = 0.0;
-  for (var i = (this.answers.length - 1); i >= minIndex && i >= 0; i--) {
-    if (ignoreAnswers.contains(this.answers[i])) {
-      continue;
-    }
-    if (this.answers[i].correct === 1) {
-      knownCount++;
-    }
-  }
-  return knownCount / consideredAnswers;
 };
 
 

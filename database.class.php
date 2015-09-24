@@ -12,10 +12,19 @@ require('database/word.class.php');
 require('database/wordlist.class.php');
 
 
+// Database
+//
+// class with a lot of static methods to read and write the Abfrag3 data base
+// mostly called from the file server.php
 class Database {
   const STAY_LOGGED_IN_DURATION = 32678400;
   
   // log server request
+  //
+  // inserts a new entry into the server requst table 
+  //
+  // @param unsigned int user: the id of the user
+  // @param string page: the requested page
   static function log_server_request($user, $page) {
     // inserts a new server request into the server_request table
     global $con;
@@ -23,7 +32,14 @@ class Database {
     $query = mysqli_query($con, $sql);
   }
   
+
   // register user
+  //
+  // throws exceptions if the passed data is now valid or not accepted for some reason
+  //
+  // @param string firstname, lastname, email, password, confirmpassword: the data of the new user
+  //
+  // @return bool: TRUE if everything worked out
   static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
     // registers a new user
     // if data is invalid the function throws exceptions
@@ -64,7 +80,14 @@ class Database {
     }
   }
 
+
+  // email available
+  //
   // check if an email-address is available
+  // 
+  // @param string email: the email address to check
+  //
+  // @return bool: TRUE of the email is available; FALSE if it isn't
   static function email_available($email) {
     global $con;
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."';";
@@ -77,11 +100,18 @@ class Database {
     }
   }
 
+
+  // check login data
+  //
   // checks an email password combination
-  // returns:
-  // 0: wrong combination
-  // 1: right combination
-  // 2: right combination but email has not been confirmed yet
+  //
+  // @param string email: email address
+  // @param string password: password
+  //
+  // @return byte: 
+  //  - 0: wrong combination
+  //  - 1: right combination
+  //  - 2: right combination but email has not been confirmed yet
   static function check_login_data($email, $password) {
     global $con;
 
@@ -109,10 +139,15 @@ class Database {
     }
   }
 
+
   // stay logged in
+  //
+  // the login table stores every single login
+  // users can stay logged in to do not require a login every time they load the page when the session has expired
+  // 
+  // @param unsigned int login_id: id of a table row in the table login
+  // @param unsigned int user: the id of the user
   static function stay_logged_in($login_id, $id) {
-    // $login_id is the id of a table row in the table login
-    // the login table stores every single login
     
     // generate salt
     $salt = rand(0, 999999999);
@@ -129,7 +164,16 @@ class Database {
     $query = mysqli_query($con, $sql);
   }
 
+
   // check stay logged in
+  //
+  // checks if the user is staying logged in
+  // the user is verified by a hash, stored in a cookie and in the data base
+  //
+  // @param unsigned int user: the id of the user
+  // @param string hash: hash to verify the user
+  //
+  // @return bool: true if the user is stayed logged in; false if not
   static function check_stay_logged_in($id, $hash) {
     // checks if a user id is staying logged in with the given hash
     $stored_hash = "";
@@ -150,6 +194,10 @@ class Database {
     return false;
   }
   
+
+  // refresh session if staying logged in
+  //
+  // in case a session has expired but the user wants to stay logged in the session cookie has to be set again
   static function refresh_session_if_staying_logged_in() {
     if (!isset($_SESSION['id']) && isset($_COOKIE['stay_logged_in_hash']) && isset($_COOKIE['stay_logged_in_id'])) {
       // no session running but user has cookies indicating that he stayed logged in
@@ -163,7 +211,12 @@ class Database {
     }
   }
 
+
   // get salt by email
+  //
+  // reads the salt from the user table
+  //
+  // @param string email: email address
   static function get_salt_by_email($email) {
     // read the user specifict salt used to do the password hash
 
@@ -177,7 +230,14 @@ class Database {
     return null;
   }
 
+
   // email to id
+  //
+  // converts an email address to the corresponding id
+  //
+  // @param string email: email address
+  //
+  // @return unsigned int | NULL: the id or NULL if the email address doesn't exist
   static function email2id($email) {
     // converts a user email to the id of the user
     // both id and email are indivitual to every user
@@ -192,7 +252,14 @@ class Database {
     return NULL;
   }
 
+
+  // id to email
+  //
   // converts a user id to the email of the user
+  //
+  // @param unsigned int id: the id of the user
+  // 
+  // @return string | NULL: the email or NULL if the id doesn't exist
   static function id2email($id) {
     global $con;
 
@@ -204,12 +271,22 @@ class Database {
     return NULL;
   }
 
+
   // get user object by id
   static function get_user_by_id($id) {
     return new User($id);
   }
 
+
   // confirm email-address
+  //
+  // after a user has registered a email confirmation is required
+  // this function checks the key and email address for validity
+  // 
+  // @param string email: email address
+  // @param string key: the key to verify the idendity of the user
+  //
+  // @return bool: TRUE if the email has been confirmed; false if not
   static function confirm_email($email, $key) {
     // update data base to email_confirmed = 1 if the key is correct
     
@@ -226,6 +303,9 @@ class Database {
   }
 
   // add a login
+  //
+  // @param unsigned int id: the id of the user
+  // @param bool stay logged in: if the user wants to stay logged in
   static function add_login($id, $stay_logged_in) {
     global $con;
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -238,7 +318,12 @@ class Database {
     }
   }
 
-  // returns true if the given user logs in for the first time
+
+  // first login of user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return bool: true if the given user logs in for the first time
   static function first_login_of_user($id) {
     global $con;
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `id` = ".$id.";";
@@ -250,7 +335,12 @@ class Database {
     return FALSE;
   }
 
-  // returns login object of the last login of a user
+
+  // get last login of user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return Login | NULL: login object of the last login of a user
   static function get_last_login_of_user($id) {
     global $con;
     $sql = "SELECT `id`, `user`, `time`, `ip` FROM `login` WHERE `user` = ".$id." ORDER BY `time` DESC LIMIT 1;";
@@ -261,7 +351,12 @@ class Database {
     return NULL;
   }
 
-  // returns login object of the next to last login of a user
+
+  // get next to last login of user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return Login | NULL: login object of the next to last login of a user
   static function get_next_to_last_login_of_user($id) {
     global $con;
     $sql = "SELECT `id`, `user`, `time`, `ip` FROM `login` WHERE `user` = ".$id." ORDER BY `time` DESC LIMIT 1,2;";
@@ -272,7 +367,12 @@ class Database {
     return NULL;
   }
 
+
   // get list of added users of user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return SimpleUser[]: array of SimpleUser objects with the additional attribute (bool) bidirectional telling whether both users have added them
   static function get_list_of_added_users_of_user($id) {
     global $con;
     $sql = "
@@ -290,7 +390,12 @@ class Database {
     return $result;
   }
 
+
   // get list of users who have added user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return SimpleUser[]: array of SimpleUser objects with the additional attribute (bool) bidirectional telling whether both users have added them
   static function get_list_of_users_who_have_added_user($id) {
     global $con;
     $sql = "
@@ -308,7 +413,12 @@ class Database {
     return $result;
   }
 
-  // returns true if users have added them both (bidirectional)
+  // users have added them both
+  //
+  // @param unsigned int user1: the id of the first user
+  // @param unsigned int user2: the id of the second user
+  //
+  // @return bool: true if users have added them both (bidirectional)
   static function users_have_added_them_both($user1, $user2) {
     global $con;
     $sql = "SELECT COUNT(`id`) AS 'count' 
@@ -318,8 +428,14 @@ class Database {
     $query = mysqli_query($con, $sql);
     return (mysqli_fetch_object($query)->count == 2);
   }
+
   
   // user has added user
+  //
+  // @param unsigned int user1: the id of the first user
+  // @param unsigned int user2: the id of the to check if the first user has added them
+  //
+  // @return bool: true if user1 has added user 2
   static function user_has_added_user($user1, $user2) {
     global $con;
     $sql = "SELECT COUNT(`id`) AS 'count' 
@@ -329,15 +445,23 @@ class Database {
     return (mysqli_fetch_object($query)->count == 1);
   }
 
+
   // get number of registered users
+  //
+  // @return unsigned int: total number of registered users in Abfrage3
   static function get_number_of_registered_users() {
     global $con;
-    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user`;";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `active` <> 0;";
     $query = mysqli_query($con, $sql);
     return mysqli_fetch_object($query)->count;
   }
 
+
   // get number of logins during last time given in seconds
+  //
+  // @param int time_in_seconds: time span
+  //
+  // @return: number of logins during the last time passed
   static function get_number_of_logins_during_last_time($time_in_seconds) {
     $time_min = time() - $time_in_seconds;
     global $con;
@@ -346,7 +470,20 @@ class Database {
     return mysqli_fetch_object($query)->count;
   }
 
+
   // add user
+  // 
+  // add user means not register user but some user adds another user
+  //
+  // @param unsigned int id: the id of the user who adds the other guy
+  // @param string email: the email address of the user to add
+  // 
+  // @return int:
+  //  - -1: the user with the passed email address doesn't exist
+  //  - -2: the id which belongs to the passed email equals the passed id (user wants to add themself)
+  //  - 0: unknown error
+  //  - 1: information in the data base updated (users have already added them before and removed afterwards or so)
+  //  - 2: user added
   static function add_user($id, $email) {
     global $con;
     $added_user_id = self::email2id($email);
@@ -359,7 +496,7 @@ class Database {
 
     $time = time();
     // check if the user is already added
-    if (!self::user_already_have_relationship($id, $added_user_id)) {
+    if (!self::user_already_has_a_relationship_with($id, $added_user_id)) {
       $sql = "INSERT INTO `relationship` (`user1`, `user2`, `time`, `type`) VALUES (".$id.", ".$added_user_id.", ".$time.", 1);";
       $query = mysqli_query($con, $sql);
       return 1;
@@ -371,7 +508,12 @@ class Database {
     return 0;
   }
 
+
   // remove user
+  //
+  // removes a user from another user
+  // 
+  // @return int: 1 if everything went fine
   static function remove_user($user1, $user2) {
     global $con;
 
@@ -380,8 +522,13 @@ class Database {
     return 1;
   }
 
-  // are two users already having a relationship entry in the data base
-  static function user_already_have_relationship($user1, $user2) {
+  // user already has a relationship with
+  //
+  // @param unsigned int user1: the id of user A
+  // @param unsigned int user2: the id of the user to check if user A has a relationship with
+  //
+  // @return bool: true if user1 already has a relationship entry in the data base with user2
+  static function user_already_has_a_relationship_with($user1, $user2) {
     global $con;
 
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `relationship` WHERE `user1` = ".$user1." AND `user2` = ".$user2.";";
@@ -393,8 +540,14 @@ class Database {
   }
 
 
-  // word lists
-  // add word lsit
+  // add word list
+  // 
+  // @param unsigned int id: the id of the user who wants to create a new list
+  // @param string name: the name of the new list
+  //
+  // @return object
+  // @return byte object->state: 1 if everything went fine
+  // @return unsigned int object->id: id of the new entry in the data base table
   static function add_word_list($id, $name) {
     // returns id and state
     global $con;
@@ -402,12 +555,21 @@ class Database {
     $sql = "INSERT INTO `list` (`name`, `creator`, `creation_time`) VALUES ('".$name."', ".$id.", ".$time.");";
     $query = mysqli_query($con, $sql);
 
+    $result = new stdClass();
     $result->state = 1;
     $result->id = mysqli_insert_id($con);
     return $result;
   }
 
+
   // get list of word lists of a user
+  //
+  // all word lists a user has created which are not deleted
+  // but not those which are shared with the user
+  //
+  // @param unsigned int id: the id of the user
+  //
+  // @return BasicWordList[]: lists of the passed user
   static function get_word_lists_of_user($id) {
     global $con;
     $sql = "
@@ -424,8 +586,12 @@ class Database {
     return $result;
   }
 
+
   // get query lists of user
+  //
   // includes self created lists and lists shared with the user
+  // 
+  // @param unsigned int id: the id of the user
   static function get_query_lists_of_user($id) {
     $lists = array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
     for ($i = 0; $i < count($lists); $i++) {
@@ -435,6 +601,12 @@ class Database {
   }
 
   // get specific word list
+  //
+  // @param unsigned int user_id: the id of the user (required to verify that the user has rights to get the list data)
+  // @param unsigned int word_list_id: id of the requested word list
+  // @param bool log: if set to true the function will log that the word list has been used (for the recently used box)
+  //
+  // @return WordList | NULL: WordList object or NULL if the user has insufficient rights or the list doesn't exist
   static function get_word_list($user_id, $word_list_id, $log) {
     global $con;
     
@@ -470,7 +642,14 @@ class Database {
     return NULL;
   }
   
+
   // rename word list
+  // 
+  // @param unsigned int user_id: the id of the user
+  // @param unsigned int word_list_id: the id of the word list to rename
+  // @param string list_name: new name of the list
+  //
+  // @return byte: 1 if everything went right
   static function rename_word_list($user_id, $word_list_id, $list_name) {
     global $con;
 
@@ -479,7 +658,12 @@ class Database {
     return 1;
   }
 
+
   // get words of list
+  //
+  // @param unsigned int list_id: the id of the word list
+  //
+  // @return Word[]: array of the lists words
   static function get_words_of_list($list_id) {
     global $con;
     $sql = "SELECT `id`, `list`, `language1`, `language2` FROM `word` WHERE `list` = ".$list_id." AND `status` = 1 ORDER BY `id` DESC";
@@ -491,7 +675,13 @@ class Database {
     return $output;
   }
 
+
   // delete word list
+  //
+  // @param unsigned int user_id: id of the user (to check permissions before deleting)
+  // @param unsigned int word_list_id: id of the list to delete
+  //
+  // @return byte: 1 if everything went right
   static function delete_word_list($user_id, $word_list_id) {
     global $con;
 
@@ -500,7 +690,17 @@ class Database {
     return 1;
   }
 
+
   // add word
+  //
+  // add a new word to a word list
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_list_id: id of the list to add the new word
+  // @param string lang1: meaning of the word in the first language
+  // @param string lang2: meaning of the word in the second language
+  //
+  // @return unsigned int: the id of the newly added word
   static function add_word($user_id, $word_list_id, $lang1, $lang2) {
     global $con;
     // TODO check owner
@@ -510,7 +710,17 @@ class Database {
     return mysqli_insert_id($con);
   }
 
+
   // update word
+  //
+  // updates the meaning of a word
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_id: id of the word
+  // @param string lang1: meaning of the word in the first language
+  // @param string lang2: meaning of the word in the second language
+  //
+  // @return byte: 1 if everything went right
   static function update_word($user_id, $word_id, $lang1, $lang2) {
     global $con;
     // TODO: add check if word is owned by $user_id
@@ -519,7 +729,13 @@ class Database {
     return 1;
   }
 
+
   // remove word
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_id: id of the word
+  //
+  // @return byte: 1 if everything went right
   static function remove_word($user_id, $word_id) {
     global $con;
     // TODO: add check if word is owned by $user_id
@@ -528,7 +744,14 @@ class Database {
     return 1;
   }
 
+
   // get list of shared word lists of user
+  //
+  // list of word lists the given user has shared with other users
+  //
+  // @param unsigned int id: id of the user
+  //
+  // @return BasicWordList[]: array of the word lists
   static function get_list_of_shared_word_lists_of_user($id) {
     global $con;
     $sql = "
@@ -546,7 +769,14 @@ class Database {
     return $result;
   }
 
+
   // get list of shared word lists with user (given id)
+  //
+  // list of word lists which other users have shared with the given user
+  //
+  // @param unsigned int id: id of the user
+  //
+  // @return BasicWordList[]: array of the word lists
   static function get_list_of_shared_word_lists_with_user($id) {
     global $con;
     $sql = "
@@ -566,7 +796,21 @@ class Database {
     return $result;
   }
 
+
   // set sharing permissions of word list with user (email)
+  //
+  // used to share a list with users or to unshare
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_list_id: id of the word list
+  // @param string email: email address of the other user
+  // @param byte permissions: permissions for the other user (don't see anything, view or edit)
+  //
+  // @return byte:
+  //  - -1: email belongs to user_id
+  //  - 1: inserted data (success)
+  //  - 2: updated data (success)
+  //  - 0: unknown error
   static function set_sharing_permissions($user_id, $word_list_id, $email, $permissions) {
     $share_with_id = self::email2id($email);
     if ($share_with_id == $user_id) return -1;
@@ -584,10 +828,17 @@ class Database {
       $query = mysqli_query($con, $sql);
       return 2;
     }
-    return -1;
+    return 0;
   }
 
-  // set sharing permissions of word list with user (id)
+
+  // set sharing permissions of word list with user
+  // 
+  // @param unsigned int user_id: id of the user who wants to set the sharing permissions
+  // @param unsigned int id: id of the other user
+  // @param byte permissions: permissions for the other user (don't see anything, view or edit)
+  //
+  // @return byte: 1 if everything worked out
   static function set_sharing_permissions_by_sharing_id($user_id, $id, $permissions) {
     global $con;
 
@@ -599,7 +850,14 @@ class Database {
     return 1;
   }
 
-  // set sharing permissions of list with user
+
+  // get sharing permissions of list with user
+  // 
+  // @param unsigned int list_owner: id of the list owner
+  // @param unsigned int word_list_id: id of the list
+  // @param string email: email of the other user to check permissions
+  //
+  // @return SharingInformation: object with the permissions the user passed via email has
   static function get_sharing_perimssions_of_list_with_user($list_owner, $word_list_id, $email) {
     $share_with_id = self::email2id($email);
 
@@ -614,7 +872,13 @@ class Database {
     }
   }
 
+
   // get sharing information of list
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_list_id: id of the word list
+  //
+  // @return SharingInformation[]: sharing information of the list
   static function get_sharing_info_of_list($user_id, $word_list_id) {
     global $con;
     $sql = "
@@ -630,7 +894,16 @@ class Database {
     return $result;
   }
 
+
   // set word list languages
+  //
+  // a word list can have information about it's languages
+  // the functions changes them
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int list_id: id of the list to change the languages
+  // @param string language1: first language of the list
+  // @param string language2: second language of the list
   static function set_word_list_languages($user_id, $list_id, $language1, $language2) {
     global $con;
 
@@ -643,12 +916,14 @@ class Database {
   }
 
 
-  // word list labels
-  // add label
+  // add label 
+  //
+  // @param unsigned int user_id: id of the user
+  // @param string label_name: name of the new label
+  // @param unsigned int parent_label_id: id of the parent label or 0 if the level is no sub-label
   static function add_label($user_id, $label_name, $parent_label_id) {
     global $con;
-    // TODO
-    // check already existing
+
     $sql = "
 		SELECT COUNT(`id`) AS 'count'
 		FROM `label`
@@ -669,7 +944,14 @@ class Database {
     }
   }
 
+
   // set label status
+  // 
+  // deletes a label if 0 is passed as the status
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int id: id of the label
+  // @param byte status: deleted (0); every other value than 0 will have no effect
   static function set_label_status($user_id, $id, $status) {
     global $con;
     $sql = "UPDATE `label` SET `active` = ".$status." WHERE `id` = ".$id." AND `user` = ".$user_id.";";
@@ -684,10 +966,19 @@ class Database {
 			`label`.`id` = ".$id." AND `label`.`user` = ".$user_id.";";
       $query = mysqli_query($con, $sql);
     }
-    return "user_id: ".$user_id."; id: ".$id."; status: ".$status.";";
   }
 
+
   // set label list attachment
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int label_id: id of the label
+  // @param unsigned int list_id: id of the list
+  // @param byte attachment: active or not (1 or 0)
+  // 
+  // @return unsigned int:
+  //  - 0: the label information has been updated
+  //  - !0: the label information is a new table row; id of the row
   static function set_label_list_attachment($user_id, $label_id, $list_id, $attachment) {
     global $con;
     // check already attached
@@ -711,11 +1002,16 @@ class Database {
         SET `label_attachment`.`active` = ".$attachment." 
         WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = ".$user_id." AND `label`.`id` = ".$label_id." AND `label_attachment`.`list` = ".$list_id.";";
       $query = mysqli_query($con, $sql);
-      return 1;
+      return 0;
     }
   }
 
+
   // get labels of user
+  //
+  // @param unsigned int user_id: id of the user
+  //
+  // @return Label[]: array of labels
   static function get_labels_of_user($user_id) {
     global $con;
 
@@ -728,7 +1024,14 @@ class Database {
     return $output;
   }
 
+
   // rename label
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int label_id: id of the label
+  // @param string label_name: new name of the label
+  //
+  // @return byte: 1
   static function rename_label($user_id, $label_id, $label_name) {
     global $con;
     $sql = "UPDATE `label` SET `name` = '".$label_name."' WHERE `id` = ".$label_id." AND `user` = ".$user_id.";";
@@ -736,6 +1039,12 @@ class Database {
     return 1;
   }
 
+
+  // get label list attachments of user
+  //
+  // @param unsigned int id: id of the user
+  //
+  // @return LabelAttachment[]: array of label list attachments
   static function get_label_list_attachments_of_user($id) {
     global $con;
 
@@ -757,6 +1066,13 @@ class Database {
   }
 
 
+  // add query results
+  //
+  // @param unsigned int user: id of the user
+  // @param object[] data: array of answer objects
+  // @param data[]->word, correct, direction, type, time: information about the answer
+  //
+  // @return unsigned int: number of added answers
   static function add_query_results($user, $data) {
     global $con;
     // add the whole array
@@ -774,6 +1090,13 @@ class Database {
     return count($data);
   }
 
+
+  // get query results
+  //
+  // @param unsigned int user: id of the user
+  // @param unsigned int[]: array of word ids for which the query answers are requested
+  //
+  // @return Answer[]: answers given to the passed words
   static function get_query_results($user, $wordIds) {
     $answers = array();
     for ($i = 0; $i < count($wordIds); $i++) {
@@ -783,9 +1106,15 @@ class Database {
   }
   
   
-  
-  // settings
-  
+  // settings set name
+  //
+  // @param unsigned int id: id of the user
+  // @param string firstname: new firstname of the user
+  // @param string lastname: new lastname of the user
+  //
+  // @return byte:
+  //  - 0: invalid first- or lastname
+  //  - 1: success
   static function set_name($id, $firstname, $lastname) {
     if (strlen($firstname) == 0 || strlen($lastname) == 0) {
       return 0;
@@ -797,6 +1126,20 @@ class Database {
     return 1;
   }
   
+
+  // set password
+  //
+  // @param unsigned int id: id of the user
+  // @param string old_pw: old password
+  // @param string new_pw: new password
+  // @param string new_pw_confirm: new password confirmation
+  //
+  // @return byte:
+  //  - 1: success
+  //  - 2: passwords not equal
+  //  - 3: wrong old password given
+  //  - 4: email not confirmed
+  //  - 5: invalid new password
   static function set_password($id, $old_pw, $new_pw, $new_pw_confirm) {
     if ($new_pw === $new_pw_confirm) {
       $check_old_pw = self::check_login_data(self::id2email($id), $old_pw);
@@ -825,6 +1168,15 @@ class Database {
     }
   }
   
+
+  // delete account
+  //
+  // @param unsigned int id: id of the user
+  // @param string password: password to confirm deletion
+  //
+  // @return byte:
+  //  - 0: error
+  //  - 1: success
   static function delete_account($id, $password) {
     if (self::check_login_data(self::id2email($id), $password) !== 0) {
       unset($password);
@@ -838,7 +1190,14 @@ class Database {
   }
   
   
-  // recently used
+  // get last used n lists of user
+  //
+  // recently used lists
+  //
+  // @param unsigned int id: id of the user
+  // @param int: limit (max number of lists)
+  // 
+  // @return BasicWordList[]: lists
   static function get_last_used_n_lists_of_user($id, $limit) {
     global $con;
     $lists = array();
@@ -857,7 +1216,12 @@ class Database {
   }
   
   
-  // feed
+  // get feed
+  //
+  // @param unsigned int id: id of the user
+  // @param int since: all (-1) or UNIX timestamp
+  //
+  // @return Feed: feed object
   static function get_feed($id, $since) {
     if ($since == -1) {
       $next_to_last_login = self::get_next_to_last_login_of_user($id);
@@ -871,14 +1235,21 @@ class Database {
   }
 
 
-  // settings
-
   // get user settings
+  //
+  // @param unsigned int id: id of the user
+  // 
+  // @return UserSettings: settings
   static function get_user_settings($id) {
     return UserSettings::get_by_id($id);
   }
 
   // set ads enabled
+  //
+  // @param unsigned int id: id of the user
+  // @param bool ads_enabled: ads enabled or not
+  //
+  // @return bool: true if the user has ads enabled now
   static function set_ads_enabled($id, $ads_enabled) {
     global $con;
     $sql = "UPDATE `user_settings` SET `ads_enabled` = ".(($ads_enabled == 'false') ? 0 : 1)." WHERE `user` = ".$id.";";
