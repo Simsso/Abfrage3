@@ -40,6 +40,12 @@ class BasicWordList {
     return null;
   }
 
+
+  // load words
+  //
+  // @param bool loadAnswers: load Word objects with answer array filled
+  // @param unsigned int user_id: id of the user
+  // @param string order: "ASC" or "DESC"
   public function load_words($loadAnswers, $user_id, $order) {
     global $con;
 
@@ -55,11 +61,15 @@ class BasicWordList {
     }
   }
   
+
   // get editing permissions for user
+  //
+  // @param unsigned int id: id of the user
+  //
+  // @return bool: 
+  //  - true if the user given via $id has permissions to edit the list
+  //  - false if the user has no permissions to edit but permissions to view or no permissions at all
   public function get_editing_permissions_for_user($id) {
-    // returns true if the user given via $id has permissions to edit the list
-    // returns false if the user has no permissions to edit but permissions to view or no permissions at all
-    
     global $con;
     
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `share` WHERE `list` = ".$this->id." AND `user` = ".$id." AND `permissions` = 2;";

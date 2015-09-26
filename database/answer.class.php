@@ -9,6 +9,9 @@ class Answer {
   public $type;
   public $time;
 
+  // constructor
+  //
+  // creates an object of type Answer with the passed parameters as attributes
   function __construct($id, $user, $word, $correct, $direction, $type, $time) {
     $this->id = intval($id);
     $this->user = intval($user);
@@ -19,6 +22,11 @@ class Answer {
     $this->time = intval($time);
   }
 
+  // get by id
+  //
+  // @param unsigned int id: id of the answer
+  //
+  // @return Answer: answer object which refers to the passed id
   static function get_by_id($id) {
     global $con;
     $sql = "SELECT * FROM `answer` WHERE `id` = ".$id.";";

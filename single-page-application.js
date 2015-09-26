@@ -30,7 +30,12 @@ var page = {}, pageElementsParent = document.getElementById('main');
 })();
 
 
-
+// update page content
+//
+// reads the current hash (the last part of the url behind the "#")
+// checks if the hash is related to an existing page (e.g. "word-lists")
+// shows the page if it isn't already
+// since some page have sub-pages (like the "settings" page) it is necessary for those to trigger 
 SinglePageApplication.updatePageContent = function () {
 
   // read page name from URL

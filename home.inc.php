@@ -259,7 +259,6 @@ if (is_null($next_to_last_login)) {
                   </select>
                   <input id="share-list-submit" type="submit" value="Share"/>
                 </form>
-                <hr class="spacer-top-15">
                 <div id="list-sharings">
 
                 </div>
@@ -293,7 +292,6 @@ if (is_null($next_to_last_login)) {
                     <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
                     <input id="words-add-button" type="submit" value="Add word"/>
                   </form>
-                  <hr class="spacer-top-15">
                 </div>
                 <div id="words-in-list">
                 </div>
@@ -313,7 +311,6 @@ if (is_null($next_to_last_login)) {
                   <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
                   <input id="word-list-add-button" type="submit" value="Create list"/>
                 </form>
-                <hr class="spacer-top-15">
                 <div id="list-of-word-lists">
                 </div>
               </div>
@@ -350,7 +347,6 @@ if (is_null($next_to_last_login)) {
                   <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
                   <input id="user-add-button" type="submit" value="Add user"/>
                 </form>
-                <hr class="spacer-top-15">
                 <div id="people-you-have-added">
                 </div>
               </div>
@@ -378,7 +374,10 @@ if (is_null($next_to_last_login)) {
         <div id="content-settings" data-page="settings">
           <div class="left-column width-30">
             <div class="box">
-              <div class="box-head">Settings</div>
+              <div class="box-head">
+                <img src="img/settings.svg" />
+                Settings
+              </div>
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="settings-menu">
                   <tr data-page="profile"><td>Profile</td></tr>

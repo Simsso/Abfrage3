@@ -4,9 +4,14 @@ class Feed {
   public $user;
   public $events = array();
   
+
+  // constructor
+  //
+  // @param unsigned int id: id of the user for whom the feed will be created
+  // @param unsigned int since: UNIX-timestamp which limits the feed content. If e.g. a list has been shared before this time it will not appear in the feed.
+  //
+  // @return Feed: feed object with ->events
   function __construct($id, $since) {
-    // $id is the user id for whom the feed is being created.
-    // $since is a UNIX-timestamp which limits the feed content. If e.g. a list has been shared before this time it will not appear in the feed.
     $this->user = intval($id);
     
     global $con;
@@ -105,6 +110,7 @@ class Feed {
   }
 }
 
+
 class FeedItem {
   public $type;
   public $time;
@@ -117,12 +123,15 @@ class FeedItem {
   }
 }
 
+
+// Feed item type enumeration
 abstract class FeedItemType {
   const UserAdded = 0;
   const ListShared = 1;
   const WordAdded = 2;
   const WordDeleted = 3;
 }
+
 
 class WordsAddedFeedItem {
   public $amount;

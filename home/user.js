@@ -128,7 +128,7 @@ function refreshListOfAddedUsers(showLoadingInformation) {
       output = noUsersAddedOutput;
     }
     else { // table head is only visible if users have been added
-      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
+      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
     }
 
     $(page['user']).find('#people-you-have-added').html(output); // update the html element with the list
@@ -168,7 +168,7 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
 
     // otherwise add table and table head to the string
     else {
-      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>' + output + '</table>';
+      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
     }
 
     $(page['user']).find('#people-who-have-added-you').html(output); // update DOM

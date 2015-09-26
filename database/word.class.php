@@ -14,6 +14,11 @@ class Word {
     $this->language2 = $language2;
   }
 
+  // load answers
+  // 
+  // @param unsigned int user_id: id of the user (a word can be answered by multiple users)
+  //
+  // @return Answer[]: answers given to the word by the passed user
   function load_answers($user_id) {
     $this->answers = array();
     global $con;

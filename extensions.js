@@ -7,7 +7,7 @@ String.prototype.repeat = function(n) {
 };
 
 
-// returns true if the array contains the object
+// returns true if the array contains the passed object
 Array.prototype.contains = function(obj) {
   for (var i = 0; i < this.length; i++) {
     if (this[i] === obj) {
