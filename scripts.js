@@ -116,7 +116,7 @@ function hideMenu() {
   var html = jQuery('html');
   var scrollPosition = html.data('scroll-position');
   html.css('overflow', html.data('previous-overflow'));
-  window.scrollTo(scrollPosition[0], scrollPosition[1])
+  window.scrollTo(scrollPosition[0], scrollPosition[1]);
 
   $('#main-wrapper').unbind('click');
   $('#main-wrapper').unbind('touchstart');
@@ -133,6 +133,8 @@ $(window).on('resize', function() {
     hideMenu();
   }
 });
+
+$('.navbar .logo').on('click', hideMenu); // hide mobile menu when clicking on the logo
 
 
 
@@ -224,6 +226,7 @@ function handleAjaxResponse(data) {
     var obj = JSON.parse(data);
     obj.rawSize = data.length;
     console.log(obj);
+    if (obj.action === "set-word-list-languages") alert('set word list languages');
 
     if (obj.status === "success") {
       return obj.data;

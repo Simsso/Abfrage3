@@ -39,7 +39,9 @@ body {
   padding-top: 60px;
   width: 100%;
 
-  transition: transform ease-in 0.2s;
+  transition-property: transform;
+  transition-timing-function: ease-in;
+  transition-duration: 0.2s;
 }
 
 a {
@@ -170,9 +172,9 @@ ul.social-icons li {
   opacity: 1;
 }
 .navbar .navbar-inner li:hover {
-  background: rgba(79, 91, 147, 0.5);
+  /*background: rgba(79, 91, 147, 0.5);
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(111, 123, 179, 0.5)), to(rgba(79, 91, 147, 0.5)));
-  background: -moz-linear-gradient(top, rgba(111, 123, 179, 0.5), rgba(79, 91, 147, 0.5));
+  background: -moz-linear-gradient(top, rgba(111, 123, 179, 0.5), rgba(79, 91, 147, 0.5));*/
 }
 
 .navbar .navbar-inner .logo {
@@ -204,13 +206,13 @@ ul.social-icons li {
   font-size: 16px;
 }
 .navbar .navbar-inner .nav li.visited {
-  background: #4F5B93;
-  background: -webkit-gradient(linear, left top, left bottom, from(#6F7BB3), to(#4F5B93));
-  background: -moz-linear-gradient(top,  #6F7BB3,  #4F5B93);
+  color: #fff;
+  background-color: #4F5B93;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
 }
 .navbar .navbar-inner .nav li.visited, .navbar .navbar-inner .nav li.visited .nav-image {
   cursor: default;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .navbar .menu-button {
@@ -651,6 +653,9 @@ svg.selected-words-avg-graph line {
   font-weight: bold;
   background-color: #000;
 }
+#mobile-nav > div li.visited .nav-image {
+  opacity: 1;
+}
 
 body.mobile-menu-shown {
   /*overflow: hidden;*/
@@ -658,7 +663,6 @@ body.mobile-menu-shown {
 body.mobile-menu-shown #main-wrapper {
   transform: translate3d(256px, 0px, 0px);
 }
-
 
 .advertisement-bottom {
   margin-top: 25px;

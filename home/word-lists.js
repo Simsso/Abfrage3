@@ -1205,7 +1205,7 @@ function getEditableHtmlTableOfLabels(labels) {
 //
 // @return string: the HTML list showing a label and its sub-labels
 function getHtmlListOfLabelId(labels, id, indenting) {
-  var output = '<tr' + ((indenting === 0)?'':' style="display: none; "') + '><td colspan="2" style="padding-left: ' + (15 * indenting + 15 + ((indenting === 0) ? 0 : 16)) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;<input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
+  var output = '<tr' + ((indenting === 0)?'':' style="display: none; "') + ' class="cursor-default"><td colspan="2" style="padding-left: ' + (15 * indenting + 15 + ((indenting === 0) ? 0 : 16)) + 'px; text-align: left; "><form class="label-add-form inline"><input type="hidden" class="label-add-parent" value="' + id + '"/><input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;<input class="label-add-button inline" type="submit" value="Add label"/></form></td>';
   var labelIds = getLabelIdsWithIndenting(labels, indenting);
   for (var i = 0; i < labelIds.length; i++) {
     var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];

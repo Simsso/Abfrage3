@@ -771,6 +771,8 @@ Query.stop = function() {
   $(page['query']).find('#query-label-selection tr').data('checked', false).removeClass('active');
 
   Query.checkStartButtonEnable();
+  
+  Query.updateQueryWordsLanguageInformation(Query.getLanguagesOfWordLists([]));
 }
 
 
@@ -1251,7 +1253,7 @@ Query.Drawing.getSvgOfWord = function(word) {
 // the diagram showing the knowledge of the word doesn't need to be redrawed every time
 // old values are stored in the array
 //
-// []{ x, y }
+// []{ y }
 Query.Drawing.storedDataOfQueryAnswers = [];
 
 
@@ -1265,21 +1267,21 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
   for (var i = maxX - 1, j = 0; i >= 0 && maxX > 1; i--, j++) {
     var x, y;
 
+    x = Math.map(i, 0, maxX - 1, 100, 0);
+
     // check if the values have already been calculated
     if (Query.Drawing.storedDataOfQueryAnswers.length > j) {
       // the values have already been calculated
       // load them from the array
-      x = Query.Drawing.storedDataOfQueryAnswers[j].x;
       y = Query.Drawing.storedDataOfQueryAnswers[j].y;
     }
     else {
       // calculate the values
-      x = Math.map(i, 0, maxX - 1, 100, 0);
       var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, Query.selectedWordsAllAnswers.length - 1));
       var ignoredAnswers = Query.selectedWordsAllAnswers.slice(Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers);
       var average = Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS, ignoredAnswers);
       y = Math.map(average, 0, 1, 100, 0);
-      Query.Drawing.storedDataOfQueryAnswers.push({x: x, y: y });
+      Query.Drawing.storedDataOfQueryAnswers.push({y: y });
     }
 
     svg += '<circle cx="' + x + '%" cy="' + y + '%" r="1" />';

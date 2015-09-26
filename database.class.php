@@ -910,7 +910,7 @@ class Database {
     $sql = "
 		UPDATE `list`, `share`
 		SET `list`.`language1` = '".$language1."', `list`.`language2` = '".$language2."'
-		WHERE `list`.`id` = ".$list_id." AND `list`.`creator` = ".$user_id." OR (`list`.`id` = `share`.`list` AND `share`.`user` = ".$user_id." AND `share`.`permissions` = 1);";
+		WHERE `list`.`id` = ".$list_id." AND (`list`.`creator` = ".$user_id." OR (`list`.`id` = `share`.`list` AND `share`.`user` = ".$user_id." AND `share`.`permissions` = 1));";
     $query = mysqli_query($con, $sql);
     return 1;
   }
