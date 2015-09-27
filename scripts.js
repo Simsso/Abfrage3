@@ -11,12 +11,49 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
     case 'expand': // expand
       $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
       break;
+
     case 'collapse': // collapse
       $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
+
+      // stop fullscreen if it is in fullscreen
+      var imgs = $(this).parent().find('img');
+      for (var i = imgs.length - 1; i >= 0; i--) {
+        if (imgs.eq(i).data('action') == 'stop-fullscreen') {
+          imgs.eq(i).trigger('click');
+        }
+      };
       break;
       
     case 'refresh': // refresh
       window[$(this).data('function-name')](true);
+      break;
+
+    case 'fullscreen': // fullscreen
+      var box = $(this).data('action', 'stop-fullscreen').parent().parent();
+
+      // expand if it isn't already
+      var imgs = $(this).parent().find('img');
+      for (var i = imgs.length - 1; i >= 0; i--) {
+        if (imgs.eq(i).data('action') == 'expand') {
+          imgs.eq(i).trigger('click');
+        }
+      };
+
+      Scrolling.disable();
+      box.addClass('fullscreen');
+      var escFunction = function(e) {
+        if (e.keyCode == 27) { // ESC
+          box.find('img[data-action="fullscreen"]').trigger('click');
+        }
+        $(document).unbind('keyup', escFunction);
+      };
+      $(document).on('keyup', escFunction);
+      break;
+
+    case 'stop-fullscreen':
+      var box = $(this).data('action', 'fullscreen').parent().parent();
+      Scrolling.enable();
+      box.removeClass('fullscreen');
       break;
   }
   
@@ -81,16 +118,7 @@ function showMenu() {
 
   menuShown = true;
 
-  // lock scroll position, but retain settings for later
-  var scrollPosition = [
-    self.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft,
-    self.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop
-  ];
-  var html = jQuery('html'); // it would make more sense to apply this to body, but IE7 won't have that
-  html.data('scroll-position', scrollPosition);
-  html.data('previous-overflow', html.css('overflow'));
-  html.css('overflow', 'hidden');
-  window.scrollTo(scrollPosition[0], scrollPosition[1]);
+  Scrolling.disable();
 
   $('body').addClass('mobile-menu-shown');
   $('.menu-button').attr('src', 'img/menu-back.svg');
@@ -112,11 +140,7 @@ function hideMenu() {
 
   menuShown = false;
 
-  // un-lock scroll position
-  var html = jQuery('html');
-  var scrollPosition = html.data('scroll-position');
-  html.css('overflow', html.data('previous-overflow'));
-  window.scrollTo(scrollPosition[0], scrollPosition[1]);
+  Scrolling.enable();
 
   $('#main-wrapper').unbind('click');
   $('#main-wrapper').unbind('touchstart');
@@ -136,7 +160,27 @@ $(window).on('resize', function() {
 
 $('.navbar .logo').on('click', hideMenu); // hide mobile menu when clicking on the logo
 
+var Scrolling = {
+  disable: function() {
+    var scrollPosition = [
+      self.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft,
+      self.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop
+    ];
+    var html = jQuery('html'); // it would make more sense to apply this to body, but IE7 won't have that
+    html.data('scroll-position', scrollPosition);
+    html.data('previous-overflow', html.css('overflow'));
+    html.css('overflow', 'hidden');
+    window.scrollTo(scrollPosition[0], scrollPosition[1]);
+  },
 
+  enable: function () {
+    // un-lock scroll position
+    var html = jQuery('html');
+    var scrollPosition = html.data('scroll-position');
+    html.css('overflow', html.data('previous-overflow'));
+    window.scrollTo(scrollPosition[0], scrollPosition[1]);
+  }
+};
 
 
 // loading animation html

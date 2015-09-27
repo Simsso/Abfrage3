@@ -95,8 +95,11 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
       $mail->send();
       header("Location: /?login_message=The email address has not been confirmed yet. A new email has been sent.&email=" . $user->email);
       exit();
-    } else {
-      header("Location: /?login_message=The given email-password-combination does not exist.&email=" . $email);
+    } else if ($result == 0) {
+      header("Location: /?login_message=The given password is wrong.&email=" . $email);
+      exit();
+    } else if ($result == 3) {
+      header("Location: /?login_message=The given email-address does not exist.");
       exit();
     }
     break;

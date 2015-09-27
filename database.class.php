@@ -109,9 +109,10 @@ class Database {
   // @param string password: password
   //
   // @return byte: 
-  //  - 0: wrong combination
+  //  - 0: wrong password
   //  - 1: right combination
   //  - 2: right combination but email has not been confirmed yet
+  //  - 3: wrong email
   static function check_login_data($email, $password) {
     global $con;
 
@@ -124,7 +125,13 @@ class Database {
     $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `password` LIKE BINARY '".$password_hash."' AND `active` = 1;";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
-    if ($count == 0) { // if no entry exists which fits email and password return 0
+    if ($count == 0) { 
+      $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` LIKE '".$email."' AND `active` = 1;";
+      $query = mysqli_query($con, $sql);
+      $count = mysqli_fetch_object($query)->count;
+      if ($count == 0) {
+        return 3;
+      }
       return 0;
     } else { // an entry which fits email and password exists
       // check if the user has already confirmed their email address

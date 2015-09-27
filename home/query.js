@@ -152,13 +152,14 @@ Word.prototype.getKnownAverageOverLastNAnswers = function(n, ignoreAnswers) {
 //
 // @param Word[] wordArray: array of words to consider
 // @param float percentage: percentage known
+// @param int n: consider last n answers
 // 
 // @return Word: random word out of the passed array which has been known below the passed percentage
-Word.getWordKnownBelow = function(wordArray, percentage) {
+Word.getWordKnownBelow = function(wordArray, percentage, n) {
   var wordsBelow = [];
   // search for all words below given percentage
   for (var i = 0; i < wordArray.length; i++) {
-    if (wordArray[i].getKnownAverage() < percentage) {
+    if (wordArray[i].getKnownAverageOverLastNAnswers(n) < percentage) {
       wordsBelow.push(wordArray[i]);
     }
   }
@@ -250,7 +251,7 @@ Query.Algorithm.InOrder.prototype.getNextWord = function() {
 //
 // @return Query.Algorithm.GroupWords: query algorithm object
 Query.Algorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
-  if (groupSize === undefined) groupSize = 6;
+  if (groupSize === undefined) groupSize = 8;
   if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = Query.CONSIDERNANSWERS;
 
   this.groupSize = groupSize;
@@ -276,7 +277,9 @@ Query.Algorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
 Query.Algorithm.GroupWords.prototype.getNextWord = function() {
   // go through all words in the current group and check of words which are known
   for (var i = 0; i < this.currentGroup.length; i++) {
-    if (this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1) {
+    if (
+      this.currentGroup[i].getKnownAverageOverLastNAnswers(this.careAboutLastNAnswers) === 1 && // average 
+      this.currentGroup[i].answers.length >= 5) { // at least five answers
       // a word is known
       this.index++; // increment the pointer which indicates where the this.currentGroup ends in the this.words array
       if (this.index >= this.words.length) { // gone through all words 
@@ -374,6 +377,7 @@ Query.AnswerStateEnum = Object.freeze({
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
 function refreshQueryLabelList(showLoadingInformation) { Query.refreshLabelList(showLoadingInformation); } // transceiver function
 Query.refreshLabelList = function(showLoadingInformation) {
+  Query.stop();
   if (showLoadingInformation) {
     $(page['query']).find('#query-selection').html(loading);
   }
@@ -515,7 +519,7 @@ Query.refreshListSelection = function() {
   $(page['query']).find('#query-list-selection').html('<table class="box-table cursor-pointer no-flex"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
 
   // checkbox click event
-  $(page['query']).find('#query-list-selection tr').on('click', function(){
+  $(page['query']).find('#query-list-selection tr').on('click', function() {
     // read list id from checkbox data tag
     var listId = $(this).data('query-list-id');
     
@@ -571,6 +575,7 @@ Query.removeLabel = function(labelId) {
 //
 // @param int listId: list id 
 Query.addList = function(listId) {
+  Query.stop();
   Query.selectedLists.push(Query.getListById(listId));
   $(page['query']).find('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
   Query.checkStartButtonEnable();
@@ -759,6 +764,8 @@ Query.start = function() {
 
 // stop query
 Query.stop = function() {
+  if (!Query.running) return;
+
   Query.running = false;
 
   $(page['query']).find('#query-start-button').attr('value', 'Start test');
@@ -832,7 +839,7 @@ Query.getNextWord = function() {
       return Query.words.getRandomElement();
     case Query.AlgorithmEnum.UnderAverage:
       var avg = Word.getKnownAverageOfArray(Query.words);
-      return Word.getWordKnownBelow(Query.words, avg);
+      return Word.getWordKnownBelow(Query.words, avg, Query.CONSIDERNANSWERS);
     case Query.AlgorithmEnum.InOrder:
       return Query.inOrderAlgorithm.getNextWord();
     case Query.AlgorithmEnum.GroupWords:
@@ -1253,7 +1260,7 @@ Query.Drawing.getSvgOfWord = function(word) {
 // the diagram showing the knowledge of the word doesn't need to be redrawed every time
 // old values are stored in the array
 //
-// []{ y }
+// []
 Query.Drawing.storedDataOfQueryAnswers = [];
 
 
@@ -1269,19 +1276,20 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
 
     x = Math.map(i, 0, maxX - 1, 100, 0);
 
+    var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, Query.selectedWordsAllAnswers.length - 1));
+    var numberOfConsideredAnswers = Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers;
     // check if the values have already been calculated
-    if (Query.Drawing.storedDataOfQueryAnswers.length > j) {
+    if (typeof Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] !== 'undefined') {
       // the values have already been calculated
       // load them from the array
-      y = Query.Drawing.storedDataOfQueryAnswers[j].y;
+      y = Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers];
     }
     else {
       // calculate the values
-      var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, Query.selectedWordsAllAnswers.length - 1));
       var ignoredAnswers = Query.selectedWordsAllAnswers.slice(Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers);
       var average = Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS, ignoredAnswers);
       y = Math.map(average, 0, 1, 100, 0);
-      Query.Drawing.storedDataOfQueryAnswers.push({y: y });
+      Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] = y;
     }
 
     svg += '<circle cx="' + x + '%" cy="' + y + '%" r="1" />';
@@ -1292,6 +1300,7 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
     lastX = x;
     lastY = y;
   }
+
   if (Query.selectedWordsAllAnswers.length === 0) {
     svg += '<line x1="0%" x2="100%" y1="100%" y2="100%" />';
   }
@@ -1299,6 +1308,8 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
     var y = Math.map(Query.selectedWordsAllAnswers[0].correct, 0, 1, 100, 0);
     svg += '<line x1="0%" x2="100%" y1="' + y + '%" y2="' + y + '%" />';
   }
+  svg += '<text y="100%" fill-opacity="0.4" x="50%" text-anchor="middle" font-size="160px">' + 
+    Math.round(Math.map(Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS), 0, 1, 0, 100)) + '%</text>';
   return svg + '</svg>';
 };
 
@@ -1325,7 +1336,7 @@ Query.Stats.updateSelectedWordsInformation = function() {
   setTimeout(function() {
     // setTimeout to make sure it donesn't block the UI
     $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfQueryAnswers());
-  }, 5);
+  }, 5 );
 };
 
 

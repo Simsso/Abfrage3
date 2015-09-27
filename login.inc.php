@@ -15,6 +15,7 @@
               <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
             </li>
           </a>
+          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"Login">Login</li></a>
         </ul>
 
         <ul class="nav right">
@@ -98,33 +99,9 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
           </div>
 
           <div class="right-column">
-            <div class="box">
-              <div class="box-head">Login</div>
-              <div class="box-body">
-                <form method="post" name="login" action="server.php?action=login" data-submit-loading="true">
-                  <table>
-                    <tr>
-                      <td>Email-address</td>
-                      <td><input type="email" name="email" placeholder="" required="required" value="<? if(!$_GET['signup_success'] == "false") echo($_GET['email']); ?>"/></td>
-                    </tr>
-                    <tr>
-                      <td>Password</td>
-                      <td><input type="password" name="password" placeholder="" required="required"/></td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" class="padding-v-6"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;Stay logged in</label></td>  
-                    </tr>
-                    <tr>
-                      <td><input type="submit" value="Login"/></td>
-                      <td></td>
-                    </tr>
-                    <!--<tr>
-<td colspan="2" style="padding-top: 5px; "><a href="#"><small>Forgot your password?</small></a></td>
-</tr>-->
-                  </table>
-                </form>
-              </div>
-            </div>
+          <?php
+            include('html-include/login.html');
+          ?>
             <div class="box right">
               <div class="box-head">Sign up</div>
               <div class="box-body">
@@ -162,6 +139,13 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
               </div>
             </div>
           </div>
+        </div>
+        
+
+        <div id="content-login">
+          <?php
+            include('html-include/login.html');
+          ?>
         </div>
 
 

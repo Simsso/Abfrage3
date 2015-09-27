@@ -111,6 +111,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/question.svg" />
                 Test
+                <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
@@ -187,8 +188,9 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/algorithm.svg" />
                 Test algorithm
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
-              <div class="box-body">
+              <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-algorithm">
                   <tr data-algorithm="0"><td>Random</td></tr>
                   <tr data-algorithm="1"><td>Words below average</td></tr>
@@ -201,8 +203,9 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/settings.svg" />
                 Test settings
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
-              <div class="box-body">
+              <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-type">
                   <tr class="active" data-type="0"><td>Text box</td></tr>
                   <tr data-type="1"><td>Buttons</td></tr>
@@ -213,8 +216,9 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/swap.svg" />
                 Test direction
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
-              <div class="box-body">
+              <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-direction">
                   <tr data-direction="0"><td><span data-value="first-language-information">First language</span> to <span data-value="second-language-information">Second language</span></td></tr>
                   <tr data-direction="1"><td><span data-value="second-language-information">Second language</span> to <span data-value="first-language-information">First language</span></td></tr>
@@ -282,6 +286,7 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/grid.svg" />
                 Words (<span id="shown-word-list-words-count">0</span>)
+                <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">

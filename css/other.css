@@ -8,9 +8,6 @@
   word-wrap: break-word;
 
   
-  z-index: 100;
-
-  
   /* set transition to any element */
   /*-moz-transition: all .2s ease-in;
   -webkit-transition: all .2s ease-in;
@@ -255,6 +252,20 @@ body > .main {
   color: #263238;
   box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
 }
+.box.fullscreen {
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 250 !important;
+  height: 100%;
+}
+.box.fullscreen .box-body {
+  height: calc(100% - 81px);
+  overflow: auto;
+}
+
 .box-body {
   transition: box-shadow 0.2s ease-in;
 }
@@ -286,9 +297,9 @@ body > .main {
   margin-right: 7px;
 }
 .box .box-head img:first-child:not(.box-head-right-icon) {
-  height: 24px;
-  width: 24px;
-  margin: 0px 8px -6px 0px;
+  height: 20px;
+  width: 20px;
+  margin: 0px 8px -4px 0px;
   opacity: 0.8;
 }
 .box .box-head img.box-head-right-icon {
@@ -613,7 +624,6 @@ svg.selected-words-avg-graph line {
   background-color: #1D1F20;
   background-image: linear-gradient(145deg, #1D1F20, #404348);
   overflow: auto;
-  z-index: 90;
 
   box-shadow: inset -9px 0 14px -2px rgba(0, 0, 0, 0.5);
   border-right: 1px solid black;
@@ -803,6 +813,12 @@ input[type=text]:first-child:last-child {
   }
 }
 
+
+.show-mobile {
+  display: none; 
+}
+
+
 /*@media screen and (min-width: 800px) {
   .smaller-800 {
     display: none !important;
@@ -817,6 +833,9 @@ input[type=text]:first-child:last-child {
 
 /* mobile */
 @media screen and (max-width: 700px) {
+  .show-mobile {
+    display: block; 
+  }
   .navbar {
     background-color: #8892BF;
     border-width: 0;

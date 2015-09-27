@@ -11,7 +11,8 @@ var shownPageName, shownHashName,
       'about': 'About',
       'contact': 'Contact',
       'legal-info': 'Legal info',
-      'tour': 'Tour'
+      'tour': 'Tour',
+      'login': 'Login'
     };
 
 var page = {}, pageElementsParent = document.getElementById('main');

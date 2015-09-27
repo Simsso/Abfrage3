@@ -606,8 +606,9 @@ function saveWord(id, lang1, lang2, callback) {
     error: function(jqXHR, textStatus, errorThrown) {
 
     }
-  }).done(function(data) {    
+  }).done(function(data) {
       data = handleAjaxResponse(data);
+      // TODO: update local list object
       callback(data);
   });
 }
