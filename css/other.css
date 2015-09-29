@@ -30,6 +30,10 @@ body {
   overflow-y: scroll;
 }
 
+#main {
+  overflow: auto;
+}
+
 #main-wrapper {
   position: relative;
   min-height: calc(100% - 60px);
@@ -857,9 +861,29 @@ input[type=text]:first-child:last-child {
 
 
 
+
+/*****************
+ * Mobile design 
+ *****************/
+
 @media screen and (max-width: 700px) {
   .show-mobile {
     display: block; 
+  }
+
+
+  .box .box-head img.box-head-right-icon, #word-list-menu-back {
+    top: 14.5px;
+    height: 20px;
+    width: 20px;
+  }
+
+  #word-list-menu-back {
+    left: 25px !important;
+  }
+
+  #word-list-title-name {
+    padding: 0 45px;
   }
 
   .navbar {
@@ -885,6 +909,7 @@ input[type=text]:first-child:last-child {
     padding-bottom: 90px;
   }
   
+  .left-column, .right-column, .left-column-small, .right-column-big {
     float: none;
     width: 100% !important;
   }
