@@ -666,10 +666,6 @@ svg.selected-words-avg-graph line {
   margin: 18px 0;
 }
 
-#mobile-nav > div > *:first-child, #mobile-nav > div > *:nth-child(2) {
-  display: none !important;
-}
-
 #mobile-nav > div li, #mobile-nav > div .nav-img-li {
   float: none !important;
   padding: 0 25px !important;

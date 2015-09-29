@@ -93,7 +93,12 @@ var menuShown = false;
 
 // add mobile menu html to body element
 $('body').prepend('<nav id="mobile-nav" class="display-none"><div></div></nav>');
-$('#mobile-nav > div').html($('.navbar-inner.content-width').html()).find('*').show();
+var htmlString = '<ul class="nav">';
+for (var i = 0; i < $('.navbar-inner.content-width > ul').length; i++) {
+  htmlString += $('.navbar-inner.content-width > ul').eq(i).html();
+}
+htmlString += '</ul>';
+$('#mobile-nav > div').html(htmlString).find('*').show();
 
 var menuIcons = $('#mobile-nav > div .nav-img-li');
 for (var i = 0; i < menuIcons.length; i++) {
