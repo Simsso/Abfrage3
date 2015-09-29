@@ -5,207 +5,6 @@ var Query = {};
 // default value of how man answers to consider when determining how well a word is known
 Query.CONSIDERNANSWERS = 5;
 
-// List
-//
-// word list object factory method
-//
-// @param int id: id
-// @param string name: name
-// @param int creator: id of the list creator
-// @param string comment: comment of the list (short info or so)
-// @param string language1: first language of the list
-// @param string language2: second language of the list
-// @param int creationTime: unix timestamp of the creation time
-// @param Word[] words: array of the lists words
-//
-// @return List: list object
-function List(id, name, creator, comment, language1, language2, creationTime, words) {
-  this.id = id;
-  this.name = name;
-  this.creator = creator;
-  this.language1 = language1;
-  this.language2 = language2;
-  this.comment = comment;
-  this.creationTime = creationTime;
-
-  this.words = [];
-  // convert parsed JSON data to "Word" objects
-  for (var i = 0; i < words.length; i++) {
-    this.words.push(new Word(words[i].id, words[i].list, words[i].language1, words[i].language2, words[i].answers)); 
-  }
-}
-
-// get name
-//
-// @return string: name of the list
-List.prototype.getName = function() {
-  return this.name;
-};
-
-
-// get known average
-//
-// goes through all words and looks in their answer history how often they have been answered correctly
-// calculates the known average of the list by calculating the average of all single words
-//
-// @return float: known average of the list
-List.prototype.getKnownAverage = function() {
-
-};
-
-
-// compare lists by name
-//
-// @param string a: list one name
-// @param string b: list two name
-//
-// @return int: returns like a spaceship operator (<=>)
-List.compareListsByName = function(a, b) {
-  if (a.name < b.name) return -1; 
-  if (a.name > b.name) return 1; 
-  return 0; 
-}
-
-
-
-// Word
-//
-// word object factory method
-//
-// @param int id: id
-// @param int list: id of the list which the word belongs to
-// @param string language1: meaning of the word in the first language of the list
-// @param string language2: meaning of the word in the second language of the list
-// @param QueryAnswer[] answers: array of query answers
-// 
-// @return Word: word object
-function Word(id, list, language1, language2, answers) {
-  this.id = id;
-  this.language1 = language1;
-  this.language2 = language2;
-  this.list = list;
-
-  this.answers = [];
-  // convert JSON-parsed answers into Answer objects
-  for (var i = 0; i < answers.length; i++) {
-    this.answers.push(new QueryAnswer(answers[i].word, answers[i].correct, answers[i].type, answers[i].direction, answers[i].id, answers[i].time));
-  }
-}
-
-
-// get known average
-//
-// goes through all answers and determines how often the word has been known
-// if it has been known 3 time in 4 queries the return value will be 0.75
-//
-// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
-//
-// @return float: known average of the word
-Word.prototype.getKnownAverage = function(ignoreAnswers) {
-  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
-  return this.getKnownAverageOverLastNAnswers(this.answers.length, ignoreAnswers);
-};
-
-
-// get known average over last n answers
-//
-// goes through the last n answers and determines how often the word has been known in average
-// if the word has been answers zero times the known average is defined as 0.0
-//
-// @param int n: number of answers to consider 
-// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
-//
-// @return float: known average of the word considering the last n answers
-Word.prototype.getKnownAverageOverLastNAnswers = function(n, ignoreAnswers) {
-  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
-  if (this.answers.length === 0) return 0;
-
-  if (this.answers.length < n) n = this.answers.length; // call requests more answers than the word even has
-  var minIndex = this.answers.length - n, validAnswers = 0, iterations = 0;
-  for (var i = this.answers.length - 1; i >= minIndex && i >= 0; i--) {
-    if (ignoreAnswers.contains(this.answers[i])) {
-      minIndex--;
-    }
-    else {
-      validAnswers++;
-    } 
-    iterations++;
-  }
-
-  if (validAnswers === 0) return 0;
-
-  var knownCount = 0.0;
-  for (var i = this.answers.length - 1; i >= this.answers.length - iterations; i--) {
-    if (ignoreAnswers.contains(this.answers[i])) {
-      continue;
-    }
-    if (this.answers[i].correct === 1) {
-      knownCount++;
-    }
-  }
-  return knownCount / validAnswers;
-};
-
-
-// static functions
-// get word known below
-//
-// @param Word[] wordArray: array of words to consider
-// @param float percentage: percentage known
-// @param int n: consider last n answers
-// 
-// @return Word: random word out of the passed array which has been known below the passed percentage
-Word.getWordKnownBelow = function(wordArray, percentage, n) {
-  var wordsBelow = [];
-  // search for all words below given percentage
-  for (var i = 0; i < wordArray.length; i++) {
-    if (wordArray[i].getKnownAverageOverLastNAnswers(n) < percentage) {
-      wordsBelow.push(wordArray[i]);
-    }
-  }
-  
-  return wordsBelow.getRandomElement();
-};
-
-// get known average of array
-//
-// @param Word[] wordArray: array of words to consider
-// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
-// 
-// @return float: known average of the words in the given array
-Word.getKnownAverageOfArray = function(wordArray, ignoreAnswers) {
-  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
-  if (wordArray.length === 0) return 0;
-
-  var sum = 0.0;
-  for (var i = 0; i < wordArray.length; i++) {
-    sum += wordArray[i].getKnownAverage(ignoreAnswers);
-  }
-
-  return sum / wordArray.length;
-};
-
-
-
-// get known average of array over last n ansers
-//
-// @param Word[] wordArray: array of words to consider
-// @param int n: number of answers per word to care about
-// @param QueryAnswer[]|undefined ignoreAnswers: query answers which shall be ignored
-// 
-// @return float: known average of the words in the given array
-Word.getKnownAverageOfArrayOverLastNAnswers = function(wordArray, n, ignoreAnswers) {
-  if (typeof ignoreAnswers === 'undefined') ignoreAnswers = [];
-  if (wordArray.length === 0) return 0;
-
-  var sum = 0.0;
-  for (var i = 0; i < wordArray.length; i++) {
-    sum += wordArray[i].getKnownAverageOverLastNAnswers(n, ignoreAnswers);
-  }
-
-  return sum / wordArray.length;
-};
-
 
 // query algorithms
 Query.Algorithm = {};
@@ -297,43 +96,6 @@ Query.Algorithm.GroupWords.prototype.getNextWord = function() {
 };
 
 
-// query answer
-//
-// query answer object factory method
-//
-// @param int word: id of the word which has been answered
-// @param byte correct: answer was correct? 0 = wrong; 1 = correct
-// @param Query.TypeEnum type: type of the query (buttons = 1 or text box = 0)
-// @param Query.DirectionEnum direction: direction of the query (0 = first to second language; 1 = 2nd to 1st)
-// @param int id: id of the answer
-// @param int time: unix time stamp when the query has been answered
-//
-// @return QueryAnswer: query answer object
-function QueryAnswer(word, correct, type, direction, id, time) {
-  this.word = word;
-  this.correct = correct;
-  this.type = type;
-  this.direction = direction;
-
-  if (time === undefined) 
-    this.time = Date.seconds();
-  else 
-    this.time = time;
-
-  if (id === undefined) 
-    this.id = undefined;
-  else 
-    this.id = id;
-}
-
-QueryAnswer.sortByTime = function(a, b) {
-  if (a.time < b.time) return -1;
-  if (a.time > b.time) return 1;
-  return 0;
-};
-
-
-
 // enumerations
 Query.AlgorithmEnum = Object.freeze({
   Random: 0, 
@@ -375,8 +137,8 @@ Query.AnswerStateEnum = Object.freeze({
 // This label list is downloaded and added to the DOM by the following function.
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
-function refreshQueryLabelList(showLoadingInformation) { Query.refreshLabelList(showLoadingInformation); } // transceiver function
-Query.refreshLabelList = function(showLoadingInformation) {
+function refreshQueryLabelList(showLoadingInformation) { Query.downloadQueryData(showLoadingInformation); } // transceiver function
+Query.downloadQueryData = function(showLoadingInformation) {
   Query.stop();
   if (showLoadingInformation) {
     $(page['query']).find('#query-selection').html(loading);
@@ -393,109 +155,99 @@ Query.refreshLabelList = function(showLoadingInformation) {
     }
   }).done(function(data) {
     var data = handleAjaxResponse(data);
-
-
-    // labels
-    Query.labels = data.labels;
-
-    // label list attachments
-    // information which list is attached to which label
-    Query.labelListAttachments = data.label_list_attachments;
-
-    // word lists
-    Query.lists = [];
-    for (var i = 0; i < data.lists.length; i++) {
-      Query.lists.push(
-        new List(
-          data.lists[i].id, 
-          data.lists[i].name, 
-          data.lists[i].creator, 
-          data.lists[i].comment, 
-          data.lists[i].language1,
-          data.lists[i].language2, 
-          data.lists[i].creationTime, 
-          data.lists[i].words
-        )
-      );
-    }
-
-
-    // fill query all answers array
-    for (var i = 0; i < Query.lists.length; i++) {
-      for (var j = 0; j < Query.lists[i].words.length; j++) {
-        Query.allAnswers.pushElements(Query.lists[i].words[j].answers);
-      }
-    }
-
-    Query.allAnswers.sort(QueryAnswer.sortByTime);
-
-    $(page['query']).find('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
-
-    // provide label selection
-    $(page['query']).find('#query-label-selection').html(Query.getHtmlTableOfLabels(Query.labels));
-
-    // provide list selection
-    Query.refreshListSelection();
-
-
-    // start query button click event
-    $(page['query']).find('#query-start-button').on('click', function() {
-      if (Query.running) {
-        Query.stop();
-      }
-      else {
-        Query.start();
-      }
-    });
-
-    // checkbox click event
-    $(page['query']).find('#query-label-selection tr').on('click', function(){
-      // read label id from checkbox data tag
-      var labelId = $(this).data('query-label-id');
-      // checkbox has been unchecked
-      if($(this).data('checked') === true) {
-        Query.removeLabel(labelId);
-      }
-      // checkbox has been checked
-      else if ($(this).data('checked') === false) { 
-        Query.addLabel(labelId);
-      }
-    });
-
-    // expand functionallity
-    // expand single labels
-    $(page['query']).find('#query-label-selection .small-exp-col-icon').on('click', function(e) {
-      e.stopPropagation();
-      var $this = $(this);
-      var expand = ($this.data('state') == 'collapsed');
-
-      var i = 0;
-      var $row = $this.parent().parent();
-      var allFollowing = $row.nextAll();
-      var selfIndenting = $row.data('indenting');
-      // show all following rows which have a higher indenting (are sub-labels) or don't have an indenting (are "add sub-label" formular rows)
-      while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') === undefined)) {
-        if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
-          if (expand) // expand
-            allFollowing.eq(i).show();
-
-          else { // collapse
-            allFollowing.eq(i).hide();
-            allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
-          }
-        }
-        i++;
-      }
-
-      if (expand) {
-        $this.data('state', 'expanded').attr('src', 'img/collapse.svg'); // flip image
-      }
-      else {
-        $this.data('state', 'collapsed').attr('src', 'img/expand.svg'); // flip image
-      }
-    });
+    Database = data;
+    Query.updateDomWithData();
   });
-}
+};
+
+
+Query.updateDom = function() {
+  // labels
+  Query.labels = Database.labels;
+
+  // label list attachments
+  // information which list is attached to which label
+  Query.labelListAttachments = Database.label_list_attachments;
+
+  // word lists
+  Query.lists = Database.lists;
+
+
+  // fill query all answers array
+  for (var i = 0; i < Query.lists.length; i++) {
+    for (var j = 0; j < Query.lists[i].words.length; j++) {
+      Query.allAnswers.pushElements(Query.lists[i].words[j].answers);
+    }
+  }
+
+  Query.allAnswers.sort(QueryAnswer.sortByTime);
+
+  $(page['query']).find('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
+
+  // provide label selection
+  $(page['query']).find('#query-label-selection').html(Query.getHtmlTableOfLabels(Query.labels));
+
+  // provide list selection
+  Query.refreshListSelection();
+
+
+  // start query button click event
+  $(page['query']).find('#query-start-button').on('click', function() {
+    if (Query.running) {
+      Query.stop();
+    }
+    else {
+      Query.start();
+    }
+  });
+
+  // checkbox click event
+  $(page['query']).find('#query-label-selection tr').on('click', function(){
+    // read label id from checkbox data tag
+    var labelId = $(this).data('query-label-id');
+    // checkbox has been unchecked
+    if($(this).data('checked') === true) {
+      Query.removeLabel(labelId);
+    }
+    // checkbox has been checked
+    else if ($(this).data('checked') === false) { 
+      Query.addLabel(labelId);
+    }
+  });
+
+  // expand functionallity
+  // expand single labels
+  $(page['query']).find('#query-label-selection .small-exp-col-icon').on('click', function(e) {
+    e.stopPropagation();
+    var $this = $(this);
+    var expand = ($this.data('state') == 'collapsed');
+
+    var i = 0;
+    var $row = $this.parent().parent();
+    var allFollowing = $row.nextAll();
+    var selfIndenting = $row.data('indenting');
+    // show all following rows which have a higher indenting (are sub-labels) or don't have an indenting (are "add sub-label" formular rows)
+    while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') === undefined)) {
+      if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
+        if (expand) // expand
+          allFollowing.eq(i).show();
+
+        else { // collapse
+          allFollowing.eq(i).hide();
+          allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
+        }
+      }
+      i++;
+    }
+
+    if (expand) {
+      $this.data('state', 'expanded').attr('src', 'img/collapse.svg'); // flip image
+    }
+    else {
+      $this.data('state', 'collapsed').attr('src', 'img/expand.svg'); // flip image
+    }
+  });
+};
 
 
 // refresh query list selection
@@ -656,9 +408,9 @@ Query.getHtmlTableOfLabels = function(labels) {
 // @return string: HTML-ist showing a label and its sub-labels
 Query.getHtmlListOfLabelId = function(labels, id, indenting) {
   var output = '';
-  var labelIds = getLabelIdsWithIndenting(labels, indenting);
+  var labelIds = WordLists.getLabelIdsWithIndenting(labels, indenting);
   for (var i = 0; i < labelIds.length; i++) {
-    var currentLabel = labels[getLabelIndexByLabelId(labels, labelIds[i])];
+    var currentLabel = labels[WordLists.getLabelIndexByLabelId(labels, labelIds[i])];
     if (currentLabel.parent_label == id) {
       output += Query.getSingleListElementOfLabelList(currentLabel, indenting);
       output += Query.getHtmlListOfLabelId(labels, labelIds[i], indenting + 1);
@@ -675,7 +427,7 @@ Query.getHtmlListOfLabelId = function(labels, id, indenting) {
 //
 // @return string: HTML-row of a single label
 Query.getSingleListElementOfLabelList = function(label, indenting) {
-  var subLabelsCount = numberOfSubLabels(Query.labels, label.id);
+  var subLabelsCount = WordLists.getNumberOfSubLabels(Query.labels, label.id);
   var expanded = false; // show all labels collapsed
 
   return '<tr data-checked="false" data-query-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
@@ -1172,30 +924,6 @@ Query.getLanguagesOfWordLists = function(list) {
 }
 
 
-
-// link loaded word list
-//
-// when the user loads a word list it will refer to the same object as the query list
-// this makes sure that changes will also affect the current query and will not require a full reload
-// if the list doesn't exist in the array at all it will be pushed (this might be the case when the user creates a new list)
-//
-// @param List list: the list to link
-//
-// @return bool: whether the list has been linked
-Query.linkLoadedWordList = function(list) {
-  if (Query.lists === null) return false;
-
-  for (var i = Query.lists.length - 1; i >= 0; i--) {
-    if (Query.lists[i].id === list.id) {
-      Query.lists[i] = list;
-      return true;
-    }
-  };
-  Query.lists.push(list);
-  return true;
-}
-
-
 // Query.Drawing
 //
 // namespace for functions related to the drawing of the information how the user has answered a word or list in the past
@@ -1341,4 +1069,4 @@ Query.Stats.updateSelectedWordsInformation = function() {
 
 
 // initial loading
-Query.refreshLabelList(true);
+Query.updateDom();

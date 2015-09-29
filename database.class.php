@@ -552,9 +552,7 @@ class Database {
   // @param unsigned int id: the id of the user who wants to create a new list
   // @param string name: the name of the new list
   //
-  // @return object
-  // @return byte object->state: 1 if everything went fine
-  // @return unsigned int object->id: id of the new entry in the data base table
+  // @return WordList: the created word list
   static function add_word_list($id, $name) {
     // returns id and state
     global $con;
@@ -562,10 +560,8 @@ class Database {
     $sql = "INSERT INTO `list` (`name`, `creator`, `creation_time`) VALUES ('".$name."', ".$id.", ".$time.");";
     $query = mysqli_query($con, $sql);
 
-    $result = new stdClass();
-    $result->state = 1;
-    $result->id = mysqli_insert_id($con);
-    return $result;
+    $list_id = mysqli_insert_id($con);
+    return self::get_word_list($id, $list_id, true);
   }
 
 
@@ -587,8 +583,7 @@ class Database {
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
-      $list = new BasicWordList($row['id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
-      array_push($result, $list);
+      array_push($result, self::get_word_list($id, $row['id'], false));
     }
     return $result;
   }
@@ -602,7 +597,11 @@ class Database {
   static function get_query_lists_of_user($id) {
     $lists = array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
     for ($i = 0; $i < count($lists); $i++) {
-      $lists[$i]->load_words(true, $id, "ASC");
+      // stores whether the requesting unser is the list creator
+      $lists[$i]->allowSharing = ($id == $lists[$i]->creator->id);
+
+      // stores whether the requesting user is allowed to edit the list
+      $lists[$i]->allowEdit = ($lists[$i]->allowSharing) ? TRUE : $lists[$i]->get_editing_permissions_for_user($id);
     }
     return $lists;
   }
@@ -769,7 +768,7 @@ class Database {
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
-      $list = new BasicWordList($row['list_id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+      $list = self::get_word_list($id, $row['list_id'], false);
       $list->sharing_id = $row['share_id'];
       array_push($result, $list);
     }
@@ -795,7 +794,7 @@ class Database {
     $query = mysqli_query($con, $sql);
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
-      $list = new BasicWordList($row['list_id'], $row['name'], $row['creator'], $row['comment'], $row['language1'], $row['language2'], $row['creation_time']);
+      $list = self::get_word_list($id, $row['list_id'], false);
       $list->permissions = $row['permissions'];
       $list->sharing_id = $row['share_id'];
       array_push($result, $list);
@@ -1262,6 +1261,16 @@ class Database {
     $sql = "UPDATE `user_settings` SET `ads_enabled` = ".(($ads_enabled == 'false') ? 0 : 1)." WHERE `user` = ".$id.";";
     $query = mysqli_query($con, $sql);
     return ($ads_enabled == 'true') ? TRUE : FALSE;
+  }
+
+
+  // get query data
+  static function get_query_data($id) {
+    $result = new stdClass();
+    $result->labels = Database::get_labels_of_user($_SESSION['id']);
+    $result->label_list_attachments = Database::get_label_list_attachments_of_user($_SESSION['id']);
+    $result->lists = Database::get_query_lists_of_user($_SESSION['id']);
+    return $result;
   }
 }
 

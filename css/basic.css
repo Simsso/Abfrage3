@@ -110,6 +110,7 @@ input[type=button].red:active, input[type=submit].red:active {
 .initial-height { height: initial; }
 
 .display-block { display: block; }
+.display-inline-block { display: inline-block; }
 .display-none { display: none; }
 
 .text-align-center { text-align: center; }

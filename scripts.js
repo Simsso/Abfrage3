@@ -184,6 +184,10 @@ var Scrolling = {
     var scrollPosition = html.data('scroll-position');
     html.css('overflow', html.data('previous-overflow'));
     window.scrollTo(scrollPosition[0], scrollPosition[1]);
+  },
+
+  toTop: function() {
+    window.scrollTo(0, 0);
   }
 };
 
@@ -241,7 +245,7 @@ var ajaxRequests = {
   loadWordList: new AjaxRequestsManager(true),
   loadListOfWordLists: new AjaxRequestsManager(true),
   loadListOfSharedWordLists: new AjaxRequestsManager(true),
-  refreshListSharings: new AjaxRequestsManager(true)
+  downloadListSharings: new AjaxRequestsManager(true)
 };
 
 
@@ -416,7 +420,7 @@ function showAds() {
   }
   else {
     $(window).load(function() {
-      loadAds();
+      showAds();
     });
   }
 }

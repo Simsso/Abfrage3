@@ -340,10 +340,13 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     // get query data
     case 'get-query-data':
     session_required();
-    $result->labels = Database::get_labels_of_user($_SESSION['id']);
-    $result->label_list_attachments = Database::get_label_list_attachments_of_user($_SESSION['id']);
-    $result->lists = Database::get_query_lists_of_user($_SESSION['id']);
-    Response::send($result);
+    Response::send(Database::get_query_data($_SESSION['id']));
+    break;
+
+    // get query lists of user
+    case 'get-query-lists-of-user':
+    session_required();
+    Response::send(Database::get_query_lists_of_user($_SESSION['id']));
     break;
 
     // upload query results

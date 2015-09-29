@@ -8,7 +8,7 @@
       <div class="navbar-inner content-width">
         <a href="#/home">
           <img class="logo" src="img/logo-46.png" alt="Abfrage3" />
-        </a><br class="clear-both smaller-800">
+        </a>
         <ul class="nav left">
           <a href="#/home">
             <li class="nav_home nav-img-li" data-text="Home">
@@ -22,7 +22,7 @@
           <a href="#/about"><li class="nav_about" data-text="About">About</li></a>
           <a href="#/contact"><li class="nav_contact" data-text="Contact">Contact</li></a>
           <a href="#/legal-info"><li class="nav_legal-info" data-text="Legal info">Legal info</li></a>
-        </ul><br class="clear-both">
+        </ul>
       </div>
     </nav>
 
@@ -156,8 +156,6 @@ include('html-include/about.html');
 include('html-include/contact.html');
         ?>
 
-
-        <br class="clear-both hide-below-700">
       </div>
 
       <?php

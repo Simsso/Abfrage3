@@ -14,7 +14,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       <div class="navbar-inner content-width">
         <a href="#/home">
           <img class="logo" src="img/logo-46.png" />
-        </a><br class="clear-both smaller-800">
+        </a>
         <ul class="nav left">
           <a href="#/home">
             <li class="nav_home nav-img-li" data-text="Home">
@@ -22,7 +22,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             </li>
           </a>
           <a href="#/query"><li class="nav_query" data-text="Test">Test</li></a>
-          <a href="#/word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
+          <a class="link-to-show-current-word-list" href="#/word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
         </ul>
         <ul class="nav right">
           <a href="#/user">
@@ -40,7 +40,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/>
             </li>
           </a>
-        </ul><br class="clear-both">
+        </ul>
       </div>
     </nav>
 
@@ -232,11 +232,30 @@ if (is_null($next_to_last_login)) {
 
         <!-- Word lists -->
         <div id="content-word-lists" data-page="word-lists">
-          <div class="left-column">
-            <div class="box" id="word-list-title">
-              <div class="box-head active"></div>
+          <div class="box" id="list-of-word-lists-wrapper">
+            <div class="box-head">
+              <img src="img/server.svg" />
+              Word lists
+              <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
+              <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
             </div>
+            <div class="box-body" data-start-state="expanded">
+              <form id="word-list-add-form">
+                <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
+                <input id="word-list-add-button" type="submit" value="Create list"/>
+              </form>
+              <div id="list-of-word-lists">
+              </div>
+            </div>
+          </div>
 
+          <div class="box" id="word-list-title">
+            <div class="box-head active"> 
+              <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
+              <div id="word-list-title-name"></div>
+            </div>
+          </div>
+          <div class="left-column-small">
             <div class="box" id="word-list-info">
               <div class="box-head">
                 <img src="img/info.svg" />
@@ -281,7 +300,9 @@ if (is_null($next_to_last_login)) {
                 </div>
               </div>
             </div>
+          </div>
 
+          <div class="right-column-big">
             <div class="box" id="word-list-info-words">
               <div class="box-head">
                 <img src="img/grid.svg" />
@@ -299,36 +320,6 @@ if (is_null($next_to_last_login)) {
                   </form>
                 </div>
                 <div id="words-in-list">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="right-column">
-            <div class="box">
-              <div class="box-head">
-                <img src="img/server.svg" />
-                Your word lists
-                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
-              </div>
-              <div class="box-body" data-start-state="expanded">
-                <form id="word-list-add-form">
-                  <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
-                  <input id="word-list-add-button" type="submit" value="Create list"/>
-                </form>
-                <div id="list-of-word-lists">
-                </div>
-              </div>
-            </div>
-            <div class="box">
-              <div class="box-head">
-                <img src="img/share.svg" />
-                Shared with you
-                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfSharedWordLists" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
-              </div>
-              <div class="box-body" data-start-state="expanded">
-                <div id="list-of-shared-word-lists">
                 </div>
               </div>
             </div>
@@ -490,9 +481,7 @@ if (is_null($next_to_last_login)) {
           include('html-include/contact.html');
           include('html-include/tour.html');
         ?>
-
         <br class="clear-both">
-
         <?php
           include('html-include/advertisement.html');
         ?>
@@ -503,9 +492,48 @@ if (is_null($next_to_last_login)) {
       ?>
     </div>
 
+    <script type="text/javascript" src="database.js"></script>
+
     <script type="text/javascript">
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
+      var Database = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_query_data($_SESSION['id']))); ?>');
+
+      function getListObjectByServerData(data) {
+        var list = new List(
+          data.id, 
+          data.name, 
+          data.creator, 
+          data.comment, 
+          data.language1,
+          data.language2, 
+          data.creationTime, 
+          data.words);
+        list.allowEdit = data.allowEdit;
+        list.allowSharing = data.allowSharing;
+        list.labels = data.labels;
+        return list;
+      }
+
+      function getListArrayByServerData(data) {
+        var listObjectArray = [];
+        for (var i = 0; i < data.length; i++) {
+          listObjectArray.push(getListObjectByServerData(data[i]));
+        }
+        return listObjectArray;
+      }
+
+      (function() {
+        Database.lists = getListArrayByServerData(Database.lists);
+        Database.userId = <? echo $user->id; ?>;
+        Database.getListById = function(id) {
+          for (var i = Database.lists.length - 1; i >= 0; i--) {
+            if (Database.lists[i].id === id) {
+              return Database.lists[i];
+            }
+          };
+        };
+      })();
     </script>
 
     <!-- add scripts to the DOM -->

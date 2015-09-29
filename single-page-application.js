@@ -77,7 +77,7 @@ SinglePageApplication.updatePageContent = function () {
   pageElementsParent.insertBefore(page[pageName], pageElementsParent.firstChild); // show the div containing the requested page
   window.scrollTo(0, 0); // scroll to the top
   
-  $(((typeof adsEnabled !== 'undefined' && adsEnabled) ? '.advertisement-bottom, ' : '') + '#footer-wrapper, #cookie-header').show();
+  $('#footer-wrapper, #cookie-header').show();
 };
 
 $(document).ready(function() {
