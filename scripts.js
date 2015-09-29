@@ -449,6 +449,23 @@ if (typeof adsEnabled !== 'undefined' && adsEnabled === true) {
 }
 
 
+
+// scroll to top button
+$(window).scroll(function(){
+    var fromTopPx = 200; // distance to trigger
+    var scrolledFromtop = jQuery(window).scrollTop();
+    if(scrolledFromtop > fromTopPx){
+        $('#scroll-top-button').addClass('scrolled');
+    }else{
+        $('#scroll-top-button').removeClass('scrolled');
+    }
+});
+$('#scroll-top-button').on('click',function(){
+    jQuery("html, body").animate({ scrollTop: 0 }, 600);
+    return false;
+});
+
+
 // save text as file
 //
 // @param string text: file content

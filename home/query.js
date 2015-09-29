@@ -648,9 +648,19 @@ Query.addAnswer = function(word, correct) {
 // @param string user: the user's string
 // @param string correct: the correct string
 Query.checkAnswer = function(user, correct) {
-  return (user.trim() == correct.trim());
-
-  // TODO: more complex checking
+  var answerSeparator = ',';
+  var userArray = user.split(answerSeparator), correctArray = correct.split(answerSeparator);
+  if (userArray.length !== correctArray.length) return false;
+  console.log(userArray);
+  console.log(correctArray);
+  for (var i = correctArray.length - 1; i >= 0; i--) {
+    userArray[i] = userArray[i].trim();
+    correctArray[i] = correctArray[i].trim();
+    if (!userArray.contains(correctArray[i])) {
+      return false;
+    }
+  };
+  return true;
 }
 
 

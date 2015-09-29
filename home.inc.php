@@ -248,14 +248,14 @@ if (is_null($next_to_last_login)) {
               </div>
             </div>
           </div>
-
-          <div class="box" id="word-list-title">
-            <div class="box-head active"> 
-              <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
-              <div id="word-list-title-name"></div>
-            </div>
-          </div>
+          
           <div class="left-column-small">
+            <div class="box" id="word-list-title">
+              <div class="box-head active"> 
+                <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
+                <div id="word-list-title-name"></div>
+              </div>
+            </div>
             <div class="box" id="word-list-info">
               <div class="box-head">
                 <img src="img/info.svg" />
@@ -490,6 +490,8 @@ if (is_null($next_to_last_login)) {
       <?php
         include('html-include/footer.html');
       ?>
+      <div id="scroll-top-button">
+        <img src="img/menu-back.svg"/>
     </div>
 
     <script type="text/javascript" src="database.js"></script>
