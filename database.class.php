@@ -602,7 +602,7 @@ class Database {
   static function get_query_lists_of_user($id) {
     $lists = array_merge(self::get_word_lists_of_user($id), self::get_list_of_shared_word_lists_with_user($id));
     for ($i = 0; $i < count($lists); $i++) {
-      $lists[$i]->load_words(true, $id, "DESC");
+      $lists[$i]->load_words(true, $id, "ASC");
     }
     return $lists;
   }
@@ -633,7 +633,7 @@ class Database {
         $row['language1'],
         $row['language2'],
         $row['creation_time'], null);
-      $list->load_words(true, $user_id, "DESC");
+      $list->load_words(true, $user_id, "ASC");
       $list->set_labels(WordList::get_labels_of_list($user_id, $word_list_id));
 
 

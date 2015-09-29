@@ -92,7 +92,7 @@ $('.box').on('shadow-blink-green', function() {
 var menuShown = false;
 
 // add mobile menu html to body element
-$('body').prepend('<nav id="mobile-nav"><div></div></nav>');
+$('body').prepend('<nav id="mobile-nav" class="display-none"><div></div></nav>');
 $('#mobile-nav > div').html($('.navbar-inner.content-width').html()).find('*').show();
 
 var menuIcons = $('#mobile-nav > div .nav-img-li');
@@ -119,6 +119,7 @@ function showMenu() {
   menuShown = true;
 
   Scrolling.disable();
+  $('#mobile-nav').removeClass('display-none');
 
   $('body').addClass('mobile-menu-shown');
   $('.menu-button').attr('src', 'img/menu-back.svg');
@@ -147,6 +148,10 @@ function hideMenu() {
 
   $('body').removeClass('mobile-menu-shown');
   $('.menu-button').attr('src', 'img/menu.svg');
+
+  setTimeout(function() {
+    $('#mobile-nav').addClass('display-none');
+  }, 200);
 }
 
 $('#head-nav').append('<img src="img/menu.svg" class="menu-button nav-image" onclick="toggleMenu()" />');

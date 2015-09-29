@@ -373,7 +373,7 @@ function loadWordList(id, showLoadingInformation, showWordListPage) {
       else {
         // add words of the list to the DOM
         var wordListHTML = "";
-        for (var i = 0; i < shownListData.words.length; i++) {
+        for (var i = shownListData.words.length - 1; i >= 0; i--) {
           wordListHTML += getTableRowOfWord(shownListData.words[i].id, shownListData.words[i].language1, shownListData.words[i].language2, allowEdit);
         }
         wordListHTML = getTableOfWordList(wordListHTML, allowEdit, shownListData.language1, shownListData.language2);
