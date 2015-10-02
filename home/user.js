@@ -25,7 +25,6 @@ function addUser(email, callback) {
 
     // refresh both lists (added users and shared word lists) with and without loading information
     refreshListOfAddedUsers(false);
-    refreshListOfSharedWordLists(true, true);
 
     callback(data);
   });
@@ -90,9 +89,6 @@ function removeUser(id) {
 
     // refresh the other list without loading information
     refreshListOfUsersWhoHaveAddedYou(false);
-
-    // refresh list of shared word lists because some items might be not there anymore
-    refreshListOfSharedWordLists(true, true);
   });
 }
 

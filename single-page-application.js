@@ -1,7 +1,7 @@
 var SinglePageApplication = {}; // namespace
 
 // single page app
-var shownPageName, shownHashName, 
+var shownPageName, shownHashName, shownSubPageName,  
     pageTitle = {
       'home': 'Home',
       'query': 'Test',
@@ -45,6 +45,7 @@ SinglePageApplication.updatePageContent = function () {
   var subPageName = hash.substring(firstPart.length + 1, hash.length);
   var pageName = (firstPart.length === 0) ? "home" : firstPart;
 
+  shownSubPageName = subPageName;
 
   if (page[pageName] === undefined) { // given page doesn't exist
     // forward to home page

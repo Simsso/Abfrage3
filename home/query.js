@@ -156,7 +156,7 @@ Query.downloadQueryData = function(showLoadingInformation) {
   }).done(function(data) {
     var data = handleAjaxResponse(data);
     Database = data;
-    Query.updateDomWithData();
+    Query.updateDom();
   });
 };
 
@@ -639,6 +639,17 @@ Query.addAnswer = function(word, correct) {
   word.answers.push(answer);
 }
 
+
+// query synonyms
+//
+// object storing arrays
+// the index e.g. 'something' has the array of synonyms as its value (e.g. ['sth.', ...])
+Query.Synonyms = {
+  'something': ['sth.', 's.th.'],
+  'someone': ['so.', 's.o.']
+};
+
+
 // check answer
 //
 // compares two string for "equality"
@@ -651,17 +662,28 @@ Query.checkAnswer = function(user, correct) {
   var answerSeparator = ',';
   var userArray = user.split(answerSeparator), correctArray = correct.split(answerSeparator);
   if (userArray.length !== correctArray.length) return false;
-  console.log(userArray);
-  console.log(correctArray);
+
+  // iterate through every correct answer (split by the separator)
   for (var i = correctArray.length - 1; i >= 0; i--) {
+    // remove spaces, returns, etc. at beginning and end of the strings
     userArray[i] = userArray[i].trim();
     correctArray[i] = correctArray[i].trim();
+
+    // replace synonyms (like sth. --> something)
+    for (var synonym in Query.Synonyms) {
+      for (var j = Query.Synonyms[synonym].length - 1; j >= 0; j--) {
+        userArray[i] = userArray[i].replace(Query.Synonyms[synonym][j], synonym);
+        correctArray[i] = correctArray[i].replace(Query.Synonyms[synonym][j], synonym);
+      }
+    }
+
+    // check if the user array has the currently iterated correct answer in it
     if (!userArray.contains(correctArray[i])) {
       return false;
     }
-  };
+  }
   return true;
-}
+};
 
 
 // refresh query results upload button
@@ -670,7 +692,7 @@ Query.checkAnswer = function(user, correct) {
 Query.refreshResultsUploadButton = function() {
   var notUploadedAnswersCount = Query.answers.length - Query.nextIndexToUpload;
   $(page['query']).find('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
-}
+};
 
 
 // refresh query results upload counter
@@ -679,7 +701,7 @@ Query.refreshResultsUploadButton = function() {
 // The functions updates the values.
 Query.refreshResultsUploadCounter = function() {
   $(page['query']).find('#query-results-upload-counter').html('Uploaded ' + Query.nextIndexToUpload + '/' + Query.answers.length + ' test answers.');
-}
+};
 
 
 // upload query results
@@ -777,7 +799,7 @@ Query.processCurrentAnswerState = function() {
       Query.Stats.updateSelectedWordsInformation();
       return;
   }
-}
+};
 
 
 // show query solution
@@ -787,7 +809,7 @@ Query.showSolution = function() {
   $(page['query']).find('#query-answer-buttons').show().html(Query.correctAnswer);
   $(page['query']).find('#correct-answer').show().html(Query.correctAnswer);
   $(page['query']).find('#query-answer').select();
-}
+};
 
 
 
@@ -824,17 +846,17 @@ Query.setType = function(queryType) {
     Query.chosenType = queryType;
     
     if (queryType == Query.TypeEnum.Buttons) {
-      $(page['query']).find('#query-answer-table-cell-text-box').hide();
+      $(page['query']).find('#query-answer-table-cell-text-box, .query-special-chars-wrapper').hide();
       $(page['query']).find('#query-answer-table-cell-buttons').show();
       
     }
     else if (queryType == Query.TypeEnum.TextBox) {
       $(page['query']).find('#query-answer-table-cell-buttons').hide();
-      $(page['query']).find('#query-answer-table-cell-text-box').show();
+      $(page['query']).find('#query-answer-table-cell-text-box, .query-special-chars-wrapper').show();
       $(page['query']).find('#query-answer').focus();
     }
   }
-}
+};
 
 
 
@@ -846,7 +868,7 @@ Query.tryAutoUpload = function() {
     Query.uploadResults();
   else
     Query.refreshResultsUploadButton();
-}
+};
 
 // auto upload enabled
 //
@@ -880,7 +902,7 @@ Query.updateQueryWordsLanguageInformation = function(languages) {
 
   $(page['query']).find('span[data-value="first-language-information"]').html(languages[0]);
   $(page['query']).find('span[data-value="second-language-information"]').html(languages[1]);
-}
+};
 
 
 
@@ -905,8 +927,7 @@ Query.getListsOfWords = function(word) {
   }
 
   return list;
-}
-
+};
 
 
 // detect languages of word lists
@@ -931,7 +952,7 @@ Query.getLanguagesOfWordLists = function(list) {
   }
 
   return language;
-}
+};
 
 
 // Query.Drawing
@@ -990,7 +1011,7 @@ Query.Drawing.getSvgOfWord = function(word) {
 
   // return HTML-element
   return svg + '</svg>'
-}
+};
 
 
 // stored statistic data of query answers
@@ -1051,12 +1072,11 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
   return svg + '</svg>';
 };
 
+
 // query stats
 //
 // namespace for all funtions related to the statistics about words and lists shown during the query
 Query.Stats = {};
-
-
 
 
 // query stats update word information
@@ -1076,6 +1096,42 @@ Query.Stats.updateSelectedWordsInformation = function() {
     $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfQueryAnswers());
   }, 5 );
 };
+
+
+
+
+
+
+// special chars box
+$(page['query']).find('#query-show-special-chars').on('click', function() {
+  $(page['query']).find('.special-chars').toggleClass('display-none');
+  if (queryInput !== null) {
+    setCursorPosition(queryInput, parseInt($(queryInput).data('last-cursor-position')));
+  }
+});
+
+$(page['query']).find('#query-special-chars select').on('change', function() {
+  $(page['query']).find('.special-chars > div').hide();
+  $(page['query']).find('.special-chars-' + $(this).val()).show();
+});
+
+$(page['query']).find('#query-answer').on('keydown keyup click', function(event) {
+  queryInput = this;
+  var cursor = getCursorPosition(this);
+  $(this).data('last-cursor-position', cursor);
+});
+
+var queryInput = $(page['query']).find('#query-answer')[0];
+$(page['query']).find('#query-special-chars > div > div').on('click', function(e) {
+  if (queryInput !== null) {
+    var cursorPos = parseInt($(queryInput).data('last-cursor-position'));
+    setCursorPosition(lastFocusedInput, cursorPos);
+    insertAtCursor(queryInput, $(this).html());
+    cursorPos++;
+    setCursorPosition(queryInput, cursorPos);
+    $(queryInput).data('last-cursor-position', cursorPos);
+  }
+});
 
 
 // initial loading

@@ -88,10 +88,10 @@ $(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
     $(page['word-lists']).find('#word-list-add-name').prop('disabled', false).val('');
     $(page['word-lists']).find('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
 
-    refreshListOfWordLists(false, function() {}); // refresh the list of word lists without loading information
+    WordLists.updateListOfWordLists(); // refresh the list of word lists without loading information
 
     // load the word list which has just been added
-    loadWordList(data.id, true);
+    WordLists.show(data.id);
   });
 });
 
@@ -136,7 +136,7 @@ WordLists.updateListOfWordLists = function() {
   var output = "";
   // build HTML output string
   for (var i = 0; i < data.length; i++) { // add a row for each list
-    output += '<tr ' + ((data[i].id == WordLists.shownId) ? 'class="active" ' : '') + 'data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td></tr>';
+    output += '<tr data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td>' + data[i].language1 + ' - ' + data[i].language2 + '</td><td>' + data[i].words.length + ' (entr' + ((data[i].words.length === 1) ? 'y' : 'ies') + ')</td><td>' + data[i].creator.firstname + ' ' + data[i].creator.lastname + '</td></tr>';
   }
 
   // if there are no lists show the appropriate message
@@ -144,7 +144,7 @@ WordLists.updateListOfWordLists = function() {
     output = noWordListOutput;
   }
   else {
-    output = '<table class="box-table cursor-pointer"></tr>' + output + '</table>';
+    output = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Name</th><th>Content</th><th>Entries</th><th>Creator</th></tr>' + output + '</table>';
   }
 
   $(page['word-lists']).find('#list-of-word-lists').html(output); // update DOM with list of word lists
@@ -260,6 +260,7 @@ WordLists.show = function(id) {
   if (WordLists.shown === null) {
     WordLists.showNoListSelectedScreen(true); // update hash to /#/word-lists because the list is not available
     return;
+
   }
   
   var allowEdit = WordLists.shown.allowEdit;
@@ -452,6 +453,7 @@ WordLists.show = function(id) {
 
   // show divs which have been updated above
   $(page['word-lists']).find('#list-of-word-lists-wrapper').hide();
+  Scrolling.toTop();
   $(page['word-lists']).find('#word-list-info').show();
   $(page['word-lists']).find('#word-list-title').show();
   $(page['word-lists']).find('#word-list-info-words').show();
@@ -1454,7 +1456,7 @@ WordLists.renameList = function(listId, listName, callback) {
     data = handleAjaxResponse(data);
 
     // update local object
-    Database.getListById(id).name = listName;
+    Database.getListById(listId).name = listName;
 
     refreshRecentlyUsed(false);
     callback(data);
@@ -1508,6 +1510,39 @@ WordLists.Import.loadWordArrayFromString = function(string, wordSeparator, langu
     error: notImported
   };
 };
+
+
+
+// special chars box
+$(page['word-lists']).find('#word-lists-show-special-chars').on('click', function() {
+  $(page['word-lists']).find('.special-chars').toggleClass('display-none');
+  if (lastFocusedInput !== null) {
+    setCursorPosition(lastFocusedInput, parseInt($(lastFocusedInput).data('last-cursor-position')));
+  }
+});
+
+$(page['word-lists']).find('#word-lists-special-chars select').on('change', function() {
+  $(page['word-lists']).find('.special-chars > div').hide();
+  $(page['word-lists']).find('.special-chars-' + $(this).val()).show();
+});
+
+$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keydown keyup click', function(event) {
+  lastFocusedInput = this;
+  var cursor = getCursorPosition(this);
+  $(this).data('last-cursor-position', cursor);
+});
+
+var lastFocusedInput = null;
+$(page['word-lists']).find('#word-lists-special-chars > div > div').on('click', function(e) {
+  if (lastFocusedInput !== null) {
+    var cursorPos = parseInt($(lastFocusedInput).data('last-cursor-position'));
+    setCursorPosition(lastFocusedInput, cursorPos);
+    insertAtCursor(lastFocusedInput, $(this).html());
+    cursorPos++;
+    setCursorPosition(lastFocusedInput, cursorPos);
+    $(lastFocusedInput).data('last-cursor-position', cursorPos);
+  }
+});
 
 // initial load functions
 WordLists.updateListOfWordLists();

@@ -128,8 +128,7 @@ if (is_null($next_to_last_login)) {
                     <tr>
                       <td class="width-150px"><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
                       <td id="query-answer-table-cell-text-box">
-                        <input type="text" id="query-answer" class="unremarkable width-100"/>
-                        <div id="correct-answer" class="display-none unselectable" unselectable="on"></div>
+                        <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0"/>
                       </td>
                       <td id="query-answer-table-cell-buttons" class="display-none">
                         <table class="width-100">
@@ -140,6 +139,18 @@ if (is_null($next_to_last_login)) {
                           </tr>
                         </table>
                         <div id="query-answer-buttons"></div>
+                      </td>
+                    </tr>
+                    <tr class="query-special-chars-wrapper">
+                      <td colspan="2">
+                        <div id="correct-answer" class="display-none unselectable" unselectable="on" style="display: inline; "></div><input type="button" value="&#35805;" class="show-special-chars" id="query-show-special-chars" />
+                      </td>
+                    </tr>
+                    <tr class="query-special-chars-wrapper">
+                      <td colspan="2">
+                        <div id="query-special-chars" class="special-chars display-none box">
+                          <?php include('html-include/special-chars.html'); ?>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -249,7 +260,7 @@ if (is_null($next_to_last_login)) {
             </div>
           </div>
           
-          <div class="left-column-small">
+          <div id="word-lists-left-column" class="left-column-small">
             <div class="box" id="word-list-title">
               <div class="box-head active"> 
                 <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
@@ -317,7 +328,11 @@ if (is_null($next_to_last_login)) {
                     <input id="words-add-language1" type="text" placeholder="First language" required="true"/>
                     <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
                     <input id="words-add-button" type="submit" value="Add word"/>
+                    <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
                   </form>
+                  <div id="word-lists-special-chars" class="special-chars display-none box">
+                    <?php include('html-include/special-chars.html'); ?>
+                  </div>
                 </div>
                 <div id="words-in-list">
                 </div>

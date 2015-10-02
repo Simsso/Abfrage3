@@ -92,7 +92,7 @@ $('.box').on('shadow-blink-green', function() {
 var menuShown = false;
 
 // add mobile menu html to body element
-$('body').prepend('<nav id="mobile-nav" class="display-none"><div></div></nav>');
+$('body').prepend('<nav id="mobile-nav"><div></div></nav>');
 var htmlString = '<ul class="nav">';
 for (var i = 0; i < $('.navbar-inner.content-width > ul').length; i++) {
   htmlString += $('.navbar-inner.content-width > ul').eq(i).html();
@@ -124,7 +124,6 @@ function showMenu() {
   menuShown = true;
 
   Scrolling.disable();
-  $('#mobile-nav').removeClass('display-none');
 
   $('body').addClass('mobile-menu-shown');
   $('.menu-button').attr('src', 'img/menu-back.svg');
@@ -153,10 +152,6 @@ function hideMenu() {
 
   $('body').removeClass('mobile-menu-shown');
   $('.menu-button').attr('src', 'img/menu.svg');
-
-  setTimeout(function() {
-    $('#mobile-nav').addClass('display-none');
-  }, 200);
 }
 
 $('#head-nav').append('<img src="img/menu.svg" class="menu-button nav-image" onclick="toggleMenu()" />');
@@ -284,7 +279,6 @@ function handleAjaxResponse(data) {
     var obj = JSON.parse(data);
     obj.rawSize = data.length;
     console.log(obj);
-    if (obj.action === "set-word-list-languages") alert('set word list languages');
 
     if (obj.status === "success") {
       return obj.data;
@@ -424,7 +418,7 @@ function showAds() {
     loadAds();
   }
   else {
-    $(window).load(function() {
+    $(window).on('load', function() {
       showAds();
     });
   }
@@ -463,6 +457,72 @@ $(window).scroll(function(){
 $('#scroll-top-button').on('click',function(){
     jQuery("html, body").animate({ scrollTop: 0 }, 600);
     return false;
+});
+
+
+// insert at cursor
+//
+// @param object field: dom element
+// @param string value: string value to insert
+function insertAtCursor(field, value) {
+    //IE support
+    if (document.selection) {
+        field.focus();
+        sel = document.selection.createRange();
+        sel.text = value;
+    }
+    //MOZILLA and others
+    else if (field.selectionStart || field.selectionStart == '0') {
+        var startPos = field.selectionStart;
+        var endPos = field.selectionEnd;
+        field.value = field.value.substring(0, startPos)
+            + value
+            + field.value.substring(endPos, field.value.length);
+    } else {
+        field.value += value;
+    }
+}
+
+function getCursorPosition(element) {
+    var el = $(element).get(0);
+    var pos = 0;
+    if ('selectionStart' in el) {
+        pos = el.selectionStart;
+    } else if ('selection' in document) {
+        el.focus();
+        var Sel = document.selection.createRange();
+        var SelLength = document.selection.createRange().text.length;
+        Sel.moveStart('character', -el.value.length);
+        pos = Sel.text.length - SelLength;
+    }
+    return pos;
+}
+
+function setCursorPosition(elem, position) {
+
+    if(elem != null) {
+        if(elem.createTextRange) {
+            var range = elem.createTextRange();
+            range.move('character', position);
+            range.select();
+        }
+        else {
+            if(elem.selectionStart) {
+                elem.focus();
+                elem.setSelectionRange(position, position);
+            }
+            else
+                elem.focus();
+        }
+    }
+}
+
+
+$(window).on('load', function() {
+  $(window).on('scroll', function() {
+    // word list shown
+    // TODO
+  });
 });
 
 

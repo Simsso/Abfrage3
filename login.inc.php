@@ -155,6 +155,7 @@ include('html-include/legal-info.html');
 include('html-include/about.html');
 include('html-include/contact.html');
         ?>
+        <br class="clear-both">
 
       </div>
 
