@@ -755,13 +755,7 @@ WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
     data = handleAjaxResponse(data);
     
     // update local object of the edited list
-    Database.getListById(listId).words.push({
-      id: data,
-      list: WordLists.shownId,
-      language1: lang1,
-      language2: lang2,
-      answers: null
-    });
+    Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, []));
 
 
     if (WordLists.shownId !== listId) return; // the user has loaded another list while the word was added
@@ -779,8 +773,6 @@ WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
 
     // add word row to the list of words
     $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, allowEdit));
-
-    // new Toast('The word "' + lang1 + '" - "' + lang2 + '" has been added successfully.');
   });
 };
 
