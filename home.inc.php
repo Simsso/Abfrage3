@@ -142,7 +142,9 @@ if (is_null($next_to_last_login)) {
                       </td>
                     </tr>
                     <tr class="query-special-chars-wrapper">
-                      <td colspan="2">
+                      <td>
+                      </td>
+                      <td>
                         <div id="correct-answer" class="display-none unselectable" unselectable="on" style="display: inline; "></div><input type="button" value="&#35805;" class="show-special-chars" id="query-show-special-chars" />
                       </td>
                     </tr>
@@ -524,7 +526,7 @@ if (is_null($next_to_last_login)) {
           data.comment, 
           data.language1,
           data.language2, 
-          data.creationTime, 
+          data.creation_time, 
           data.words);
         list.allowEdit = data.allowEdit;
         list.allowSharing = data.allowSharing;

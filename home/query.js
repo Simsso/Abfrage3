@@ -156,6 +156,7 @@ Query.downloadQueryData = function(showLoadingInformation) {
   }).done(function(data) {
     var data = handleAjaxResponse(data);
     Database = data;
+    Query.lists = Database.lists; // link 
     Query.updateDom();
   });
 };
@@ -471,6 +472,22 @@ Query.groupWordsAlgorithm;
 
 // start query
 Query.start = function() {
+  // produce one array containing all query words
+  Query.words = [];
+  for (var i = 0; i < Query.selectedLists.length; i++) {
+    Query.words = Query.words.concat(Query.selectedLists[i].words);
+  }
+
+  if (Query.words.length === 0) {
+    var messageBox = new MessageBox();
+    messageBox.setTitle('Can\'t start test');
+    messageBox.setContent('You haven\'t selected enough words to start a test. Select at least one word.');
+    messageBox.setButtons(MessageBox.ButtonType.Ok);
+    messageBox.show();
+    return;
+  }
+
+
   Query.running = true;
 
   // update start query button and test fields
@@ -478,13 +495,6 @@ Query.start = function() {
   $(page['query']).find('#query-not-started-info').addClass('display-none');
   $(page['query']).find('#query-content-table').removeClass('display-none');
   
-  Query.running = true;
-
-  // produce one array containing all query words
-  Query.words = [];
-  for (var i = 0; i < Query.selectedLists.length; i++) {
-    Query.words = Query.words.concat(Query.selectedLists[i].words);
-  }
 
   // refresh array of selected words all answers
   Query.selectedWordsAllAnswers = [];
@@ -953,6 +963,19 @@ Query.getLanguagesOfWordLists = function(list) {
 
   return language;
 };
+
+
+// starts a test with the passed list id
+//
+// @param int listId: the list id
+Query.startTestWithList = function(listId, showQueryPage) {
+  if (showQueryPage) {
+    window.location.hash = '#/query';
+  }
+  Query.stop();
+  Query.addList(listId);
+  Query.start();
+}
 
 
 // Query.Drawing

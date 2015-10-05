@@ -278,35 +278,38 @@ WordLists.show = function(id) {
   // info box body
   // add content depending on the users permissions (sharing and editing)
   var wordListInfoBoxBody = '';
+  var ownerString = '', permissionsString = '', deleteString = '', startTestString = '', editLangaugesString = '', creationTimeString = '', renameListString = '';
+  startTestString = '<p><a href="#/query" onclick="Query.startTestWithList(WordLists.shown.id, true)">Start test with this list.</a></p>';
   if (!allowSharing) { // not list owner
-    wordListInfoBoxBody += '<p>' + WordLists.shown.creator.firstname + ' ' + WordLists.shown.creator.lastname + ' shares this list with you.</p>';
-    wordListInfoBoxBody += '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + WordLists.shown.creator.firstname + '\'s list.</p>';
+    ownerString = '<p>' + WordLists.shown.creator.firstname + ' ' + WordLists.shown.creator.lastname + ' shares this list with you.</p>';
+    permissionsString = '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + WordLists.shown.creator.firstname + '\'s list.</p>';
     // add hide button
-    wordListInfoBoxBody += '<input type="button" class="inline" value="Hide list" id="hide-shown-word-list"/>';
+    deleteString = '<input type="button" value="Hide list" id="hide-shown-word-list"/>';
   }
   else {
     // list owner
-    wordListInfoBoxBody += '<p>You own this list.</p>';
-    wordListInfoBoxBody += '<p><form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form></p>';
+    ownerString = '<p>You own this list.</p>';
+    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form><p></p>';
     // add delete button
-    wordListInfoBoxBody += '<input type="button" class="inline" value="Delete list" id="delete-shown-word-list"/>';
+    deleteString = '<input type="button" value="Delete list" id="delete-shown-word-list"/>';
   }
 
-  // var creationTime = new Date(parseInt(WordLists.shown.creation_time) * 1000);
-  // wordListInfoBoxBody += '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
+  var creationTime = new Date(parseInt(WordLists.shown.creationTime) * 1000);
+  creationTimeString = '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
 
   if (allowEdit) {
     // change language form
-    wordListInfoBoxBody += '<div class="inline"><p><form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '""/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form></p></div>';
-
-    //wordListInfoBoxBody += '<label id="import-wrapper" class="button">Import...<input type="file" id="import-data" style="display: none; " /></label>';
+    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '""/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
   }
   else {
 
   }
 
+
   // add export button
   //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="WordLists.exportList()"/>';
+
+  wordListInfoBoxBody += ownerString + permissionsString + startTestString + creationTimeString + renameListString + editLangaugesString + '<hr class="spacer-15">' + deleteString;
 
   $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
