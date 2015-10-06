@@ -329,6 +329,7 @@ if (is_null($next_to_last_login)) {
                   <form id="words-add-form">
                     <input id="words-add-language1" type="text" placeholder="First language" required="true"/>
                     <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
+                    <input id="words-add-comment" type="text" placeholder="Comment"/>
                     <input id="words-add-button" type="submit" value="Add word"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
                   </form>

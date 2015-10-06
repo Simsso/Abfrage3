@@ -54,7 +54,7 @@ class BasicWordList {
     $query = mysqli_query($con, $sql);
     $this->words = array();
     while ($row = mysqli_fetch_assoc($query)) {
-      $word = new Word($row['id'], $row['list'], $row['language1'], $row['language2']);
+      $word = new Word($row['id'], $row['list'], $row['language1'], $row['language2'], $row['comment']);
       if ($loadAnswers) {
         $word->load_answers($user_id);
       }
@@ -100,6 +100,22 @@ class BasicWordList {
       array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['list'], $row['permissions']));
     }
     return $result;
+  }
+
+  // get words of list
+  //
+  // @param unsigned int list_id: the id of the word list
+  //
+  // @return Word[]: array of the lists words
+  static function get_words_of_list($list_id) {
+    global $con;
+    $sql = "SELECT `id`, `list`, `language1`, `language2`, `comment` FROM `word` WHERE `list` = ".$list_id." AND `status` = 1 ORDER BY `id` DESC";
+    $query = mysqli_query($con, $sql);
+    $output = array();
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push($output, new Word($row['id'], $row['list'], $row['language1'], $row['language2'], $row['comment']));
+    }
+    return $output;
   }
 
 

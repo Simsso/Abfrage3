@@ -25,7 +25,7 @@ function List(id, name, creator, comment, language1, language2, creationTime, wo
   this.words = [];
   // convert parsed JSON data to "Word" objects
   for (var i = 0; i < words.length; i++) {
-    this.words.push(new Word(words[i].id, words[i].list, words[i].language1, words[i].language2, words[i].answers)); 
+    this.words.push(new Word(words[i].id, words[i].list, words[i].language1, words[i].language2, words[i].comment, words[i].answers)); 
   }
 }
 
@@ -78,13 +78,15 @@ List.prototype.getWordById = function(id) {
 // @param int list: id of the list which the word belongs to
 // @param string language1: meaning of the word in the first language of the list
 // @param string language2: meaning of the word in the second language of the list
+// @param string comment: additional comment to the word
 // @param QueryAnswer[] answers: array of query answers
 // 
 // @return Word: word object
-function Word(id, list, language1, language2, answers) {
+function Word(id, list, language1, language2, comment, answers) {
   this.id = id;
   this.language1 = language1;
   this.language2 = language2;
+  this.comment = comment;
   this.list = list;
 
   this.answers = [];

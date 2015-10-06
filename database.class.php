@@ -706,13 +706,14 @@ class Database {
   // @param unsigned int word_list_id: id of the list to add the new word
   // @param string lang1: meaning of the word in the first language
   // @param string lang2: meaning of the word in the second language
+  // @param string comment: additional comment to the word (can be left blank)
   //
   // @return unsigned int: the id of the newly added word
-  static function add_word($user_id, $word_list_id, $lang1, $lang2) {
+  static function add_word($user_id, $word_list_id, $lang1, $lang2, $comment) {
     global $con;
     // TODO check owner
-    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `time`, `user`)
-		VALUES (".$word_list_id.", '".$lang1."', '".$lang2."', ".time().", ".$user_id.");";
+    $sql = "INSERT INTO `word` (`list`, `language1`, `language2`, `comment`, `time`, `user`)
+		VALUES (".$word_list_id.", '".$lang1."', '".$lang2."', '".$comment."', ".time().", ".$user_id.");";
     $query = mysqli_query($con, $sql);
     return mysqli_insert_id($con);
   }
@@ -726,12 +727,13 @@ class Database {
   // @param unsigned int word_id: id of the word
   // @param string lang1: meaning of the word in the first language
   // @param string lang2: meaning of the word in the second language
+  // @param string comment: comment to the word
   //
   // @return byte: 1 if everything went right
-  static function update_word($user_id, $word_id, $lang1, $lang2) {
+  static function update_word($user_id, $word_id, $lang1, $lang2, $comment) {
     global $con;
     // TODO: add check if word is owned by $user_id
-    $sql = "UPDATE `word` SET `language1` = '".$lang1."', `language2` = '".$lang2."' WHERE `id` = ".$word_id.";";
+    $sql = "UPDATE `word` SET `language1` = '".$lang1."', `language2` = '".$lang2."', `comment` = '".$comment."' WHERE `id` = ".$word_id.";";
     $query = mysqli_query($con, $sql);
     return 1;
   }

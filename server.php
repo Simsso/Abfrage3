@@ -243,13 +243,13 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     // add word
     case 'add-word':
     session_required();
-    Response::send(Database::add_word($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2'])));
+    Response::send(Database::add_word($_SESSION['id'], Validation::format_text($_GET['word_list_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']), Validation::format_text($_GET['comment'])));
     break;
 
     // update word
     case 'update-word':
     session_required();
-    Response::send(Database::update_word($_SESSION['id'], Validation::format_text($_GET['word_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2'])));
+    Response::send(Database::update_word($_SESSION['id'], Validation::format_text($_GET['word_id']), Validation::format_text($_GET['lang1']), Validation::format_text($_GET['lang2']), Validation::format_text($_GET['comment'])));
     break;
 
     // remove word

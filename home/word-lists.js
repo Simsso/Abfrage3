@@ -337,7 +337,7 @@ WordLists.show = function(id) {
     // add words of the list to the DOM
     var wordListHTML = "";
     for (var i = WordLists.shown.words.length - 1; i >= 0; i--) {
-      wordListHTML += WordLists.getTableRowOfWord(WordLists.shown.words[i].id, WordLists.shown.words[i].language1, WordLists.shown.words[i].language2, allowEdit);
+      wordListHTML += WordLists.getTableRowOfWord(WordLists.shown.words[i].id, WordLists.shown.words[i].language1, WordLists.shown.words[i].language2, WordLists.shown.words[i].comment, allowEdit);
     }
     wordListHTML = WordLists.getTableOfWordList(wordListHTML, allowEdit, WordLists.shown.language1, WordLists.shown.language2);
     $(page['word-lists']).find('#words-in-list').html(wordListHTML);
@@ -467,8 +467,8 @@ WordLists.show = function(id) {
 // get table row of word
 //
 // @return string: the HTML of a single word row
-WordLists.getTableRowOfWord = function(id, lang1, lang2, allowEdit) {
-  return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="WordLists.removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
+WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit) {
+  return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td>' + comment + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="WordLists.removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
 };
 
 
@@ -476,7 +476,7 @@ WordLists.getTableRowOfWord = function(id, lang1, lang2, allowEdit) {
 //
 // @return string: the HTML table around a given content of the word list
 WordLists.getTableOfWordList = function(content, allowEdit, lang1, lang2) {
-  return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold cursor-default"><td>' + lang1 + '</td><td>' + lang2 + '</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
+  return '<table id="word-list-table" class="box-table ' + ((allowEdit)?'button-right-column':'') + '"><tr class="bold cursor-default"><td>' + lang1 + '</td><td>' + lang2 + '</td><td>Comment</td>' + (allowEdit?'<td></td>':'') + '</tr>' + content + '</table>';
 };
 
 
@@ -513,7 +513,7 @@ WordLists.editOrSaveWordEvent = function(event, id) {
   // jQuery vars of the important elements
   var row = $(page['word-lists']).find('#word-row-' + id); // the HTML row (<tr>)
   var editSaveButton = row.find('input[type=submit]'); // the button (<input type="button"/>)
-  var cell1 = row.children().eq(0), cell2 = row.children().eq(1); // the first cell in the words table row (<td>)
+  var cell1 = row.children().eq(0), cell2 = row.children().eq(1), cell3 = row.children().eq(2); // the first cell in the words table row (<td>)
 
   // edit button
   if (editSaveButton.data('action') == 'edit') { // edit mode
@@ -523,22 +523,25 @@ WordLists.editOrSaveWordEvent = function(event, id) {
     // replace the words meanings with text boxes containing the meanings as value="" to allow editing by the user
     cell1.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language1-' + id + '" value="' + cell1.html() + '" />');
     cell2.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language2-' + id + '" value="' + cell2.html() + '" />');
+    cell3.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-comment-' + id + '" value="' + cell3.html() + '" />');
   }
 
   // save button
   else {
     // disable the form elements
-    var lang1Input = $(page['word-lists']).find('#word-edit-input-language1-' + id), lang2Input = $(page['word-lists']).find('#word-edit-input-language2-' + id);
+    var lang1Input = $(page['word-lists']).find('#word-edit-input-language1-' + id), lang2Input = $(page['word-lists']).find('#word-edit-input-language2-' + id), commentInput = $(page['word-lists']).find('#word-edit-input-comment-' + id);
     lang1Input.prop('disabled', true);
     lang2Input.prop('disabled', true);
+    commentInput.prop('disabled', true);
     editSaveButton.prop('disabled', true).attr('value', 'Saving...');
 
     // send updated word information to the server
-    WordLists.updateWord(id, lang1Input.val(), lang2Input.val(), function() {
+    WordLists.updateWord(id, lang1Input.val(), lang2Input.val(), commentInput.val(), function() {
       // reset the table row (hide the input fields and re-enable the edit button)
       editSaveButton.prop('disabled', false).attr('value', 'Edit').data('action', 'edit');
       cell1.html(lang1Input.val());
       cell2.html(lang2Input.val());
+      cell3.html(commentInput.val());
     });
   }
 };
@@ -551,14 +554,16 @@ WordLists.editOrSaveWordEvent = function(event, id) {
 // @param int id: id of the word
 // @param string lang1: first language
 // @param string lang2: second language
+// @param string comment: comment to the word
 // @param function callback: called with the server response data after sending the Ajax-request
-WordLists.updateWord = function(id, lang1, lang2, callback) {
+WordLists.updateWord = function(id, lang1, lang2, comment, callback) {
   jQuery.ajax('server.php', {
     data: {
       action: 'update-word',
       word_id: id,
       lang1: lang1,
-      lang2: lang2
+      lang2: lang2,
+      comment: comment
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -572,6 +577,7 @@ WordLists.updateWord = function(id, lang1, lang2, callback) {
           if (Database.lists[i].words[j].id === id) {
             Database.lists[i].words[j].language1 = lang1;
             Database.lists[i].words[j].language2 = lang2;
+            Database.lists[i].words[j].comment = comment;
           }
         };
       }
@@ -716,14 +722,15 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
   e.preventDefault();
 
   // read input fields
-  var lang1 = $(page['word-lists']).find('#words-add-language1').val(), lang2 = $(page['word-lists']).find('#words-add-language2').val();
+  var lang1 = $(page['word-lists']).find('#words-add-language1').val(), lang2 = $(page['word-lists']).find('#words-add-language2').val(), comment = $(page['word-lists']).find('#words-add-comment').val();
 
   // clear input fields and focus the first one to allow the user to enter the next word immediately
   $(page['word-lists']).find('#words-add-language1').val('').focus();
   $(page['word-lists']).find('#words-add-language2').val('');
+  $(page['word-lists']).find('#words-add-comment').val('');
 
   // send word to the server
-  WordLists.addWordToShownList(lang1, lang2, true);
+  WordLists.addWordToShownList(lang1, lang2, comment, true);
 });
 
 
@@ -733,15 +740,17 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
 //
 // @param string lang1: first language
 // @param string lang2: second language
+// @param string comment: additional comment to the word
 // @param bool allowEdit: information whether the user is allowed to edit (necessary to add the word <tr> element with or without Edit and Delete button)
-WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
+WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   var listId = WordLists.shownId;
   jQuery.ajax('server.php', {
     data: {
       action: 'add-word',
       word_list_id: listId,
       lang1: lang1,
-      lang2: lang2
+      lang2: lang2,
+      comment: comment
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -751,7 +760,7 @@ WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
     data = handleAjaxResponse(data);
     
     // update local object of the edited list
-    Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, []));
+    Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, comment, []));
 
 
     if (WordLists.shownId !== listId) return; // the user has loaded another list while the word was added
@@ -768,7 +777,7 @@ WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
     }
 
     // add word row to the list of words
-    $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, allowEdit));
+    $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, comment, allowEdit));
   });
 };
 
@@ -1499,7 +1508,8 @@ WordLists.Import.loadWordArrayFromString = function(string, wordSeparator, langu
         continue;
       }
       else {
-        word.push(new Word(undefined, listId, meaning[0], meaning[1], []));
+        // TODO work with comments
+        word.push(new Word(undefined, listId, meaning[0], meaning[1], '', []));
       }
     }
   }

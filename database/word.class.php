@@ -5,13 +5,15 @@ class Word {
   public $list;
   public $language1;
   public $language2;
+  public $comment;
   public $answers;
 
-  public function __construct($id, $list, $language1, $language2) {
+  public function __construct($id, $list, $language1, $language2, $comment) {
     $this->id = intval($id);
     $this->list = intval($list);
     $this->language1 = $language1;
     $this->language2 = $language2;
+    $this->comment = $comment;
   }
 
   // load answers
@@ -34,7 +36,7 @@ class Word {
     $sql = "SELECT * FROM `word` WHERE `id` = ".$id." ORDER BY `id` DESC;";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      return new Word($id, $row['list'], $row['language1'], $row['language2']);
+      return new Word($id, $row['list'], $row['language1'], $row['language2'], $row['comment']);
     }
   }
 }
