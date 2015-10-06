@@ -531,7 +531,8 @@ if (is_null($next_to_last_login)) {
           data.language1,
           data.language2, 
           data.creation_time, 
-          data.words);
+          data.words, 
+          data.sharings);
         list.allowEdit = data.allowEdit;
         list.allowSharing = data.allowSharing;
         list.labels = data.labels;

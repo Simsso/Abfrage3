@@ -633,6 +633,7 @@ class Database {
         $row['language2'],
         $row['creation_time'], null);
       $list->load_words(true, $user_id, "ASC");
+      $list->load_sharing_information($user_id);
       $list->set_labels(WordList::get_labels_of_list($user_id, $word_list_id));
 
 
@@ -886,18 +887,7 @@ class Database {
   //
   // @return SharingInformation[]: sharing information of the list
   static function get_sharing_info_of_list($user_id, $word_list_id) {
-    global $con;
-    $sql = "
-		SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `share`.`list`, `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
-		FROM `share`, `list`, `user`
-		WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = ".$word_list_id." AND `list`.`creator` = ".$user_id." AND `list`.`active` = 1 AND `share`.`permissions` <> 0
-        ORDER BY `user`.`firstname` ASC, `user`.`lastname` ASC;";
-    $query = mysqli_query($con, $sql);
-    $result = array();
-    while ($row = mysqli_fetch_assoc($query)) {
-      array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['list'], $row['permissions']));
-    }
-    return $result;
+    return WordList::get_sharing_info_of_list($user_id, $word_list_id);
   }
 
 

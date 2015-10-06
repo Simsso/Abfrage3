@@ -12,7 +12,7 @@
 // @param Word[] words: array of the lists words
 //
 // @return List: list object
-function List(id, name, creator, comment, language1, language2, creationTime, words) {
+function List(id, name, creator, comment, language1, language2, creationTime, words, sharings) {
   this.id = id;
   this.name = name;
   this.creator = creator;
@@ -20,6 +20,7 @@ function List(id, name, creator, comment, language1, language2, creationTime, wo
   this.language2 = language2;
   this.comment = comment;
   this.creationTime = creationTime;
+  this.sharings = sharings;
 
   this.words = [];
   // convert parsed JSON data to "Word" objects

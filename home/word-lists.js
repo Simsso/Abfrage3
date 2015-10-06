@@ -320,7 +320,7 @@ WordLists.show = function(id) {
   // sharing box
   if (allowSharing) {
     // refresh sharing box with loading information
-    WordLists.downloadListSharings(true, WordLists.shown.id);
+    WordLists.updateDomListSharings(true, WordLists.shown.id);
     $(page['word-lists']).find('#word-list-sharing').show();
   }
   else {
@@ -780,6 +780,7 @@ WordLists.addWordToShownList = function(lang1, lang2, allowEdit) {
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
 // @param int|undefined wordListId: id of the word list for which the information will be requested
+function refreshListSharings(l) { WordLists.downloadListSharings(l); }
 WordLists.downloadListSharings = function(showLoadingInformation, wordListId) {
   // set id parameter to the shown list id if undefined has been passed
   if (wordListId === undefined)
@@ -806,45 +807,52 @@ WordLists.downloadListSharings = function(showLoadingInformation, wordListId) {
     }).done(function(data) {    
       data = handleAjaxResponse(data);
 
-      if (data.length === 0) { // list not shared yet
-        $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString); // show appropriate message
-      }
-      else { // list shared with at least one user
-        var output = "";
-        // add row for each sharing to output string
-        for (var i = 0; i < data.length; i++) {
-          output += '<tr id="list-shared-with-row-' + data[i].id + '">';
-          output += '<td>' + data[i].user.firstname + ' ' + data[i].user.lastname + '</td>';
-          output += '<td>' + ((data[i].permissions == 1)?'Can edit':'Can view') + '</td>';
-          output += '<td><input type="button" class="inline" value="Stop sharing" data-action="delete-sharing" data-sharing-id="' + data[i].id + '"/></td></tr>';
-        }
-        // add table to output string
-        output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td></td><td></td></tr>' + output + '</table>';
-
-        $(page['word-lists']).find('#list-sharings').html(output); // display the output string
-
-        // event listeners for the buttons just added
-        // stop sharing button
-        $(page['word-lists']).find('#list-sharings input[type=button]').on('click', function() {
-
-          var button = $(this);
-          button.prop('disabled', true).attr('value', 'Stopping sharing...'); // change button value and disable button
-
-          // send message to server to stop sharing of the list
-          WordLists.setSharingPermissionsBySharingId(button.data('sharing-id'), 0, function() {
-
-            // remove the row from the table
-            $(page['word-lists']).find('#list-shared-with-row-' + button.data('sharing-id')).remove();
-
-            // still rows left?
-            if ($(page['word-lists']).find('#list-sharings tr').length == 1) {
-              $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString);
-            }
-          });
-        });
-      }
+      Database.getListById(wordListId).sharings = data;
+      WordLists.updateDomListSharings();
     })
   );
+};
+
+// update dom list sharings
+WordLists.updateDomListSharings = function() {
+  var data = Database.getListById(WordLists.shownId).sharings;
+  if (typeof data === 'undefined' || data.length === 0) { // list not shared yet
+    $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString); // show appropriate message
+  }
+  else { // list shared with at least one user
+    var output = "";
+    // add row for each sharing to output string
+    for (var i = 0; i < data.length; i++) {
+      output += '<tr id="list-shared-with-row-' + data[i].id + '">';
+      output += '<td>' + data[i].user.firstname + ' ' + data[i].user.lastname + '</td>';
+      output += '<td>' + ((data[i].permissions == 1)?'Can edit':'Can view') + '</td>';
+      output += '<td><input type="button" class="inline" value="Stop sharing" data-action="delete-sharing" data-sharing-id="' + data[i].id + '"/></td></tr>';
+    }
+    // add table to output string
+    output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td></td><td></td></tr>' + output + '</table>';
+
+    $(page['word-lists']).find('#list-sharings').html(output); // display the output string
+
+    // event listeners for the buttons just added
+    // stop sharing button
+    $(page['word-lists']).find('#list-sharings input[type=button]').on('click', function() {
+
+      var button = $(this);
+      button.prop('disabled', true).attr('value', 'Stopping sharing...'); // change button value and disable button
+
+      // send message to server to stop sharing of the list
+      WordLists.setSharingPermissionsBySharingId(button.data('sharing-id'), 0, function() {
+
+        // remove the row from the table
+        $(page['word-lists']).find('#list-shared-with-row-' + button.data('sharing-id')).remove();
+
+        // still rows left?
+        if ($(page['word-lists']).find('#list-sharings tr').length == 1) {
+          $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString);
+        }
+      });
+    });
+  }
 };
 
 

@@ -9,6 +9,7 @@ class BasicWordList {
   public $language2;
   public $creation_time;
   public $words;
+  public $sharings;
 
   public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time) {
     $this->id = intval($id);
@@ -77,6 +78,38 @@ class BasicWordList {
     $count = mysqli_fetch_object($query)->count;
     
     return ($count == 0);
+  }
+
+
+  // get sharing information of list
+  //
+  // @param unsigned int user_id: id of the user
+  // @param unsigned int word_list_id: id of the word list
+  //
+  // @return SharingInformation[]: sharing information of the list
+  static function get_sharing_info_of_list($user_id, $word_list_id) {
+    global $con;
+    $sql = "
+    SELECT `share`.`permissions`, `share`.`id` AS 'share_id', `share`.`list`, `user`.`id` AS 'user_id', `user`.`firstname`, `user`.`lastname`, `user`.`email`
+    FROM `share`, `list`, `user`
+    WHERE `share`.`list` = `list`.`id` AND `share`.`user` = `user`.`id` AND `list`.`id` = ".$word_list_id." AND `list`.`creator` = ".$user_id." AND `list`.`active` = 1 AND `share`.`permissions` <> 0
+        ORDER BY `user`.`firstname` ASC, `user`.`lastname` ASC;";
+    $query = mysqli_query($con, $sql);
+    $result = array();
+    while ($row = mysqli_fetch_assoc($query)) {
+      array_push($result, new SharingInformation($row['share_id'], new SimpleUser($row['user_id'], $row['firstname'], $row['lastname'], $row['email']), $row['list'], $row['permissions']));
+    }
+    return $result;
+  }
+
+
+  // load sharing information
+  //
+  // update the object's sharing attribute to the appropriate value
+  //
+  // @param unsigned int user_id: id of the user
+  public function load_sharing_information($user_id) {
+    $this->sharings = self::get_sharing_info_of_list($user_id, $this-id);
   }
 }
 
