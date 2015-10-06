@@ -1,11 +1,19 @@
 "use strict";
 
+var Home = {};
+
+$(window).on('page-user', function(event, pageName, subPageName) {
+  // sub page user called
+  //
+});
+
 // feed
+Home.Feed = {};
 
 // feed HTML element
-var feed = $(page['home']).find('#feed'), 
-    noFeedContent = '<p>Nothing new since last login.</p>',
-    feedSince = -1; // show the feed since unix time (-1 = since last login)
+Home.Feed.domElement = $(page['home']).find('#feed'), 
+    Home.Feed.noFeedContentString = '<p>Nothing new since last login.</p>',
+    Home.Feed.since = -1; // show the feed since unix time (-1 = since last login)
 
 
 // refresh feed
@@ -14,16 +22,17 @@ var feed = $(page['home']).find('#feed'),
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
 // @param function|undefined callback: callback with Ajax-request response as first parameter
-function refreshFeed(showLoadingInformation, callback) {
+function refreshFeed(l) { Home.Feed.download(l); }
+Home.Feed.download = function(showLoadingInformation, callback) {
   if (showLoadingInformation) {
-    feed.html(loading);
+    Home.Feed.domElement.html(loading);
   }
 
   // send request to get the feed
   jQuery.ajax('server.php', {
     data: {
       action: 'get-feed',
-      since: feedSince
+      since: Home.Feed.since
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -64,10 +73,10 @@ function refreshFeed(showLoadingInformation, callback) {
     }
     
     // nothing in the feed
-    if (feedHtml.length === 0) feedHtml = noFeedContent;
+    if (feedHtml.length === 0) feedHtml = Home.Feed.noFeedContentString;
     else feedHtml = '<table class="feed-table box-table no-flex">' + feedHtml + '</table>';
     
-    feed.html(feedHtml);
+    Home.Feed.domElement.html(feedHtml);
     
     if (callback !== undefined)
       callback(data);
@@ -77,8 +86,8 @@ function refreshFeed(showLoadingInformation, callback) {
 // button load whole feed event listener
 $(page['home']).find('#feed-load-all').on('click', function() {
   $(page['home']).find('#feed-load-all').prop('disabled', true).attr('value', 'Loading all...');
-  feedSince = 0;
-  refreshFeed(false, function() {
+  Home.Feed.since = 0;
+  Home.Feed.download(false, function() {
     $(page['home']).find('#feed-load-all').hide();
   });
 });
@@ -86,17 +95,19 @@ $(page['home']).find('#feed-load-all').on('click', function() {
 
 
 // recently used
+Home.RecentlyUsed = {};
 
-var recentlyUsedElement = $(page['home']).find('#recently-used'), noRecentlyUsed = '<p>No recently used lists found.</p>';
+Home.RecentlyUsed.domElement = $(page['home']).find('#recently-used'), Home.RecentlyUsed.nothingString = '<p>No recently used lists found.</p>';
 
 // refresh recently used
 //
 // refreshes the div content showing the recently used lists of a user 
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
-function refreshRecentlyUsed(showLoadingInformation) {
+function refreshRecentlyUsed(l) { Home.RecentlyUsed.download(l); }
+Home.RecentlyUsed.download = function(showLoadingInformation) {
   if (showLoadingInformation) 
-    recentlyUsedElement.html(loading);
+    Home.RecentlyUsed.domElement.html(loading);
   
   // send request to get the feed
   jQuery.ajax('server.php', {
@@ -113,7 +124,7 @@ function refreshRecentlyUsed(showLoadingInformation) {
     
     // no recently used lists
     if (data.length === 0) {
-      recentlyUsedElement.html(noRecentlyUsed);
+      Home.RecentlyUsed.domElement.html(Home.RecentlyUsed.nothingString);
     }
     else {
       // add a table
@@ -126,17 +137,17 @@ function refreshRecentlyUsed(showLoadingInformation) {
       html += '</table>';
 
       // update the DOM
-      recentlyUsedElement.html(html);
+      Home.RecentlyUsed.domElement.html(html);
 
       // add event listener to make lists clickable (link to #/word-lists/xxx)
-      recentlyUsedElement.find('tr').on('click', function() {
+      Home.RecentlyUsed.domElement.find('tr').on('click', function() {
         window.location.href = '#/word-lists/' + $(this).data('list-id');
       });
     }
   });
-}
+};
 
 
 // initial loading
-refreshFeed(true);
-refreshRecentlyUsed(true);
+Home.Feed.download(true);
+Home.RecentlyUsed.download(true);

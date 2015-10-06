@@ -1,8 +1,15 @@
 "use strict";
 
+var User = {};
+
+$(window).on('page-user', function(event, pageName, subPageName) {
+  // sub page user called
+  //
+});
+
 // const strings
-var noUsersAddedOutput = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
-var noUsersHaveAddedYouOutput = '<p class="spacer-top-15">No users have added you yet.</p>';
+User.noUserAddedString = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
+User.noUsersHaveAddedYouString = '<p class="spacer-top-15">No users have added you yet.</p>';
 
 // add user
 //
@@ -10,7 +17,7 @@ var noUsersHaveAddedYouOutput = '<p class="spacer-top-15">No users have added yo
 // 
 // @param string email: user to add
 // @param function callback: callback with request response data passed
-function addUser(email, callback) {
+User.add = function(email, callback) {
   jQuery.ajax('server.php', {
     data: {
       action: 'add-user',
@@ -24,11 +31,11 @@ function addUser(email, callback) {
     data = handleAjaxResponse(data);
 
     // refresh both lists (added users and shared word lists) with and without loading information
-    refreshListOfAddedUsers(false);
+    User.downloadListOfAddedUsers(false);
 
     callback(data);
   });
-}
+};
 
 // event listener for submit of form to add a new user
 $(page['user']).find('#user-add-form').on('submit', function(e) {
@@ -40,7 +47,7 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
   $(page['user']).find('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
 
   // call actual add user function and pass required information (email address of user to add)
-  addUser($(page['user']).find('#user-add-email').val(), function(data) {
+  User.add($(page['user']).find('#user-add-email').val(), function(data) {
     // re-enable button and input field to allow adding another user
     $(page['user']).find('#user-add-email').prop('disabled', false).val('');
     $(page['user']).find('#user-add-button').prop('disabled', false).attr('value', 'Add user');
@@ -62,7 +69,7 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
 // removes a user by their id
 // 
 // @param int id: user id
-function removeUser(id) {
+User.remove = function(id) {
   // disable buton to avoid resubmission
   $(page['user']).find('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
 
@@ -84,19 +91,20 @@ function removeUser(id) {
     // update div
     // if no added users are left show the appropriate message
     if ($(page['user']).find('#people-you-have-added tr').length == 1) {
-      $(page['user']).find('#people-you-have-added').html(noUsersAddedOutput);
+      $(page['user']).find('#people-you-have-added').html(User.noUserAddedString);
     }
 
     // refresh the other list without loading information
-    refreshListOfUsersWhoHaveAddedYou(false);
+    User.downloadListOfUsersWhoHaveAddedYou(false);
   });
-}
+};
 
 
-// refresh list of added users
+// download list of added users
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
-function refreshListOfAddedUsers(showLoadingInformation) {
+function refreshListOfAddedUsers(l) { User.downloadListOfAddedUsers(l); }
+User.downloadListOfAddedUsers = function(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
     $(page['user']).find('#people-you-have-added').html(loading);
@@ -111,30 +119,37 @@ function refreshListOfAddedUsers(showLoadingInformation) {
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
-
-
-    var output = "";
-    // get the html rows for the table
-    for (var i = 0; i < data.length; i++) {
-      output += '<tr id="added-users-row-' + data[i].id + '"><td>' + data[i].firstname + ' ' + data[i].lastname + '</td><td>' + data[i].email + '</td><td><input id="added-users-remove-' + data[i].id + '" type="button" class="inline" value="Remove" onclick="removeUser(' + data[i].id + ')"/></td></tr>';
-    }
-
-    // if no users have been added yet show the appropriate message
-    if (output.length === 0) {
-      output = noUsersAddedOutput;
-    }
-    else { // table head is only visible if users have been added
-      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
-    }
-
-    $(page['user']).find('#people-you-have-added').html(output); // update the html element with the list
+    Database.listOfAddedUsers = data;
+    User.updateDomListOfAddedUsers();
   });
-}
+};
 
-// refresh list of users who have added you
+
+// update dom list of added users
+User.updateDomListOfAddedUsers = function() {
+  var output = "";
+  // get the html rows for the table
+  for (var i = 0; i < Database.listOfAddedUsers.length; i++) {
+    output += '<tr id="added-users-row-' + Database.listOfAddedUsers[i].id + '"><td>' + Database.listOfAddedUsers[i].firstname + ' ' + Database.listOfAddedUsers[i].lastname + '</td><td>' + Database.listOfAddedUsers[i].email + '</td><td><input id="added-users-remove-' + Database.listOfAddedUsers[i].id + '" type="button" class="inline" value="Remove" onclick="User.remove(' + Database.listOfAddedUsers[i].id + ')"/></td></tr>';
+  }
+
+  // if no users have been added yet show the appropriate message
+  if (output.length === 0) {
+    output = User.noUserAddedString;
+  }
+  else { // table head is only visible if users have been added
+    output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
+  }
+
+  $(page['user']).find('#people-you-have-added').html(output); // update the html element with the list
+};
+
+
+// download list of users who have added you
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
-function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
+function refreshListOfUsersWhoHaveAddedYou(l) { User.downloadListOfUsersWhoHaveAddedYou(l); }
+User.downloadListOfUsersWhoHaveAddedYou = function(showLoadingInformation) {
   // loading information
   if (showLoadingInformation)
     $(page['user']).find('#people-who-have-added-you').html(loading);
@@ -150,42 +165,50 @@ function refreshListOfUsersWhoHaveAddedYou(showLoadingInformation) {
   }).done(function(data) {    
     data = handleAjaxResponse(data);
 
+    Database.listOfUsersWhoHaveAddedYou = data;
 
-    var output = "";
-    // create a string with all html rows of users who have added you
-    for (var i = 0; i < data.length; i++) {
-      output += '<tr><td>' + data[i].firstname + ' ' + data[i].lastname + '</td><td>' + data[i].email + '</td><td>' + ((data[i].bidirectional)?'':'<input type="button" class="inline" value="Add user" data-email="' + data[i].email + '"/>') + '</td></tr>';
-    }
+    User.updateDomListOfUsersWhoHaveAddedYou();
+  });
+};
 
-    // show appropriate message if there are no users who have added you
-    if (output.length === 0) {
-      output = noUsersHaveAddedYouOutput;
-    }
 
-    // otherwise add table and table head to the string
-    else {
-      output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
-    }
+// update dom list of users who have added you
+User.updateDomListOfUsersWhoHaveAddedYou = function() {
 
-    $(page['user']).find('#people-who-have-added-you').html(output); // update DOM
+  var output = "";
+  // create a string with all html rows of users who have added you
+  for (var i = 0; i < Database.listOfUsersWhoHaveAddedYou.length; i++) {
+    output += '<tr><td>' + Database.listOfUsersWhoHaveAddedYou[i].firstname + ' ' + Database.listOfUsersWhoHaveAddedYou[i].lastname + '</td><td>' + Database.listOfUsersWhoHaveAddedYou[i].email + '</td><td>' + ((Database.listOfUsersWhoHaveAddedYou[i].bidirectional)?'':'<input type="button" class="inline" value="Add user" data-email="' + Database.listOfUsersWhoHaveAddedYou[i].email + '"/>') + '</td></tr>';
+  }
 
-    // add event listener for newly added buttons
-    $(page['user']).find('#people-who-have-added-you input[type=button]').on('click', function() {
-      // buttons function is adding users
-      var $button = $(this);
-      $button.prop('disabled', true).val('Adding...'); // disable button and change value
+  // show appropriate message if there are no users who have added you
+  if (output.length === 0) {
+    output = User.noUsersHaveAddedYouString;
+  }
 
-      // call actual function to update the database
-      addUser($button.data('email'), function() {
-        $button.fadeOut(); // hide button after the user has been added
-      });
+  // otherwise add table and table head to the string
+  else {
+    output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
+  }
+
+  $(page['user']).find('#people-who-have-added-you').html(output); // update DOM
+
+  // add event listener for newly added buttons
+  $(page['user']).find('#people-who-have-added-you input[type=button]').on('click', function() {
+    // buttons function is adding users
+    var $button = $(this);
+    $button.prop('disabled', true).val('Adding...'); // disable button and change value
+
+    // call actual function to update the database
+    User.add($button.data('email'), function() {
+      $button.fadeOut(); // hide button after the user has been added
     });
   });
-}
+};
 
 
 
 
 // load methods
-refreshListOfAddedUsers(true);
-refreshListOfUsersWhoHaveAddedYou(true);
+User.updateDomListOfAddedUsers();
+User.updateDomListOfUsersWhoHaveAddedYou();

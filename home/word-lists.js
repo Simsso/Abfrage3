@@ -2,24 +2,11 @@
 
 var WordLists = {};
 
-// const strings
-var noWordListOutput = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
-var noSharedWordListOutput = '<p>There are no shared lists to show.</p>';
-var listNotShared = '<p class="spacer-top-15">The selected list isn\'t shared with anyone. Only you can see it.</p>';
-var noWordsInList = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
-var noWordsInListDisallowEdit = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
-var noLabels = '<p>You don\'t have any labels.</p>';
-
-WordLists.shownId = -1; // stores the id of the word list which is shown at the moment (-1 if none)
-WordLists.shown = null; // stores the data (words, creation date, etc.) of the word list which is shown at the moment (null if none)
-var labels = null; // stores the labels of the user
-
-var expandedLabelsIds = []; // stores which labels were expanded to expand them after refreshing the label HTML element
-
-
 // single page application allows urls like
 // ...#/word-lists/4 (<-- id)
 $(window).on('page-word-lists', function(event, pageName, subPageName) {
+  // sub page word-lists called
+
   var hashListId = parseInt(subPageName); // subPageName (last part of the url #/xxx/this) defines the id of the loaded list
   if (hashListId === WordLists.shownId) return; // no reason to touch the DOM because the requested list hasn't changed
   
@@ -32,6 +19,19 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
     WordLists.show(parseInt(subPageName));
   }
 });
+
+// const strings
+WordLists.noListString = '<p class="spacer-top-15">You haven\'t created any wordlists yet.</p>';
+WordLists.listNotSharedString = '<p class="spacer-top-15">The selected list isn\'t shared with anyone. Only you can see it.</p>';
+WordLists.noWordsInListString = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet.</p>';
+WordLists.noWordsInListNoEditPermissionsString = '<p class="spacer-top-15">The selected list doesn\'t contain any words yet. You don\'t have permissions to add new words.</p>';
+WordLists.noLabelsString = '<p>You don\'t have any labels.</p>';
+
+WordLists.shownId = -1; // stores the id of the word list which is shown at the moment (-1 if none)
+WordLists.shown = null; // stores the data (words, creation date, etc.) of the word list which is shown at the moment (null if none)
+
+WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand them after refreshing the label HTML element
+
 
 
 
@@ -141,7 +141,7 @@ WordLists.updateListOfWordLists = function() {
 
   // if there are no lists show the appropriate message
   if (output.length === 0) {
-    output = noWordListOutput;
+    output = WordLists.noListString;
   }
   else {
     output = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Name</th><th>Content</th><th>Entries</th><th>Creator</th></tr>' + output + '</table>';
@@ -289,7 +289,7 @@ WordLists.show = function(id) {
   else {
     // list owner
     ownerString = '<p>You own this list.</p>';
-    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '" class="inline"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button" class="inline"/></form><p></p>';
+    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button"/></form><p></p>';
     // add delete button
     deleteString = '<input type="button" value="Delete list" id="delete-shown-word-list"/>';
   }
@@ -309,7 +309,7 @@ WordLists.show = function(id) {
   // add export button
   //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="WordLists.exportList()"/>';
 
-  wordListInfoBoxBody += ownerString + permissionsString + startTestString + creationTimeString + renameListString + editLangaugesString + '<hr class="spacer-15">' + deleteString;
+  wordListInfoBoxBody += ownerString + permissionsString + startTestString + renameListString + editLangaugesString + '<hr class="spacer-15">' + deleteString;
 
   $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
@@ -331,7 +331,7 @@ WordLists.show = function(id) {
   $(page['word-lists']).find('#shown-word-list-words-count').html(WordLists.shown.words.length); // update word count
   
   if (WordLists.shown.words.length === 0) { // no words added yet
-    $(page['word-lists']).find('#words-in-list').html((allowEdit)?noWordsInList:noWordsInListDisallowEdit);
+    $(page['word-lists']).find('#words-in-list').html((allowEdit)?WordLists.noWordsInListString:WordLists.noWordsInListNoEditPermissionsString);
   }
   else {
     // add words of the list to the DOM
@@ -377,13 +377,6 @@ WordLists.show = function(id) {
         var sharingId = $(page['word-lists']).find('tr[data-list-id=' + WordLists.shownId + ']').data('sharing-id');
         // send server request to hide the shared list
         WordLists.setSharingPermissionsBySharingId(sharingId, 0, function() {
-          $(page['word-lists']).find('#list-of-shared-word-lists-row-' + sharingId).remove();
-
-          // still rows left?
-          if ($(page['word-lists']).find('#list-of-shared-word-lists tr').length == 1) {
-            $(page['word-lists']).find('#list-of-shared-word-lists').html(noSharedWordListOutput); // show appropriate message if there are no lists to display
-          }
-
           // because the shown list has just been removed update the screen to show the appropriate message
           WordLists.showNoListSelectedScreen(true);
         });
@@ -466,8 +459,8 @@ WordLists.show = function(id) {
   else
     $(page['word-lists']).find('#words-add').hide();
 
-  // update label list with loading information
-  WordLists.getLabelList(true);
+  // update label list
+  WordLists.updateDomLabelList();
   $(page['word-lists']).find('#word-list-label').show();
 }
 
@@ -669,7 +662,7 @@ WordLists.removeWord = function(id) {
 
     // show special message if no word is left
     if ($(page['word-lists']).find('#word-list-table tr').length == 1) {
-      $(page['word-lists']).find('#word-list-table').html(noWordsInList);
+      $(page['word-lists']).find('#word-list-table').html(WordLists.noWordsInListString);
     }
   });
 };
@@ -709,7 +702,7 @@ WordLists.deleteWordList = function(id, callback) {
 
     // no list table row anymore (except from the th)
     if ($(page['word-lists']).find('#list-of-word-lists tr').length == 1) {
-      $(page['word-lists']).find('#list-of-word-lists').html(noWordListOutput);
+      $(page['word-lists']).find('#list-of-word-lists').html(WordLists.noListString);
     }
 
 
@@ -814,7 +807,7 @@ WordLists.downloadListSharings = function(showLoadingInformation, wordListId) {
       data = handleAjaxResponse(data);
 
       if (data.length === 0) { // list not shared yet
-        $(page['word-lists']).find('#list-sharings').html(listNotShared); // show appropriate message
+        $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString); // show appropriate message
       }
       else { // list shared with at least one user
         var output = "";
@@ -845,7 +838,7 @@ WordLists.downloadListSharings = function(showLoadingInformation, wordListId) {
 
             // still rows left?
             if ($(page['word-lists']).find('#list-sharings tr').length == 1) {
-              $(page['word-lists']).find('#list-sharings').html(listNotShared);
+              $(page['word-lists']).find('#list-sharings').html(WordLists.listNotSharedString);
             }
           });
         });
@@ -973,7 +966,7 @@ WordLists.setSharingPermissions = function(listId, email, permissions, callback)
 // adds event listeners to added HTML-elements
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
-WordLists.getLabelList = function(showLoadingInformation) {
+WordLists.downloadLabelList = function(showLoadingInformation) {
   if (showLoadingInformation)
     $(page['word-lists']).find('#list-labels-list').html(loading);
 
@@ -987,173 +980,176 @@ WordLists.getLabelList = function(showLoadingInformation) {
 
     }
   }).done(function(data) {    
-    labels = handleAjaxResponse(data);
+    Database.labels = handleAjaxResponse(data);
 
-    // refreshQueryLabelSelection(labels);
+    WordLists.updateDomLabelList();
+  });
+};
 
-    $(page['word-lists']).find('#list-labels-list').html(WordLists.getEditableHtmlTableOfLabels(labels)); // update DOM
-    
-    
-    // open small menu for single label event trigger
-    $(page['word-lists']).find('#list-labels-list img.small-menu-open-image').on('click', function(e) {
-      $(page['word-lists']).find('.small-menu').addClass('display-none');
-      $(this).next().removeClass('display-none');
-      e.stopPropagation(); // prevent triggering click event on body which listens for click to close the popup
-    });
-    $(page['word-lists']).find('#list-labels-list .small-menu input').on('click', function(e) {
-      $(this).parents('.small-menu').addClass('display-none');
-    });
-    $(page['word-lists']).find('#list-labels-list .small-menu').on('click', function(e) { e.stopPropagation(); }); // prevent triggering click event on body which listens for click to close the popup
+// update dom label list
+WordLists.updateDomLabelList = function() {
+  $(page['word-lists']).find('#list-labels-list').html(WordLists.getEditableHtmlTableOfLabels(Database.labels)); // update DOM
+  
+  
+  // open small menu for single label event trigger
+  $(page['word-lists']).find('#list-labels-list img.small-menu-open-image').on('click', function(e) {
+    $(page['word-lists']).find('.small-menu').addClass('display-none');
+    $(this).next().removeClass('display-none');
+    e.stopPropagation(); // prevent triggering click event on body which listens for click to close the popup
+  });
+  $(page['word-lists']).find('#list-labels-list .small-menu input').on('click', function(e) {
+    $(this).parents('.small-menu').addClass('display-none');
+  });
+  $(page['word-lists']).find('#list-labels-list .small-menu').on('click', function(e) { e.stopPropagation(); }); // prevent triggering click event on body which listens for click to close the popup
 
-    // just added checkboxes event listener
-    // the checkboxes allow the user to attach the list to a label by checking the checkbox
-    $(page['word-lists']).find('#list-labels-list input[type=checkbox]').click( function(){
-      // read label id from checkbox data tag
-      var labelId = $(this).data('label-id');
+  // just added checkboxes event listener
+  // the checkboxes allow the user to attach the list to a label by checking the checkbox
+  $(page['word-lists']).find('#list-labels-list input[type=checkbox]').click( function(){
+    // read label id from checkbox data tag
+    var labelId = $(this).data('label-id');
 
-      // checkbox has been checked
-      if($(this).is(':checked')) { // add list to label
-        WordLists.attachListToLabel(labelId, WordLists.shownId, function() {
-          // update list object by adding the label
-          WordLists.shown.labels.push(labels[WordLists.getLabelIndexByLabelId(labels, labelId)]);
-        });
-      }
-      // checkbox has been unchecked
-      else { // detach list from label
-        WordLists.detachListFromLabel(labelId, WordLists.shownId, function() {
-          // update list object by removing the label
-          WordLists.shown.labels.splice(WordLists.getLabelIndexByLabelId(WordLists.shown.labels, labelId), 1);
-        });
-      }
-    });
-
-
-    // add new label form event listener
-    $(page['word-lists']).find('.label-add-form').on('submit', function(e) {
-      e.preventDefault();
-
-      // disable form elements
-      var button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
-      var nameInput = $(this).children('.label-add-name').prop('disabled', true);
-      var parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
-
-      expandedLabelsIds.push(parseInt(parentSelect.val())); // expand parent label of newly added label
-      
-      // send message to the server
-      WordLists.addNewLabel(nameInput.val(), parentSelect.val(), function(data) {
-        // after adding successfully refresh the label list without loading information
-        WordLists.getLabelList(false);
-
-        // re-enable form elements
-        button.prop('disabled', false).attr('value', 'Add label');
-        nameInput.prop('disabled', false).val('');
-        parentSelect.prop('disabled', false).val(null);
+    // checkbox has been checked
+    if($(this).is(':checked')) { // add list to label
+      WordLists.attachListToLabel(labelId, WordLists.shownId, function() {
+        // update list object by adding the label
+        WordLists.shown.labels.push(Database.labels[WordLists.getLabelIndexByLabelId(Database.labels, labelId)]);
       });
-    });
-
-    // remove label form submit event listener
-    $(page['word-lists']).find('.label-remove-form').on('submit', function(e) {
-      e.preventDefault();
-
-      // update form children
-      $(this).children('.label-remove-select').prop('disabled', true);
-      $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing...');
-
-      var labelId = $(this).children('.label-remove-select').val(); // read label id
-
-      // remove label server request
-      WordLists.removeLabel(labelId, function() {
-        // re-enable form children
-        $(this).children('.label-remove-select').prop('disabled', false);
-        $(this).children('.label-remove-button').prop('disabled', false).attr('value', 'Remove label');
-
-        // update local list object
+    }
+    // checkbox has been unchecked
+    else { // detach list from label
+      WordLists.detachListFromLabel(labelId, WordLists.shownId, function() {
+        // update list object by removing the label
         WordLists.shown.labels.splice(WordLists.getLabelIndexByLabelId(WordLists.shown.labels, labelId), 1);
-
-        // update label list without loading information
-        WordLists.getLabelList(false);
       });
+    }
+  });
+
+
+  // add new label form event listener
+  $(page['word-lists']).find('.label-add-form').on('submit', function(e) {
+    e.preventDefault();
+
+    // disable form elements
+    var button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
+    var nameInput = $(this).children('.label-add-name').prop('disabled', true);
+    var parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
+
+    WordLists.expandedLabelsIds.push(parseInt(parentSelect.val())); // expand parent label of newly added label
+    
+    // send message to the server
+    WordLists.addNewLabel(nameInput.val(), parentSelect.val(), function(data) {
+      // after adding successfully refresh the label list without loading information
+      WordLists.updateDomLabelList();
+
+      // re-enable form elements
+      button.prop('disabled', false).attr('value', 'Add label');
+      nameInput.prop('disabled', false).val('');
+      parentSelect.prop('disabled', false).val(null);
     });
+  });
 
-    // add sub label event listener
-    $(page['word-lists']).find('.label-add-sub-label').on('click', function() {
-      // show the "add sub label form" which is hidden in the following <tr>
-      $(this).hide().parent().parent().parent().next().show().children().find('input[type=text]').first().focus();
+  // remove label form submit event listener
+  $(page['word-lists']).find('.label-remove-form').on('submit', function(e) {
+    e.preventDefault();
+
+    // update form children
+    $(this).children('.label-remove-select').prop('disabled', true);
+    $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing...');
+
+    var labelId = $(this).children('.label-remove-select').val(); // read label id
+
+    // remove label server request
+    WordLists.removeLabel(labelId, function() {
+      // re-enable form children
+      $(this).children('.label-remove-select').prop('disabled', false);
+      $(this).children('.label-remove-button').prop('disabled', false).attr('value', 'Remove label');
+
+      // update local list object
+      WordLists.shown.labels.splice(WordLists.getLabelIndexByLabelId(WordLists.shown.labels, labelId), 1);
+
+      // update label list without loading information
+      WordLists.updateDomLabelList();
     });
+  });
 
-    // label rename form event listener
-    $(page['word-lists']).find('.label-rename-form').on('submit', function(e) {
-      e.preventDefault();
+  // add sub label event listener
+  $(page['word-lists']).find('.label-add-sub-label').on('click', function() {
+    // show the "add sub label form" which is hidden in the following <tr>
+    $(this).hide().parent().parent().parent().next().show().children().find('input[type=text]').first().focus();
+  });
 
-      // get label id from data tag of the form
-      var labelId = $(this).data('label-id');
-      var button = $(page['word-lists']).find('#label-rename-button-' + labelId);
-      var $firstCell = $(page['word-lists']).find('#label-rename-table-cell-' + labelId);
+  // label rename form event listener
+  $(page['word-lists']).find('.label-rename-form').on('submit', function(e) {
+    e.preventDefault();
 
-      // edit name
-      if (button.data('action') == 'rename-edit') {
-        var labelName = labels[WordLists.getLabelIndexByLabelId(labels, labelId)].name;
-        $firstCell.find('label span').html('');
-        $firstCell.append('&nbsp;<input type="text" form="label-rename-form-' + labelId + '" class="inline" value="' + labelName + '" required="true"/>');
-        button.data('action', 'rename-save');
-      }
+    // get label id from data tag of the form
+    var labelId = $(this).data('label-id');
+    var button = $(page['word-lists']).find('#label-rename-button-' + labelId);
+    var $firstCell = $(page['word-lists']).find('#label-rename-table-cell-' + labelId);
 
-      // submit edits
-      else {
-        var input = $firstCell.children('input').first();
-        var newName = input.val();
+    // edit name
+    if (button.data('action') == 'rename-edit') {
+      var labelName = Database.labels[WordLists.getLabelIndexByLabelId(Database.labels, labelId)].name;
+      $firstCell.find('label span').html('');
+      $firstCell.append('&nbsp;<input type="text" form="label-rename-form-' + labelId + '" class="inline" value="' + labelName + '" required="true"/>');
+      button.data('action', 'rename-save');
+    }
 
-        button.prop('disabled', true).attr('value', 'Renaming...');
-        input.prop('disabled', true);
+    // submit edits
+    else {
+      var input = $firstCell.children('input').first();
+      var newName = input.val();
 
-        // send new name to the server
-        WordLists.renameLabel(labelId, newName, function() {
-          button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
-          $firstCell.children('input').remove();
-          $firstCell.find('label span').html('&nbsp;' + newName);
+      button.prop('disabled', true).attr('value', 'Renaming...');
+      input.prop('disabled', true);
 
-          // update local label object
-          labels[WordLists.getLabelIndexByLabelId(labels, labelId)].name = newName;
-        });
-      }
-    });
+      // send new name to the server
+      WordLists.renameLabel(labelId, newName, function() {
+        button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
+        $firstCell.children('input').remove();
+        $firstCell.find('label span').html('&nbsp;' + newName);
+
+        // update local label object
+        Database.labels[WordLists.getLabelIndexByLabelId(Database.labels, labelId)].name = newName;
+      });
+    }
+  });
 
 
-    // expand single labels
-    $(page['word-lists']).find('#list-labels-list .small-exp-col-icon').on('click', function() {
-      var $this = $(this);
-      var expand = ($this.data('state') == 'collapsed');
+  // expand single labels
+  $(page['word-lists']).find('#list-labels-list .small-exp-col-icon').on('click', function() {
+    var $this = $(this);
+    var expand = ($this.data('state') == 'collapsed');
 
-      var i = 0;
-      var row = $this.parent().parent();
-      var allFollowing = row.nextAll();
-      var selfIndenting = row.data('indenting');
-      // show all following rows which have a higher indenting (are sub-labels) or don't have an indenting (are "add sub-label" formular rows)
-      while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') === undefined)) {
-        if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
-          if (expand) // expand
-            allFollowing.eq(i).show();
+    var i = 0;
+    var row = $this.parent().parent();
+    var allFollowing = row.nextAll();
+    var selfIndenting = row.data('indenting');
+    // show all following rows which have a higher indenting (are sub-labels) or don't have an indenting (are "add sub-label" formular rows)
+    while (allFollowing.eq(i).length > 0 && (allFollowing.eq(i).data('indenting') > selfIndenting || allFollowing.eq(i).data('indenting') === undefined)) {
+      if (allFollowing.eq(i).data('indenting') == selfIndenting + 1 || !expand) {
+        if (expand) // expand
+          allFollowing.eq(i).show();
 
-          else { // collapse
-            allFollowing.eq(i).hide();
-            allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
+        else { // collapse
+          allFollowing.eq(i).hide();
+          allFollowing.eq(i).find('.small-exp-col-icon').attr('src', 'img/expand.svg').data('state', 'collapsed');
 
-            // refresh array of expanded labels
-            expandedLabelsIds.removeAll(parseInt(allFollowing.eq(i).data('label-id')));
-          }
+          // refresh array of expanded labels
+          WordLists.expandedLabelsIds.removeAll(parseInt(allFollowing.eq(i).data('label-id')));
         }
-        i++;
       }
+      i++;
+    }
 
-      if (expand) {
-        $this.data('state', 'expanded').attr('src', 'img/collapse.svg'); // flip image
-        expandedLabelsIds.push(parseInt(row.data('label-id'))); // refresh array of expanded labels
-      }
-      else {
-        $this.data('state', 'collapsed').attr('src', 'img/expand.svg'); // flip image
-        expandedLabelsIds.removeAll(parseInt(row.data('label-id'))); // refresh array of expanded labels
-      }
-    });
+    if (expand) {
+      $this.data('state', 'expanded').attr('src', 'img/collapse.svg'); // flip image
+      WordLists.expandedLabelsIds.push(parseInt(row.data('label-id'))); // refresh array of expanded labels
+    }
+    else {
+      $this.data('state', 'collapsed').attr('src', 'img/expand.svg'); // flip image
+      WordLists.expandedLabelsIds.removeAll(parseInt(row.data('label-id'))); // refresh array of expanded labels
+    }
   });
 };
 
@@ -1178,7 +1174,7 @@ WordLists.getEditableHtmlTableOfLabels = function(labels) {
   }
   else {
     // if there was no code returned there are no labels to show
-    html = noLabels;
+    html = WordLists.noLabelsString;
   }
   return html;
 };
@@ -1212,8 +1208,8 @@ WordLists.getHtmlListOfLabelId = function(labels, id, indenting) {
 //
 // @return string: HTML table row (<tr>) of a single label
 WordLists.getSingleListElementOfLabelList = function(label, indenting) {
-  var subLabelsCount = WordLists.getNumberOfSubLabels(labels, label.id);
-  var expanded = expandedLabelsIds.contains(label.id), parentExpanded = expandedLabelsIds.contains(label.parent_label); // label is expanded?
+  var subLabelsCount = WordLists.getNumberOfSubLabels(Database.labels, label.id);
+  var expanded = WordLists.expandedLabelsIds.contains(label.id), parentExpanded = WordLists.expandedLabelsIds.contains(label.parent_label); // label is expanded?
 
   var output = '<tr data-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0 || parentExpanded)?'':' style="display: none; "') + ' id="label-list-row-id-' + label.id + '">';
   output += '<form class="label-rename-form" id="label-rename-form-' + label.id + '" data-label-id="' + label.id + '"></form>';

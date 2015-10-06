@@ -2,6 +2,11 @@
 
 var Query = {};
 
+$(window).on('page-query', function(event, pageName, subPageName) {
+  // sub page query called
+  Query.updateDom(); // update the dom (e.g. a new list might have been added)
+});
+
 // default value of how man answers to consider when determining how well a word is known
 Query.CONSIDERNANSWERS = 5;
 
@@ -393,7 +398,7 @@ Query.getHtmlTableOfLabels = function(labels) {
   }
   else {
     // if there was no code returned there are no labels to show
-    html = noLabels;
+    html = WordLists.noLabelsString;
   }
   return html;
 }

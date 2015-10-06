@@ -148,23 +148,21 @@ Word.prototype.getKnownAverageOverLastNAnswers = function(n, ignoreAnswers) {
 };
 
 
-// static functions
-// get word known below
+// get word known below or equal the percentage over last n answers
 //
 // @param Word[] wordArray: array of words to consider
 // @param float percentage: percentage known
 // @param int n: consider last n answers
 // 
-// @return Word: random word out of the passed array which has been known below the passed percentage
+// @return Word: random word out of the passed array which has been known below the passed percentage or undefined if no word is below the avg
 Word.getWordKnownBelow = function(wordArray, percentage, n) {
   var wordsBelow = [];
   // search for all words below given percentage
   for (var i = 0; i < wordArray.length; i++) {
-    if (wordArray[i].getKnownAverageOverLastNAnswers(n) < percentage) {
+    if (wordArray[i].getKnownAverageOverLastNAnswers(n) <= percentage) {
       wordsBelow.push(wordArray[i]);
     }
   }
-  
   return wordsBelow.getRandomElement();
 };
 
