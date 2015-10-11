@@ -35,7 +35,6 @@ WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand
 
 
 
-
 // adds a new word list to the data base
 //
 // @param string name: the name of the new word list
@@ -87,8 +86,6 @@ $(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
     // re-enable the button and the text box
     $(page['word-lists']).find('#word-list-add-name').prop('disabled', false).val('');
     $(page['word-lists']).find('#word-list-add-button').prop('disabled', false).attr('value', 'Create list');
-
-    WordLists.updateListOfWordLists(); // refresh the list of word lists without loading information
 
     // load the word list which has just been added
     WordLists.show(data.id);
@@ -162,6 +159,8 @@ WordLists.updateListOfWordLists = function() {
 WordLists.showNoListSelectedScreen = function(updateHash) {
   WordLists.shownId = -1;
   WordLists.shown = null;
+
+  WordLists.updateListOfWordLists();
 
   $('.link-to-show-current-word-list').attr('href', '#/word-lists');
   
@@ -239,6 +238,15 @@ WordLists.download = function(id, showLoadingInformation, showWordListPage) {
 };
 
 
+
+// show word list
+//
+// shows the word list and loads it from the Database object
+// so there is no Ajax-request
+//
+// to show a word list and load it from the server call WordLists.download method
+// 
+// @param unsigned int id: id of the word list
 WordLists.show = function(id) {
   var data = null;
   for (var i = 0; i < Database.lists.length; i++) {
@@ -254,7 +262,10 @@ WordLists.show = function(id) {
   // update the list data variable to the downloaded data
   WordLists.shown = data;
   WordLists.shownId = WordLists.shown.id;
+
+  // update links and hash (url)
   $('.link-to-show-current-word-list').attr('href', '#/word-lists/' + WordLists.shownId);
+  window.location.hash = '#/word-lists/' + WordLists.shownId;
   
   // list doesn't exist or no permissions or deleted
   if (WordLists.shown === null) {
@@ -462,7 +473,8 @@ WordLists.show = function(id) {
   // update label list
   WordLists.updateDomLabelList();
   $(page['word-lists']).find('#word-list-label').show();
-}
+};
+
 
 // get table row of word
 //
@@ -507,6 +519,9 @@ WordLists.exportList = function(list) {
 // the information whether the line is currently in edit or save mode is stored in a data attribute of the button (data('action'))
 // it can have the values 'edit' which means that the user wants to edit the word by clicking the button
 // the value 'save' means that the user has added the word and wants to save the changes by clicking
+//
+// @param object event: event data
+// @param unsigned int: id of the word to edit or save
 WordLists.editOrSaveWordEvent = function(event, id) {
   event.preventDefault(); // stop form submission
 
@@ -547,9 +562,9 @@ WordLists.editOrSaveWordEvent = function(event, id) {
 };
 
 
-// save word
+// update word
 //
-// saves changed made to a word into the database
+// saves changed made to a word into the database online and the local Database object
 //
 // @param int id: id of the word
 // @param string lang1: first language
@@ -744,6 +759,18 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
 // @param bool allowEdit: information whether the user is allowed to edit (necessary to add the word <tr> element with or without Edit and Delete button)
 WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   var listId = WordLists.shownId;
+  var list = Database.getListById(listId);
+  console.log(list);
+  // check for a word with the same meaning in lang1 or lang2
+  for (var i = 0; i < list.words.length; i++) {
+    if (list.words[i].language1 == lang1 || list.words[i].language2 == lang2) {
+        var messageBox = new MessageBox();
+        messageBox.setTitle('Similar word found');
+        messageBox.setContent('This word list already contains a word with the same meaning.');
+        messageBox.show();
+    }
+  }
+
   jQuery.ajax('server.php', {
     data: {
       action: 'add-word',
@@ -983,6 +1010,7 @@ WordLists.setSharingPermissions = function(listId, email, permissions, callback)
 // adds event listeners to added HTML-elements
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
+function getLabelList(l) { WordLists.downloadLabelList(l); }
 WordLists.downloadLabelList = function(showLoadingInformation) {
   if (showLoadingInformation)
     $(page['word-lists']).find('#list-labels-list').html(loading);
@@ -1002,6 +1030,7 @@ WordLists.downloadLabelList = function(showLoadingInformation) {
     WordLists.updateDomLabelList();
   });
 };
+
 
 // update dom label list
 WordLists.updateDomLabelList = function() {
@@ -1054,9 +1083,7 @@ WordLists.updateDomLabelList = function() {
     WordLists.expandedLabelsIds.push(parseInt(parentSelect.val())); // expand parent label of newly added label
     
     // send message to the server
-    WordLists.addNewLabel(nameInput.val(), parentSelect.val(), function(data) {
-      // after adding successfully refresh the label list without loading information
-      WordLists.updateDomLabelList();
+    WordLists.addNewLabel(nameInput.val(), parseInt(parentSelect.val()), function(data) {
 
       // re-enable form elements
       button.prop('disabled', false).attr('value', 'Add label');
@@ -1073,7 +1100,7 @@ WordLists.updateDomLabelList = function() {
     $(this).children('.label-remove-select').prop('disabled', true);
     $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing...');
 
-    var labelId = $(this).children('.label-remove-select').val(); // read label id
+    var labelId = parseInt($(this).children('.label-remove-select').val()); // read label id
 
     // remove label server request
     WordLists.removeLabel(labelId, function() {
@@ -1083,9 +1110,6 @@ WordLists.updateDomLabelList = function() {
 
       // update local list object
       WordLists.shown.labels.splice(WordLists.getLabelIndexByLabelId(WordLists.shown.labels, labelId), 1);
-
-      // update label list without loading information
-      WordLists.updateDomLabelList();
     });
   });
 
@@ -1339,6 +1363,19 @@ WordLists.addNewLabel = function(name, parentId, callback) {
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
+
+    // update local data base object
+    Database.labels.push({
+      active: 1,
+      id: data,
+      name: name,
+      parent_label: parentId,
+      user: Database.userId
+    });
+
+    // after adding successfully refresh the label list without loading information
+    WordLists.updateDomLabelList();
+
     callback(data);
   });
 };
@@ -1415,6 +1452,18 @@ WordLists.removeLabel = function(labelId, callback) {
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
+
+    // update local data base object
+    for (var i = 0; i < Database.labels.length; i++) {
+      if (Database.labels[i].id === labelId) {
+        Database.labels.splice(i, 1); // remove deleted label
+        break;
+      }
+    }
+
+    // update label list
+    WordLists.updateDomLabelList();
+
     callback(data);
   });
 }
@@ -1472,6 +1521,42 @@ WordLists.renameList = function(listId, listName, callback) {
 };
 
 
+
+// special chars box
+// TODO: add comments
+$(page['word-lists']).find('#word-lists-show-special-chars').on('click', function() {
+  $(page['word-lists']).find('.special-chars').toggleClass('display-none');
+  if (lastFocusedInput !== null) {
+    setCursorPosition(lastFocusedInput, parseInt($(lastFocusedInput).data('last-cursor-position')));
+  }
+});
+
+$(page['word-lists']).find('#word-lists-special-chars select').on('change', function() {
+  $(page['word-lists']).find('.special-chars > div').hide();
+  $(page['word-lists']).find('.special-chars-' + $(this).val()).show();
+});
+
+$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keydown keyup click', function(event) {
+  lastFocusedInput = this;
+  var cursor = getCursorPosition(this);
+  $(this).data('last-cursor-position', cursor);
+});
+
+var lastFocusedInput = null;
+$(page['word-lists']).find('#word-lists-special-chars > div > div').on('click', function(e) {
+  if (lastFocusedInput !== null) {
+    var cursorPos = parseInt($(lastFocusedInput).data('last-cursor-position'));
+    setCursorPosition(lastFocusedInput, cursorPos);
+    insertAtCursor(lastFocusedInput, $(this).html());
+    cursorPos++;
+    setCursorPosition(lastFocusedInput, cursorPos);
+    $(lastFocusedInput).data('last-cursor-position', cursorPos);
+  }
+});
+
+
+
+
 // import namespace
 WordLists.Import = {};
 
@@ -1522,36 +1607,21 @@ WordLists.Import.loadWordArrayFromString = function(string, wordSeparator, langu
 
 
 
-// special chars box
-$(page['word-lists']).find('#word-lists-show-special-chars').on('click', function() {
-  $(page['word-lists']).find('.special-chars').toggleClass('display-none');
-  if (lastFocusedInput !== null) {
-    setCursorPosition(lastFocusedInput, parseInt($(lastFocusedInput).data('last-cursor-position')));
-  }
-});
+WordLists.Import.showDialog = function() {
+  Scrolling.disable(); // disable scrolling
 
-$(page['word-lists']).find('#word-lists-special-chars select').on('change', function() {
-  $(page['word-lists']).find('.special-chars > div').hide();
-  $(page['word-lists']).find('.special-chars-' + $(this).val()).show();
-});
+  $('#background-black-overlay').html($('#word-import-box').html()); // fill background overlay with word import box content
 
-$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keydown keyup click', function(event) {
-  lastFocusedInput = this;
-  var cursor = getCursorPosition(this);
-  $(this).data('last-cursor-position', cursor);
-});
+  $('#background-black-overlay').removeClass('display-none'); // show background overlay
+};
 
-var lastFocusedInput = null;
-$(page['word-lists']).find('#word-lists-special-chars > div > div').on('click', function(e) {
-  if (lastFocusedInput !== null) {
-    var cursorPos = parseInt($(lastFocusedInput).data('last-cursor-position'));
-    setCursorPosition(lastFocusedInput, cursorPos);
-    insertAtCursor(lastFocusedInput, $(this).html());
-    cursorPos++;
-    setCursorPosition(lastFocusedInput, cursorPos);
-    $(lastFocusedInput).data('last-cursor-position', cursorPos);
-  }
-});
+
+WordLists.Import.hideDialog = function() {
+  $('#background-black-overlay').addClass('display-none').html(''); // hide background overlay and remove children
+
+  Scrolling.enable(); // enable scrolling
+};
+
 
 // initial load functions
 WordLists.updateListOfWordLists();

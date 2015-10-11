@@ -42,10 +42,10 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
       Scrolling.disable();
       box.addClass('fullscreen');
       var escFunction = function(e) {
-        if (e.keyCode == 27) { // ESC
+        if (e.keyCode == 27) { // detect ESC key press
           box.find('img[data-action="fullscreen"]').trigger('click');
+          $(document).unbind('keyup', escFunction); // remove esc function event listener
         }
-        $(document).unbind('keyup', escFunction);
       };
       $(document).on('keyup', escFunction);
       break;

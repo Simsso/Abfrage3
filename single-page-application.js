@@ -1,21 +1,27 @@
-var SinglePageApplication = {}; // namespace
+var SPA = {}; // namespace
 
 // single page app
-var shownPageName, shownHashName, shownSubPageName,  
-    pageTitle = {
-      'home': 'Home',
-      'query': 'Test',
-      'word-lists': 'Word lists',
-      'user': 'User',
-      'settings': 'Settings',
-      'about': 'About',
-      'contact': 'Contact',
-      'legal-info': 'Legal info',
-      'tour': 'Tour',
-      'login': 'Login'
-    };
+SPA.shownPageName = '';
+SPA.shownHashName = '';
+SPA.shownSubPageName = '';
+SPA.pageTitle = {
+  'home': 'Home',
+  'query': 'Test',
+  'word-lists': 'Word lists',
+  'user': 'User',
+  'settings': 'Settings',
+  'about': 'About',
+  'contact': 'Contact',
+  'legal-info': 'Legal info',
+  'tour': 'Tour',
+  'login': 'Login'
+};
 
-var page = {}, pageElementsParent = document.getElementById('main');
+var page = {}, // stores all dom elements from not rendered sites
+  pageElementsParent = document.getElementById('main');
+
+
+// siaf
 (function() {
   var jQueryPageElement = $('#main').children('div');
   for (var i = 0;  i < jQueryPageElement.length; i++) {
@@ -37,7 +43,8 @@ var page = {}, pageElementsParent = document.getElementById('main');
 // checks if the hash is related to an existing page (e.g. "word-lists")
 // shows the page if it isn't already
 // since some page have sub-pages (like the "settings" page) it is necessary for those to trigger 
-SinglePageApplication.updatePageContent = function () {
+SPA.updatePageContent = function (firstCall) {
+  if (typeof firstCall === 'undefined') firstCall = false;
 
   // read page name from URL
   var hash = location.hash.slice(2);
@@ -45,32 +52,32 @@ SinglePageApplication.updatePageContent = function () {
   var subPageName = hash.substring(firstPart.length + 1, hash.length);
   var pageName = (firstPart.length === 0) ? "home" : firstPart;
 
-  shownSubPageName = subPageName;
+  SPA.shownSubPageName = subPageName;
 
-  if (page[pageName] === undefined) { // given page doesn't exist
+  if (pageName === '' || typeof page[pageName] === 'undefined') { // given page doesn't exist
     // forward to home page
     pageName = "home";
   }
   
   
   // update document title
-  document.title = pageTitle[pageName] + ' - Abfrage3';
+  document.title = SPA.pageTitle[pageName] + ' - Abfrage3';
 
   // if the hash hasn't changed at all do nothing
-  if (shownHashName === hash) return;
-  shownHashName = hash; // the hash has changed
+  if (!firstCall && SPA.shownHashName === hash) return;
+  SPA.shownHashName = hash; // the hash has changed
 
   // allow sub pages to process the hash change
   $(window).trigger('page-' + pageName, [pageName, subPageName]);
   
   // don't touch the DOM if the page (first part of the has) is already shown
-  if (shownPageName === pageName) return;
+  if (SPA.shownPageName === pageName) return;
   
-  if (shownPageName !== undefined) {
-    pageElementsParent.removeChild(page[shownPageName]);
+  if (SPA.shownPageName !== undefined && SPA.shownPageName !== '') {
+    pageElementsParent.removeChild(page[SPA.shownPageName]);
   }
   
-  shownPageName = pageName;
+  SPA.shownPageName = pageName;
   $('li').removeClass('visited'); // unmark the navigation element
   
   // mark nav element as visisted (class active)
@@ -83,6 +90,6 @@ SinglePageApplication.updatePageContent = function () {
 
 $(document).ready(function() {
   // hashchange event listener
-  $(window).on('hashchange', SinglePageApplication.updatePageContent);
-  SinglePageApplication.updatePageContent(); // update when loading the page
+  $(window).on('hashchange', SPA.updatePageContent);
+  SPA.updatePageContent(true); // update when loading the page
 });

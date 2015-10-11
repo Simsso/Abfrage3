@@ -256,6 +256,17 @@ Query.updateDom = function() {
 };
 
 
+
+// case sensitive query
+Query.caseSensitivity = $(page['query']).find('#query-case-sensitivity').is(':checked');
+
+// checkbox case sensitivity query change event listener
+$(page['query']).find('#query-case-sensitivity').on('change', function() {
+  Query.caseSensitivity = $(this).is(':checked');
+});
+
+
+
 // refresh query list selection
 //
 // Refreshes the list of word lists where the user can select the lists for the test.
@@ -683,6 +694,12 @@ Query.checkAnswer = function(user, correct) {
     // remove spaces, returns, etc. at beginning and end of the strings
     userArray[i] = userArray[i].trim();
     correctArray[i] = correctArray[i].trim();
+
+    // no case sensitivity
+    if (!Query.caseSensitivity) {
+      userArray[i] = userArray[i].toLowerCase();
+      correctArray[i] = correctArray[i].toLowerCase();
+    }
 
     // replace synonyms (like sth. --> something)
     for (var synonym in Query.Synonyms) {
@@ -1124,8 +1141,6 @@ Query.Stats.updateSelectedWordsInformation = function() {
     $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfQueryAnswers());
   }, 5 );
 };
-
-
 
 
 

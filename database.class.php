@@ -74,8 +74,12 @@ class Database {
       $query = mysqli_query($con, $sql);
 
 
-      // send email
+      // send email to registered user
       Mail::get_email_confirmation_mail($firstname, $email, $email_confirmation_key)->send();
+
+      // mail to admin
+      (new Mail("timo.denk@simsso.de", Mail::DEFAULT_SENDER_EMAIL, null, "New user", "" . $firstname . " " . $lastname . " has just signed up on Abfrage3!"))->send();
+
       return TRUE;
     }
   }

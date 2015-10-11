@@ -107,7 +107,7 @@ hr {
 }
 
 h4 {
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 ul {
@@ -448,6 +448,24 @@ body > .main {
 }
 
 
+#background-black-overlay {
+  z-index: 1000; 
+
+  height: 100%; 
+  width: 100%; 
+  position: fixed; 
+  top: 0px; 
+  left: 0px;  
+  
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+#background-black-overlay.display-none {
+  display: none;
+}
+
+
 
 form table {
   width: 100%;
@@ -591,6 +609,12 @@ div.right-column-img-wrapper {
 
 #query-show-special-chars {
   float: right;
+}
+
+
+.word-import-box-inner-wrapper {
+  margin: 100px;
+  overflow: auto;
 }
 
 

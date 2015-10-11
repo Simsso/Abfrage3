@@ -179,14 +179,18 @@ if (is_null($next_to_last_login)) {
             </div>
 
 
-            <div class="box" id="query-results-upload-box">
+            <div class="box" id="query-advanced-settings-box">
               <div class="box-head">
-                <img src="img/upload.svg" />
-                Upload test results
+                <img src="img/settings.svg" />
+                Advanced settings
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
-                <div id="query-results-upload">
+                <div>
+                  <h4>Case sensitivity</h4>
+                  <p><label><input type="checkbox" id="query-case-sensitivity" checked="true"/>&nbsp;Case sensitive test</label></p>
+
+                  <h4>Test answer upload</h4>
                   <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
                   <p id="query-results-upload-counter">Uploaded 0/0 test answers.</p>
                   <p>You can upload your answers (the information about whether you answered the word correctly or not) to the data base to make your next test better adjusted to your knowledge.</p>
@@ -279,6 +283,19 @@ if (is_null($next_to_last_login)) {
               </div>
             </div>
 
+            <div class="box" id="word-list-label" style="z-index: 105; ">
+              <div class="box-head">
+                <img src="img/tags.svg" />
+                Labels
+                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
+                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
+              </div>
+              <div class="box-body" data-start-state="collapsed">
+                <div id="list-labels-list">
+                </div>
+              </div>
+            </div>
+
             <div class="box" id="word-list-sharing">
               <div class="box-head">
                 <img src="img/share.svg" />
@@ -297,19 +314,6 @@ if (is_null($next_to_last_login)) {
                 </form>
                 <div id="list-sharings">
 
-                </div>
-              </div>
-            </div>
-
-            <div class="box" id="word-list-label" style="z-index: 105; ">
-              <div class="box-head">
-                <img src="img/tags.svg" />
-                Labels
-                <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
-                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
-              </div>
-              <div class="box-body" data-start-state="collapsed">
-                <div id="list-labels-list">
                 </div>
               </div>
             </div>
@@ -510,6 +514,17 @@ if (is_null($next_to_last_login)) {
       ?>
       <div id="scroll-top-button">
         <img src="img/menu-back.svg"/>
+    </div>
+
+    <div id="background-black-overlay" class="display-none"></div>
+
+    <div id="word-import-box" class="display-none">
+      <div class="word-import-box-inner-wrapper">
+        <div class="box">
+          <div class="box-head">Import words</div>
+          <div class="box-body">coming soon...</div>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript" src="database.js"></script>
