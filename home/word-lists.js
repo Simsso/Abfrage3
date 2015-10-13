@@ -306,13 +306,13 @@ WordLists.show = function(id) {
   }
 
   var creationTime = new Date(parseInt(WordLists.shown.creationTime) * 1000);
-  creationTimeString = '<p>Creation date: ' + creationTime.toDefaultString() + '</p>';
+  creationTimeString = '<p>Created: ' + creationTime.toDefaultString() + '</p>';
 
   if (allowEdit) {
     // change language form
     editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '""/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
 
-    importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" />';
+    importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" /><hr class="spacer-15">';
   }
   else {
 
@@ -322,7 +322,7 @@ WordLists.show = function(id) {
   // add export button
   //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="WordLists.exportList()"/>';
 
-  wordListInfoBoxBody += ownerString + permissionsString + startTestString + renameListString + editLangaugesString + '<hr class="spacer-15">' + importWordsString + '<hr class="spacer-15">' + deleteString;
+  wordListInfoBoxBody += ownerString + permissionsString + startTestString + creationTimeString + renameListString + editLangaugesString + '<hr class="spacer-15">' + importWordsString + deleteString;
 
   $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 

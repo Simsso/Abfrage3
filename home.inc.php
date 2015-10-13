@@ -77,6 +77,9 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/feed.svg" />
                 Feed
+                <span class="tooltip">
+                  The feed provides you with news: For example if a user adds you it will appear here.
+                </span>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -188,7 +191,15 @@ if (is_null($next_to_last_login)) {
               <div class="box-body" data-start-state="expanded">
                 <div>
                   <h4>Case sensitivity</h4>
-                  <p><label><input type="checkbox" id="query-case-sensitivity" checked="true"/>&nbsp;Case sensitive test</label></p>
+                  <p>
+                    <label>
+                      <input type="checkbox" id="query-case-sensitivity" checked="true"/>
+                      &nbsp;
+                      Case sensitive test
+
+                      <span class="tooltip">Accept e.g. "answer" for "Answer".</span>
+                    </label>
+                  </p>
 
                   <h4>Test answer upload</h4>
                   <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
@@ -209,10 +220,38 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-algorithm">
-                  <tr data-algorithm="0"><td>Random</td></tr>
-                  <tr data-algorithm="1"><td>Words below average</td></tr>
-                  <tr data-algorithm="3"><td>In order</td></tr>
-                  <tr data-algorithm="2" class="active"><td>Group words</td></tr>
+                  <tr data-algorithm="0">
+                    <td>
+                      Random
+                      <span class="tooltip">
+                        The "Random" algorithm asks a randomly chosen word.
+                      </span>
+                  </td>
+                  </tr>
+                  <tr data-algorithm="1">
+                    <td>
+                      Words below average
+                      <span class="tooltip">
+                        The "Words below average" algorithm asks words you haven't known often compared to the others.
+                      </span>
+                  </td>
+                  </tr>
+                  <tr data-algorithm="3">
+                    <td>
+                      In order
+                      <span class="tooltip">
+                        The "In order" algorithm iterates through all words one afther the other.
+                      </span>
+                  </td>
+                  </tr>
+                  <tr data-algorithm="2" class="active">
+                    <td>
+                      Group words
+                      <span class="tooltip">
+                        The group words algorithm picks some words and asks them nearly randomly. If you know one word it will be replaced by a new one.
+                      </span>
+                  </td>
+                  </tr>
                 </table>
               </div>
             </div>
@@ -456,7 +495,16 @@ if (is_null($next_to_last_login)) {
                 Secret service clause
               </div>
               <div class="box-body">
-                <input type="checkbox" disabled checked/>&nbsp;The NSA is allowed to spy me.
+                <p>
+                  <label>
+                    <input type="checkbox" disabled checked/>
+                    &nbsp;
+                    The NSA is allowed to spy me.
+                    <span class="tooltip">
+                      This is just a little joke.
+                    </span>
+                  </label>                
+                </p>
               </div>
             </div>
 
