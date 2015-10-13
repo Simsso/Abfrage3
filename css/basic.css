@@ -133,6 +133,7 @@ div.center { margin: auto; }
 .inline { display: inline; }
 
 .padding-0 { padding: 0 !important; }
+.margin-0 { margin: 0 !important; }
 
 .overflow-hidden { overflow: hidden; }
 

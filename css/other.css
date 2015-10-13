@@ -614,6 +614,7 @@ div.right-column-img-wrapper {
 
 .word-import-box-inner-wrapper {
   margin: 100px;
+  max-height: calc(100% - 200px);
   overflow: auto;
 }
 
@@ -671,6 +672,12 @@ div.right-column-img-wrapper {
   float: right;
   width: calc(70% - 40px);
 }
+
+
+#words-add-form.comfortable input[type=text] {
+    width: calc(100% - 16px);
+}
+
 
 svg line.crisp {
   shape-rendering: crispEdges;

@@ -73,17 +73,21 @@ $(page['settings']).find('#settings-name').on('submit', function(e) {
     
     var message = '';
     switch (data) {
-      case '0': 
+      case 0: 
         message = 'The given name is not valid.';
         break;
-      case '1':
+      case 1:
         message = 'Your name has been update successfully.';  
         break;
+
       default:
         message = 'An unknown error occured.';
         break;
     }
-    $(page['settings']).find('#settings-name-response').html(message).removeClass('display-none');
+    var mb = new MessageBox();
+    mb.setTitle('Change name');
+    mb.setContent(message);
+    mb.show();
   });
 });
 
@@ -116,16 +120,16 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
     
     var message = '';
     switch (data) {
-      case '1':
+      case 1:
         message = 'Your password has been updated successfully.';  
         break;
-      case '2':
+      case 2:
         message = 'The two new passwords are not equal.';  
         break;
-      case '3':
+      case 3:
         message = 'Your old password is not correct.';  
         break;
-      case '5':
+      case 5:
         message = 'The new password is not valid.';  
         break;
         
@@ -133,7 +137,12 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
         message = 'An unknown error occured.';
         break;
     }
-    $(page['settings']).find('#settings-password-response').html(message).removeClass('display-none');
+    var mb = new MessageBox();
+    mb.setTitle('Change password');
+    mb.setContent(message);
+    mb.show();
+
+    $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').val('');
   });
 });
 
@@ -152,7 +161,6 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
     if (button === 'Yes') {
       $(page['settings']).find('#settings-delete-account-password').prop('disabled', true);
       $(page['settings']).find('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
-      $(page['settings']).find('#settings-delete-account-response').html('').addClass('display-none');
       
       // send request
       jQuery.ajax('server.php?action=delete-account', {
@@ -173,7 +181,11 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
           $(page['settings']).find('#settings-delete-account-password').prop('disabled', false).val('');
           $(page['settings']).find('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
 
-          $(page['settings']).find('#settings-delete-account-response').html((data === 0) ? 'The password is not correct.' : 'An unknown error occured.').removeClass('display-none');
+          var mb = new MessageBox();
+          mb.setTitle('Delete account');
+          mb.setContent(((data === 0) ? 'The password is not correct.' : 'An unknown error occured.'));
+          mb.show();
+          
         }
       });
     }

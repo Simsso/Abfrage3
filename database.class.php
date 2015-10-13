@@ -78,7 +78,8 @@ class Database {
       Mail::get_email_confirmation_mail($firstname, $email, $email_confirmation_key)->send();
 
       // mail to admin
-      (new Mail("timo.denk@simsso.de", Mail::DEFAULT_SENDER_EMAIL, null, "New user", "" . $firstname . " " . $lastname . " has just signed up on Abfrage3!"))->send();
+      $admin_mail = new Mail("timo.denk@simsso.de", Mail::DEFAULT_SENDER_EMAIL, null, "New user", "" . $firstname . " " . $lastname . " has just signed up on Abfrage3!");
+      $admin_mail->send();
 
       return TRUE;
     }

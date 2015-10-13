@@ -289,7 +289,7 @@ WordLists.show = function(id) {
   // info box body
   // add content depending on the users permissions (sharing and editing)
   var wordListInfoBoxBody = '';
-  var ownerString = '', permissionsString = '', deleteString = '', startTestString = '', editLangaugesString = '', creationTimeString = '', renameListString = '';
+  var ownerString = '', permissionsString = '', deleteString = '', startTestString = '', editLangaugesString = '', creationTimeString = '', renameListString = '', importWordsString = '';
   startTestString = '<p><a href="#/query" onclick="Query.startTestWithList(WordLists.shown.id, true)">Start test with this list.</a></p>';
   if (!allowSharing) { // not list owner
     ownerString = '<p>' + WordLists.shown.creator.firstname + ' ' + WordLists.shown.creator.lastname + ' shares this list with you.</p>';
@@ -311,6 +311,8 @@ WordLists.show = function(id) {
   if (allowEdit) {
     // change language form
     editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '""/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
+
+    importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" />';
   }
   else {
 
@@ -320,7 +322,7 @@ WordLists.show = function(id) {
   // add export button
   //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="WordLists.exportList()"/>';
 
-  wordListInfoBoxBody += ownerString + permissionsString + startTestString + renameListString + editLangaugesString + '<hr class="spacer-15">' + deleteString;
+  wordListInfoBoxBody += ownerString + permissionsString + startTestString + renameListString + editLangaugesString + '<hr class="spacer-15">' + importWordsString + '<hr class="spacer-15">' + deleteString;
 
   $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
@@ -456,8 +458,11 @@ WordLists.show = function(id) {
     });
   });
 
-
-
+  
+  // set input fields not to comfortable mode
+  $(page['word-lists']).find('#words-add-form').removeClass('comfortable');
+  $(page['word-lists']).find('#words-add-form input[type=text]').val(''); // remove old content from add new word input field
+  
   // show divs which have been updated above
   $(page['word-lists']).find('#list-of-word-lists-wrapper').hide();
   Scrolling.toTop();
@@ -480,7 +485,7 @@ WordLists.show = function(id) {
 //
 // @return string: the HTML of a single word row
 WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit) {
-  return '<tr id="word-row-' + id + '"><td>' + lang1 + '</td><td>' + lang2 + '</td><td>' + comment + '</td>' + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="WordLists.removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
+  return '<tr ' + ((typeof id !== 'undefined') ? 'id="word-row-' + id + '"' : '') + '><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((typeof comment !== 'undefined') ? '<td>' + comment + '</td>' : '') + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="WordLists.removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
 };
 
 
@@ -730,6 +735,16 @@ WordLists.deleteWordList = function(id, callback) {
     callback(data);
   });
 };
+
+
+// add word input keyup event listener
+// goes into comfortable display mode (bigger input fields) if the user wants to add long words
+$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keyup', function() {
+  if (this.scrollWidth > $(this).innerWidth()) {
+    // input field has a scrollbar
+    $(page['word-lists']).find('#words-add-form').addClass('comfortable');
+  }
+});
 
 
 // add new word form submit event listener
@@ -1607,20 +1622,102 @@ WordLists.Import.loadWordArrayFromString = function(string, wordSeparator, langu
 
 
 
+// show import dialog
 WordLists.Import.showDialog = function() {
   Scrolling.disable(); // disable scrolling
+
+  $(document).on('keyup', WordLists.Import.escClose); // allow ESC keypress to close popup
 
   $('#background-black-overlay').html($('#word-import-box').html()); // fill background overlay with word import box content
 
   $('#background-black-overlay').removeClass('display-none'); // show background overlay
+
+
+  // import dialog event listeners
+  // separator between languages select change event 
+  $('#word-import-separator-1-select').on('change', function() {
+    // show textbox if the user wants to use a custom separator
+    if ($(this).val() === 'custom') {
+      $('#word-import-separator-1-text').removeClass('display-none');
+    }
+    else {
+      $('#word-import-separator-1-text').val($(this).val()).addClass('display-none');
+    }
+  });
+
+  // separator between words
+  $('#word-import-separator-2-select').on('change', function() {
+    // show textbox if the user wants to use a custom separator
+    if ($(this).val() === 'custom') {
+      $('#word-import-separator-2-text').removeClass('display-none');
+    }
+    else {
+      $('#word-import-separator-2-text').val($(this).val()).addClass('display-none');
+    }
+  });
+
+  // close icon click event
+  $('#word-import-close-dialog').on('click', WordLists.Import.hideDialog);
 };
 
 
+WordLists.Import.preview = function() {
+  var wordSeparator = '', languagesSeparator = '';
+  switch ($('#word-import-separator-1-select').val()) {
+    case 'tab': 
+      languagesSeparator = '\t';
+      break;
+    case 'custom':
+      languagesSeparator = $('#word-import-separator-1-text').val();
+      break;
+    default:
+      break;
+  }
+  switch ($('#word-import-separator-2-select').val()) {
+    case 'return': 
+      wordSeparator = '\n';
+      break;
+    case 'custom':
+      wordSeparator = $('#word-import-separator-2-text').val();
+      break;
+    default:
+      break;
+  }
+  WordLists.Import.loadedWords = WordLists.Import.loadWordArrayFromString($('#word-import-input').val(), wordSeparator, languagesSeparator, WordLists.shownId);
+
+  console.log(WordLists.Import.loadedWords);
+
+  var tableContentHtml = '';
+  for (var i = 0; i < WordLists.Import.loadedWords.word.length; i++) {
+    tableContentHtml += WordLists.getTableRowOfWord(
+      undefined, // id
+      WordLists.Import.loadedWords.word[i].language1, // language 1
+      WordLists.Import.loadedWords.word[i].language2, // language 2
+      undefined, // comment
+      false); // allow edit
+  }
+  $('#word-import-preview').html(tableContentHtml);
+};
+
+
+// hide import dialog
 WordLists.Import.hideDialog = function() {
+  $(document).unbind('keyup', WordLists.Import.escClose); // remove esc function event listener
+
   $('#background-black-overlay').addClass('display-none').html(''); // hide background overlay and remove children
 
   Scrolling.enable(); // enable scrolling
 };
+
+
+
+WordLists.Import.escClose = function(e) {
+  if (e.keyCode == 27) { // detect ESC key press
+    WordLists.Import.hideDialog();
+  }
+};
+
+
 
 
 // initial load functions

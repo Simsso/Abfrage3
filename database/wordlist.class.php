@@ -125,7 +125,7 @@ class BasicWordList {
   //
   // @param unsigned int user_id: id of the user
   public function load_sharing_information($user_id) {
-    $this->sharings = self::get_sharing_info_of_list($user_id, $this-id);
+    $this->sharings = self::get_sharing_info_of_list($user_id, $this->id);
   }
 }
 

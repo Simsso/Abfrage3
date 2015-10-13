@@ -411,7 +411,6 @@ if (is_null($next_to_last_login)) {
                 Change name
               </div>
               <div class="box-body">
-                <p id="settings-name-response" class="display-none"></p>
                 <form id="settings-name">
                   <input type="text" required="true" value="<? echo $user->firstname; ?>" placeholder="First name" id="settings-firstname" />&nbsp;
                   <input type="text" required="true" value="<? echo $user->lastname; ?>" placeholder="Last name" id="settings-lastname" />&nbsp;
@@ -425,7 +424,6 @@ if (is_null($next_to_last_login)) {
                 Change password
               </div>
               <div class="box-body">
-                <p id="settings-password-response" class="display-none"></p>
                 <form id="settings-password">
                   <table class="width-auto">
                     <tr><td>Old password</td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
@@ -485,7 +483,6 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body">
                 <p>Be careful: This action can't be undone. Your shared lists will still be visible to other users. </p>
-                <p id="settings-delete-account-response" class="display-none"></p>
                 <form id="settings-delete-account-form">
                   <input type="password" required="true" placeholder="Password" id="settings-delete-account-password" />&nbsp;
                   <input type="button" value="Delete account" id="settings-delete-account-button" />
@@ -520,9 +517,51 @@ if (is_null($next_to_last_login)) {
 
     <div id="word-import-box" class="display-none">
       <div class="word-import-box-inner-wrapper">
-        <div class="box">
-          <div class="box-head">Import words</div>
-          <div class="box-body">coming soon...</div>
+        <div class="box margin-0">
+          <div class="box-head">
+            Import words
+            <img src="img/close.svg" class="box-head-right-icon" id="word-import-close-dialog" />
+          </div>
+          <div class="box-body">
+            Coming soon...
+            <!--<div class="word-import-left-col">
+              <table>
+                <tr>
+                  <td>Separator between both languages</td>
+                  <td>
+                    <select id="word-import-separator-1-select">
+                      <option value="tab">Tab</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" id="word-import-separator-1-text" class="display-none" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Separator between words</td>
+                  <td>
+                    <select id="word-import-separator-2-select">
+                      <option value="return">Return</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" id="word-import-separator-2-text" class="display-none" />
+                  </td>
+                </tr>
+              </table>
+              <textarea id="word-import-input" placeholder="Paste your words here." class="margin-0"></textarea>
+            </div>
+            <div class="word-import-right-col">
+               <input type="button" value="Preview" onclick="WordLists.Import.preview()" />&nbsp;
+               <input type="button" value="Import" />
+               <hr class="spacer-15">
+               <table id="word-import-preview" class="box-table">
+
+               </table>
+            </div>-->
+          </div>
         </div>
       </div>
     </div>
