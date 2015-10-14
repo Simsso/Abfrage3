@@ -38,7 +38,7 @@ textarea {
 
 /* buttons */
 
-input[type=button], input[type=submit], .button {
+input[type=button]:not(.icon), input[type=submit]:not(.icon), .button {
   padding: 8px;
   font-size: 9pt;
   color: black;
@@ -56,21 +56,21 @@ input[type=button].inline, input[type=submit].inline, input[type=text].inline, i
 input[type=button].inline-both, input[type=submit].inline-both, input[type=text].inline-both, input[type=password].inline-both, input[type=textarea].inline-both, input[type=email].inline-both, input[type=number].inline-both, textarea.inline-both, .button.inline-both {
   margin: -7px;
 }
-input[type=button]:hover, input[type=submit]:hover, .button:hover {
+input[type=button]:not(.icon):hover, input[type=submit]:not(.icon):hover, .button:hover {
   border: 1px solid #C17909;
   background: #F9C64C;
   background: -webkit-gradient(linear, left top, left bottom, from(#FCDB80), to(#F6B217));
   background: -moz-linear-gradient(top,  #FCDB80,  #F6B217);
   box-shadow: 0 2x 2px #C3C7CD, inset 0 1px 1px #FEF1CD;
 }
-input[type=button]:active, input[type=submit]:active, .button:active {
+input[type=button]:not(.icon):active, input[type=submit]:not(.icon):active, .button:active {
   border: 1px solid #AB7519;
   background: #DA9E1E;
   background: -webkit-gradient(linear, left top, left bottom, from(#DDAA38), to(#D89003));
   background: -moz-linear-gradient(top,  #DDAA38,  #D89003);
   box-shadow: inset 0 1px 1px #BA9032;
 }
-input[type=button]:disabled, input[type=submit]:disabled, .button:disabled {
+input[type=button]:not(.icon):disabled, input[type=submit]:not(.icon):disabled, .button:disabled {
   color: #6D6D6D;
   border: 1px solid #D7D7D7;
   background: #E3E3E3;

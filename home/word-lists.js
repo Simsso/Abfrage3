@@ -485,7 +485,7 @@ WordLists.show = function(id) {
 //
 // @return string: the HTML of a single word row
 WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit) {
-  return '<tr ' + ((typeof id !== 'undefined') ? 'id="word-row-' + id + '"' : '') + '><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((typeof comment !== 'undefined') ? '<td>' + comment + '</td>' : '') + ((allowEdit)?'<td><input type="submit" class="inline" value="Edit" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" class="inline" value="Remove" onclick="WordLists.removeWord(' + id + ')"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
+  return '<tr ' + ((typeof id !== 'undefined') ? 'id="word-row-' + id + '"' : '') + '><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((typeof comment !== 'undefined') ? '<td>' + comment + '</td>' : '') + ((allowEdit)?'<td><input type="submit" class="icon pencil table-icon" value="" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" value="" onclick="WordLists.removeWord(' + id + ')" class="icon rubbish table-icon"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
 };
 
 
@@ -537,8 +537,10 @@ WordLists.editOrSaveWordEvent = function(event, id) {
 
   // edit button
   if (editSaveButton.data('action') == 'edit') { // edit mode
+    row.addClass('show-icons');
+
     // update the buttons value
-    editSaveButton.data('action', 'save').attr('value', 'Save');
+    editSaveButton.data('action', 'save').removeClass('pencil').addClass('check');
 
     // replace the words meanings with text boxes containing the meanings as value="" to allow editing by the user
     cell1.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language1-' + id + '" value="' + cell1.html() + '" />');
@@ -553,12 +555,13 @@ WordLists.editOrSaveWordEvent = function(event, id) {
     lang1Input.prop('disabled', true);
     lang2Input.prop('disabled', true);
     commentInput.prop('disabled', true);
-    editSaveButton.prop('disabled', true).attr('value', 'Saving...');
+    editSaveButton.prop('disabled', true).removeClass('check').addClass('upload');
 
     // send updated word information to the server
     WordLists.updateWord(id, lang1Input.val(), lang2Input.val(), commentInput.val(), function() {
+      row.removeClass('show-icons');
       // reset the table row (hide the input fields and re-enable the edit button)
-      editSaveButton.prop('disabled', false).attr('value', 'Edit').data('action', 'edit');
+      editSaveButton.prop('disabled', false).data('action', 'edit').removeClass('upload').addClass('pencil');
       cell1.html(lang1Input.val());
       cell2.html(lang2Input.val());
       cell3.html(commentInput.val());

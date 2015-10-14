@@ -240,7 +240,7 @@ if (is_null($next_to_last_login)) {
                     <td>
                       In order
                       <span class="tooltip">
-                        The "In order" algorithm iterates through all words one afther the other.
+                        The "In order" algorithm iterates through all words one after the other.
                       </span>
                   </td>
                   </tr>
