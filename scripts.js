@@ -29,7 +29,7 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
       break;
 
     case 'fullscreen': // fullscreen
-      var box = $(this).data('action', 'stop-fullscreen').parent().parent();
+      var box = $(this).data('action', 'stop-fullscreen').attr('src', 'img/fullscreen-exit.svg').parent().parent();
 
       // expand if it isn't already
       var imgs = $(this).parent().find('img');
@@ -51,7 +51,7 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
       break;
 
     case 'stop-fullscreen':
-      var box = $(this).data('action', 'fullscreen').parent().parent();
+      var box = $(this).data('action', 'fullscreen').attr('src', 'img/fullscreen.svg').parent().parent();
       Scrolling.enable();
       box.removeClass('fullscreen');
       break;
@@ -519,9 +519,45 @@ function setCursorPosition(elem, position) {
 
 
 $(window).on('load', function() {
-  $(window).on('scroll', function() {
+  $(window).on('scroll resize', function() {
     // word list shown
-    // TODO
+    if (false && $(window).width() > 700) {
+      if (SPA.shownPageName === 'word-lists' && SPA.shownSubPageName !== '') {
+        if ($('#word-list-table').height() + $('#word-list-table').offset().top - $(window).scrollTop() - $(window).height() > 0) {
+          var leftColumnElement = $('#word-lists-left-column'), titleElement = $('#word-list-title');
+
+          var scrollTop = $(window).scrollTop(), elementOffsetTop = leftColumnElement.offset().top;
+          var headNavHeight = $('#head-nav').height();
+
+
+          var actualOffset = scrollTop - elementOffsetTop + headNavHeight;
+
+          if (actualOffset >= 0) {
+            if (actualOffset > parseInt(leftColumnElement.css('padding-top').replace('px', ''))) {
+              // scrolling downwards
+              /// ----->>>
+              if (leftColumnElement.height() + leftColumnElement.offset().top <= scrollTop + $(window).height())
+                leftColumnElement.css('padding-top', actualOffset + 'px');
+            }
+            else {
+              // scrolling upwards
+              leftColumnElement.css('padding-top', actualOffset + 'px');
+            }
+          }
+          else {
+            leftColumnElement.css('padding-top', '0px');
+          }
+
+          console.log(leftColumnElement.height());
+          console.log($(window).height());
+        }
+      }
+    }
+    else {
+      // mobile device
+      $('#word-lists-left-column').css('padding-top', '0px');
+    }
+
   });
 });
 

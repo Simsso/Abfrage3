@@ -306,7 +306,7 @@ body > .main {
   height: 24px;
   width: 24px;
   position: absolute;
-  top: 12.5px;
+  top: 12px;
   opacity: 0.19;
   display: none;
   cursor: pointer;
@@ -374,16 +374,15 @@ tr.show-icons .table-icon {
   opacity: .5;
 }
 
-
-.table-icon:hover {
+.table-icon:hover, tr.show-icons .table-icon:hover {
   opacity: 0.7;
 }
 
-.table-icon:active {
+.table-icon:active, tr.show-icons .table-icon:active {
   opacity: 1;
 }
 
-.table-icon:disabled {
+.table-icon:disabled, tr.show-icons .table-icon:disabled {
   cursor: default;
   opacity: .7;
 }

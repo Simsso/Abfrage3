@@ -740,9 +740,9 @@ WordLists.deleteWordList = function(id, callback) {
 };
 
 
-// add word input keyup event listener
+// add word input change event listener
 // goes into comfortable display mode (bigger input fields) if the user wants to add long words
-$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keyup', function() {
+$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keydown', function() {
   if (this.scrollWidth > $(this).innerWidth()) {
     // input field has a scrollbar
     $(page['word-lists']).find('#words-add-form').addClass('comfortable');
@@ -778,52 +778,73 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
 WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   var listId = WordLists.shownId;
   var list = Database.getListById(listId);
-  console.log(list);
+
   // check for a word with the same meaning in lang1 or lang2
+  var messageBox = null, word = null;
   for (var i = 0; i < list.words.length; i++) {
     if (list.words[i].language1 == lang1 || list.words[i].language2 == lang2) {
-        var messageBox = new MessageBox();
-        messageBox.setTitle('Similar word found');
-        messageBox.setContent('This word list already contains a word with the same meaning.');
-        messageBox.show();
+      messageBox = new MessageBox();
+      word = list.words[i];
     }
   }
 
-  jQuery.ajax('server.php', {
-    data: {
-      action: 'add-word',
-      word_list_id: listId,
-      lang1: lang1,
-      lang2: lang2,
-      comment: comment
-    },
-    type: 'GET',
-    error: function(jqXHR, textStatus, errorThrown) {
+  var sendServerRequest = function() {
+    jQuery.ajax('server.php', {
+      data: {
+        action: 'add-word',
+        word_list_id: listId,
+        lang1: lang1,
+        lang2: lang2,
+        comment: comment
+      },
+      type: 'GET',
+      error: function(jqXHR, textStatus, errorThrown) {
 
-    }
-  }).done(function(data) {
-    data = handleAjaxResponse(data);
-    
-    // update local object of the edited list
-    Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, comment, []));
+      }
+    }).done(function(data) {
+      data = handleAjaxResponse(data);
+      
+      // update local object of the edited list
+      Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, comment, []));
 
 
-    if (WordLists.shownId !== listId) return; // the user has loaded another list while the word was added
+      if (WordLists.shownId !== listId) return; // the user has loaded another list while the word was added
 
-    // update word count
-    $(page['word-lists']).find('#shown-word-list-words-count').html(WordLists.shown.words.length); 
+      // update word count
+      $(page['word-lists']).find('#shown-word-list-words-count').html(WordLists.shown.words.length); 
 
-    
-    // update the word list table
-    if ($(page['word-lists']).find('#word-list-table').length === 0) { 
-      // no words added yet
-      var wordListHTML = WordLists.getTableOfWordList("", allowEdit, WordLists.shown.language1, WordLists.shown.language2);
-      $(page['word-lists']).find('#words-in-list').html(wordListHTML);
-    }
+      
+      // update the word list table
+      if ($(page['word-lists']).find('#word-list-table').length === 0) { 
+        // no words added yet
+        var wordListHTML = WordLists.getTableOfWordList("", allowEdit, WordLists.shown.language1, WordLists.shown.language2);
+        $(page['word-lists']).find('#words-in-list').html(wordListHTML);
+      }
 
-    // add word row to the list of words
-    $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, comment, allowEdit));
-  });
+      // add word row to the list of words
+      $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, comment, allowEdit));
+    });
+  };
+
+
+  if (messageBox === null) {
+    sendServerRequest();
+  }
+  else {
+    messageBox.setTitle('Similar word found');
+    messageBox.setContent('This word list already contains the word:<br><br><i>' + word.language1 + ' - ' + word.language2 + '</i><br><br>Do you want to add the word (<i>' + lang1 + ' - ' + lang2 + '</i>) nevertheless?');
+    messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+    messageBox.setCallback(function(button) {
+      switch(button) {
+        case 'Yes':
+          sendServerRequest();
+          break;
+        default: 
+          break;
+      }
+    });
+    messageBox.show();
+  }
 };
 
 
@@ -1448,6 +1469,24 @@ WordLists.setLabelListAttachment = function(labelId, listId, attachment, callbac
     }
   }).done(function(data) {
     data = handleAjaxResponse(data);
+
+    // update local database object
+    if (attachment === 0) {
+      for (var i = Database.label_list_attachments.length - 1; i >= 0; i--) {
+        if (Database.label_list_attachments[i].label === labelId && Database.label_list_attachments[i].list === listId) {
+          Database.label_list_attachments.splice(i, 1);
+          break;
+        }
+      }
+    }
+    else {
+      Database.label_list_attachments.push({
+        active: 1,
+        label: labelId,
+        list: listId,
+        id: undefined
+      });
+    }
     callback(data);
   });
 };
@@ -1554,7 +1593,7 @@ $(page['word-lists']).find('#word-lists-special-chars select').on('change', func
   $(page['word-lists']).find('.special-chars-' + $(this).val()).show();
 });
 
-$(page['word-lists']).find('#words-add-language1, #words-add-language2').on('keydown keyup click', function(event) {
+$(page['word-lists']).find('#words-add-language1, #words-add-language2, #words-add-comment').on('keydown keyup click', function(event) {
   lastFocusedInput = this;
   var cursor = getCursorPosition(this);
   $(this).data('last-cursor-position', cursor);

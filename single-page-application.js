@@ -61,7 +61,7 @@ SPA.updatePageContent = function (firstCall) {
   
   
   // update document title
-  document.title = SPA.pageTitle[pageName] + ' - Abfrage3';
+  document.title = SPA.pageTitle[pageName] + ' - Abfrage3 (dev)';
 
   // if the hash hasn't changed at all do nothing
   if (!firstCall && SPA.shownHashName === hash) return;

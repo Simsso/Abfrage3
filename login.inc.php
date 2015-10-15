@@ -7,7 +7,7 @@
     <nav id="head-nav" class="navbar">
       <div class="navbar-inner content-width">
         <a href="#/home">
-          <img class="logo" src="img/logo-46.png" alt="Abfrage3" />
+          <img class="logo" src="img/logo.svg" alt="Abfrage3" />
         </a>
         <ul class="nav left">
           <a href="#/home">

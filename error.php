@@ -39,6 +39,9 @@ $error_message = $codes[$status][1];
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
 
     <style type="text/css">
+      html, body {
+        background-color: #FFFFFF;
+      }
       body > div {
         height: 90%;
         width: 100%;
@@ -57,12 +60,16 @@ $error_message = $codes[$status][1];
       #error-message {
         font-style: italic;
       }
+
+      .center-logo {
+        height: 58px;
+      }
     </style>
   </head>
   <body>
     <div>
       <div>
-        <p><a href="/"><img src="/img/logo-56.png"/></a></p>
+        <p><a href="/"><img class="center-logo" src="/img/logo-white.svg"/></a></p>
         <p><span id="error-code"><? echo $error_code; ?>.&nbsp;</span>That's an error.</p>
         <p id="error-message"><? echo $error_message; ?></p>
       </div>

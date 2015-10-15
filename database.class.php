@@ -1001,7 +1001,7 @@ class Database {
     } else {
       // update
       $sql = "
-        UPDATE `label_attachment`, `label` 
+        UPDATE `label_attachment`, `label`
         SET `label_attachment`.`active` = ".$attachment." 
         WHERE `label_attachment`.`label` = `label`.`id` AND `label`.`user` = ".$user_id." AND `label`.`id` = ".$label_id." AND `label_attachment`.`list` = ".$list_id.";";
       $query = mysqli_query($con, $sql);
