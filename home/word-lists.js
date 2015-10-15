@@ -188,7 +188,8 @@ WordLists.showNoListSelectedScreen = function(updateHash) {
 // @param int id: the id of the requested word list
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
 // @param bool|undefined showWordListPage: defines whether the page "Word lists" should be shown
-WordLists.download = function(id, showLoadingInformation, showWordListPage) {
+// @param function callback: callback when the data has been downloaded
+WordLists.download = function(id, showLoadingInformation, showWordListPage, callback) {
   // show loading information
   if (showLoadingInformation) {
     $(page['word-lists']).find('#word-list-info .box-head > div').html("Loading...");
@@ -224,6 +225,12 @@ WordLists.download = function(id, showLoadingInformation, showWordListPage) {
     }).done(function(data) {    
       data = handleAjaxResponse(data);
 
+      // the requested list is not available
+      if (data === null) {
+        callback(data);
+        return;
+      }
+
       // link loaded word list
       var listObject = getListObjectByServerData(data), linked = false;
       for (var i = Database.lists.length - 1; i >= 0; i--) {
@@ -233,6 +240,8 @@ WordLists.download = function(id, showLoadingInformation, showWordListPage) {
         }
       };
       if (!linked) Database.lists.push(listObject);
+
+      callback(data);
     })
   );
 };
@@ -254,7 +263,22 @@ WordLists.show = function(id) {
       data = Database.lists[i];
     }
   }
-  if (data === null) return;
+
+  if (data === null) {
+    // the list is not available offline
+    WordLists.download(id, true, false, function(ajaxResponseData) {
+      if (ajaxResponseData === null) {
+        // the list is not available online
+        WordLists.showNoListSelectedScreen(true); // update hash (true)
+      }
+      else {
+        // the list has been downloaded
+        // show it
+        WordLists.show(id);
+      }
+    });
+    return;
+  }
 
   // refresh list of recently used lists
   refreshRecentlyUsed(false);

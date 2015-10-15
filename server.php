@@ -204,16 +204,14 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     // get word list
     case 'get-word-list':
     session_required();
-    $res = new stdClass();
     
-    // actual list data
-    $res->list = Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), true);
-    if ($res->list !== NULL) { // list is null if it doesn't exist of has been deleted
+    $res = Database::get_word_list($_SESSION['id'], Validation::format_text($_GET['word_list_id']), true);
+    if ($res !== NULL) { // list is null if it doesn't exist of has been deleted
       // stores whether the requesting unser is the list creator
-      $res->allowSharing = ($_SESSION['id'] == $res->list->creator->id);
+      $res->allowSharing = ($_SESSION['id'] == $res->creator->id);
 
       // stores whether the requesting user is allowed to edit the list
-      $res->allowEdit = ($res->allowSharing) ? TRUE : $res->list->get_editing_permissions_for_user($_SESSION['id']);
+      $res->allowEdit = ($res->allowSharing) ? TRUE : $res->get_editing_permissions_for_user($_SESSION['id']);
     }
     
     Response::send($res);
