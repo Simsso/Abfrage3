@@ -87,6 +87,7 @@ $(page['settings']).find('#settings-name').on('submit', function(e) {
     var mb = new MessageBox();
     mb.setTitle('Change name');
     mb.setContent(message);
+    mb.setFocusedButton('Ok');
     mb.show();
   });
 });
@@ -140,6 +141,7 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
     var mb = new MessageBox();
     mb.setTitle('Change password');
     mb.setContent(message);
+    mb.setFocusedButton('Ok');
     mb.show();
 
     $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').val('');
@@ -157,6 +159,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
   messageBox.setTitle('Delete account');
   messageBox.setContent('Are you sure you want to delete your account?');
   messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+  messageBox.setFocusedButton('No');
   messageBox.setCallback(function(button) {
     if (button === 'Yes') {
       $(page['settings']).find('#settings-delete-account-password').prop('disabled', true);
@@ -184,6 +187,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
           var mb = new MessageBox();
           mb.setTitle('Delete account');
           mb.setContent(((data === 0) ? 'The password is not correct.' : 'An unknown error occured.'));
+          mb.setFocusedButton('Ok');
           mb.show();
           
         }

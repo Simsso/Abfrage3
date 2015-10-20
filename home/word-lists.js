@@ -391,6 +391,7 @@ WordLists.show = function(id) {
     messageBox.setTitle('Delete word list');
     messageBox.setContent('Do you want to delete the word list <span class="italic">' + WordLists.shown.name + '</span>?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+    messageBox.setFocusedButton('Ok');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
         $(this).prop('disabled', true).attr('value', 'Deleting...');
@@ -411,6 +412,7 @@ WordLists.show = function(id) {
     messageBox.setTitle('Hide word list');
     messageBox.setContent('Do you want to hide the word list <span class="italic">' + WordLists.shown.name + '</span>?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+    messageBox.setFocusedButton('Yes');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
         $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
@@ -792,6 +794,7 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
     var mb = new MessageBox();
     mb.setTitle('Empty word');
     mb.setContent('You can\'t add empty words');
+    mb.setFocusedButton('Ok');
     mb.show();
 
     // abort adding the word
@@ -877,6 +880,7 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
     messageBox.setTitle('Similar word found');
     messageBox.setContent('This word list already contains the word:<br><br><i>' + word.language1 + ' - ' + word.language2 + '</i><br><br>Do you want to add the word (<i>' + lang1 + ' - ' + lang2 + '</i>) nevertheless?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
+    messageBox.setFocusedButton('No');
     messageBox.setCallback(function(button) {
       switch(button) {
         case 'Yes':
@@ -1006,6 +1010,7 @@ $(page['word-lists']).find('#share-list-form').on('submit', function(e) {
         var messageBox = new MessageBox();
         messageBox.setTitle('Not shared');
         messageBox.setContent('Found no user with the given email-address (<span class="italic">' + email + '</span>).');
+        messageBox.setFocusedButton('Ok');
         messageBox.show();
       }
       // user hasn't added you

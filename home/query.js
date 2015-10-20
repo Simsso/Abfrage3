@@ -528,6 +528,7 @@ Query.start = function() {
     messageBox.setTitle('Can\'t start test');
     messageBox.setContent('You haven\'t selected enough words to start a test. Select at least one word.');
     messageBox.setButtons(MessageBox.ButtonType.Ok);
+    messageBox.setFocusedButton('Ok');
     messageBox.show();
     return;
   }
