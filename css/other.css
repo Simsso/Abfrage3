@@ -1069,6 +1069,10 @@ input[type=text]:first-child:last-child.inline-both {
     display: block; 
   }
 
+  .hide-below-700, .hide-mobile {
+    display: none !important;
+  }
+
   span.tooltip {
     display: none;
   }
@@ -1141,10 +1145,6 @@ input[type=text]:first-child:last-child.inline-both {
   .cookie-header {
     width: calc(100% - 50px);
     padding: 25px;
-  }
-
-  .hide-below-700 {
-    display: none;
   }
 
   /*.navbar .navbar-inner .nav li {

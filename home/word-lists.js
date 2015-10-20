@@ -52,7 +52,7 @@ WordLists.addNew = function(name, callback) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
-    // update local object
+    // update local data base object
     var list = new List(
       data.id, 
       data.name, 
@@ -62,6 +62,8 @@ WordLists.addNew = function(name, callback) {
       data.language2, 
       data.creationTime, 
       data.words);
+
+    // since the user created the list it's sure that the permissions to edit and share exist
     list.allowEdit = true;
     list.allowSharing = true;
     list.labels = data.labels;
@@ -70,6 +72,7 @@ WordLists.addNew = function(name, callback) {
     callback(data);
   });
 };
+
 
 // event listener for form which adds new word lists to the data base
 $(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
@@ -133,7 +136,7 @@ WordLists.updateListOfWordLists = function() {
   var output = "";
   // build HTML output string
   for (var i = 0; i < data.length; i++) { // add a row for each list
-    output += '<tr data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td>' + data[i].language1 + ' - ' + data[i].language2 + '</td><td>' + data[i].words.length + ' (entr' + ((data[i].words.length === 1) ? 'y' : 'ies') + ')</td><td>' + data[i].creator.firstname + ' ' + data[i].creator.lastname + '</td></tr>';
+    output += '<tr data-action="edit" data-list-id="' + data[i].id + '" id="list-of-word-lists-row-' + data[i].id + '"><td>' + data[i].name + '</td><td class="hide-mobile">' + data[i].language1 + ' - ' + data[i].language2 + '</td><td class="hide-mobile">' + data[i].words.length + '</td><td class="hide-mobile">' + data[i].creator.firstname + ' ' + data[i].creator.lastname + '</td></tr>';
   }
 
   // if there are no lists show the appropriate message
@@ -141,7 +144,7 @@ WordLists.updateListOfWordLists = function() {
     output = WordLists.noListString;
   }
   else {
-    output = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Name</th><th>Content</th><th>Entries</th><th>Creator</th></tr>' + output + '</table>';
+    output = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Name</th><th class="hide-mobile">Content</th><th class="hide-mobile">Entries</th><th class="hide-mobile">Creator</th></tr>' + output + '</table>';
   }
 
   $(page['word-lists']).find('#list-of-word-lists').html(output); // update DOM with list of word lists
@@ -677,9 +680,10 @@ WordLists.removeWord = function(id) {
   var listId = WordLists.shownId; // store the id of the list of the word which will be removed
   
   // update button
-  var row = $(page['word-lists']).find('#word-row-' + id);
+  // TODO: use class to disable row and reenable it when an error occurs
+  var row = $(page['word-lists']).find('#word-row-' + id).css('opacity', '0.5');
   var removeButton = row.find('* input[type=button]');
-  removeButton.prop('disabled', true).attr('value', 'Removing...');
+  removeButton.prop('disabled', true);
 
   // send message to server
   jQuery.ajax('server.php', {
@@ -781,6 +785,19 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
   // read input fields
   var lang1 = $(page['word-lists']).find('#words-add-language1').val(), lang2 = $(page['word-lists']).find('#words-add-language2').val(), comment = $(page['word-lists']).find('#words-add-comment').val();
 
+  if (lang1.length === 0 && lang2.length === 0 && comment.length === 0) {
+    // empty word (no lang1, lang2 and comment)
+
+    // inform the user
+    var mb = new MessageBox();
+    mb.setTitle('Empty word');
+    mb.setContent('You can\'t add empty words');
+    mb.show();
+
+    // abort adding the word
+    return;
+  }
+
   // clear input fields and focus the first one to allow the user to enter the next word immediately
   $(page['word-lists']).find('#words-add-language1').val('').focus();
   $(page['word-lists']).find('#words-add-language2').val('');
@@ -852,15 +869,18 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
 
 
   if (messageBox === null) {
+    // no similar word has been found
     sendServerRequest();
   }
   else {
+    // inform the user that the list contains a similar word
     messageBox.setTitle('Similar word found');
     messageBox.setContent('This word list already contains the word:<br><br><i>' + word.language1 + ' - ' + word.language2 + '</i><br><br>Do you want to add the word (<i>' + lang1 + ' - ' + lang2 + '</i>) nevertheless?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
     messageBox.setCallback(function(button) {
       switch(button) {
         case 'Yes':
+          // user wants to add the word nevertheless
           sendServerRequest();
           break;
         default: 

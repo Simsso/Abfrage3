@@ -125,11 +125,11 @@ if (is_null($next_to_last_login)) {
                    
                   <table class="width-100 display-none" id="query-content-table">
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
-                      <td id="query-question">&nbsp;</td>
+                      <td><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
+                      <td class="width-100" id="query-question">&nbsp;</td>
                     </tr>
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
+                      <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
                       <td id="query-answer-table-cell-text-box">
                         <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0"/>
                       </td>
@@ -143,6 +143,10 @@ if (is_null($next_to_last_login)) {
                         </table>
                         <div id="query-answer-buttons"></div>
                       </td>
+                    </tr>
+                    <tr>
+                      <td>Comment:&nbsp;</td>
+                      <td id="query-comment"></td>
                     </tr>
                     <tr class="query-special-chars-wrapper">
                       <td>
@@ -370,8 +374,8 @@ if (is_null($next_to_last_login)) {
                 <div id="words-add">
                   <div id="words-add-message"></div>
                   <form id="words-add-form">
-                    <input id="words-add-language1" type="text" placeholder="First language" required="true"/>
-                    <input id="words-add-language2" type="text" placeholder="Second language" required="true"/>
+                    <input id="words-add-language1" type="text" placeholder="First language"/>
+                    <input id="words-add-language2" type="text" placeholder="Second language"/>
                     <input id="words-add-comment" type="text" placeholder="Comment"/>
                     <input id="words-add-button" type="submit" value="Add word"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />

@@ -196,6 +196,14 @@ Query.updateDom = function() {
   // provide list selection
   Query.refreshListSelection();
 
+  // when updating the dom while a query is running it is necessary to mark the selected labels and lists of the running query
+  if (Query.running) {
+    Query.checkStartButtonEnable();
+    Query.updateLabelSelections();
+    Query.updateListSelections();
+    $(page['query']).find('#query-start-button').attr('value', 'Stop test');
+  }
+
 
   // start query button click event
   $(page['query']).find('#query-start-button').on('click', function() {
@@ -301,7 +309,8 @@ Query.refreshListSelection = function() {
       Query.addList(listId);
     }
   });
-}
+};
+
 
 // add label to query
 //
@@ -316,9 +325,9 @@ Query.addLabel = function(labelId) {
     }
   }
 
-  $(page['query']).find('#query-label-selection tr[data-query-label-id=' + labelId + ']').addClass('active').data('checked', true);
   Query.selectedLabels.push(labelId);
-}
+  Query.updateLabelSelections();
+};
 
 
 // remove label from query
@@ -333,9 +342,19 @@ Query.removeLabel = function(labelId) {
       Query.removeList(Query.labelListAttachments[i].list);
     }
   }
-  $(page['query']).find('#query-label-selection tr[data-query-label-id=' + labelId + ']').removeClass('active').data('checked', false);
   Query.selectedLabels.removeAll(labelId); // remove all removes all occurences of the passed object
-}
+  Query.updateLabelSelections();
+};
+
+
+// update label selections
+//
+// marks labels as selected which are in the selectedLabels array
+Query.updateLabelSelections = function() {
+  for (var i = Query.selectedLabels.length - 1; i >= 0; i--) {
+      $(page['query']).find('#query-label-selection tr[data-query-label-id=' + Query.selectedLabels[i] + ']').addClass('active').data('checked', true);
+  }
+};
 
 
 // add list to query
@@ -346,12 +365,12 @@ Query.removeLabel = function(labelId) {
 Query.addList = function(listId) {
   Query.stop();
   Query.selectedLists.push(Query.getListById(listId));
-  $(page['query']).find('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', true).addClass('active');
   Query.checkStartButtonEnable();
+  Query.updateListSelections();
 
   // update information about the language of the selected words
   Query.updateQueryWordsLanguageInformation(Query.getLanguagesOfWordLists(Query.selectedLists));
-}
+};
 
 
 // remove list from query
@@ -361,12 +380,22 @@ Query.addList = function(listId) {
 // @param int listId: list id
 Query.removeList = function(listId) {
   Query.selectedLists.removeAll(Query.getListById(listId));
-  $(page['query']).find('#query-list-selection tr[data-query-list-id=' + listId + ']').data('checked', false).removeClass('active');
   Query.checkStartButtonEnable();
+  Query.updateListSelections();
 
   // update information about the language of the selected words
   Query.updateQueryWordsLanguageInformation(Query.getLanguagesOfWordLists(Query.selectedLists));
-}
+};
+
+
+// update list selections
+//
+// marks lists as selected which are in the selectedLists array
+Query.updateListSelections = function() {
+  for (var i = Query.selectedLists.length - 1; i >= 0; i--) {
+    $(page['query']).find('#query-list-selection tr[data-query-list-id=' + Query.selectedLists[i].id + ']').data('checked', true).addClass('active');
+  }
+};
 
 
 // get list row
@@ -379,7 +408,7 @@ Query.removeList = function(listId) {
 // @return <tr> HTML-element for the table of word lists
 Query.getListRow = function(list, selected) {
   return '<tr' + (selected?'class="active"':'') + ' data-query-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + '</td></tr>';
-}
+};
 
 // check start query button enable
 //
@@ -390,7 +419,7 @@ Query.checkStartButtonEnable = function() {
       wordSum += Query.selectedLists[i].words.length;
   };  
   $(page['query']).find('#query-start-button').prop('disabled', wordSum === 0 && !Query.running);
-}
+};
 
 
 // get html table of labels
@@ -412,7 +441,7 @@ Query.getHtmlTableOfLabels = function(labels) {
     html = WordLists.noLabelsString;
   }
   return html;
-}
+};
 
 // get HTML list of label id
 // 
@@ -434,7 +463,7 @@ Query.getHtmlListOfLabelId = function(labels, id, indenting) {
     }
   }
   return output;
-}
+};
 
 
 // get single list element of label list
@@ -448,7 +477,7 @@ Query.getSingleListElementOfLabelList = function(label, indenting) {
   var expanded = false; // show all labels collapsed
 
   return '<tr data-checked="false" data-query-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
-}
+};
 
 // get list by id
 // 
@@ -464,7 +493,7 @@ Query.getListById = function(id) {
     }
   }
   return undefined;
-}
+};
 
 
 
@@ -537,7 +566,7 @@ Query.start = function() {
   //$(page['query']).find('#query-select-box img[data-action="collapse"]').trigger('collapse');
   $(page['query']).find('#query-box img[data-action="expand"]').trigger('expand'); // expand query container
 
-}
+};
 
 
 // stop query
@@ -558,13 +587,13 @@ Query.stop = function() {
   Query.checkStartButtonEnable();
   
   Query.updateQueryWordsLanguageInformation(Query.getLanguagesOfWordLists([]));
-}
+};
 
 
 // next word
 //
 // gets the next word for the test
-// updates the DOM (show the word)
+// updates the DOM (shows the word)
 Query.nextWord = function() {
   Query.currentAnswerState = Query.AnswerStateEnum.Start;
   
@@ -587,24 +616,28 @@ Query.nextWord = function() {
   }
 
   // fill the question fields
-  if (Query.currentDirection == Query.DirectionEnum.Ltr) {
+  if (Query.currentDirection === Query.DirectionEnum.Ltr) {
     $(page['query']).find('#query-lang1').html(listOfTheWord.language1);
     $(page['query']).find('#query-lang2').html(listOfTheWord.language2);
     $(page['query']).find('#query-question').html(Query.currentWord.language1);
     Query.correctAnswer = Query.currentWord.language2;
   }
-  else if (Query.currentDirection == Query.DirectionEnum.Rtl) {
+  else if (Query.currentDirection === Query.DirectionEnum.Rtl) {
     $(page['query']).find('#query-lang1').html(listOfTheWord.language2);
     $(page['query']).find('#query-lang2').html(listOfTheWord.language1);
     $(page['query']).find('#query-question').html(Query.currentWord.language2);
     Query.correctAnswer = Query.currentWord.language1;
   }
+
+  // show word's comment
+  $(page['query']).find('#query-comment').html(Query.currentWord.comment);
   
   $(page['query']).find('#query-answer').val('').focus();
 
   Query.Stats.updateWordInformation(Query.currentWord);
   Query.Stats.updateSelectedWordsInformation();
-}
+};
+
 
 // get next word
 //
@@ -623,7 +656,8 @@ Query.getNextWord = function() {
     case Query.AlgorithmEnum.GroupWords:
       return Query.groupWordsAlgorithm.getNextWord();
   }
-}
+};
+
 
 // allow enter pressing to check the user's answer
 $(page['query']).find('#query-answer').on('keypress', function(e) {
@@ -663,7 +697,7 @@ Query.addAnswer = function(word, correct) {
   if (Query.words.contains(word)) Query.selectedWordsAllAnswers.push(answer);
   Query.refreshResultsUploadCounter();
   word.answers.push(answer);
-}
+};
 
 
 // query synonyms
@@ -997,7 +1031,7 @@ Query.startTestWithList = function(listId, showQueryPage) {
   Query.stop();
   Query.addList(listId);
   Query.start();
-}
+};
 
 
 // Query.Drawing

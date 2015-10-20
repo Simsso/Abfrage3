@@ -522,6 +522,7 @@ $(window).on('load', function() {
   $(window).on('scroll resize', function() {
     // word list shown
     if (false && $(window).width() > 700) {
+      // TODO: intelligent scrolling
       if (SPA.shownPageName === 'word-lists' && SPA.shownSubPageName !== '') {
         if ($('#word-list-table').height() + $('#word-list-table').offset().top - $(window).scrollTop() - $(window).height() > 0) {
           var leftColumnElement = $('#word-lists-left-column'), titleElement = $('#word-list-title');
