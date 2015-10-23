@@ -16,6 +16,8 @@
   height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.75);
+
+  z-index: 120;
 }
 
 .message-box {
@@ -30,6 +32,8 @@
   max-width: 400px;
   background-color: rgb(255,255,255);
   box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+
+  z-index: 125;
 }
 
 .message-box .message-box-title, .message-box .message-box-content {

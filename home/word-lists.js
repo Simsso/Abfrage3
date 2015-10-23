@@ -102,7 +102,7 @@ $(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
 // @param function|undefined callback: callback which will be called after finishing the list refresh
 // @param bool|undefined firstCall: if set to false (which is also the default value if undefined is passed) the WordLists.showNoListSelectedScreen function will update the hash to "#/word-lists"
-function refreshListOfWordLists(showLoadingInformation) { WordLists.downloadListOfWordLists(showLoadingInformation);}
+function refreshListOfWordLists(l) { WordLists.downloadListOfWordLists(l); }
 WordLists.downloadListOfWordLists = function(showLoadingInformation, callback, firstCall) {
   if (firstCall === undefined) firstCall = false;
 
@@ -111,7 +111,7 @@ WordLists.downloadListOfWordLists = function(showLoadingInformation, callback, f
     $(page['word-lists']).find('#list-of-word-lists').html(loading);
 
   // reset all table row highlights and hidden buttons indicating which list is selected
-  WordLists.showNoListSelectedScreen(!firstCall);
+  WordLists.showNoListSelectedScreen(!firstCall, false);
 
   // add the Ajax-request to the request manager to make sure that there is only one ajax request of this type running at one moment
   ajaxRequests.loadListOfWordLists.add(
@@ -129,7 +129,7 @@ WordLists.downloadListOfWordLists = function(showLoadingInformation, callback, f
       WordLists.updateListOfWordLists();
     })
   );
-}
+};
 
 WordLists.updateListOfWordLists = function() {
   var data = Database.lists.sort(List.compareListsByName);;
@@ -159,11 +159,16 @@ WordLists.updateListOfWordLists = function() {
 // show the information that no list is selected and update the vars
 //
 // @param bool updateHash: if set to true the hash will be updated to "#/word-lists"
-WordLists.showNoListSelectedScreen = function(updateHash) {
+// @param bool | undefined updateListOfWordLists: by default set to true; defines whether the function will be called
+WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists) {
+  if (typeof updateListOfWordLists === 'undefined')
+    updateListOfWordLists = true;
+
   WordLists.shownId = -1;
   WordLists.shown = null;
 
-  WordLists.updateListOfWordLists();
+  if (updateListOfWordLists)
+    WordLists.updateListOfWordLists();
 
   $('.link-to-show-current-word-list').attr('href', '#/word-lists');
   
@@ -195,20 +200,25 @@ WordLists.showNoListSelectedScreen = function(updateHash) {
 WordLists.download = function(id, showLoadingInformation, showWordListPage, callback) {
   // show loading information
   if (showLoadingInformation) {
-    $(page['word-lists']).find('#word-list-info .box-head > div').html("Loading...");
-    $(page['word-lists']).find('#word-list-info .box-body').html(loading);
+    $(page['word-lists']).find('#word-list-info .box-head > div').html('Loading word list...');
+    $(page['word-lists']).find('#word-list-info .box-body').html(loading + '<br><a href="/#/word-lists">Show all word lists.</a>');
 
     // hide all divs which will later show things like words, sharings, labels and the list name while the list loads
     $(page['word-lists']).find('#word-list-info-words').hide();
     $(page['word-lists']).find('#word-list-sharing').hide();
     $(page['word-lists']).find('#word-list-label').hide();
     $(page['word-lists']).find('#word-list-title').hide();
+
+    $(page['word-lists']).find('#list-of-word-lists-wrapper').hide(); // hide list of word lists
+
+    // show info div
+    $(page['word-lists']).find('#word-list-info').show();
   }
   
   // a call of this method can force to show the page "word lists" with the parameter showWordListPage
   if (showWordListPage === true) {
-    if (window.location.hash !== '#word-lists') {
-      window.location.hash = '#word-lists';
+    if (window.location.hash !== '#/word-lists') {
+      window.location.hash = '#/word-lists';
     }
   }
 
@@ -511,6 +521,12 @@ WordLists.show = function(id) {
 
 
 // get table row of word
+//
+// @param unsigned int | undefined id: id of the word; no id="xxx" attribute will be assigned when passing undefined
+// @param string lang1: first language
+// @param string lang2: second language
+// @param string comment: comment to the word
+// @param bool allowEdit: determines whether to show edit and remove icons (true) or not (false)
 //
 // @return string: the HTML of a single word row
 WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit) {
@@ -935,6 +951,7 @@ WordLists.downloadListSharings = function(showLoadingInformation, wordListId) {
     })
   );
 };
+
 
 // update dom list sharings
 WordLists.updateDomListSharings = function() {
@@ -1480,6 +1497,7 @@ WordLists.attachListToLabel = function(labelId, listId, callback) {
   WordLists.setLabelListAttachment(labelId, listId, 1, callback);
 };
 
+
 // detach list from label
 //
 // detaches the given list from the given label
@@ -1490,6 +1508,7 @@ WordLists.attachListToLabel = function(labelId, listId, callback) {
 WordLists.detachListFromLabel = function(labelId, listId, callback) {
   WordLists.setLabelListAttachment(labelId, listId, 0, callback);
 };
+
 
 // set label list attachment
 // 
@@ -1540,6 +1559,7 @@ WordLists.setLabelListAttachment = function(labelId, listId, attachment, callbac
   });
 };
 
+
 // remove label
 //
 // removes a label (not from a list but generally from the user)
@@ -1574,6 +1594,7 @@ WordLists.removeLabel = function(labelId, callback) {
   });
 }
 
+
 // rename label
 // 
 // renames a label
@@ -1597,6 +1618,7 @@ WordLists.renameLabel = function(labelId, labelName, callback) {
     callback(data);
   });
 };
+
 
 // rename list
 // 
@@ -1752,6 +1774,9 @@ WordLists.Import.showDialog = function() {
 };
 
 
+// word lists import preview
+//
+// updates the import preview (list of detected words with the chosen separators)
 WordLists.Import.preview = function() {
   var wordSeparator = '', languagesSeparator = '';
   switch ($('#word-import-separator-1-select').val()) {
@@ -1801,7 +1826,12 @@ WordLists.Import.hideDialog = function() {
 };
 
 
-
+// word lists import ESC close
+// 
+// function will be fired when the user presses the ESC key
+// hides the import dialog
+//
+// @param EventArgs e: event arguments
 WordLists.Import.escClose = function(e) {
   if (e.keyCode == 27) { // detect ESC key press
     WordLists.Import.hideDialog();

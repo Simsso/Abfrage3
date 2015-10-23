@@ -1076,6 +1076,12 @@ input[type=text]:first-child:last-child.inline-both {
   span.tooltip {
     display: none;
   }
+  
+
+  /* make word list title stick to the top navigation without any space between */
+  div#word-list-title {
+    margin-top: 0;
+  }
 
 
 
