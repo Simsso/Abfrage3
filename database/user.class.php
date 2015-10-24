@@ -43,7 +43,7 @@ class User extends SimpleUser {
   public $salt;
   public $reg_time;
   public $email_confirmed;
-  public $email_confirmation_key;
+  public $hash;
 
   // constructor (by id)
   public function __construct($id) {
@@ -60,7 +60,7 @@ class User extends SimpleUser {
       $this->salt = $row['salt'];
       $this->reg_time = intval($row['reg_time']);
       $this->email_confirmed = intval($row['email_confirmed']);
-      $this->email_confirmation_key = $row['email_confirmation_key'];
+      $this->hash = $row['hash'];
     }
   }
 }
@@ -68,10 +68,12 @@ class User extends SimpleUser {
 class UserSettings {
   public $user;
   public $ads_enabled;
+  public $newsletter_enabled;
 
-  public function __construct($user, $ads_enabled) {
+  public function __construct($user, $ads_enabled, $newsletter_enabled) {
     $this->user = $user;
     $this->ads_enabled = $ads_enabled;
+    $this->newsletter_enabled = $newsletter_enabled;
   }
 
   public function get_by_id($id) {
@@ -80,7 +82,7 @@ class UserSettings {
     $sql = "SELECT * FROM `user_settings` WHERE `user` = ".$id.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      return new UserSettings($id, ($row['ads_enabled'] == 0) ? FALSE : TRUE);
+      return new UserSettings($id, ($row['ads_enabled'] == 0) ? FALSE : TRUE, ($row['newsletter_enabled'] == 0) ? FALSE : TRUE);
     }
     return NULL;
   }

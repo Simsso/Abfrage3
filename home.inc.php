@@ -518,7 +518,7 @@ if (is_null($next_to_last_login)) {
                 Email notifications
               </div>
               <div class="box-body">
-                Not available yet.
+                <label><input type="checkbox" id="enable-newsletter-checkbox" <? echo ($user_settings->newsletter_enabled ? 'checked' : ''); ?>/>&nbsp;Newsletter</label>
               </div>
             </div>
 

@@ -59,13 +59,13 @@ class Database {
       $salt = rand(0, 999999999);
       $password = sha1($salt . $password);
       unset($confirmpassword);
-      $email_confirmation_key = sha1($salt . $email . $password);
+      $hash = sha1($salt . $email . $password);
       $reg_time = time();
 
       global $con;
       $sql = "
-        INSERT INTO `user` (`firstname`, `lastname`, `email`, `password`, `salt`, `reg_time`, `email_confirmation_key`)
-		  VALUES ('".$firstname."', '".$lastname."', '".$email."', '".$password."', ".$salt.", ".$reg_time.", '".$email_confirmation_key."');";
+        INSERT INTO `user` (`firstname`, `lastname`, `email`, `password`, `salt`, `reg_time`, `hash`)
+		  VALUES ('".$firstname."', '".$lastname."', '".$email."', '".$password."', ".$salt.", ".$reg_time.", '".$hash."');";
       $query = mysqli_query($con, $sql);
 
       $user_id = mysqli_insert_id($con);
@@ -75,7 +75,7 @@ class Database {
 
 
       // send email to registered user
-      Mail::get_email_confirmation_mail($firstname, $email, $email_confirmation_key)->send();
+      Mail::get_email_confirmation_mail($firstname, $email, $hash)->send();
 
       // mail to admin
       $admin_mail = new Mail("timo.denk@simsso.de", Mail::DEFAULT_SENDER_EMAIL, null, "New user", "" . $firstname . " " . $lastname . " has just signed up on Abfrage3!");
@@ -303,7 +303,7 @@ class Database {
     // update data base to email_confirmed = 1 if the key is correct
     
     global $con;
-    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` = '".$email."' AND `email_confirmation_key` = '".$key."';";
+    $sql = "SELECT COUNT(`id`) AS 'count' FROM `user` WHERE `email` = '".$email."' AND `hash` = '".$key."';";
     $query = mysqli_query($con, $sql);
     $count = mysqli_fetch_object($query)->count;
     if ($count == 1) { // the given key exists
@@ -1258,6 +1258,19 @@ class Database {
     $sql = "UPDATE `user_settings` SET `ads_enabled` = ".(($ads_enabled == 'false') ? 0 : 1)." WHERE `user` = ".$id.";";
     $query = mysqli_query($con, $sql);
     return ($ads_enabled == 'true') ? TRUE : FALSE;
+  }
+
+  // set newsletter enabled
+  //
+  // @param unsigned int id: id of the user
+  // @param bool newsletter_enabled: newsletter enabled or not
+  //
+  // @return bool: true if the user has the newsletter enabled now
+  static function set_newsletter_enabled($id, $newsletter_enabled) {
+    global $con;
+    $sql = "UPDATE `user_settings` SET `newsletter_enabled` = ".(($newsletter_enabled == 'false') ? 0 : 1)." WHERE `user` = ".$id.";";
+    $query = mysqli_query($con, $sql);
+    return ($newsletter_enabled == 'true') ? TRUE : FALSE;
   }
 
 

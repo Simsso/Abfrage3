@@ -547,6 +547,21 @@ p:not(:last-child), ul.normal:not(:last-child) {
   cursor: pointer;
 }
 
+
+
+#word-list-table tr.pending {
+  transition: opacity ease-in .2s;
+}
+#word-list-table tr.pending {
+  opacity: .5;
+}
+
+#word-list-table .pending td:nth-child(4) > * {
+  display: none;
+}
+
+
+
 ul.normal {
   list-style-type: disc;
   margin-left: 25px;

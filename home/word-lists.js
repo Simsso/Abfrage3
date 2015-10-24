@@ -60,7 +60,7 @@ WordLists.addNew = function(name, callback) {
       data.comment, 
       data.language1,
       data.language2, 
-      data.creationTime, 
+      data.creation_time, 
       data.words);
 
     // since the user created the list it's sure that the permissions to edit and share exist
@@ -527,10 +527,12 @@ WordLists.show = function(id) {
 // @param string lang2: second language
 // @param string comment: comment to the word
 // @param bool allowEdit: determines whether to show edit and remove icons (true) or not (false)
+// @param bool | undefined: whether the word is currently being uploaded
 //
 // @return string: the HTML of a single word row
-WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit) {
-  return '<tr ' + ((typeof id !== 'undefined') ? 'id="word-row-' + id + '"' : '') + '><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((typeof comment !== 'undefined') ? '<td>' + comment + '</td>' : '') + ((allowEdit)?'<td><input type="submit" class="icon pencil table-icon" value="" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" value="" onclick="WordLists.removeWord(' + id + ')" class="icon rubbish table-icon"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
+WordLists.getTableRowOfWord = function(id, lang1, lang2, comment, allowEdit, pending) {
+  if (typeof pending === 'undefined') pending = false;
+  return '<tr ' + ((typeof id !== 'undefined') ? 'id="word-row-' + id + '"' : '') + (pending ? ' class="pending"' : '') + '><td>' + lang1 + '</td><td>' + lang2 + '</td>' + ((typeof comment !== 'undefined') ? '<td>' + comment + '</td>' : '') + ((allowEdit)?'<td><input type="submit" class="icon pencil table-icon" value="" data-action="edit" form="word-row-' + id + '-form"/>&nbsp;<input type="button" value="" onclick="WordLists.removeWord(' + id + ')" class="icon rubbish table-icon"/><form id="word-row-' + id + '-form" onsubmit="WordLists.editOrSaveWordEvent(event, ' + id + ')"></form></td>':'') + '</tr>';
 };
 
 
@@ -849,6 +851,18 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   }
 
   var sendServerRequest = function() {
+
+    // update the word list table
+    if ($(page['word-lists']).find('#word-list-table').length === 0) { 
+      // no words added yet
+      var wordListHTML = WordLists.getTableOfWordList("", allowEdit, WordLists.shown.language1, WordLists.shown.language2);
+      $(page['word-lists']).find('#words-in-list').html(wordListHTML);
+    }
+
+    // add word row to the list of words
+    var tmpId = getLocalId();
+    $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord('pending-' + tmpId, lang1, lang2, comment, allowEdit, true));
+
     jQuery.ajax('server.php', {
       data: {
         action: 'add-word',
@@ -863,6 +877,12 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
       }
     }).done(function(data) {
       data = handleAjaxResponse(data);
+
+      // mark word row as uploaded and change ids
+      $(page['word-lists']).find('#word-row-pending-' + tmpId).attr('id', 'word-row-' + data).removeClass('pending');
+      $(page['word-lists']).find('#word-row-' + data).find('input.rubbish').attr('onclick', 'WordLists.removeWord(' + data + ')');
+      $(page['word-lists']).find('#word-row-' + data).find('input[type="submit"]').attr('form', 'word-row-' + data + '-form');
+      $(page['word-lists']).find('#word-row-pending-' + tmpId + '-form').attr('id', 'word-row-' + data + '-form').attr('onsubmit', 'WordLists.editOrSaveWordEvent(event, ' + data + ')');
       
       // update local object of the edited list
       Database.getListById(listId).words.push(new Word(data, listId, lang1, lang2, comment, []));
@@ -872,17 +892,6 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
 
       // update word count
       $(page['word-lists']).find('#shown-word-list-words-count').html(WordLists.shown.words.length); 
-
-      
-      // update the word list table
-      if ($(page['word-lists']).find('#word-list-table').length === 0) { 
-        // no words added yet
-        var wordListHTML = WordLists.getTableOfWordList("", allowEdit, WordLists.shown.language1, WordLists.shown.language2);
-        $(page['word-lists']).find('#words-in-list').html(wordListHTML);
-      }
-
-      // add word row to the list of words
-      $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord(data, lang1, lang2, comment, allowEdit));
     });
   };
 
@@ -903,7 +912,7 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
           // user wants to add the word nevertheless
           sendServerRequest();
           break;
-        default: 
+        default:
           break;
       }
     });

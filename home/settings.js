@@ -1,28 +1,30 @@
 "use strict";
 
+var Settings = {}; // settings namespace
+
 // single page application allow url like
 // ...#settings/profile
-var shownSettingsSubPageName;
+Settings.shownSubPageName;
 $(window).on('page-settings', function(event, pageName, subPageName) {
   // sub page settings called
   
-  if (subPageName === shownSettingsSubPageName) return; // nothing has changed - no reason to touch the DOM
+  if (subPageName === Settings.shownSubPageName) return; // nothing has changed - no reason to touch the DOM
 
   if (!subPageName) {
-    if (shownSettingsSubPageName) {
-      subPageName = shownSettingsSubPageName;
+    if (Settings.shownSubPageName) {
+      subPageName = Settings.shownSubPageName;
     }
     else {
       subPageName = 'profile';
     }
   }
   
-  showSettingsPage(subPageName);
+  Settings.showPage(subPageName);
   location.hash = '#/settings/' + subPageName;
   
   // load sub page (if given by url) like /#/settings/profile
   if (subPageName) {
-    showSettingsPage(subPageName);
+    Settings.showPage(subPageName);
   }
 });
 
@@ -33,13 +35,13 @@ $(window).on('page-settings', function(event, pageName, subPageName) {
 // the method shows the passed page
 // 
 // @param string name: name of the settings-sub-page to show
-function showSettingsPage(name) {
-  shownSettingsSubPageName = name;
+Settings.showPage = function(name) {
+  Settings.shownSubPageName = name;
   $(page['settings']).find('#settings-menu tr').removeClass('active');
   $(page['settings']).find('#settings-menu tr[data-page=' + name + ']').addClass('active');
   $(page['settings']).find('#settings-content > div').addClass('display-none');
   $(page['settings']).find('#settings-content > div[data-page=' + name + ']').removeClass('display-none');
-}
+};
 
 // settings sub-pages menu event listener
 $(page['settings']).find('#settings-menu tr').on('click', function() {
@@ -202,7 +204,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
 // set ads enabled
 //
 // @param bool adsEnabled: ads enabled or not
-function setAdsEnabled(adsEnabled) {
+Settings.setAdsEnabled = function(adsEnabled) {
   // send request
   jQuery.ajax('server.php', {
     data: {
@@ -224,9 +226,35 @@ function setAdsEnabled(adsEnabled) {
       hideAds();
     }
   });
-}
+};
 
 // checkbox event listener for changing ads enabled settings
 $(page['settings']).find('#enable-ads-checkbox').on('change', function() {
-  setAdsEnabled(this.checked);
+  Settings.setAdsEnabled(this.checked);
+});
+
+
+
+// set newsletter enabled
+//
+// @param bool newsletterEnabled: newsletter enabled or not
+Settings.setNewsletterEnabled = function(newsletterEnabled) {
+  // send request
+  jQuery.ajax('server.php', {
+    data: {
+      action: 'set-newsletter-enabled',
+      newsletter_enabled: newsletterEnabled
+    },
+    type: 'GET',
+    error: function(jqXHR, textStatus, errorThrown) {
+
+    }
+  }).done(function(data) {
+    data = handleAjaxResponse(data);
+  });
+};
+
+// checkbox event listener for changing ads enabled settings
+$(page['settings']).find('#enable-newsletter-checkbox').on('change', function() {
+  Settings.setNewsletterEnabled(this.checked);
 });

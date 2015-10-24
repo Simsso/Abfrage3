@@ -91,7 +91,7 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
       exit();
     } else if ($result == 2) { // correct combination but email not comfirmed yet
       $user = Database::get_user_by_id($id);
-      $mail = Mail::get_email_confirmation_mail($user->firstname, $user->email, $user->email_confirmation_key);
+      $mail = Mail::get_email_confirmation_mail($user->firstname, $user->email, $user->hash);
       $mail->send();
       header("Location: /?login_message=The email address has not been confirmed yet. A new email has been sent.&email=" . $user->email);
       exit();
@@ -407,6 +407,12 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     case 'set-ads-enabled':
     session_required();
     Response::send(Database::set_ads_enabled($_SESSION['id'], Validation::format_text($_GET['ads_enabled'])));
+    break;
+
+    // set newsletter enabled
+    case 'set-newsletter-enabled':
+    session_required();
+    Response::send(Database::set_newsletter_enabled($_SESSION['id'], Validation::format_text($_GET['newsletter_enabled'])));
     break;
   }
 } else {

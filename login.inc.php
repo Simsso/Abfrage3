@@ -71,8 +71,8 @@ if($_GET['login_message']) {
 
 
 // email confirmation
-if($_GET['email_confirmation_key'] && $_GET['email']) {
-  if (Database::confirm_email($_GET['email'], $_GET['email_confirmation_key'])) {
+if($_GET['hash'] && $_GET['email']) {
+  if (Database::confirm_email($_GET['email'], $_GET['hash'])) {
     $infobox_header = "Email address confirmed";
     $infobox_green_red = "green";
     $infobox_body = '<p>The email address ' . $_GET['email'] . ' is now confirmed and can be used to login.</p>';
