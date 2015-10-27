@@ -1,6 +1,8 @@
 <?php
+require_once('dbconnect.inc.php');
+require_once('database.class.php');
+
 class Mail {
-  include_once('dbconnect.inc.php');
 
   const DEFAULT_SENDER_EMAIL = "abfrage3@simsso.de";
 
@@ -49,8 +51,10 @@ class Mail {
 
     // log that an email has been sent
     global $con;
-    $sql = "INSERT INTO `sent_email` (`email`, `ip`, `time`, `subject`) VALUES ('".$this->to."', '".$_SERVER['REMOTE_ADDR']."', ".time().", '".$this->subject."');";
+    $id = Database::email2id($this->to); // can be NULL
+    $sql = "INSERT INTO `sent_email` (`user`, `email`, `ip`, `time`, `subject`) VALUES (".(($id === NULL) ? "NULL" : $id).", '".$this->to."', '".$_SERVER['REMOTE_ADDR']."', ".time().", '".$this->subject."');";
     $query = mysqli_query($con, $sql);
+    echo Database::email2id($this->to);
     return mysqli_insert_id($con);
   }
 
@@ -76,12 +80,12 @@ class Mail {
       FROM `user`, `user_settings`
       WHERE `user`.`id` = `user_settings`.`user` AND
         `user`.`email_confirmed` = 1 AND `user`.`active` = 1 AND
-        `user_settings`.`newsletter_enabled` = 1;";
+        `user_settings`.`newsletter_enabled` = 1 AND `user`.`id` = 1;";
 
     $query = mysqli_query($con, $sql);
     $count = 0;
     while ($row = mysqli_fetch_assoc($query)) {
-      $unsubscribe_link = 'http://abfrage3.simsso.de/?action=unsubscribe&medium=newsletter&id='.$row['id'].'&hash=' . $row['hash'];
+      $unsubscribe_link = 'http://abfrage3.simsso.de/?basic-page=&action=unsubscribe&medium=newsletter&id='.$row['id'].'&hash=' . $row['hash'];
       $mail = new Default_Client_HTML_Mail($row['email'], $subject, $row['firstname'], $text, $unsubscribe_link);
       $mail->send();
       $count++;
@@ -112,8 +116,7 @@ class Default_Client_HTML_Mail extends HTML_Mail {
     $body ='
 		<html>
 		<body style="font-family: arial; background-color: #ECEFF1; margin: 0; padding: 0;">
-		<div style="position: relative;
-		width: 100%;
+		<div style="width: 100%;
 		padding: 20px;
 		background-color: #8892BF;
 		border-style: solid;

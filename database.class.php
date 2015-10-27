@@ -1,15 +1,15 @@
 <?php
-require('dbconnect.inc.php'); // include data base connection
-require('validation.class.php'); // include validation class to verify correctness of strings in general
+require_once('dbconnect.inc.php'); // include data base connection
+require_once('validation.class.php'); // include validation class to verify correctness of strings in general
 
 
 // database classes
-require('database/answer.class.php');
-require('database/feed.class.php');
-require('database/label.class.php');
-require('database/user.class.php');
-require('database/word.class.php');
-require('database/wordlist.class.php');
+require_once('database/answer.class.php');
+require_once('database/feed.class.php');
+require_once('database/label.class.php');
+require_once('database/user.class.php');
+require_once('database/word.class.php');
+require_once('database/wordlist.class.php');
 
 
 // Database

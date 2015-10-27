@@ -401,7 +401,7 @@ WordLists.show = function(id) {
     messageBox.setTitle('Delete word list');
     messageBox.setContent('Do you want to delete the word list <span class="italic">' + WordLists.shown.name + '</span>?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
-    messageBox.setFocusedButton('Ok');
+    messageBox.setFocusedButton('No');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
         $(this).prop('disabled', true).attr('value', 'Deleting...');
@@ -422,7 +422,7 @@ WordLists.show = function(id) {
     messageBox.setTitle('Hide word list');
     messageBox.setContent('Do you want to hide the word list <span class="italic">' + WordLists.shown.name + '</span>?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
-    messageBox.setFocusedButton('Yes');
+    messageBox.setFocusedButton('No');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
         $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
