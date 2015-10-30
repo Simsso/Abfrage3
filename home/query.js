@@ -392,6 +392,7 @@ Query.removeList = function(listId) {
 //
 // marks lists as selected which are in the selectedLists array
 Query.updateListSelections = function() {
+  $(page['query']).find('#query-list-selection tr').data('checked', false).removeClass('active');
   for (var i = Query.selectedLists.length - 1; i >= 0; i--) {
     $(page['query']).find('#query-list-selection tr[data-query-list-id=' + Query.selectedLists[i].id + ']').data('checked', true).addClass('active');
   }

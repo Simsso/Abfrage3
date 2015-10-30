@@ -347,7 +347,7 @@ WordLists.show = function(id) {
 
   if (allowEdit) {
     // change language form
-    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '""/>&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
+    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
 
     importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" /><hr class="spacer-15">';
   }
