@@ -439,7 +439,7 @@ Query.getHtmlTableOfLabels = function(labels) {
   }
   else {
     // if there was no code returned there are no labels to show
-    html = WordLists.noLabelsString;
+    html = WordLists.Template.noLabels();
   }
   return html;
 };

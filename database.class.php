@@ -490,7 +490,7 @@ class Database {
   // @param unsigned int id: the id of the user who adds the other guy
   // @param string email: the email address of the user to add
   // 
-  // @return int:
+  // @return byte:
   //  - -1: the user with the passed email address doesn't exist
   //  - -2: the id which belongs to the passed email equals the passed id (user wants to add themself)
   //  - 0: unknown error
@@ -525,7 +525,7 @@ class Database {
   //
   // removes a user from another user
   // 
-  // @return int: 1 if everything went fine
+  // @return byte: 1 if everything went fine
   static function remove_user($user1, $user2) {
     global $con;
 
@@ -581,9 +581,9 @@ class Database {
   static function get_word_lists_of_user($id) {
     global $con;
     $sql = "
-		SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time`
-		FROM `list`
-		WHERE `creator` = ".$id." AND `active` = 1
+  		SELECT `id`, `name`, `creator`, `comment`, `language1`, `language2`, `creation_time`
+  		FROM `list`
+  		WHERE `creator` = ".$id." AND `active` = 1
         ORDER BY `name` ASC;";
     $query = mysqli_query($con, $sql);
     $result = array();
@@ -610,6 +610,7 @@ class Database {
     }
     return $lists;
   }
+
 
   // get specific word list
   //
@@ -1247,6 +1248,7 @@ class Database {
     return UserSettings::get_by_id($id);
   }
 
+
   // set ads enabled
   //
   // @param unsigned int id: id of the user
@@ -1275,11 +1277,18 @@ class Database {
 
 
   // get query data
+  //
+  // @param unsigned int id: id of the user
+  // 
+  // @return object: object of query data
+  // @return Label[] object->labels: labels of the user
+  // @return LabelAttachment[] object->label_list_attachments: label list attachments of the user
+  // @return List[] object->lists: lists of the user including words and answers given
   static function get_query_data($id) {
     $result = new stdClass();
-    $result->labels = Database::get_labels_of_user($_SESSION['id']);
-    $result->label_list_attachments = Database::get_label_list_attachments_of_user($_SESSION['id']);
-    $result->lists = Database::get_query_lists_of_user($_SESSION['id']);
+    $result->labels = Database::get_labels_of_user($id);
+    $result->label_list_attachments = Database::get_label_list_attachments_of_user($id);
+    $result->lists = Database::get_query_lists_of_user($id);
     return $result;
   }
 }

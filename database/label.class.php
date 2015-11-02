@@ -30,7 +30,13 @@ class Label {
     $this->active = intval($active);
   }
 
+  // get label by id
+  //
   // second constructor (by id)
+  // 
+  // @param unsigned int id: id of the label
+  //
+  // @return Label | null: the corresponding label object or null if the id is invalid
   public function get_by_id($id) {
     global $con;
 

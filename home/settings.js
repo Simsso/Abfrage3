@@ -2,6 +2,26 @@
 
 var Settings = {}; // settings namespace
 
+// settings templates
+Settings.Template = {
+  changeName: {
+    serverResponse: {
+      invalid: Handlebars.compile($(page['settings']).find('#settings-name-server-invalid-template').html()),
+      success: Handlebars.compile($(page['settings']).find('#settings-name-server-success-template').html()),
+      unknownError: Handlebars.compile($(page['settings']).find('#settings-name-server-unknown-error-template').html())
+    }
+  },
+  changePassword: {
+    serverResponse: {
+      success: Handlebars.compile($(page['settings']).find('#settings-password-server-success-template').html()),
+      notEqual: Handlebars.compile($(page['settings']).find('#settings-password-server-not-equal-template').html()),
+      wrongOld: Handlebars.compile($(page['settings']).find('#settings-password-server-wrong-old-template').html()),
+      invalid: Handlebars.compile($(page['settings']).find('#settings-password-server-invalid-template').html()),
+      unknownError: Handlebars.compile($(page['settings']).find('#settings-password-server-unknown-template').html())
+    }
+  }
+};
+
 // single page application allow url like
 // ...#settings/profile
 Settings.shownSubPageName;
@@ -53,7 +73,7 @@ $(page['settings']).find('#settings-name').on('submit', function(e) {
   e.preventDefault();
   
   $(page['settings']).find('#settings-firstname, #settings-lastname').prop('disabled', true);
-  $(page['settings']).find('#settings-submit-button').prop('disabled', true).attr('value', 'Changing name...');
+  Button.setPending($(page['settings']).find('#settings-submit-button'));
   $(page['settings']).find('#settings-name-response').html('').addClass('display-none');
   
   // send request
@@ -71,19 +91,19 @@ $(page['settings']).find('#settings-name').on('submit', function(e) {
     data = handleAjaxResponse(data);
 
     $(page['settings']).find('#settings-firstname, #settings-lastname').prop('disabled', false);
-    $(page['settings']).find('#settings-submit-button').prop('disabled', false).attr('value', 'Change name');
+    Button.setDefault($(page['settings']).find('#settings-submit-button'));
     
-    var message = '';
+    var message;
     switch (data) {
       case 0: 
-        message = 'The given name is not valid.';
+        message = Settings.Template.changeName.serverResponse.invalid;
         break;
       case 1:
-        message = 'Your name has been update successfully.';  
+        message = Settings.Template.changeName.serverResponse.success;  
         break;
 
       default:
-        message = 'An unknown error occured.';
+        message = Settings.Template.changeName.serverResponse.unknownError;
         break;
     }
     var mb = new MessageBox();
@@ -101,7 +121,7 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
   e.preventDefault();
   
   $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', true);
-  $(page['settings']).find('#settings-password-button').prop('disabled', true).attr('value', 'Changing password...');
+  Button.setPending($(page['settings']).find('#settings-password-button'));
   $(page['settings']).find('#settings-password-response').html('').addClass('display-none');
   
   // send request
@@ -119,25 +139,25 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
     data = handleAjaxResponse(data);
 
     $(page['settings']).find('#settings-password-old, #settings-password-new, #settings-password-new-confirm').prop('disabled', false).attr('value', '');
-    $(page['settings']).find('#settings-password-button').prop('disabled', false).attr('value', 'Change password');
+    Button.setDefault($(page['settings']).find('#settings-password-button'));
     
-    var message = '';
+    var message;
     switch (data) {
       case 1:
-        message = 'Your password has been updated successfully.';  
+        message = Settings.Template.changeName.serverResponse.success();
         break;
       case 2:
-        message = 'The two new passwords are not equal.';  
+        message = Settings.Template.changeName.serverResponse.notEqual();
         break;
       case 3:
-        message = 'Your old password is not correct.';  
+        message = Settings.Template.changeName.serverResponse.wrongOld();
         break;
       case 5:
-        message = 'The new password is not valid.';  
+        message = Settings.Template.changeName.serverResponse.invalid();
         break;
         
       default:
-        message = 'An unknown error occured.';
+        message = Settings.Template.changeName.serverResponse.unknown();
         break;
     }
     var mb = new MessageBox();
@@ -165,7 +185,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
   messageBox.setCallback(function(button) {
     if (button === 'Yes') {
       $(page['settings']).find('#settings-delete-account-password').prop('disabled', true);
-      $(page['settings']).find('#settings-delete-account-button').prop('disabled', true).attr('value', 'Deleting account...');
+      Button.setPending($(page['settings']).find('#settings-delete-account-button'));
       
       // send request
       jQuery.ajax('server.php?action=delete-account', {
@@ -184,7 +204,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
         } 
         else {
           $(page['settings']).find('#settings-delete-account-password').prop('disabled', false).val('');
-          $(page['settings']).find('#settings-delete-account-button').prop('disabled', false).attr('value', 'Delete account');
+          Buutton.setDefault($(page['settings']).find('#settings-delete-account-button'));
 
           var mb = new MessageBox();
           mb.setTitle('Delete account');
@@ -228,6 +248,7 @@ Settings.setAdsEnabled = function(adsEnabled) {
   });
 };
 
+
 // checkbox event listener for changing ads enabled settings
 $(page['settings']).find('#enable-ads-checkbox').on('change', function() {
   Settings.setAdsEnabled(this.checked);
@@ -253,6 +274,7 @@ Settings.setNewsletterEnabled = function(newsletterEnabled) {
     data = handleAjaxResponse(data);
   });
 };
+
 
 // checkbox event listener for changing ads enabled settings
 $(page['settings']).find('#enable-newsletter-checkbox').on('change', function() {

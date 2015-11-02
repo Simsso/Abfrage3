@@ -77,9 +77,6 @@ if (is_null($next_to_last_login)) {
               <div class="box-head">
                 <img src="img/feed.svg" />
                 Feed
-                <span class="tooltip">
-                  The feed provides you with news: For example if a user adds you it will appear here.
-                </span>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -88,7 +85,72 @@ if (is_null($next_to_last_login)) {
                 <div class="text-align-center spacer-top-15"><input type="button" value="Load all" id="feed-load-all" /></div>
               </div>
             </div>
+
+
+            <!-- feed templates -->
+
+            <script id="feed-table-template" type="text/x-handlebars-template">
+              <table class="feed-table box-table no-flex">{{tableBody}}</table>
+            </script>
+
+            <script id="feed-no-content-template" type="text/x-handlebars-template">
+              <p>Nothing new since last login.</p>
+            </script>
+
+            <script id="feed-user-added-element-template" type="text/x-handlebars-template">
+              <tr>
+                <td>
+                  <img src="img/users.svg">
+                </td>
+                <td>
+                  {{info.firstname}} {{info.lastname}} has added you.
+                  &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
+                </td>
+              </tr>
+            </script>
+
+            <script id="feed-list-shared-element-template" type="text/x-handlebars-template">
+              <tr>
+                <td>
+                  <img src="img/share.svg">
+                </td>
+                <td>
+                  {{info.user.firstname}} {{info.user.lastname}} gave you permissions to 
+                  {{#if info.editingPermissions}}
+                    edit
+                  {{else}}
+                    view
+                  {{/if}} their list <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                  &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
+                </td>
+              </tr>
+            </script>
+
+            <script id="feed-word-added-element-template" type="text/x-handlebars-template">
+              <tr>
+                <td>
+                  <img src="img/add.svg">
+                </td>
+                <td>
+                  {{info.user.firstname}} {{info.user.lastname}} has added {{info.amountString}} word{{#unless info.exactlyOneWord}}s{{/unless}} 
+                  to 
+                  {{#if info.yourList}}
+                    your
+                  {{else}}
+                    {{#if info.userAddedToTheirOwnList}}
+                      their
+                    {{else}}
+                      {{info.list_creator.firstname}}&#39;s
+                    {{/if}}
+                  {{/if}} 
+                  list <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                  &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
+                </td>
+              </tr>
+            </script>
+
           </div>
+
           <div class="right-column">
             <div class="box">
               <div class="box-head">
@@ -101,12 +163,28 @@ if (is_null($next_to_last_login)) {
               </div>
             </div>
 
+            <script id="recently-used-no-content-template" type="text/x-handlebars-template">
+              <p>No recently used lists found.</p>
+            </script>
+
+            <script id="recently-used-table-template" type="text/x-handlebars-template">
+              <table class="box-table cursor-pointer">
+                {{#each list}}
+                  <tr data-list-id="{{id}}">
+                    <td>
+                      {{name}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>
+            </script>
+
           </div>
         </div>
 
 
+
         <!-- Test -->
-        
         
         <div id="content-query" data-page="query">
           <div class="left-column">
@@ -302,13 +380,36 @@ if (is_null($next_to_last_login)) {
             <div class="box-body" data-start-state="expanded">
               <form id="word-list-add-form">
                 <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
-                <input id="word-list-add-button" type="submit" value="Create list"/>
+                <input id="word-list-add-button" type="submit" value="Create list" data-pending-value="Creating list"/>
               </form>
               <div id="list-of-word-lists">
               </div>
             </div>
+
+            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="spacer-top-15">You haven&#39;t created any wordlists yet.</p></script>
+
+            <script id="word-lists-list-of-word-lists-template" type="text/x-handlebars-template">
+              <table class="box-table cursor-pointer">
+                <tr class="cursor-default">
+                  <th>Name</th>
+                  <th class="hide-mobile">Content</th>
+                  <th class="hide-mobile">Entries</th>
+                  <th class="hide-mobile">Creator</th>
+                </tr>
+                {{#each list}}
+                  <tr data-action="edit" data-list-id="{{id}}" id="list-of-word-lists-row-{{id}}">
+                    <td>{{name}}</td>
+                    <td class="hide-mobile">{{language1}} - {{language2}}</td>
+                    <td class="hide-mobile">{{words.length}}</td>
+                    <td class="hide-mobile">{{creator.firstname}} {{creator.lastname}}</td>
+                  </tr>
+                {{/each}}
+              </table>
+            </script>
           </div>
+
           
+
           <div id="word-lists-left-column" class="left-column-small">
             <div class="box" id="word-list-title">
               <div class="box-head active"> 
@@ -337,7 +438,57 @@ if (is_null($next_to_last_login)) {
                 <div id="list-labels-list">
                 </div>
               </div>
+
+              <script id="word-lists-no-labels-template" type="text/x-handlebars-template"><p>You don&#39;t have any labels.</p></script>
+
+              <script id="word-lists-label-table-template" type="text/x-handlebars-template">
+                <table class="box-table button-right-column no-flex">{{content}}</table
+              </script>
+
+              <script id="word-lists-label-list-template" type="text/x-handlebars-template">
+                <tr
+                {{#unless show}} style="display: none; "{{/unless}} class="cursor-default">
+                  <td colspan="2" style="padding-left: {{indentingPxl}}px; text-align: left; ">
+                    <form class="label-add-form inline">
+                      <input type="hidden" class="label-add-parent" value="{{id}}"/>
+                      <input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;
+                      <input class="label-add-button inline" type="submit" value="Add label"/>
+                    </form>
+                  </td>
+                </tr>
+              </script>
+
+              <script id="word-lists-label-single-list-element-template" type="text/x-handlebars-template">
+                <tr data-label-id="{{label.id}}" data-indenting="{{indenting}}" {{#if displayNone}} style="display: none; "{{/if}} id="label-list-row-id-{{label.id}}">
+                  <form class="label-rename-form" id="label-rename-form-{{label.id}}" data-label-id="{{label.id}}"></form>
+                  <td class="label-list-first-cell" style="padding-left: {{paddingLeft}}px; " id="label-rename-table-cell-{{label.id}}">
+                    {{#if hasSubLabels}}
+                      <img 
+                        src="img/{{#if expanded}}collapse{{else}}expand{{/if}}.svg" 
+                        data-state="{{#if expanded}}expanded{{else}}collapsed{{/if}}" 
+                        class="small-exp-col-icon" />
+                    {{/if}}
+                    &nbsp;
+                    <label class="checkbox-wrapper">
+                      <input type="checkbox" data-label-id="{{label.id}}" {{#if isAttachedToList}}checked="true"{{/if}}/>
+                      <span>&nbsp;{{label.name}}</span>
+                    </label>
+                  </td>
+                  <td>
+                    <img class="small-menu-open-image" src="img/menu-small.svg" />
+                    <div class="small-menu display-none">
+                      <input type="submit" class="width-100" form="label-rename-form-{{label.id}}" id="label-rename-button-{{label.id}}" data-action="rename-edit" value="Rename" /><br>
+                      <input type="button" class="label-add-sub-label width-100" value="Add sub-label"/><br>
+                      <form class="label-remove-form inline">
+                        <input type="hidden" class="label-remove-select" value="{{label.id}}"/>
+                        <input class="label-remove-button width-100" type="submit" value="Remove" />
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </script>
             </div>
+
 
             <div class="box" id="word-list-sharing">
               <div class="box-head">
@@ -353,13 +504,42 @@ if (is_null($next_to_last_login)) {
                     <option value="2">Can view</option>
                     <option value="1">Can edit</option>
                   </select>
-                  <input id="share-list-submit" type="submit" value="Share"/>
+                  <input id="share-list-submit" type="submit" value="Share" data-pending-value="Sharing"/>
                 </form>
                 <div id="list-sharings">
 
                 </div>
               </div>
+
+              <script id="word-lists-share-table-template" type="text/x-handlebars-template">
+                {{#if share}}
+                  <table class="box-table button-right-column">
+                    <tr class="bold cursor-default">
+                      <td>Name</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {{#each share}}
+                      <tr id="list-shared-with-row-{{id}}">
+                        <td>{{user.firstname}} {{user.lastname}}</td>
+                        <td>
+                          {{#if permissions}}
+                            Can edit
+                          {{else}}
+                            Can view
+                          {{/if}}
+                        </td>
+                        <td><input type="button" class="inline" value="Stop sharing" data-pending-value="Stopping sharing" data-action="delete-sharing" data-sharing-id="{{id}}"/></td>
+                      </tr>
+                    {{/each}}
+                {{else}}
+                  <p class="spacer-top-15">The selected list isn&#39;t shared with anyone. Only you can see it.</p>
+                {{/if}}
+              </script>
+
             </div>
+
+
           </div>
 
           <div class="right-column-big">
@@ -388,6 +568,50 @@ if (is_null($next_to_last_login)) {
                 </div>
               </div>
             </div>
+
+            <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="spacer-top-15">The selected list doesn&#39;t contain any words yet.</p></script>
+            <script id="word-lists-no-words-no-editing-permissions-template" type="text/x-handlebars-template"><p class="spacer-top-15">The selected list doesn&#39;t contain any words yet. You don&#39;t have permissions to add new words.</p></script>
+
+            <script id="word-lists-words-table-template" type="text/x-handlebars-template">
+              <table id="word-list-table" class="box-table{{#if allowEdit}} button-right-column{{/if}}">
+                <tr class="bold cursor-default">
+                  <td>{{lang1}}</td>
+                  <td>{{lang2}}</td>
+                  <td>Comment</td>
+                 {{#if allowEdit}}<td></td>{{/if}}
+                </tr>
+                {{content}}
+              </table>
+            </script>
+
+            <script id="word-lists-words-table-row-template" type="text/x-handlebars-template">
+              <tr
+                {{#if id}}
+                  &nbsp;
+                  id="word-row-{{id}}"
+                {{/if}}
+                {{#if pending}}
+                  &nbsp;
+                  class="pending" 
+                {{/if}}>
+
+                <td>{{lang1}}</td>
+                <td>{{lang2}}</td>
+
+                {{#if showComment}}
+                  <td>{{comment}}</td>
+                {{/if}}
+
+                {{#if allowEdit}}
+                  <td>
+                    <input type="submit" class="icon pencil table-icon" value="" data-action="edit" form="word-row-{{id}}-form"/>
+                    &nbsp;
+                    <input type="button" value="" onclick="WordLists.removeWord({{id}})" class="icon rubbish table-icon"/>
+                    <form id="word-row-{{id}}-form" onsubmit="WordLists.editOrSaveWordEvent(event, {{id}})"></form>
+                  </td>
+                {{/if}}
+              </tr>
+            </script>
           </div>
         </div>
 
@@ -406,13 +630,43 @@ if (is_null($next_to_last_login)) {
                 <div id="user-add-message"></div>
                 <form id="user-add-form">
                   <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
-                  <input id="user-add-button" type="submit" value="Add user"/>
+                  <input id="user-add-button" type="submit" value="Add user" data-pending-value="Adding user"/>
                 </form>
                 <div id="people-you-have-added">
                 </div>
               </div>
             </div>
+
+            <!-- user people you've added templates -->
+            <script id="user-none-added-template" type="text/x-handlebars-template">
+              <p class="spacer-top-15">You haven&#39;t added other users yet.</p>
+            </script>
+
+            <script id="user-add-server-response-wrong-email-template" type="text/x-handlebars-template">Email-address does not exist.</script>
+            <script id="user-add-server-response-success-template" type="text/x-handlebars-template">User has been added.</script>
+            <script id="user-add-server-response-cant-add-yourself-template" type="text/x-handlebars-template">You can not add yourself.</script>
+            <script id="user-add-server-response-unknown-error-template" type="text/x-handlebars-template">An unknown error occured.</script>
+
+            <script id="user-list-of-added-users-template" type="text/x-handlebars-template">
+              <table class="box-table button-right-column">
+                <tr class="bold cursor-default">
+                  <td>Name</td>
+                  <td>Email-address</td>
+                  <td></td>
+                </tr>
+                {{#each user}}
+                  <tr id="added-users-row-{{id}}">
+                    <td>{{firstname}} {{lastname}}</td>
+                    <td>{{email}}</td>
+                    <td>
+                      <input id="added-users-remove-{{id}}" type="button" class="inline" value="Remove" data-pending-value="Removing" onclick="User.remove({{id}})"/>
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>
+            </script>
           </div>
+
 
           <div class="right-column width-50">
             <div class="box">
@@ -427,6 +681,32 @@ if (is_null($next_to_last_login)) {
                 </div>
               </div>
             </div>
+
+            <!-- user who have added you templates -->
+            <script id="user-none-have-added-you-template" type="text/x-handlebars-template">
+              <p class="spacer-top-15">No users have added you yet.</p>
+            </script>
+
+            <script id="user-list-of-users-who-have-added-you-template" type="text/x-handlebars-template">
+              <table class="box-table button-right-column">
+                <tr class="bold cursor-default">
+                  <td>Name</td>
+                  <td>Email-address</td>
+                  <td></td>
+                </tr>
+                {{#each user}}
+                  <tr>
+                    <td>{{firstname}} {{lastname}}</td>
+                    <td>{{email}}</td>
+                    <td>
+                      {{#unless bidirectional}}
+                        <input type="button" class="inline" value="Add user" data-pending-value="Adding user" data-email="{{email}}"/>
+                      {{/unless}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>
+            </script>
           </div>
         </div>
 
@@ -457,10 +737,15 @@ if (is_null($next_to_last_login)) {
                 <form id="settings-name">
                   <input type="text" required="true" value="<? echo $user->firstname; ?>" placeholder="First name" id="settings-firstname" />&nbsp;
                   <input type="text" required="true" value="<? echo $user->lastname; ?>" placeholder="Last name" id="settings-lastname" />&nbsp;
-                  <input type="submit" value="Change name" id="settings-submit-button"/>&nbsp;
+                  <input type="submit" value="Change name" data-pending-value="Changing name" id="settings-submit-button"/>&nbsp;
                 </form>
               </div>
             </div>
+
+            <script id="settings-name-server-invalid-template" type="text/x-handlebars-template">The given name is not valid.</script>
+            <script id="settings-name-server-success-template" type="text/x-handlebars-template">Your name has been updated successfully.</script>
+            <script id="settings-name-server-unknown-error-template" type="text/x-handlebars-template">An unknown error occured.</script>
+
 
             <div class="box" data-page="profile">
               <div class="box-head">
@@ -472,11 +757,17 @@ if (is_null($next_to_last_login)) {
                     <tr><td>Old password</td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
                     <tr><td>New password</td><td><input id="settings-password-new" required="true" type="password"/></td></tr>
                     <tr><td>Confirm new password</td><td><input id="settings-password-new-confirm" required="true" type="password"/></td></tr>
-                    <tr><td><input id="settings-password-button" type="submit" value="Change password" class="width-auto"/></td><td></td></tr>
+                    <tr><td><input id="settings-password-button" type="submit" value="Change password" data-pending-value="Changing password" class="width-auto"/></td><td></td></tr>
                   </table>
                 </form>
               </div>
             </div>
+
+            <script id="settings-password-server-success-template" type="text/x-handlebars-template">Your password has been updated successfully.</script>
+            <script id="settings-password-server-not-equal-template" type="text/x-handlebars-template">The two new passwords are not equal.</script>
+            <script id="settings-password-server-wrong-old-template" type="text/x-handlebars-template">Your old password is not correct.</script>
+            <script id="settings-password-server-invalid-template" type="text/x-handlebars-template">The new password is not valid.</script>
+            <script id="settings-password-server-unknown-template" type="text/x-handlebars-template">An unknown error occured.</script>
 
             <!--<div class="box" data-page="profile">
               <div class="box-head">
@@ -537,7 +828,7 @@ if (is_null($next_to_last_login)) {
                 <p>Be careful: This action can't be undone. Your shared lists will still be visible to other users. </p>
                 <form id="settings-delete-account-form">
                   <input type="password" required="true" placeholder="Password" id="settings-delete-account-password" />&nbsp;
-                  <input type="button" value="Delete account" id="settings-delete-account-button" />
+                  <input type="button" value="Delete account" data-pending-id="Deleting account" id="settings-delete-account-button" />
                 </form>
               </div>
             </div>
@@ -670,8 +961,10 @@ if (is_null($next_to_last_login)) {
     <!-- add scripts to the DOM -->
     <script type="text/javascript">
       document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="handlebars-v4.0.4.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
+
+      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
     
       // single page appcliation script

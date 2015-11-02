@@ -1,15 +1,28 @@
 "use strict";
 
+// user page namespace
 var User = {};
+
+// templates
+User.Template = {
+  noneAdded: Handlebars.compile($(page['user']).find('#user-none-added-template').html()),
+  noneHaveAddedYou: Handlebars.compile($(page['user']).find('#user-none-have-added-you-template').html()),
+
+  serverWrongEmail: Handlebars.compile($(page['user']).find('#user-add-server-response-wrong-email-template').html()),
+  serverSuccess: Handlebars.compile($(page['user']).find('#user-add-server-response-success-template').html()),
+  serverCantAddYourself: Handlebars.compile($(page['user']).find('#user-add-server-response-cant-add-yourself-template').html()),
+  serverUnknownError: Handlebars.compile($(page['user']).find('#user-add-server-response-unknown-error-template').html()),
+
+  listOfAddedUsers: Handlebars.compile($(page['user']).find('#user-list-of-added-users-template').html()),
+  listOfUsersWhoHaveAddedYou: Handlebars.compile($(page['user']).find('#user-list-of-users-who-have-added-you-template').html())
+};
+
 
 $(window).on('page-user', function(event, pageName, subPageName) {
   // sub page user called
   //
 });
 
-// const strings
-User.noUserAddedString = '<p class="spacer-top-15">You haven\'t added other users yet.</p>';
-User.noUsersHaveAddedYouString = '<p class="spacer-top-15">No users have added you yet.</p>';
 
 // add user
 //
@@ -44,21 +57,20 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
 
   // disable button to avoid resubmission
   $(page['user']).find('#user-add-email').prop('disabled', true);
-  $(page['user']).find('#user-add-button').prop('disabled', true).attr('value', 'Adding...');
+  Button.setPending($(page['user']).find('#user-add-button'));
 
   // call actual add user function and pass required information (email address of user to add)
   User.add($(page['user']).find('#user-add-email').val(), function(data) {
     // re-enable button and input field to allow adding another user
     $(page['user']).find('#user-add-email').prop('disabled', false).val('');
-    $(page['user']).find('#user-add-button').prop('disabled', false).attr('value', 'Add user');
+    Button.setDefault($(page['user']).find('#user-add-button'));
 
     // handle response string
     var responseString;
-    if (data === -1) responseString = "Email-address does not exist.";
-    else if (data === 0) responseString =  "You have already added this user.";
-    else if (data === 1) responseString =  "User has been added.";
-    else if (data === 2) responseString =  "You can not add yourself.";
-    else responseString = "An unknown error occured.";
+    if (data === -1) responseString = User.Template.serverWrongEmail();
+    else if (data === -2) responseString = User.Template.serverCantAddYourself();
+    else if (data === 1 || data === 2) responseString = User.Template.serverSuccess();
+    else responseString = User.Template.serverUnknownError(); // code 0 (data === 0)
     $(page['user']).find('#user-add-message').html(responseString);
   });
 });
@@ -71,7 +83,7 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
 // @param int id: user id
 User.remove = function(id) {
   // disable buton to avoid resubmission
-  $(page['user']).find('#added-users-remove-' + id).prop('disabled', true).attr('value', 'Removing...');
+  Button.setPending($(page['user']).find('#added-users-remove-' + id));
 
   jQuery.ajax('server.php', {
     data: {
@@ -90,8 +102,8 @@ User.remove = function(id) {
 
     // update div
     // if no added users are left show the appropriate message
-    if ($(page['user']).find('#people-you-have-added tr').length == 1) {
-      $(page['user']).find('#people-you-have-added').html(User.noUserAddedString);
+    if ($(page['user']).find('#people-you-have-added tr').length === 1) {
+      $(page['user']).find('#people-you-have-added').html(User.Template.noneAdded());
     }
 
     // refresh the other list without loading information
@@ -127,18 +139,14 @@ User.downloadListOfAddedUsers = function(showLoadingInformation) {
 
 // update dom list of added users
 User.updateDomListOfAddedUsers = function() {
-  var output = "";
-  // get the html rows for the table
-  for (var i = 0; i < Database.listOfAddedUsers.length; i++) {
-    output += '<tr id="added-users-row-' + Database.listOfAddedUsers[i].id + '"><td>' + Database.listOfAddedUsers[i].firstname + ' ' + Database.listOfAddedUsers[i].lastname + '</td><td>' + Database.listOfAddedUsers[i].email + '</td><td><input id="added-users-remove-' + Database.listOfAddedUsers[i].id + '" type="button" class="inline" value="Remove" onclick="User.remove(' + Database.listOfAddedUsers[i].id + ')"/></td></tr>';
-  }
-
+  var output;
   // if no users have been added yet show the appropriate message
-  if (output.length === 0) {
-    output = User.noUserAddedString;
+  if (Database.listOfAddedUsers.length === 0) {
+    output = User.Template.noneAdded();
   }
-  else { // table head is only visible if users have been added
-    output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
+  else {
+    // get the html rows for the table
+    output = User.Template.listOfAddedUsers({ user: Database.listOfAddedUsers });
   }
 
   $(page['user']).find('#people-you-have-added').html(output); // update the html element with the list
@@ -174,38 +182,30 @@ User.downloadListOfUsersWhoHaveAddedYou = function(showLoadingInformation) {
 
 // update dom list of users who have added you
 User.updateDomListOfUsersWhoHaveAddedYou = function() {
-
-  var output = "";
-  // create a string with all html rows of users who have added you
-  for (var i = 0; i < Database.listOfUsersWhoHaveAddedYou.length; i++) {
-    output += '<tr><td>' + Database.listOfUsersWhoHaveAddedYou[i].firstname + ' ' + Database.listOfUsersWhoHaveAddedYou[i].lastname + '</td><td>' + Database.listOfUsersWhoHaveAddedYou[i].email + '</td><td>' + ((Database.listOfUsersWhoHaveAddedYou[i].bidirectional)?'':'<input type="button" class="inline" value="Add user" data-email="' + Database.listOfUsersWhoHaveAddedYou[i].email + '"/>') + '</td></tr>';
-  }
-
+  var output;
   // show appropriate message if there are no users who have added you
-  if (output.length === 0) {
-    output = User.noUsersHaveAddedYouString;
+  if (Database.listOfUsersWhoHaveAddedYou.length === 0) {
+    output = User.Template.noneHaveAddedYou();
+  }
+  else { // otherwise add table and table head to the string
+    output = User.Template.listOfUsersWhoHaveAddedYou({ user: Database.listOfUsersWhoHaveAddedYou });
   }
 
-  // otherwise add table and table head to the string
-  else {
-    output = '<table class="box-table button-right-column"><tr class="bold cursor-default"><td>Name</td><td>Email-address</td><td></td></tr>' + output + '</table>';
-  }
 
   $(page['user']).find('#people-who-have-added-you').html(output); // update DOM
 
   // add event listener for newly added buttons
   $(page['user']).find('#people-who-have-added-you input[type=button]').on('click', function() {
     // buttons function is adding users
-    var $button = $(this);
-    $button.prop('disabled', true).val('Adding...'); // disable button and change value
+    var button = $(this);
+    Button.setPending(buton); // disable button and change value
 
     // call actual function to update the database
-    User.add($button.data('email'), function() {
-      $button.fadeOut(); // hide button after the user has been added
+    User.add(button.data('email'), function() {
+      button.fadeOut(); // hide button after the user has been added
     });
   });
 };
-
 
 
 

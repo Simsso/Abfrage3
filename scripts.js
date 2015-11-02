@@ -5,6 +5,7 @@ $(window).load(function() {
     window.loaded = true;
 });
 
+
 // box head right icons (like reload, expand and collapse)
 $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {
@@ -165,7 +166,11 @@ $(window).on('resize', function() {
 
 $('.navbar .logo').on('click', hideMenu); // hide mobile menu when clicking on the logo
 
+
+// scrolling functions 
 var Scrolling = {
+
+  // disable scrolling
   disable: function() {
     var scrollPosition = [
       self.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft,
@@ -178,6 +183,8 @@ var Scrolling = {
     window.scrollTo(scrollPosition[0], scrollPosition[1]);
   },
 
+
+  // enable scrolling
   enable: function () {
     // un-lock scroll position
     var html = jQuery('html');
@@ -186,6 +193,8 @@ var Scrolling = {
     window.scrollTo(scrollPosition[0], scrollPosition[1]);
   },
 
+
+  // scroll to the top
   toTop: function() {
     window.scrollTo(0, 0);
   }
@@ -228,6 +237,8 @@ function Toast(text, ms) {
 
 // Ajax request manager
 // manages Ajax requests of the same type and can make sure that there is only one running at the same time
+//
+// @param bool onlyOne: defines wheter there can be only one request of the type running at the same time
 function AjaxRequestsManager(onlyOne) {
   this.onlyOne = onlyOne;
   this.list = [];
@@ -465,56 +476,69 @@ $('#scroll-top-button').on('click',function(){
 // @param object field: dom element
 // @param string value: string value to insert
 function insertAtCursor(field, value) {
-    //IE support
-    if (document.selection) {
-        field.focus();
-        sel = document.selection.createRange();
-        sel.text = value;
-    }
-    //MOZILLA and others
-    else if (field.selectionStart || field.selectionStart == '0') {
-        var startPos = field.selectionStart;
-        var endPos = field.selectionEnd;
-        field.value = field.value.substring(0, startPos)
-            + value
-            + field.value.substring(endPos, field.value.length);
-    } else {
-        field.value += value;
-    }
+  //IE support
+  if (document.selection) {
+    field.focus();
+    sel = document.selection.createRange();
+    sel.text = value;
+  }
+  //MOZILLA and others
+  else if (field.selectionStart || field.selectionStart == '0') {
+    var startPos = field.selectionStart;
+    var endPos = field.selectionEnd;
+    field.value = field.value.substring(0, startPos)
+      + value
+      + field.value.substring(endPos, field.value.length);
+  } 
+  else {
+    field.value += value;
+  }
 }
 
+
+// get cursor position
+// 
+// @param object element: dom element (of type input, textarea or so)
+//
+// @return int: the cursor position in the passed input field
 function getCursorPosition(element) {
-    var el = $(element).get(0);
-    var pos = 0;
-    if ('selectionStart' in el) {
-        pos = el.selectionStart;
-    } else if ('selection' in document) {
-        el.focus();
-        var Sel = document.selection.createRange();
-        var SelLength = document.selection.createRange().text.length;
-        Sel.moveStart('character', -el.value.length);
-        pos = Sel.text.length - SelLength;
-    }
-    return pos;
+  var el = $(element).get(0);
+  var pos = 0;
+  if ('selectionStart' in el) {
+    pos = el.selectionStart;
+  } 
+  else if ('selection' in document) {
+    el.focus();
+    var Sel = document.selection.createRange();
+    var SelLength = document.selection.createRange().text.length;
+    Sel.moveStart('character', -el.value.length);
+    pos = Sel.text.length - SelLength;
+  }
+  return pos;
 }
 
+
+// set cursor position
+//
+// @param object element: dom element (of type input, textarea or so)
+// @param int position: new position of the cursor
 function setCursorPosition(elem, position) {
 
-    if(elem != null) {
-        if(elem.createTextRange) {
-            var range = elem.createTextRange();
-            range.move('character', position);
-            range.select();
-        }
-        else {
-            if(elem.selectionStart) {
-                elem.focus();
-                elem.setSelectionRange(position, position);
-            }
-            else
-                elem.focus();
-        }
+  if(elem != null) {
+    if(elem.createTextRange) {
+      var range = elem.createTextRange();
+      range.move('character', position);
+      range.select();
     }
+    else {
+      if(elem.selectionStart) {
+        elem.focus();
+        elem.setSelectionRange(position, position);
+      }
+      else
+        elem.focus();
+    }
+  }
 }
 
 
@@ -561,6 +585,36 @@ $(window).on('load', function() {
 
   });
 });
+
+
+// functions for buttons
+var Button = {
+  
+
+  // set pending
+  //
+  // disables the button and sets the value to the in data-pending-value="" defined value
+  // 
+  // @param object btn: jQuery element object of a button
+  setPending: function(btn) {
+    btn
+      .prop('disabled', true)
+      .data('default-value', btn.attr('value'))
+      .attr('value', btn.data('pending-value'));
+  },
+
+
+  // set default
+  //
+  // enables the button and sets the value to the in data-default-value="" defined value
+  // 
+  // @param object btn: jQuery element object of a button
+  setDefault: function(btn) {
+    btn
+      .prop('disabled', false)
+      .attr('value', btn.data('default-value'));
+  }
+};
 
 
 // save text as file
