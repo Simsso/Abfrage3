@@ -82,7 +82,7 @@ if (is_null($next_to_last_login)) {
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="feed"></div>
-                <div class="text-align-center spacer-top-15"><input type="button" value="Load all" id="feed-load-all" /></div>
+                <div class="text-align-center spacer-top-15"><input type="button" value="Load all" data-pending-value="Loading all" id="feed-load-all" /></div>
               </div>
             </div>
 
@@ -408,6 +408,22 @@ if (is_null($next_to_last_login)) {
             </script>
           </div>
 
+
+          <div id="word-list-loading" class="box">
+            <div id="word-list-loading-head" class="box-head">
+              Loading word list
+            </div>
+            <div class="box-body">
+              <div class="sk-three-bounce">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+              </div>
+
+              <a href="/#/word-lists">Show all word lists.</a>
+            </div>
+          </div>
+
           
 
           <div id="word-lists-left-column" class="left-column-small">
@@ -452,7 +468,7 @@ if (is_null($next_to_last_login)) {
                     <form class="label-add-form inline">
                       <input type="hidden" class="label-add-parent" value="{{id}}"/>
                       <input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;
-                      <input class="label-add-button inline" type="submit" value="Add label"/>
+                      <input class="label-add-button inline" type="submit" value="Add label" data-pending-value="Adding label"/>
                     </form>
                   </td>
                 </tr>
@@ -915,10 +931,21 @@ if (is_null($next_to_last_login)) {
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
       
+      // word lists, words, answers
       var Database = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_query_data($_SESSION['id']))); ?>');
+
+      // users who have added you
       Database.listOfUsersWhoHaveAddedYou = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id']))); ?>');
+
+      // users you have added
       Database.listOfAddedUsers = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_list_of_added_users_of_user($_SESSION['id']))); ?>');
 
+      // feed data
+      Database.feed = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_feed($_SESSION['id'], -1))); ?>');
+
+      // recently used lists
+      Database.recentlyUsed = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_last_used_n_lists_of_user($_SESSION['id'], 8))); ?>');
+      
 
       function getListObjectByServerData(data) {
         var list = new List(

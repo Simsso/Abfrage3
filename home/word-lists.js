@@ -150,6 +150,10 @@ WordLists.downloadListOfWordLists = function(showLoadingInformation, callback, f
   );
 };
 
+
+// word lists update list of word lists
+// 
+// takes the local data base object and adds the corresponding HTML-elements to the DOM
 WordLists.updateListOfWordLists = function() {
   var data = Database.lists.sort(List.compareListsByName);
 
@@ -192,7 +196,7 @@ WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists)
     window.location.hash = '#/word-lists';
   }
 
-  $(page['word-lists']).find('#word-list-info, #word-list-info-words, #word-list-title, #word-list-sharing, #word-list-label').hide();
+  $(page['word-lists']).find('#word-list-info, #word-list-info-words, #word-list-title, #word-list-sharing, #word-list-label, #word-list-loading').hide();
   Scrolling.toTop();
   $(page['word-lists']).find('#list-of-word-lists-wrapper').show()
 };
@@ -212,14 +216,12 @@ WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists)
 WordLists.download = function(id, showLoadingInformation, showWordListPage, callback) {
   // show loading information
   if (showLoadingInformation) {
-    $(page['word-lists']).find('#word-list-info .box-head > div').html('Loading word list...');
-    $(page['word-lists']).find('#word-list-info .box-body').html(loading + '<br><a href="/#/word-lists">Show all word lists.</a>');
 
     // hide all divs which will later show things like words, sharings, labels and the list name while the list loads
-    $(page['word-lists']).find('#word-list-info-words, #word-list-sharing, #word-list-label, #word-list-title, #list-of-word-lists-wrapper').hide();
+    $(page['word-lists']).find('#word-list-info, #word-list-info-words, #word-list-sharing, #word-list-label, #word-list-title, #list-of-word-lists-wrapper').hide();
 
-    // show info div
-    $(page['word-lists']).find('#word-list-info').show();
+    // show loading div
+    $(page['word-lists']).find('#word-list-loading').show();
   }
   
   // a call of this method can force to show the page "word lists" with the parameter showWordListPage
@@ -326,9 +328,8 @@ WordLists.show = function(id) {
   if (!WordLists.shown.language1) WordLists.shown.language1 = "First language";
   if (!WordLists.shown.language2) WordLists.shown.language2 = "Second language";
 
-  // info box head and list name box
+  // update list name box
   $(page['word-lists']).find('#word-list-title-name').html(WordLists.shown.name);
-  $(page['word-lists']).find('#word-list-info .box-head > div').html("General");
 
   // info box body
   // add content depending on the users permissions (sharing and editing)
@@ -339,14 +340,14 @@ WordLists.show = function(id) {
     ownerString = '<p>' + WordLists.shown.creator.firstname + ' ' + WordLists.shown.creator.lastname + ' shares this list with you.</p>';
     permissionsString = '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + WordLists.shown.creator.firstname + '\'s list.</p>';
     // add hide button
-    deleteString = '<input type="button" value="Hide list" id="hide-shown-word-list"/>';
+    deleteString = '<input type="button" value="Hide list" data-pending-value="Hiding list" id="hide-shown-word-list"/>';
   }
   else {
     // list owner
     ownerString = '<p>You own this list.</p>';
-    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '"/>&nbsp;<input type="submit" value="Rename" id="rename-list-button"/></form><p></p>';
+    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '"/>&nbsp;<input type="submit" value="Rename" data-pending-value="Renaming" id="rename-list-button"/></form><p></p>';
     // add delete button
-    deleteString = '<input type="button" value="Delete list" id="delete-shown-word-list"/>';
+    deleteString = '<input type="button" value="Delete list" data-pending-value="Deleting list" id="delete-shown-word-list"/>';
   }
 
   var creationTime = new Date(parseInt(WordLists.shown.creationTime) * 1000);
@@ -354,7 +355,7 @@ WordLists.show = function(id) {
 
   if (allowEdit) {
     // change language form
-    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages"/></form>';
+    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages" data-pending-value="Editing languages" /></form>';
 
     importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" /><hr class="spacer-15">';
   }
@@ -408,7 +409,7 @@ WordLists.show = function(id) {
     messageBox.setFocusedButton('No');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
-        $(this).prop('disabled', true).attr('value', 'Deleting...');
+        Button.setPending($(this));
 
         // call delete word list function and pass id of the list which will be deleted
         WordLists.deleteWordList(WordLists.shownId, function() {
@@ -429,7 +430,7 @@ WordLists.show = function(id) {
     messageBox.setFocusedButton('No');
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
-        $(this).prop('disabled', true).attr('value', 'Hiding list...'); // disable button
+        Button.setPending($(this)); // disable button
         var sharingId = $(page['word-lists']).find('tr[data-list-id=' + WordLists.shownId + ']').data('sharing-id');
         // send server request to hide the shared list
         WordLists.setSharingPermissionsBySharingId(sharingId, 0, function() {
@@ -448,14 +449,14 @@ WordLists.show = function(id) {
     // disable button and inputs
     var nameInput = $(page['word-lists']).find('#rename-list-name'), submitButton = $(page['word-lists']).find('#rename-list-button');
     nameInput.prop('disabled', true);
-    submitButton.prop('disabled', true).attr('value', 'Renaming...');
+    Button.setPending(submitButton);
 
     var newListName = nameInput.val();
     // send information to the server
     WordLists.renameList(WordLists.shownId, newListName, function(data) {
       // re-enable button and inputs
       nameInput.prop('disabled', false);
-      submitButton.prop('disabled', false).attr('value', 'Rename');
+      Button.setDefault(submitButton);
 
       // update local list object
       WordLists.shown.name = newListName;
@@ -474,7 +475,7 @@ WordLists.show = function(id) {
     var lang1Input = $(page['word-lists']).find('#word-list-language1'), lang2Input = $(page['word-lists']).find('#word-list-language2'), submitButton = $(page['word-lists']).find('#word-list-languages-button');
     lang1Input.prop('disabled', true);
     lang2Input.prop('disabled', true);
-    submitButton.prop('disabled', true).attr('value', 'Editing languages...');
+    Button.setPending(submitButton);
 
     // read string values
     var lang1 = lang1Input.val(), lang2 = lang2Input.val();
@@ -485,7 +486,7 @@ WordLists.show = function(id) {
       // re-enable inputs and buttons
       lang1Input.prop('disabled', false);
       lang2Input.prop('disabled', false);
-      submitButton.prop('disabled', false).attr('value', 'Edit languages');
+      Button.setDefault(submitButton);
 
       // update local list object
       WordLists.shown.language1 = lang1;
@@ -506,12 +507,12 @@ WordLists.show = function(id) {
   $(page['word-lists']).find('#words-add-form').removeClass('comfortable');
   $(page['word-lists']).find('#words-add-form input[type=text]').val(''); // remove old content from add new word input field
   
-  // show divs which have been updated above
-  $(page['word-lists']).find('#list-of-word-lists-wrapper').hide();
+  // hide divs
+  $(page['word-lists']).find('#list-of-word-lists-wrapper, #word-list-loading').hide();
+
   Scrolling.toTop();
-  $(page['word-lists']).find('#word-list-info').show();
-  $(page['word-lists']).find('#word-list-title').show();
-  $(page['word-lists']).find('#word-list-info-words').show();
+  // show divs which have been updated above
+  $(page['word-lists']).find('#word-list-info, #word-list-title, #word-list-info-words').show();
 
   if (allowEdit)
     $(page['word-lists']).find('#words-add').show();
@@ -1195,7 +1196,8 @@ WordLists.updateDomLabelList = function() {
     e.preventDefault();
 
     // disable form elements
-    var button = $(this).children('.label-add-button').prop('disabled', true).attr('value', 'Adding label...');
+    var button = $(this).children('.label-add-button');
+    Button.setPending(button);
     var nameInput = $(this).children('.label-add-name').prop('disabled', true);
     var parentSelect = $(this).children('.label-add-parent').prop('disabled', true);
 
@@ -1205,7 +1207,7 @@ WordLists.updateDomLabelList = function() {
     WordLists.addNewLabel(nameInput.val(), parseInt(parentSelect.val()), function(data) {
 
       // re-enable form elements
-      button.prop('disabled', false).attr('value', 'Add label');
+      Button.setDefault(button);
       nameInput.prop('disabled', false).val('');
       parentSelect.prop('disabled', false).val(null);
     });
@@ -1217,7 +1219,7 @@ WordLists.updateDomLabelList = function() {
 
     // update form children
     $(this).children('.label-remove-select').prop('disabled', true);
-    $(this).children('.label-remove-button').prop('disabled', true).attr('value', 'Removing...');
+    Button.setPending($(this).children('.label-remove-button'));
 
     var labelId = parseInt($(this).children('.label-remove-select').val()); // read label id
 
@@ -1225,7 +1227,7 @@ WordLists.updateDomLabelList = function() {
     WordLists.removeLabel(labelId, function() {
       // re-enable form children
       $(this).children('.label-remove-select').prop('disabled', false);
-      $(this).children('.label-remove-button').prop('disabled', false).attr('value', 'Remove label');
+      Button.setDefault($(this).children('.label-remove-button'));
 
       // update local list object
       WordLists.shown.labels.splice(WordLists.getLabelIndexByLabelId(WordLists.shown.labels, labelId), 1);
@@ -1260,12 +1262,12 @@ WordLists.updateDomLabelList = function() {
       var input = $firstCell.children('input').first();
       var newName = input.val();
 
-      button.prop('disabled', true).attr('value', 'Renaming...');
+      Button.setPending(button);
       input.prop('disabled', true);
 
       // send new name to the server
       WordLists.renameLabel(labelId, newName, function() {
-        button.prop('disabled', false).attr('value', 'Rename').data('action', 'rename-edit');
+        Button.setDefault(button.data('action', 'rename-edit'));
         $firstCell.children('input').remove();
         $firstCell.find('label span').html('&nbsp;' + newName);
 
@@ -1472,6 +1474,7 @@ WordLists.getLabelIndenting = function(labels, index) {
   return WordLists.getLabelIndenting(labels, WordLists.getLabelIndexByLabelId(labels, labels[index].parent_label)) + 1;
 };
 
+
 // add label
 // 
 // add a new label
@@ -1617,7 +1620,7 @@ WordLists.removeLabel = function(labelId, callback) {
 
     callback(data);
   });
-}
+};
 
 
 // rename label

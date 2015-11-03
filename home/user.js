@@ -82,7 +82,7 @@ $(page['user']).find('#user-add-form').on('submit', function(e) {
 // 
 // @param int id: user id
 User.remove = function(id) {
-  // disable buton to avoid resubmission
+  // disable button to avoid resubmission
   Button.setPending($(page['user']).find('#added-users-remove-' + id));
 
   jQuery.ajax('server.php', {
@@ -198,7 +198,7 @@ User.updateDomListOfUsersWhoHaveAddedYou = function() {
   $(page['user']).find('#people-who-have-added-you input[type=button]').on('click', function() {
     // buttons function is adding users
     var button = $(this);
-    Button.setPending(buton); // disable button and change value
+    Button.setPending(button); // disable button and change value
 
     // call actual function to update the database
     User.add(button.data('email'), function() {
