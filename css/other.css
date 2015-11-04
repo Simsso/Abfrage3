@@ -166,7 +166,7 @@ ul.social-icons li {
   
   transition-duration: 0s;
 }
-.navbar .navbar-inner li:hover, .navbar .navbar-inner li:hover .nav-image  {
+.navbar .navbar-inner li:hover, .navbar .navbar-inner li:hover .nav-image:hover  {
   opacity: 1;
 }
 .navbar .navbar-inner li:hover {
@@ -234,6 +234,9 @@ ul.social-icons li {
   height: 32px;
   width: 32px;
   transition-duration: 0s;
+
+  -webkit-filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.25));
 }
 
 

@@ -2,6 +2,15 @@
 
 var Query = {};
 
+// templates
+Query.Template = {
+  querySelection: Handlebars.compile($(page['query']).find('#query-selection-template').html()),
+  listSelectionTable: Handlebars.compile($(page['query']).find('#query-list-selection-table-template').html()),
+  listSelectionRow: Handlebars.compile($(page['query']).find('#query-list-selection-row-template').html()),
+  labelSelectionTable: Handlebars.compile($(page['query']).find('#query-label-selection-table-template').html()),
+  labelSelectionRow: Handlebars.compile($(page['query']).find('#query-label-selection-row-template').html())
+};
+
 $(window).on('page-query', function(event, pageName, subPageName) {
   // sub page query called
   Query.updateDom(); // update the dom (e.g. a new list might have been added)
@@ -9,6 +18,7 @@ $(window).on('page-query', function(event, pageName, subPageName) {
 
 // default value of how man answers to consider when determining how well a word is known
 Query.CONSIDERNANSWERS = 5;
+
 
 
 // query algorithms
@@ -188,7 +198,8 @@ Query.updateDom = function() {
 
   Query.allAnswers.sort(QueryAnswer.sortByTime);
 
-  $(page['query']).find('#query-selection').html('<p><input id="query-start-button" type="button" value="Start test" class="width-100 height-50px font-size-20px" disabled="true"/></p><div id="query-label-selection"></div><div id="query-list-selection"></div><br class="clear-both">');
+  $(page['query']).find('#query-selection').html(Query.Template.querySelection);
+  $(page['query']).find('#query-start-button').attr('value', $(page['query']).find('#query-start-button').data('value-start')); // set value to "Start test"
 
   // provide label selection
   $(page['query']).find('#query-label-selection').html(Query.getHtmlTableOfLabels(Query.labels));
@@ -201,7 +212,7 @@ Query.updateDom = function() {
     Query.checkStartButtonEnable();
     Query.updateLabelSelections();
     Query.updateListSelections();
-    $(page['query']).find('#query-start-button').attr('value', 'Stop test');
+    $(page['query']).find('#query-start-button').attr('value', $(page['query']).find('#query-start-button').data('value-stop'));
   }
 
 
@@ -293,7 +304,7 @@ Query.refreshListSelection = function() {
   }
 
 
-  $(page['query']).find('#query-list-selection').html('<table class="box-table cursor-pointer no-flex"><tr class="cursor-default"><th colspan="2">Lists</th></tr>' + html + '</table');
+  $(page['query']).find('#query-list-selection').html(Query.Template.listSelectionTable({ content: new Handlebars.SafeString(html) }));
 
   // checkbox click event
   $(page['query']).find('#query-list-selection tr').on('click', function() {
@@ -408,7 +419,7 @@ Query.updateListSelections = function() {
 // 
 // @return <tr> HTML-element for the table of word lists
 Query.getListRow = function(list, selected) {
-  return '<tr' + (selected?'class="active"':'') + ' data-query-list-id="' + list.id + '" data-checked="false"><td>' + list.name + '</td><td>' + list.words.length + '</td></tr>';
+  return Query.Template.listSelectionRow({ list: list, selected: selected });
 };
 
 // check start query button enable
@@ -434,15 +445,9 @@ Query.getHtmlTableOfLabels = function(labels) {
   // method returns the HTML code of the label list
   var html = Query.getHtmlListOfLabelId(labels, 0, 0);
 
-  if (html.length > 0) {
-    html = '<table class="box-table cursor-pointer"><tr class="cursor-default"><th>Labels</th></tr>' + html + '</table>';
-  }
-  else {
-    // if there was no code returned there are no labels to show
-    html = WordLists.Template.noLabels();
-  }
-  return html;
+  return Query.Template.labelSelectionTable({ content: new Handlebars.SafeString(html) });
 };
+
 
 // get HTML list of label id
 // 
@@ -477,8 +482,15 @@ Query.getSingleListElementOfLabelList = function(label, indenting) {
   var subLabelsCount = WordLists.getNumberOfSubLabels(Query.labels, label.id);
   var expanded = false; // show all labels collapsed
 
-  return '<tr data-checked="false" data-query-label-id="' + label.id + '" data-indenting="' + indenting + '"' + ((indenting === 0)?'':' style="display: none; "') + '><td class="label-list-first-cell" style="padding-left: ' + (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)) + 'px; ">' + ((subLabelsCount > 0)?'<img src="img/' + (expanded?'collapse':'expand') + '.svg" data-state="' + (expanded?'expanded':'collapsed') + '" class="small-exp-col-icon" />':'') + '&nbsp;' + label.name + '</td></tr>';
+  return Query.Template.labelSelectionRow({ 
+    label: label,
+    indenting: indenting,
+    indentingPxl: (15 * indenting + 15 + ((subLabelsCount === 0) ? 16 : 0)),
+    subLabelsCount: subLabelsCount,
+    expanded: expanded
+  });
 };
+
 
 // get list by id
 // 
@@ -538,7 +550,7 @@ Query.start = function() {
   Query.running = true;
 
   // update start query button and test fields
-  $(page['query']).find('#query-start-button').attr('value', 'Stop test');
+  $(page['query']).find('#query-start-button').attr('value', $(page['query']).find('#query-start-button').data('value-stop'));
   $(page['query']).find('#query-not-started-info').addClass('display-none');
   $(page['query']).find('#query-content-table').removeClass('display-none');
   
@@ -577,7 +589,7 @@ Query.stop = function() {
 
   Query.running = false;
 
-  $(page['query']).find('#query-start-button').attr('value', 'Start test');
+  $(page['query']).find('#query-start-button').attr('value', $(page['query']).find('#query-start-button').data('value-start'));
   $(page['query']).find('#query-not-started-info').removeClass('display-none');
   $(page['query']).find('#query-content-table').addClass('display-none');
 

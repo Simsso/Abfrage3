@@ -1,5 +1,5 @@
 <?php
-require('mail.class.php'); // include email class
+require_once('mail.class.php'); // include email class
 $user = Database::get_user_by_id($_SESSION['id']);
 $user_settings = Database::get_user_settings($_SESSION['id']);
 $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
@@ -17,27 +17,27 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         </a>
         <ul class="nav left">
           <a href="#/home">
-            <li class="nav_home nav-img-li" data-text="Home">
-              <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+            <li class="nav_home nav-img-li" data-text="<? echo $l['home']; ?>">
+              <img src="img/home.svg" class="nav-image" alt="<? echo $l['home']; ?>" title="<? echo $l['home']; ?>"/>
             </li>
           </a>
-          <a href="#/query"><li class="nav_query" data-text="Test">Test</li></a>
-          <a class="link-to-show-current-word-list" href="#/word-lists"><li class="nav_word-lists" data-text="Word lists">Word lists</li></a>
+          <a href="#/query"><li class="nav_query" data-text="<? echo $l['test']; ?>"><? echo $l['test']; ?></li></a>
+          <a class="link-to-show-current-word-list" href="#/word-lists"><li class="nav_word-lists" data-text="<? echo $l['word_lists']; ?>"><? echo $l['word_lists']; ?></li></a>
         </ul>
         <ul class="nav right">
           <a href="#/user">
-            <li class="nav_user nav-img-li" data-text="User">
-              <img src="img/multiple-user.svg" class="nav-image" alt="Users" title="Users"/>
+            <li class="nav_user nav-img-li" data-text="<? echo $l['users']; ?>">
+              <img src="img/multiple-user.svg" class="nav-image" alt="<? echo $l['users']; ?>" title="<? echo $l['users']; ?>"/>
             </li>
           </a>
           <a href="#/settings">
-            <li class="nav_settings nav-img-li" data-text="Settings">
-              <img src="img/settings-white.svg" class="nav-image" alt="Settings" title="Settings"/>
+            <li class="nav_settings nav-img-li" data-text="<? echo $l['settings']; ?>">
+              <img src="img/settings-white.svg" class="nav-image" alt="<? echo $l['settings']; ?>" title="<? echo $l['settings']; ?>"/>
             </li>
           </a>
           <a href="server.php?action=logout">
-            <li class="nav_logout nav-img-li" data-text="Logout">
-              <img src="img/logout.svg" class="nav-image" alt="Logout" title="Logout"/>
+            <li class="nav_logout nav-img-li" data-text="<? echo $l['logout']; ?>">
+              <img src="img/logout.svg" class="nav-image" alt="<? echo $l['logout']; ?>" title="<? echo $l['logout']; ?>"/>
             </li>
           </a>
         </ul>
@@ -58,31 +58,22 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           <div class="left-column">
             <div class="box">
               <div class="box-head">
-                Hey <? echo $user->firstname; ?>!
+                <? echo $l['hey']; ?> <? echo $user->firstname; ?>!
               </div>
-              <!--<div class="box-body">
-                <?php
-if (is_null($next_to_last_login)) {
-  // first login
-  echo '<p>Welcome to Abfrage3! <a href="#/word-lists">Start by creating a new word list.</a></p>';
-} else {
-  echo '<p>Last login at ' . $next_to_last_login->get_date_string() . ' from IP-address ' . $next_to_last_login->ip . '</p>';
-}
-                ?>
-
-              </div>-->
             </div>
             
             <div class="box">
               <div class="box-head">
                 <img src="img/feed.svg" />
-                Feed
+                <? echo $l['feed']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="feed"></div>
-                <div class="text-align-center spacer-top-15"><input type="button" value="Load all" data-pending-value="Loading all" id="feed-load-all" /></div>
+                <div class="text-align-center spacer-top-15">
+                  <input type="button" value="<? echo $l['load_all']; ?>" data-pending-value="<? echo $l['loading_all']; ?>" id="feed-load-all" />
+                </div>
               </div>
             </div>
 
@@ -94,7 +85,7 @@ if (is_null($next_to_last_login)) {
             </script>
 
             <script id="feed-no-content-template" type="text/x-handlebars-template">
-              <p>Nothing new since last login.</p>
+              <p><? echo $l['nothing_new_since_last_login']; ?></p>
             </script>
 
             <script id="feed-user-added-element-template" type="text/x-handlebars-template">
@@ -261,6 +252,60 @@ if (is_null($next_to_last_login)) {
               <div class="box-body" data-start-state="expanded">
                 <div id="query-selection"></div>
               </div>
+
+              <script id="query-selection-template" type="text/x-handlebars-template">
+                <p>
+                  <input id="query-start-button" type="button" data-value-start="Start test" data-value-stop="Stop test" class="width-100 height-50px font-size-20px" disabled="true"/>
+                </p>
+                <div id="query-label-selection"></div>
+                <div id="query-list-selection"></div>
+                <br class="clear-both">
+              </script>
+
+              <script id="query-list-selection-table-template" type="text/x-handlebars-template">
+                {{#if content}}
+                  <table class="box-table cursor-pointer no-flex">
+                    <tr class="cursor-default">
+                      <th colspan="2">Lists</th>
+                    </tr>
+                    {{content}}
+                  </table>
+                {{else}}
+                  <p>You don&#39;t have any labels.</p>
+                {{/if}}
+              </script>
+
+              <script id="query-list-selection-row-template" type="text/x-handlebars-template">
+                <tr {{#if selected}}class="active" {{/if}} data-query-list-id="{{list.id}}" data-checked="false">
+                  <td>{{list.name}}</td>
+                  <td>{{list.words.length}}</td>
+                </tr>
+              </script>
+
+
+              <script id="query-label-selection-table-template" type="text/x-handlebars-template">
+                {{#if content}}
+                  <table class="box-table cursor-pointer">
+                    <tr class="cursor-default">
+                      <th>Labels</th>
+                    </tr>
+                    {{content}}
+                  </table>
+                {{else}}
+                  <p>You don&#39;t have any labels.</p>
+                {{/if}}
+              </script>
+
+              <script id="query-label-selection-row-template" type="text/x-handlebars-template">
+                <tr data-checked="false" data-query-label-id="{{label.id}}" data-indenting="{{indenting}}"{{#if indenting}} style="display: none; "{{/if}}>
+                  <td class="label-list-first-cell" style="padding-left: {{indentingPxl}}px; ">
+                    {{#if subLabelsCount}}
+                      <img src="img/{{#if expanded}}collapse{{else}}expand{{/if}}.svg" data-state="{{#if expanded}}expanded{{else}}collapsed{{/if}}" class="small-exp-col-icon" />
+                    {{/if}}
+                    &nbsp;{{label.name}}
+                  </td>
+                </tr>
+              </script>
             </div>
 
 
@@ -945,7 +990,7 @@ if (is_null($next_to_last_login)) {
 
       // recently used lists
       Database.recentlyUsed = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_last_used_n_lists_of_user($_SESSION['id'], 8))); ?>');
-      
+
 
       function getListObjectByServerData(data) {
         var list = new List(
