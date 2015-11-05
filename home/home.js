@@ -29,8 +29,9 @@ Home.Feed.domElement = $(page['home']).find('#feed'),
 // downloads the feed data and calls the refresh DOM function
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
+// @param function|undefined callback: callback which will be called after finishing the Ajax-request and (!) updating the DOM
 function refreshFeed(l) { Home.Feed.download(l); }
-Home.Feed.download = function(showLoadingInformation) {
+Home.Feed.download = function(showLoadingInformation, callback) {
   if (showLoadingInformation) {
     Home.Feed.domElement.html(loading);
   }
@@ -52,8 +53,12 @@ Home.Feed.download = function(showLoadingInformation) {
     Database.feed = data;
 
     Home.Feed.updateDom();
+
+    if (callback)
+      callback(data);
   });
 };
+
 
 // update feed dom
 //
@@ -137,12 +142,13 @@ Home.RecentlyUsed.domElement = $(page['home']).find('#recently-used');
 // downloads the recently used lists and calls the DOM-update function
 //
 // @param bool showLoadingInformation: defines whether the loading animation is shown or not
+// @param function|undefined callback: callback which will be called after finishing the Ajax-request and (!) updating the DOM
 function refreshRecentlyUsed(l) { Home.RecentlyUsed.download(l); }
-Home.RecentlyUsed.download = function(showLoadingInformation) {
+Home.RecentlyUsed.download = function(showLoadingInformation, callback) {
   if (showLoadingInformation) 
     Home.RecentlyUsed.domElement.html(loading);
   
-  // send request to get the feed
+  // send request to get the Feedd
   jQuery.ajax('server.php', {
     data: {
       action: 'get-last-used-n-lists',
@@ -158,6 +164,9 @@ Home.RecentlyUsed.download = function(showLoadingInformation) {
     Database.recentlyUsed = data;
 
     Home.RecentlyUsed.updateDom();
+
+    if (callback)
+      callback(data);
   });
 };
 
@@ -181,6 +190,32 @@ Home.RecentlyUsed.updateDom = function() {
   }
 };
 
+
+// add word list usage
+Home.RecentlyUsed.addWordListUsage = function(listId) {
+  // check if the recently used lists array contains the list
+  for (var i = Database.recentlyUsed.length - 1; i >= 0; i--) {
+    if (Database.recentlyUsed[i].id === listId) {
+      Database.recentlyUsed.splice(i, 1);
+      break;
+    }
+  }
+  Database.recentlyUsed.unshift(Database.getListById(listId)); // push at the beginning of the array
+  Home.RecentlyUsed.updateDom();
+  
+  jQuery.ajax('server.php', {
+    data: {
+      action: 'add-word-list-usage',
+      word_list_id: listId
+    },
+    type: 'GET',
+    error: function(jqXHR, textStatus, errorThrown) {
+
+    }
+  }).done(function(data) {
+    data = handleAjaxResponse(data);
+  });
+};
 
 // initial loading
 Home.Feed.updateDom();

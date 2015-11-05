@@ -1,15 +1,15 @@
 <select id="query-special-chars-language-selection">
-  <option value="czech">Czech and Slovenian</option>
-  <option value="french">French</option>
-  <option value="german">German</option>
-  <option value="greek">Greek</option>
-  <option value="hawaiian">Hawaiian</option>
-  <option value="italian">Italian</option>
-  <option value="polish">Polish</option>
-  <option value="romanian">Romanian</option>
-  <option value="russian">Russian</option>
-  <option value="spanish">Spanish</option>
-  <option value="turkish">Turkish</option>
+  <option value="czech"><? echo $l['Czech_and_slovenian']; ?></option>
+  <option value="french"><? echo $l['French']; ?></option>
+  <option value="german"><? echo $l['German']; ?></option>
+  <option value="greek"><? echo $l['Greek']; ?></option>
+  <option value="hawaiian"><? echo $l['Hawaiian']; ?></option>
+  <option value="italian"><? echo $l['Italian']; ?></option>
+  <option value="polish"><? echo $l['Polish']; ?></option>
+  <option value="romanian"><? echo $l['Romanian']; ?></option>
+  <option value="russian"><? echo $l['Russian']; ?></option>
+  <option value="spanish"><? echo $l['Spanish']; ?></option>
+  <option value="turkish"><? echo $l['Turkish']; ?></option>
 </select>
 <div class="special-chars-czech" style="display: block; ">
   <div>&#193;</div><div>&#225;</div><div>&#260;</div><div>&#261;</div><div>&#196;</div><div>&#228;</div><div>&#201;</div><div>&#233;</div><div>&#280;</div><div>&#281;</div><div>&#282;</div><div>&#283;</div><div>&#205;</div><div>&#237;</div><div>&#211;</div><div>&#243;</div><div>&#212;</div><div>&#244;</div><div>&#218;</div><div>&#250;</div><div>&#366;</div><div>&#367;</div><div>&#221;</div><div>&#253;</div><div>&#268;</div><div>&#269;</div><div>&#271;</div><div>&#357;</div><div>&#313;</div><div>&#314;</div><div>&#327;</div><div>&#328;</div><div>&#340;</div><div>&#341;</div><div>&#344;</div><div>&#345;</div><div>&#352;</div><div>&#353;</div><div>&#381;</div><div>&#382;</div>

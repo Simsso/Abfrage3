@@ -15,9 +15,9 @@ switch ($lang) {
   $lang_file = 'lang.en.inc.php';
   break;
  
-  /*case 'de':
+  case 'de':
   $lang_file = 'lang.de.inc.php';
-  break;*/
+  break;
  
   default:
   $lang_file = 'lang.en.inc.php';

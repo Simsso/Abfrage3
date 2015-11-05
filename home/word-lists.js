@@ -14,6 +14,9 @@ WordLists.Template = {
   wordListTable: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-template').html()),
   wordListTableRow: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-row-template').html()),
 
+  // single list general information (owner, start test link, creation time, etc.)
+  singleListGeneralInformation: Handlebars.compile($(page['word-lists']).find('#word-lists-single-list-general-information').html()),
+
   // list of words
   listOfWordsTable: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-template').html()),
   listOfWordsRow: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-row-template').html()),
@@ -278,7 +281,10 @@ WordLists.download = function(id, showLoadingInformation, showWordListPage, call
 // to show a word list and load it from the server call WordLists.download method
 // 
 // @param unsigned int id: id of the word list
-WordLists.show = function(id) {
+// @param bool | undefined addUsage: add a list usage entry to the data base (default true)
+WordLists.show = function(id, addUsage) {
+  if (typeof addUsage === 'undefined') addUsage = true;
+
   var data = null;
   for (var i = 0; i < Database.lists.length; i++) {
     if (Database.lists[i].id === id) {
@@ -296,14 +302,13 @@ WordLists.show = function(id) {
       else {
         // the list has been downloaded
         // show it
-        WordLists.show(id);
+        WordLists.show(id, addUsage);
       }
     });
     return;
   }
 
-  // refresh list of recently used lists
-  refreshRecentlyUsed(false);
+  Home.RecentlyUsed.addWordListUsage(id);
 
   // update the list data variable to the downloaded data
   WordLists.shown = data;
@@ -323,48 +328,22 @@ WordLists.show = function(id) {
   var allowEdit = WordLists.shown.allowEdit;
   var allowSharing = WordLists.shown.allowSharing;
 
-  // because the default value of language1 and language2 in the data base is nothing set it to "First language" and "Second language"
+  // because the default value of language1 and language2 in the data base is an empty string ("" not null) set it to "First language" and "Second language"
   // those vars are title of the bottom table, placeholder in the change language form and placeholder in the add new words form
-  if (!WordLists.shown.language1) WordLists.shown.language1 = "First language";
-  if (!WordLists.shown.language2) WordLists.shown.language2 = "Second language";
+  if (!WordLists.shown.language1) WordLists.shown.language1 = constString['First_language'];
+  if (!WordLists.shown.language2) WordLists.shown.language2 = constString['Second_language'];
 
   // update list name box
   $(page['word-lists']).find('#word-list-title-name').html(WordLists.shown.name);
 
   // info box body
   // add content depending on the users permissions (sharing and editing)
-  var wordListInfoBoxBody = '';
-  var ownerString = '', permissionsString = '', deleteString = '', startTestString = '', editLangaugesString = '', creationTimeString = '', renameListString = '', importWordsString = '';
-  startTestString = '<p><a href="#/query" onclick="Query.startTestWithList(WordLists.shown.id, true)">Start test with this list.</a></p>';
-  if (!allowSharing) { // not list owner
-    ownerString = '<p>' + WordLists.shown.creator.firstname + ' ' + WordLists.shown.creator.lastname + ' shares this list with you.</p>';
-    permissionsString = '<p>You have permissions to ' + (allowEdit?'edit':'view') + ' ' + WordLists.shown.creator.firstname + '\'s list.</p>';
-    // add hide button
-    deleteString = '<input type="button" value="Hide list" data-pending-value="Hiding list" id="hide-shown-word-list"/>';
-  }
-  else {
-    // list owner
-    ownerString = '<p>You own this list.</p>';
-    renameListString = '<form id="rename-list-form"><input type="text" id="rename-list-name" required="true" placeholder="List name" value="' + WordLists.shown.name + '"/>&nbsp;<input type="submit" value="Rename" data-pending-value="Renaming" id="rename-list-button"/></form><p></p>';
-    // add delete button
-    deleteString = '<input type="button" value="Delete list" data-pending-value="Deleting list" id="delete-shown-word-list"/>';
-  }
-
-  var creationTime = new Date(parseInt(WordLists.shown.creationTime) * 1000);
-  creationTimeString = '<p>Created: ' + creationTime.toDefaultString() + '</p>';
-
-  if (allowEdit) {
-    // change language form
-    editLangaugesString = '<form id="change-language-form"><input id="word-list-language1" required="true" type="text" placeholder="First language" value="' + WordLists.shown.language1 + '" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="Second language" value="' + WordLists.shown.language2 + '" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="Edit languages" data-pending-value="Editing languages" /></form>';
-
-    importWordsString = '<input type="button" value="Import words..." onclick="WordLists.Import.showDialog()" /><hr class="spacer-15">';
-  }
-
-
-  // add export button
-  //wordListInfoBoxBody += '<input id="export-list" type="button" value="Export..." onclick="WordLists.exportList()"/>';
-
-  wordListInfoBoxBody += ownerString + permissionsString + startTestString + creationTimeString + renameListString + editLangaugesString + '<hr class="spacer-15">' + importWordsString + deleteString;
+  var wordListInfoBoxBody = WordLists.Template.singleListGeneralInformation({
+    allowSharing: allowSharing,
+    list: WordLists.shown,
+    allowEdit: allowEdit,
+    creationTime: (new Date(parseInt(WordLists.shown.creationTime) * 1000)).toDefaultString()
+  });
 
   $(page['word-lists']).find('#word-list-info .box-body').html(wordListInfoBoxBody); // update DOM
 
@@ -788,12 +767,17 @@ WordLists.deleteWordList = function(id, callback) {
     // update local object
     for (var i = Database.lists.length - 1; i >= 0; i--) {
       if (Database.lists[i].id === id) {
+
+        // recently used
+        Database.recentlyUsed.remove(Database.lists[i]); // delete from recently used array
+        Home.RecentlyUsed.updatedom(); // update dom
+
+        // remove list object from data base array
         Database.lists.splice(i, 1);
         break;
       }
     };
 
-    refreshRecentlyUsed(false);
 
     // remove the word list row from the DOM
     $(page['word-lists']).find('#list-of-word-lists-row-' + id).remove();
@@ -1649,7 +1633,7 @@ WordLists.renameLabel = function(labelId, labelName, callback) {
 
 
 // rename list
-// 
+//
 // renames a word list
 // @param int listId: id of the list to rename
 // @param string listName: new name for the list
@@ -1668,10 +1652,11 @@ WordLists.renameList = function(listId, listName, callback) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
-    // update local object
+    // update local list object
     Database.getListById(listId).name = listName;
 
-    refreshRecentlyUsed(false);
+    Home.RecentlyUsed.updateDom(); // the list might have been recently used and therefore the DOM has to bee updated to the new name
+
     callback(data);
   });
 };

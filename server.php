@@ -217,6 +217,13 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     Response::send($res);
     break;
 
+
+    // add word list usage
+    case 'add-word-list-usage':
+    session_required();
+    Response::send(Database::add_list_usage($_SESSION['id'], Validation::format_text($_GET['word_list_id']), $_GET['word_list_id']));
+    break;
+
     // rename word list
     case 'rename-word-list':
     session_required();

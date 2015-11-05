@@ -645,14 +645,29 @@ class Database {
 
       // log the list access inside the loop to make sure it is only logged if the user has actually access to the list
       if ($log === true) {
-        $sql = "INSERT INTO `list_usage` (`user`, `list`, `time`)
-            VALUES (".$user_id.", ".$word_list_id.", ".time().");";
-        $query = mysqli_query($con, $sql);
+        self::add_list_usage($user_id, $word_list_id);
       }
 
       return $list;
     }
     return NULL;
+  }
+
+
+  // add list usage
+  //
+  // add an entry to the list usage data base table
+  //
+  // @param unsigned int user_id: id of the user who uses the list
+  // @param unsigned int word_list_id: id of the used list
+  //
+  // @return byte: 1
+  static function add_list_usage($user_id, $word_list_id) {
+    global $con;
+    $sql = "INSERT INTO `list_usage` (`user`, `list`, `time`)
+      VALUES (".$user_id.", ".$word_list_id.", ".time().");";
+    $query = mysqli_query($con, $sql);
+    return 1;
   }
   
 
@@ -1201,7 +1216,7 @@ class Database {
   // @param unsigned int id: id of the user
   // @param int: limit (max number of lists)
   // 
-  // @return BasicWordList[]: lists
+  // @return unsigned int: ids of lists
   static function get_last_used_n_lists_of_user($id, $limit) {
     global $con;
     $lists = array();
@@ -1214,7 +1229,7 @@ class Database {
       LIMIT 0 , ".$limit.";";
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
-      array_push($lists, BasicWordList::get_by_id($row['list']));
+      array_push($lists, intval($row['list']));
     }
     return $lists;
   }

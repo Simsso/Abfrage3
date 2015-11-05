@@ -7,7 +7,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 <!DOCTYPE html>
 <html>
-  <? require('html-include/head.html'); ?>
+  <? require('html-include/head.php'); ?>
   <body>
     <!-- navigation -->
     <nav id="head-nav" class="navbar">
@@ -17,27 +17,27 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         </a>
         <ul class="nav left">
           <a href="#/home">
-            <li class="nav_home nav-img-li" data-text="<? echo $l['home']; ?>">
-              <img src="img/home.svg" class="nav-image" alt="<? echo $l['home']; ?>" title="<? echo $l['home']; ?>"/>
+            <li class="nav_home nav-img-li" data-text="<? echo $l['Home']; ?>">
+              <img src="img/home.svg" class="nav-image" alt="<? echo $l['Home']; ?>" title="<? echo $l['Home']; ?>"/>
             </li>
           </a>
-          <a href="#/query"><li class="nav_query" data-text="<? echo $l['test']; ?>"><? echo $l['test']; ?></li></a>
-          <a class="link-to-show-current-word-list" href="#/word-lists"><li class="nav_word-lists" data-text="<? echo $l['word_lists']; ?>"><? echo $l['word_lists']; ?></li></a>
+          <a href="#/query"><li class="nav_query" data-text="<? echo $l['Test']; ?>"><? echo $l['Test']; ?></li></a>
+          <a class="link-to-show-current-word-list" href="#/word-lists"><li class="nav_word-lists" data-text="<? echo $l['Word_lists']; ?>"><? echo $l['Word_lists']; ?></li></a>
         </ul>
         <ul class="nav right">
           <a href="#/user">
-            <li class="nav_user nav-img-li" data-text="<? echo $l['users']; ?>">
-              <img src="img/multiple-user.svg" class="nav-image" alt="<? echo $l['users']; ?>" title="<? echo $l['users']; ?>"/>
+            <li class="nav_user nav-img-li" data-text="<? echo $l['Users']; ?>">
+              <img src="img/multiple-user.svg" class="nav-image" alt="<? echo $l['Users']; ?>" title="<? echo $l['Users']; ?>"/>
             </li>
           </a>
           <a href="#/settings">
-            <li class="nav_settings nav-img-li" data-text="<? echo $l['settings']; ?>">
-              <img src="img/settings-white.svg" class="nav-image" alt="<? echo $l['settings']; ?>" title="<? echo $l['settings']; ?>"/>
+            <li class="nav_settings nav-img-li" data-text="<? echo $l['Settings']; ?>">
+              <img src="img/settings-white.svg" class="nav-image" alt="<? echo $l['Settings']; ?>" title="<? echo $l['Settings']; ?>"/>
             </li>
           </a>
           <a href="server.php?action=logout">
-            <li class="nav_logout nav-img-li" data-text="<? echo $l['logout']; ?>">
-              <img src="img/logout.svg" class="nav-image" alt="<? echo $l['logout']; ?>" title="<? echo $l['logout']; ?>"/>
+            <li class="nav_logout nav-img-li" data-text="<? echo $l['Logout']; ?>">
+              <img src="img/logout.svg" class="nav-image" alt="<? echo $l['Logout']; ?>" title="<? echo $l['Logout']; ?>"/>
             </li>
           </a>
         </ul>
@@ -58,21 +58,21 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           <div class="left-column">
             <div class="box">
               <div class="box-head">
-                <? echo $l['hey']; ?> <? echo $user->firstname; ?>!
+                <? echo $l['Hey']; ?> <? echo $user->firstname; ?>!
               </div>
             </div>
             
             <div class="box">
               <div class="box-head">
                 <img src="img/feed.svg" />
-                <? echo $l['feed']; ?>
+                <? echo $l['Feed']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="feed"></div>
                 <div class="text-align-center spacer-top-15">
-                  <input type="button" value="<? echo $l['load_all']; ?>" data-pending-value="<? echo $l['loading_all']; ?>" id="feed-load-all" />
+                  <input type="button" value="<? echo $l['Load_all']; ?>" data-pending-value="<? echo $l['Loading_all']; ?>" id="feed-load-all" />
                 </div>
               </div>
             </div>
@@ -85,7 +85,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             </script>
 
             <script id="feed-no-content-template" type="text/x-handlebars-template">
-              <p><? echo $l['nothing_new_since_last_login']; ?></p>
+              <p><? echo $l['Nothing_new_since_last_login_']; ?></p>
             </script>
 
             <script id="feed-user-added-element-template" type="text/x-handlebars-template">
@@ -94,7 +94,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/users.svg">
                 </td>
                 <td>
-                  {{info.firstname}} {{info.lastname}} has added you.
+                  {{info.firstname}} {{info.lastname}} <? echo $l['has_added_you']; ?>.
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -106,12 +106,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/share.svg">
                 </td>
                 <td>
-                  {{info.user.firstname}} {{info.user.lastname}} gave you permissions to 
+                  {{info.user.firstname}} {{info.user.lastname}} <? echo $l['gave_you_permissions_to']; ?> 
                   {{#if info.editingPermissions}}
-                    edit
+                    <? echo $l['edit']; ?>
                   {{else}}
-                    view
-                  {{/if}} their list <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                    <? echo $l['view']; ?>
+                  {{/if}} <? echo $l['the_list']; ?> <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -123,18 +123,18 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/add.svg">
                 </td>
                 <td>
-                  {{info.user.firstname}} {{info.user.lastname}} has added {{info.amountString}} word{{#unless info.exactlyOneWord}}s{{/unless}} 
-                  to 
+                  {{info.user.firstname}} {{info.user.lastname}} <? echo $l['has_added']; ?> {{info.amountString}} <? echo $l['word']; ?>{{#unless info.exactlyOneWord}}<? echo $l['word_plural_extension']; ?>{{/unless}} 
+                  <? echo $l['to']; ?> 
                   {{#if info.yourList}}
-                    your
+                    <? echo $l['your']; ?>
                   {{else}}
                     {{#if info.userAddedToTheirOwnList}}
-                      their
+                      <? echo $l['their']; ?>
                     {{else}}
                       {{info.list_creator.firstname}}&#39;s
                     {{/if}}
                   {{/if}} 
-                  list <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                  <? echo $l['list']; ?> <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -146,7 +146,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/history.svg"/>
-                Recently used
+                <? echo $l['Recently_used']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshRecentlyUsed" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -155,7 +155,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             </div>
 
             <script id="recently-used-no-content-template" type="text/x-handlebars-template">
-              <p>No recently used lists found.</p>
+              <p><? echo $l['No_recently_used_lists_found_']; ?></p>
             </script>
 
             <script id="recently-used-table-template" type="text/x-handlebars-template">
@@ -182,39 +182,39 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box" id="query-box">
               <div class="box-head">
                 <img src="img/question.svg" />
-                Test
+                <? echo $l['Test']; ?>
                 <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-div">
                   <div id="query-not-started-info">
-                    To start a test select labels and lists below and click the button "Start test".
+                    <? echo $l['To_start_a_test__']; ?>
                   </div>
                    
                   <table class="width-100 display-none" id="query-content-table">
                     <tr>
-                      <td><span class="language" id="query-lang1">First language</span>:&nbsp;</td>
+                      <td><span class="language" id="query-lang1"><? echo $l['First_language']; ?></span>:&nbsp;</td>
                       <td class="width-100" id="query-question">&nbsp;</td>
                     </tr>
                     <tr>
-                      <td><span class="language" id="query-lang2">Second language</span>:&nbsp;</td>
+                      <td><span class="language" id="query-lang2"><? echo $l['Second_language']; ?></span>:&nbsp;</td>
                       <td id="query-answer-table-cell-text-box">
                         <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0"/>
                       </td>
                       <td id="query-answer-table-cell-buttons" class="display-none">
                         <table class="width-100">
                           <tr>
-                            <td class="width-33"><input id="query-answer-known" type="button" value="I know!" class="height-50px width-100"/></td>
-                            <td class="width-33"><input id="query-answer-not-sure" type="button" value="Not sure..." class="height-50px width-100"/></td>
-                            <td class="width-33"><input id="query-answer-not-known" type="button" value="No idea." class="height-50px width-100"/></td>
+                            <td class="width-33"><input id="query-answer-known" type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"/></td>
+                            <td class="width-33"><input id="query-answer-not-sure" type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"/></td>
+                            <td class="width-33"><input id="query-answer-not-known" type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"/></td>
                           </tr>
                         </table>
                         <div id="query-answer-buttons"></div>
                       </td>
                     </tr>
                     <tr>
-                      <td>Comment:&nbsp;</td>
+                      <td><? echo $l['Comment']; ?>:&nbsp;</td>
                       <td id="query-comment"></td>
                     </tr>
                     <tr class="query-special-chars-wrapper">
@@ -227,7 +227,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <tr class="query-special-chars-wrapper">
                       <td colspan="2">
                         <div id="query-special-chars" class="special-chars display-none box">
-                          <?php include('html-include/special-chars.html'); ?>
+                          <?php include('html-include/special-chars.php'); ?>
                         </div>
                       </td>
                     </tr>
@@ -245,7 +245,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box" id="query-select-box">
               <div class="box-head">
                 <img src="img/tags.svg" />
-                Select labels and word lists
+                <? echo $l['Select_labels_and_word_lists']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -255,7 +255,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
               <script id="query-selection-template" type="text/x-handlebars-template">
                 <p>
-                  <input id="query-start-button" type="button" data-value-start="Start test" data-value-stop="Stop test" class="width-100 height-50px font-size-20px" disabled="true"/>
+                  <input id="query-start-button" type="button" data-value-start="<? echo $l['Start_test']; ?>" data-value-stop="<? echo $l['Stop_test']; ?>" class="width-100 height-50px font-size-20px" disabled="true"/>
                 </p>
                 <div id="query-label-selection"></div>
                 <div id="query-list-selection"></div>
@@ -266,12 +266,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 {{#if content}}
                   <table class="box-table cursor-pointer no-flex">
                     <tr class="cursor-default">
-                      <th colspan="2">Lists</th>
+                      <th colspan="2"><? echo $l['Lists']; ?></th>
                     </tr>
                     {{content}}
                   </table>
                 {{else}}
-                  <p>You don&#39;t have any labels.</p>
+                  <p><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p>
                 {{/if}}
               </script>
 
@@ -287,12 +287,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 {{#if content}}
                   <table class="box-table cursor-pointer">
                     <tr class="cursor-default">
-                      <th>Labels</th>
+                      <th><? echo $l['Labels']; ?></th>
                     </tr>
                     {{content}}
                   </table>
                 {{else}}
-                  <p>You don&#39;t have any labels.</p>
+                  <p><? echo $l['You_dont_have_any_labels__']; ?></p>
                 {{/if}}
               </script>
 
@@ -312,26 +312,26 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box" id="query-advanced-settings-box">
               <div class="box-head">
                 <img src="img/settings.svg" />
-                Advanced settings
+                <? echo $l['Advanced_settings']; ?>
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div>
-                  <h4>Case sensitivity</h4>
+                  <h4><? echo $l['Case_sensitivity']; ?></h4>
                   <p>
                     <label>
                       <input type="checkbox" id="query-case-sensitivity" checked="true"/>
                       &nbsp;
-                      Case sensitive test
+                      <? echo $l['Case_sensitive_test']; ?>
 
-                      <span class="tooltip">Accept e.g. "answer" for "Answer".</span>
+                      <span class="tooltip"><? echo $l['Accept_eg__']; ?></span>
                     </label>
                   </p>
 
-                  <h4>Test answer upload</h4>
-                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;Auto upload</label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <h4><? echo $l['Test_answer_upload']; ?></h4>
+                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;<? echo $l['Auto_upload']; ?></label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
                   <p id="query-results-upload-counter">Uploaded 0/0 test answers.</p>
-                  <p>You can upload your answers (the information about whether you answered the word correctly or not) to the data base to make your next test better adjusted to your knowledge.</p>
+                  <p><? echo $l['You_can_upload_answers_to_make__']; ?></p>
                 </div>
               </div>
             </div>
@@ -342,40 +342,40 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/algorithm.svg" />
-                Test algorithm
+                <? echo $l['Test_algorithm']; ?>
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-algorithm">
                   <tr data-algorithm="0">
                     <td>
-                      Random
+                      <? echo $l['Random']; ?>
                       <span class="tooltip">
-                        The "Random" algorithm asks a randomly chosen word.
+                        <? echo $l['The_random_algorithm__']; ?>
                       </span>
                   </td>
                   </tr>
                   <tr data-algorithm="1">
                     <td>
-                      Words below average
+                      <? echo $l['Words_below_average']; ?>
                       <span class="tooltip">
-                        The "Words below average" algorithm asks words you haven't known often compared to the others.
+                        <? echo $l['The_words_below_average_algorithm__']; ?>
                       </span>
                   </td>
                   </tr>
                   <tr data-algorithm="3">
                     <td>
-                      In order
+                      <? echo $l['In_order']; ?>
                       <span class="tooltip">
-                        The "In order" algorithm iterates through all words one after the other.
+                        <? echo $l['The_in_order_algorithm__']; ?>
                       </span>
                   </td>
                   </tr>
                   <tr data-algorithm="2" class="active">
                     <td>
-                      Group words
+                      <? echo $l['Group_words']; ?>
                       <span class="tooltip">
-                        The group words algorithm picks some words and asks them nearly randomly. If you know one word it will be replaced by a new one.
+                        <? echo $l['The_group_words_algorithm__']; ?>
                       </span>
                   </td>
                   </tr>
@@ -385,27 +385,27 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/settings.svg" />
-                Test settings
+                <? echo $l['Test_settings']; ?>
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-type">
-                  <tr class="active" data-type="0"><td>Text box</td></tr>
-                  <tr data-type="1"><td>Buttons</td></tr>
+                  <tr class="active" data-type="0"><td><? echo $l['Text_box']; ?></td></tr>
+                  <tr data-type="1"><td><? echo $l['Buttons']; ?></td></tr>
                 </table>
               </div>
             </div>
             <div class="box">
               <div class="box-head">
                 <img src="img/swap.svg" />
-                Test direction
+                <? echo $l['Test_direction']; ?>
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-direction">
-                  <tr data-direction="0"><td><span data-value="first-language-information">First language</span> to <span data-value="second-language-information">Second language</span></td></tr>
-                  <tr data-direction="1"><td><span data-value="second-language-information">Second language</span> to <span data-value="first-language-information">First language</span></td></tr>
-                  <tr class="active" data-direction="-1"><td>Both directions</td></tr>
+                  <tr data-direction="0"><td><span data-value="first-language-information"><? echo $l['First_language']; ?></span> <? echo $l['to']; ?> <span data-value="second-language-information"><? echo $l['Second_language']; ?></span></td></tr>
+                  <tr data-direction="1"><td><span data-value="second-language-information"><? echo $l['Second_language']; ?></span> <? echo $l['to']; ?> <span data-value="first-language-information"><? echo $l['First_language']; ?></span></td></tr>
+                  <tr class="active" data-direction="-1"><td><? echo $l['Both_directions']; ?></td></tr>
                 </table>
               </div>
             </div>
@@ -418,20 +418,20 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           <div class="box" id="list-of-word-lists-wrapper">
             <div class="box-head">
               <img src="img/server.svg" />
-              Word lists
+              <? echo $l['Word_lists']; ?>
               <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
               <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
             </div>
             <div class="box-body" data-start-state="expanded">
               <form id="word-list-add-form">
-                <input id="word-list-add-name" type="text" placeholder="Word list name" required="true"/>
-                <input id="word-list-add-button" type="submit" value="Create list" data-pending-value="Creating list"/>
+                <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
+                <input id="word-list-add-button" type="submit" value="Create list" data-pending-value="<? echo $l['Creating_list']; ?>"/>
               </form>
               <div id="list-of-word-lists">
               </div>
             </div>
 
-            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="spacer-top-15">You haven&#39;t created any wordlists yet.</p></script>
+            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
 
             <script id="word-lists-list-of-word-lists-template" type="text/x-handlebars-template">
               <table class="box-table cursor-pointer">
@@ -456,7 +456,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
           <div id="word-list-loading" class="box">
             <div id="word-list-loading-head" class="box-head">
-              Loading word list
+              <? echo $l['Loading_word_list']; ?>
             </div>
             <div class="box-body">
               <div class="sk-three-bounce">
@@ -465,7 +465,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div class="sk-child sk-bounce3"></div>
               </div>
 
-              <a href="/#/word-lists">Show all word lists.</a>
+              <a href="/#/word-lists"><? echo $l['Show_all_word_lists_']; ?></a>
             </div>
           </div>
 
@@ -478,6 +478,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="word-list-title-name"></div>
               </div>
             </div>
+
+            <!-- General -->
             <div class="box" id="word-list-info">
               <div class="box-head">
                 <img src="img/info.svg" />
@@ -486,12 +488,67 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
               <div class="box-body" data-start-state="expanded">
               </div>
+
+              <script id="word-lists-single-list-general-information" type="x-handlebars-template">
+                {{! owner string}}
+                {{#if allowSharing}}
+                  <p><? echo $l['You_own_this_list_']; ?></p>
+                {{else}}
+                  <p>{{list.creator.firstname}} {{list.creator.lastname}} <? echo $l['shares_this_list_with_you_']; ?></p>
+                {{/if}}
+
+                {{! permissions string }}
+                {{#unless allowSharing}}
+                  <p><? echo $l['You_have_permissions_to']; ?>{{#if allowEdit}}<? echo $l['edit']; ?>{{else}}<? echo $l['view']; ?>{{/if}} {{list.creator.firstname}}<? echo $l['person_plural_extension']; ?> <? echo $l['list']; ?>.</p>
+                {{/unless}}
+
+                {{! start test string}}
+                <p>
+                  <a href="#/query" onclick="Query.startTestWithList(list.id, true)">
+                    <? echo $l['Start_test_with_this_list_']; ?>
+                  </a>
+                </p>
+
+                {{! creation time string}}
+                <p><? echo $l['Created']; ?>: {{creationTime}}</p>
+
+                {{! rename list string}}
+                {{#if allowSharing}}
+                  <form id="rename-list-form">
+                    <input type="text" id="rename-list-name" required="true" placeholder="<? echo $l['List_name']; ?>" value="{{list.name}}"/>&nbsp;<input type="submit" value="<? echo $l['Rename']; ?>" data-pending-value="<? echo $l['Renaming']; ?>" id="rename-list-button"/>
+                  </form>
+                  <p></p>
+                {{/if}}
+
+                {{! edit languages string}}
+                {{#if allowEdit}}
+                  <form id="change-language-form">
+                    <input id="word-list-language1" required="true" type="text" placeholder="<? echo $l['First_language']; ?>" value="{{list.language1}}" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="<? echo $l['Second_language']; ?>" value="{{list.language2}}" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="<? echo $l['Edit_languages']; ?>" data-pending-value="<? echo $l['Editing_languages']; ?>" />
+                  </form>
+                {{/if}}
+
+                <hr class="spacer-15">
+
+                {{! import words string }}
+                {{#if allowEdit}}
+                  <input type="button" value="<? echo $l['Import_words']; ?>..." onclick="WordLists.Import.showDialog()" />
+                  <hr class="spacer-15">
+                {{/if}}
+
+
+                {{! delete string}}
+                {{#if allowSharing}}
+                  <input type="button" value="<? echo $l['Delete_list']; ?>" data-pending-value="<? echo $l['Deleting_list']; ?>" id="delete-shown-word-list"/>
+                {{else}}
+                  <input type="button" value="<? echo $l['Hide_list']; ?>" data-pending-value="<? echo $l['Hiding_list']; ?>" id="hide-shown-word-list"/>
+                {{/if}}
+              </script>
             </div>
 
             <div class="box" id="word-list-label" style="z-index: 105; ">
               <div class="box-head">
                 <img src="img/tags.svg" />
-                Labels
+                <? echo $l['Labels']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
                 <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
               </div>
@@ -500,7 +557,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 </div>
               </div>
 
-              <script id="word-lists-no-labels-template" type="text/x-handlebars-template"><p>You don&#39;t have any labels.</p></script>
+              <script id="word-lists-no-labels-template" type="text/x-handlebars-template"><p><? echo $l['You_dont_have_any_labels__']; ?></p></script>
 
               <script id="word-lists-label-table-template" type="text/x-handlebars-template">
                 <table class="box-table button-right-column no-flex">{{content}}</table
@@ -512,8 +569,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <td colspan="2" style="padding-left: {{indentingPxl}}px; text-align: left; ">
                     <form class="label-add-form inline">
                       <input type="hidden" class="label-add-parent" value="{{id}}"/>
-                      <input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="Label name" required="true"/>&nbsp;
-                      <input class="label-add-button inline" type="submit" value="Add label" data-pending-value="Adding label"/>
+                      <input class="label-add-name inline" style="margin-left: -8px; " type="text" placeholder="<? echo $l['Label_name']; ?>" required="true"/>&nbsp;
+                      <input class="label-add-button inline" type="submit" value="<? echo $l['Add_label']; ?>" data-pending-value="<? echo $l['Adding_label']; ?>"/>
                     </form>
                   </td>
                 </tr>
@@ -538,11 +595,11 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <td>
                     <img class="small-menu-open-image" src="img/menu-small.svg" />
                     <div class="small-menu display-none">
-                      <input type="submit" class="width-100" form="label-rename-form-{{label.id}}" id="label-rename-button-{{label.id}}" data-action="rename-edit" value="Rename" /><br>
-                      <input type="button" class="label-add-sub-label width-100" value="Add sub-label"/><br>
+                      <input type="submit" class="width-100" form="label-rename-form-{{label.id}}" id="label-rename-button-{{label.id}}" data-action="rename-edit" value="<? echo $l['Rename']; ?>" /><br>
+                      <input type="button" class="label-add-sub-label width-100" value="<? echo $l['Add']; ?> sub-label"/><br>
                       <form class="label-remove-form inline">
                         <input type="hidden" class="label-remove-select" value="{{label.id}}"/>
-                        <input class="label-remove-button width-100" type="submit" value="Remove" />
+                        <input class="label-remove-button width-100" type="submit" value="<? echo $l['Remove']; ?>" />
                       </form>
                     </div>
                   </td>
@@ -554,7 +611,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box" id="word-list-sharing">
               <div class="box-head">
                 <img src="img/share.svg" />
-                Share
+                <? echo $l['Share']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
                 <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
               </div>
@@ -562,10 +619,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <form id="share-list-form">
                   <input id="share-list-other-user-email" type="text" placeholder="Email-address" required="true"/>
                   <select id="share-list-permissions" required="true">
-                    <option value="2">Can view</option>
-                    <option value="1">Can edit</option>
+                    <option value="2"><? echo $l['Can_view']; ?></option>
+                    <option value="1"><? echo $l['Can_edit']; ?></option>
                   </select>
-                  <input id="share-list-submit" type="submit" value="Share" data-pending-value="Sharing"/>
+                  <input id="share-list-submit" type="submit" value="<? echo $l['Share']; ?>" data-pending-value="<? echo $l['Sharing']; ?>"/>
                 </form>
                 <div id="list-sharings">
 
@@ -576,7 +633,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 {{#if share}}
                   <table class="box-table button-right-column">
                     <tr class="bold cursor-default">
-                      <td>Name</td>
+                      <td><? echo $l['Name']; ?></td>
                       <td></td>
                       <td></td>
                     </tr>
@@ -585,16 +642,16 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                         <td>{{user.firstname}} {{user.lastname}}</td>
                         <td>
                           {{#if permissions}}
-                            Can edit
+                            <? echo $l['Can_edit']; ?>
                           {{else}}
-                            Can view
+                            <? echo $l['Can_view']; ?>
                           {{/if}}
                         </td>
-                        <td><input type="button" class="inline" value="Stop sharing" data-pending-value="Stopping sharing" data-action="delete-sharing" data-sharing-id="{{id}}"/></td>
+                        <td><input type="button" class="inline" value="<? echo $l['Stop_sharing']; ?>" data-pending-value="<? echo $l['Stopping_sharing']; ?>" data-action="delete-sharing" data-sharing-id="{{id}}"/></td>
                       </tr>
                     {{/each}}
                 {{else}}
-                  <p class="spacer-top-15">The selected list isn&#39;t shared with anyone. Only you can see it.</p>
+                  <p class="spacer-top-15"><? echo $l['The_selected_list_isnt_shared__']; ?></p>
                 {{/if}}
               </script>
 
@@ -607,7 +664,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box" id="word-list-info-words">
               <div class="box-head">
                 <img src="img/grid.svg" />
-                Words (<span id="shown-word-list-words-count">0</span>)
+                <? echo $l['Words']; ?> (<span id="shown-word-list-words-count">0</span>)
                 <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -615,14 +672,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="words-add">
                   <div id="words-add-message"></div>
                   <form id="words-add-form">
-                    <input id="words-add-language1" type="text" placeholder="First language"/>
-                    <input id="words-add-language2" type="text" placeholder="Second language"/>
-                    <input id="words-add-comment" type="text" placeholder="Comment"/>
-                    <input id="words-add-button" type="submit" value="Add word"/>
+                    <input id="words-add-language1" type="text" placeholder="<? echo $l['First_language']; ?>"/>
+                    <input id="words-add-language2" type="text" placeholder="<? echo $l['Second_language']; ?>"/>
+                    <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>"/>
+                    <input id="words-add-button" type="submit" value="<? echo $l['Add_word']; ?>"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
                   </form>
                   <div id="word-lists-special-chars" class="special-chars display-none box">
-                    <?php include('html-include/special-chars.html'); ?>
+                    <?php include('html-include/special-chars.php'); ?>
                   </div>
                 </div>
                 <div id="words-in-list">
@@ -630,8 +687,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
             </div>
 
-            <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="spacer-top-15">The selected list doesn&#39;t contain any words yet.</p></script>
-            <script id="word-lists-no-words-no-editing-permissions-template" type="text/x-handlebars-template"><p class="spacer-top-15">The selected list doesn&#39;t contain any words yet. You don&#39;t have permissions to add new words.</p></script>
+            <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['The_selected_list_doesnt_contain__']; ?></p></script>
+            <script id="word-lists-no-words-no-editing-permissions-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['The_selected_list_doesnt_contain__']; ?> <? echo $l['You_dont_have_permissions_to_add_new_words_']; ?></p></script>
 
             <script id="word-lists-words-table-template" type="text/x-handlebars-template">
               <table id="word-list-table" class="box-table{{#if allowEdit}} button-right-column{{/if}}">
@@ -683,15 +740,15 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/users.svg" />
-                People you've added
+                <? echo $l['People_youve_added']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="user-add-message"></div>
                 <form id="user-add-form">
-                  <input id="user-add-email" type="email" placeholder="Email-address" required="true"/>
-                  <input id="user-add-button" type="submit" value="Add user" data-pending-value="Adding user"/>
+                  <input id="user-add-email" type="email" placeholder="<? echo $l['Email_address']; ?>" required="true"/>
+                  <input id="user-add-button" type="submit" value="<? echo $l['Add_user']; ?>" data-pending-value="<? echo $l['Adding_user']; ?>"/>
                 </form>
                 <div id="people-you-have-added">
                 </div>
@@ -700,19 +757,19 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <!-- user people you've added templates -->
             <script id="user-none-added-template" type="text/x-handlebars-template">
-              <p class="spacer-top-15">You haven&#39;t added other users yet.</p>
+              <p class="spacer-top-15"><? echo $l['You_havent_added_other_users_yet_']; ?></p>
             </script>
 
-            <script id="user-add-server-response-wrong-email-template" type="text/x-handlebars-template">Email-address does not exist.</script>
-            <script id="user-add-server-response-success-template" type="text/x-handlebars-template">User has been added.</script>
-            <script id="user-add-server-response-cant-add-yourself-template" type="text/x-handlebars-template">You can not add yourself.</script>
-            <script id="user-add-server-response-unknown-error-template" type="text/x-handlebars-template">An unknown error occured.</script>
+            <script id="user-add-server-response-wrong-email-template" type="text/x-handlebars-template"><? echo $l['Email_address_does_not_exist_']; ?></script>
+            <script id="user-add-server-response-success-template" type="text/x-handlebars-template"><? echo $l['User_has_been_added']; ?></script>
+            <script id="user-add-server-response-cant-add-yourself-template" type="text/x-handlebars-template"><? echo $l['You_can_not_add_yourself']; ?></script>
+            <script id="user-add-server-response-unknown-error-template" type="text/x-handlebars-template"><? echo $l['An_unknown_error_occured']; ?></script>
 
             <script id="user-list-of-added-users-template" type="text/x-handlebars-template">
               <table class="box-table button-right-column">
                 <tr class="bold cursor-default">
-                  <td>Name</td>
-                  <td>Email-address</td>
+                  <td><? echo $l['Name']; ?></td>
+                  <td><? echo $l['Email_address']; ?></td>
                   <td></td>
                 </tr>
                 {{#each user}}
@@ -720,7 +777,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <td>{{firstname}} {{lastname}}</td>
                     <td>{{email}}</td>
                     <td>
-                      <input id="added-users-remove-{{id}}" type="button" class="inline" value="Remove" data-pending-value="Removing" onclick="User.remove({{id}})"/>
+                      <input id="added-users-remove-{{id}}" type="button" class="inline" value="<? echo $l['Remove']; ?>" data-pending-value="<? echo $l['Removing']; ?>" onclick="User.remove({{id}})"/>
                     </td>
                   </tr>
                 {{/each}}
@@ -733,7 +790,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/users.svg" />
-                People who have added you
+                <? echo $l['People_who_have_added_you']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
@@ -745,14 +802,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <!-- user who have added you templates -->
             <script id="user-none-have-added-you-template" type="text/x-handlebars-template">
-              <p class="spacer-top-15">No users have added you yet.</p>
+              <p class="spacer-top-15"><? echo $l['No_users_have_added_you_yet']; ?></p>
             </script>
 
             <script id="user-list-of-users-who-have-added-you-template" type="text/x-handlebars-template">
               <table class="box-table button-right-column">
                 <tr class="bold cursor-default">
-                  <td>Name</td>
-                  <td>Email-address</td>
+                  <td><? echo $l['Name']; ?></td>
+                  <td><? echo $l['Email_address']; ?></td>
                   <td></td>
                 </tr>
                 {{#each user}}
@@ -761,7 +818,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <td>{{email}}</td>
                     <td>
                       {{#unless bidirectional}}
-                        <input type="button" class="inline" value="Add user" data-pending-value="Adding user" data-email="{{email}}"/>
+                        <input type="button" class="inline" value="<? echo $l['Add_user']; ?>" data-pending-value="<? echo $l['Adding_user']; ?>" data-email="{{email}}"/>
                       {{/unless}}
                     </td>
                   </tr>
@@ -778,13 +835,13 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box">
               <div class="box-head">
                 <img src="img/settings.svg" />
-                Settings
+                <? echo $l['Settings']; ?>
               </div>
               <div class="box-body">
                 <table class="box-table cursor-pointer" id="settings-menu">
-                  <tr data-page="profile"><td>Profile</td></tr>
-                  <tr data-page="email-notifications"><td>Email notifications</td></tr>
-                  <tr data-page="account"><td>Account</td></tr>
+                  <tr data-page="profile"><td><? echo $l['Profile']; ?></td></tr>
+                  <tr data-page="email-notifications"><td><? echo $l['Email_notifications']; ?></td></tr>
+                  <tr data-page="account"><td><? echo $l['Account']; ?></td></tr>
                 </table>
               </div>
             </div>
@@ -792,43 +849,43 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           <div class="right-column width-70" id="settings-content">
             <div class="box" data-page="profile">
               <div class="box-head">
-                Change name
+                <? echo $l['Change_name']; ?>
               </div>
               <div class="box-body">
                 <form id="settings-name">
-                  <input type="text" required="true" value="<? echo $user->firstname; ?>" placeholder="First name" id="settings-firstname" />&nbsp;
-                  <input type="text" required="true" value="<? echo $user->lastname; ?>" placeholder="Last name" id="settings-lastname" />&nbsp;
-                  <input type="submit" value="Change name" data-pending-value="Changing name" id="settings-submit-button"/>&nbsp;
+                  <input type="text" required="true" value="<? echo $user->firstname; ?>" placeholder="<? echo $l['First_name']; ?>" id="settings-firstname" />&nbsp;
+                  <input type="text" required="true" value="<? echo $user->lastname; ?>" placeholder="<? echo $l['Last_name']; ?>" id="settings-lastname" />&nbsp;
+                  <input type="submit" value="<? echo $l['Change_name']; ?>" data-pending-value="<? echo $l['Changing_name']; ?>" id="settings-submit-button"/>&nbsp;
                 </form>
               </div>
             </div>
 
-            <script id="settings-name-server-invalid-template" type="text/x-handlebars-template">The given name is not valid.</script>
-            <script id="settings-name-server-success-template" type="text/x-handlebars-template">Your name has been updated successfully.</script>
-            <script id="settings-name-server-unknown-error-template" type="text/x-handlebars-template">An unknown error occured.</script>
+            <script id="settings-name-server-invalid-template" type="text/x-handlebars-template"><? echo $l['The_given_name_is_not_valid_']; ?></script>
+            <script id="settings-name-server-success-template" type="text/x-handlebars-template"><? echo $l['Your_name_has_been_updated_successfully_']; ?></script>
+            <script id="settings-name-server-unknown-error-template" type="text/x-handlebars-template"><? echo $l['An_unknown_error_occured_']; ?></script>
 
 
             <div class="box" data-page="profile">
               <div class="box-head">
-                Change password
+                <? echo $l['Change_password']; ?>
               </div>
               <div class="box-body">
                 <form id="settings-password">
                   <table class="width-auto">
-                    <tr><td>Old password</td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
-                    <tr><td>New password</td><td><input id="settings-password-new" required="true" type="password"/></td></tr>
-                    <tr><td>Confirm new password</td><td><input id="settings-password-new-confirm" required="true" type="password"/></td></tr>
-                    <tr><td><input id="settings-password-button" type="submit" value="Change password" data-pending-value="Changing password" class="width-auto"/></td><td></td></tr>
+                    <tr><td><? echo $l['Old_password']; ?></td><td><input id="settings-password-old" required="true" type="password"/></td></tr>
+                    <tr><td><? echo $l['New_password']; ?></td><td><input id="settings-password-new" required="true" type="password"/></td></tr>
+                    <tr><td><? echo $l['Confirm_new_password']; ?></td><td><input id="settings-password-new-confirm" required="true" type="password"/></td></tr>
+                    <tr><td><input id="settings-password-button" type="submit" value="<? echo $l['Change_password']; ?>" data-pending-value="<? echo $l['Changing_password']; ?>" class="width-auto"/></td><td></td></tr>
                   </table>
                 </form>
               </div>
             </div>
 
-            <script id="settings-password-server-success-template" type="text/x-handlebars-template">Your password has been updated successfully.</script>
-            <script id="settings-password-server-not-equal-template" type="text/x-handlebars-template">The two new passwords are not equal.</script>
-            <script id="settings-password-server-wrong-old-template" type="text/x-handlebars-template">Your old password is not correct.</script>
-            <script id="settings-password-server-invalid-template" type="text/x-handlebars-template">The new password is not valid.</script>
-            <script id="settings-password-server-unknown-template" type="text/x-handlebars-template">An unknown error occured.</script>
+            <script id="settings-password-server-success-template" type="text/x-handlebars-template"><? echo $l['Your_password_has_been_updated_successfully_']; ?></script>
+            <script id="settings-password-server-not-equal-template" type="text/x-handlebars-template"><? echo $l['The_two_new_passwords_are_not_equal_']; ?></script>
+            <script id="settings-password-server-wrong-old-template" type="text/x-handlebars-template"><? echo $l['Your_old_password_is_not_correct_']; ?></script>
+            <script id="settings-password-server-invalid-template" type="text/x-handlebars-template"><? echo $l['The_new_password_is_not_valid_']; ?></script>
+            <script id="settings-password-server-unknown-template" type="text/x-handlebars-template"><? echo $l['An_unknown_error_occured_']; ?></script>
 
             <!--<div class="box" data-page="profile">
               <div class="box-head">
@@ -848,16 +905,16 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             
             <div class="box" data-page="profile">
               <div class="box-head">
-                Secret service clause
+                <? echo $l['Secret_service_clause']; ?>
               </div>
               <div class="box-body">
                 <p>
                   <label>
                     <input type="checkbox" disabled checked/>
                     &nbsp;
-                    The NSA is allowed to spy me.
+                    <? echo $l['The_NSA_is_allowed_to_spy_me_']; ?>
                     <span class="tooltip">
-                      This is just a little joke.
+                      <? echo $l['This_is_just_a_little_joke_']; ?>
                     </span>
                   </label>                
                 </p>
@@ -867,17 +924,17 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <div class="box" data-page="email-notifications">
               <div class="box-head">
-                Email notifications
+                <? echo $l['Email_notifications']; ?>
               </div>
               <div class="box-body">
-                <label><input type="checkbox" id="enable-newsletter-checkbox" <? echo ($user_settings->newsletter_enabled ? 'checked' : ''); ?>/>&nbsp;Newsletter</label>
+                <label><input type="checkbox" id="enable-newsletter-checkbox" <? echo ($user_settings->newsletter_enabled ? 'checked' : ''); ?>/>&nbsp;<? echo $l['Newsletter']; ?></label>
               </div>
             </div>
 
             <div class="box" data-page="account">
-              <div class="box-head">Advertisement</div>
+              <div class="box-head"><? echo $l['Advertisement']; ?></div>
               <div class="box-body">
-                <label><input type="checkbox" id="enable-ads-checkbox" <? echo ($user_settings->ads_enabled ? 'checked' : ''); ?>/>&nbsp;Load and show advertisement</label>
+                <label><input type="checkbox" id="enable-ads-checkbox" <? echo ($user_settings->ads_enabled ? 'checked' : ''); ?>/>&nbsp;<? echo $l['Load_and_show_advertisement']; ?></label>
               </div>
             </div>
 
@@ -886,10 +943,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 Delete account
               </div>
               <div class="box-body">
-                <p>Be careful: This action can't be undone. Your shared lists will still be visible to other users. </p>
+                <p><? echo $l['Be_careful_cant_be_undone_lists_still_visible__']; ?></p>
                 <form id="settings-delete-account-form">
-                  <input type="password" required="true" placeholder="Password" id="settings-delete-account-password" />&nbsp;
-                  <input type="button" value="Delete account" data-pending-id="Deleting account" id="settings-delete-account-button" />
+                  <input type="password" required="true" placeholder="<? echo $l['Password']; ?>" id="settings-delete-account-password" />&nbsp;
+                  <input type="button" value="<? echo $l['Delete_account']; ?>" data-pending-id="<? echo $l['Deleting_account']; ?>" id="settings-delete-account-button" />
                 </form>
               </div>
             </div>
@@ -899,19 +956,19 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
         <?php
           // include legal info, about, contact, tour and advertisement HTML code
-          include('html-include/legal-info.html');
-          include('html-include/about.html');
-          include('html-include/contact.html');
-          include('html-include/tour.html');
+          include('html-include/legal-info.php');
+          include('html-include/about.php');
+          include('html-include/contact.php');
+          include('html-include/tour.php');
         ?>
         <br class="clear-both">
         <?php
-          include('html-include/advertisement.html');
+          include('html-include/advertisement.php');
         ?>
       </div>
 
       <?php
-        include('html-include/footer.html');
+        include('html-include/footer.php');
       ?>
       <div id="scroll-top-button">
         <img src="img/menu-back.svg"/>
@@ -923,11 +980,11 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       <div class="word-import-box-inner-wrapper">
         <div class="box margin-0">
           <div class="box-head">
-            Import words
+            <? echo $l['Import_words']; ?>
             <img src="img/close.svg" class="box-head-right-icon" id="word-import-close-dialog" />
           </div>
           <div class="box-body">
-            Coming soon...
+            <? echo $l['Coming_soon']; ?>...
             <!--<div class="word-import-left-col">
               <table>
                 <tr>
@@ -975,6 +1032,18 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
     <script type="text/javascript">
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
+
+      // constant strings
+      var constString = {
+        'First_language': "<? echo $l['First_language']; ?>",
+        'Second_language': "<? echo $l['Second_language']; ?>",
+        'I_know_': "<? echo $l['I_know_']; ?>",
+        'Not_sure_': "<? echo $l['Not_sure']; ?>",
+        'No_idea_': "<? echo $l['No_idea_']; ?>",
+        'I_knew_that_': "<? echo $l['I_knew_that_']; ?>",
+        'I_didnt_know_that_': "<? echo $l['I_didnt_know_that_']; ?>",
+        'Continue_': "<? echo $l['Continue_']; ?>"
+      };
       
       // word lists, words, answers
       var Database = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_query_data($_SESSION['id']))); ?>');
@@ -1027,6 +1096,11 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             }
           };
         };
+
+        // link ids in recently used array to respective objects
+        for (var i = Database.recentlyUsed.length - 1; i >= 0; i--) {
+          Database.recentlyUsed[i] = Database.getListById(Database.recentlyUsed[i]);
+        }
       })();
     </script>
 

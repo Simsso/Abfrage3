@@ -612,8 +612,8 @@ Query.nextWord = function() {
   Query.currentAnswerState = Query.AnswerStateEnum.Start;
   
   $(page['query']).find('#query-answer-not-known').prop('disabled', false);
-  $(page['query']).find('#query-answer-known').attr('value', 'I know!');
-  $(page['query']).find('#query-answer-not-known').attr('value', 'No idea.');
+  $(page['query']).find('#query-answer-known').attr('value', constString['I_know_']);
+  $(page['query']).find('#query-answer-not-known').attr('value', constString['No_idea_']);
   $(page['query']).find('#query-answer-buttons').hide();
   $(page['query']).find('#correct-answer').hide();
   $(page['query']).find('#query-answer-not-sure').prop('disabled', false);
@@ -859,8 +859,8 @@ Query.processCurrentAnswerState = function() {
       return;
     case Query.AnswerStateEnum.NotSureClicked:
       $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
-      $(page['query']).find('#query-answer-known').attr('value', 'I knew that!');
-      $(page['query']).find('#query-answer-not-known').attr('value', 'I didn\'t know that.');
+      $(page['query']).find('#query-answer-known').attr('value', constString['I_knew_that_']);
+      $(page['query']).find('#query-answer-not-known').attr('value', constString['I_didnt_know_that_']);
       Query.showSolution();
       return;
     case Query.AnswerStateEnum.NotKnownClicked:
@@ -869,7 +869,7 @@ Query.processCurrentAnswerState = function() {
     case Query.AnswerStateEnum.NotKnown:
       $(page['query']).find('#query-answer-not-known').prop('disabled', true);
       $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
-      $(page['query']).find('#query-answer-known').attr('value', 'Continue.');
+      $(page['query']).find('#query-answer-known').attr('value', constString['Continue_']);
 
       Query.showSolution();
       Query.addAnswer(Query.currentWord, 0);
@@ -977,7 +977,7 @@ $(page['query']).find('#query-results-auto-upload').on('click', function() {
 // @param string[2] languages: both langauges
 Query.updateQueryWordsLanguageInformation = function(languages) {
   if (languages[0] === undefined || languages[1] === undefined) {
-    languages = ["First language", "Second language"];
+    languages = [constString['First_language'], constString['Second_language']];
   }
 
   $(page['query']).find('span[data-value="first-language-information"]').html(languages[0]);

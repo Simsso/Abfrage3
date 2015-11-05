@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <? require('html-include/head.html'); ?>
+  <? require('html-include/head.php'); ?>
   <body>
 
     <!-- navigation -->
@@ -94,13 +94,13 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
             ?>
 
             <?php 
-              include('html-include/tour.html'); 
+              include('html-include/tour.php'); 
             ?>
           </div>
 
           <div class="right-column">
           <?php
-            include('html-include/login.html');
+            include('html-include/login.php');
           ?>
             <div class="box right">
               <div class="box-head">Sign up</div>
@@ -144,23 +144,23 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
 
         <div id="content-login">
           <?php
-            include('html-include/login.html');
+            include('html-include/login.php');
           ?>
         </div>
 
 
         <?php
 // include legal info, about and contact html code
-include('html-include/legal-info.html');
-include('html-include/about.html');
-include('html-include/contact.html');
+include('html-include/legal-info.php');
+include('html-include/about.php');
+include('html-include/contact.php');
         ?>
         <br class="clear-both">
 
       </div>
 
       <?php
-        include('html-include/footer.html');
+        include('html-include/footer.php');
       ?>
     </div>
 

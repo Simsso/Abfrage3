@@ -32,7 +32,7 @@ switch ($_GET['action']) {
 
 <!DOCTYPE html>
 <html>
-  <? require('html-include/head.html'); ?>
+  <? require('html-include/head.php'); ?>
   <body>
 
     <!-- navigation -->
@@ -67,16 +67,16 @@ switch ($_GET['action']) {
 
         <?php
 // include legal info, about and contact html code
-include('html-include/legal-info.html');
-include('html-include/about.html');
-include('html-include/contact.html');
+include('html-include/legal-info.php');
+include('html-include/about.php');
+include('html-include/contact.php');
         ?>
         <br class="clear-both">
 
       </div>
 
       <?php
-        include('html-include/footer.html');
+        include('html-include/footer.php');
       ?>
     </div>
 

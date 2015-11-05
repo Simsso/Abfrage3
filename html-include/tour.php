@@ -3,68 +3,66 @@
     <div class="text-align-center">
       <table class="width-100 headline spacer-15">
         <tr>
-          <td><h2>Welcome to&nbsp;</h2></td>
+          <td><h2><? echo $l['Welcome_to']; ?>&nbsp;</h2></td>
           <td><img class="height-46px" src="img/logo-white.svg"/></td>
         </tr>
       </table>
       <p>
-        Abfrage3 is an online vocabulary trainer with functionality to create, share and organize word lists. 
-        Its purpose is to make learning vocabulary of a foreign language more efficient.
-        The website is still under heavy development so some features might not work as expected.
+        <? echo $l['Abfrage3_is_an_online__']; ?>
       </p>
       <p>
         <img src="/img/mockup-image.jpg" class="full-width">
       </p>
-      <p class="italic">Here is how it works:</p>
+      <p class="italic"><? echo $l['Here_is_how_it_works']; ?>:</p>
     </div>
 
 
     <div class="tour-element">
       <hr class="spacer-30">
-      <h2>Create lists and add words</h2>
+      <h2><? echo $l['Create_lists_and_add_words']; ?></h2>
       <div>
         <div class="col-l">
-          <p>Define a name and create a new list for your words.</p>
+          <p><? echo $l['Define_a_name_and_create__']; ?></p>
         </div>
         <div class="col-r">
           <div class="box">
             <div class="box-head">
               <img src="img/server.svg">
-              Your word lists
+              <? echo $l['Your_word_lists']; ?>
             </div>
             <div class="box-body">
-              <input type="text" placeholder="Word list name">
-              <input type="button" value="Create list">
+              <input type="text" placeholder="<? echo $l['Word_list_name']; ?>">
+              <input type="button" value="<? echo $l['Create_list']; ?>">
               <hr class="spacer-top-15">
-              <div><table class="box-table cursor-pointer"><tbody><tr><td>My first word list</td></tr><tr><td>Difficult new words</td></tr></tbody></table></div>
+              <div><table class="box-table cursor-pointer"><tbody><tr><td><? echo $l['My_first_word_list']; ?></td></tr><tr><td><? echo $l['Difficult_new_words']; ?></td></tr></tbody></table></div>
             </div>
           </div>
         </div>
         <br class="clear-both">
 
         <div class="col-l">
-          <p>Add words to your lists to learn them later.</p>
-          <p>If you already have some words, e.g. in a file, you can simply import them.</p>
+          <p><? echo $l['Add_words_to__']; ?></p>
+          <p><? echo $l['If_you_already_have__p']; ?></p>
         </div>
         <div class="col-r">
           <div class="box">
             <div class="box-head">
               <img src="img/grid.svg">
-              Words
+              <? echo $l['Words']; ?>
             </div>
             <div class="box-body">
               <div>
-                <input type="text" placeholder="German">
-                <input type="text" placeholder="English">
-                <input type="button" value="Add word">
+                <input type="text" placeholder="<? echo $l['German']; ?>">
+                <input type="text" placeholder="<? echo $l['English']; ?>">
+                <input type="button" value="<? echo $l['Add_word']; ?>">
                 <hr class="spacer-top-15">
               </div>
               <div>
                 <table class="box-table button-right-column">
                   <tbody>
-                    <tr class="bold cursor-default"><td>German</td><td>English</td><td></td></tr>
-                    <tr><td>abwechslungsreich</td><td>diversified</td><td><input type="button" class="inline" value="Edit">&nbsp;<input type="button" class="inline" value="Remove"></td></tr>
-                    <tr><td>Vorschlag</td><td>proposal</td><td><input type="button" class="inline" value="Edit">&nbsp;<input type="button" class="inline" value="Remove"></td></tr>
+                    <tr class="bold cursor-default"><td><? echo $l['German']; ?></td><td><? echo $l['English']; ?></td><td></td></tr>
+                    <tr><td>abwechslungsreich</td><td>diversified</td><td><input type="button" class="inline" value="<? echo $l['Edit']; ?>">&nbsp;<input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
+                    <tr><td>Vorschlag</td><td>proposal</td><td><input type="button" class="inline" value="<? echo $l['Edit']; ?>">&nbsp;<input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -78,28 +76,27 @@
 
     <div class="tour-element">
       <hr class="spacer-30">
-      <h2>Learn words</h2>
+      <h2><? echo $l['Learn_words']; ?></h2>
       <div>
         <div class="col-l">
-          <p>Learn the added words using the <span class="italic">Test</span> feature. Your answers (correct or not) will be saved to personalize your tests.</p>
-          <p>You can select different algorithms e.g. <span class="italic">Random</span> or <span class="italic">Below average</span> to make the test even more efficient.</p>
+          <? echo $l['P_Tour_learn_words__']; ?>
         </div>
         <div class="col-r">
           <div class="box" id="query-box">
             <div class="box-head">
               <img src="img/question.svg">
-              Test
+              <? echo $l['Test']; ?>
             </div>
             <div class="box-body">
               <div>
                 <table class="width-100">
                   <tbody>
                     <tr>
-                      <td class="width-150px"><span class="language">English</span>:&nbsp;</td>
+                      <td class="width-150px"><span class="language"><? echo $l['English']; ?></span>:&nbsp;</td>
                       <td id="query-question">swift</td>
                     </tr>
                     <tr>
-                      <td class="width-150px"><span class="language">German</span>:&nbsp;</td>
+                      <td class="width-150px"><span class="language"><? echo $l['German']; ?></span>:&nbsp;</td>
                       <td>
                         <input type="text" id="query-answer" class="unremarkable width-100">
                       </td>
@@ -113,7 +110,7 @@
         <br class="clear-both">
 
         <div class="col-l">
-          <p>To lazy to type? Use buttons to learn the words instead of typing the answer every time.</p>
+          <? echo $l['P_Tour_learn_by_typing__']; ?>
         </div>
         <div class="col-r">
           <div class="box" id="query-box">
@@ -122,18 +119,18 @@
                 <table class="width-100" id="query-content-table">
                   <tbody>
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang1">English</span>:&nbsp;</td>
+                      <td class="width-150px"><span class="language" id="query-lang1"><? echo $l['English']; ?></span>:&nbsp;</td>
                       <td id="query-question">leverage</td>
                     </tr>
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang2">German</span>:&nbsp;</td>
+                      <td class="width-150px"><span class="language" id="query-lang2"><? echo $l['German']; ?></span>:&nbsp;</td>
                       <td id="query-answer-table-cell-buttons" class="display-none" style="display: table-cell;">
                         <table class="width-100">
                           <tbody>
                             <tr>
-                              <td class="width-33"><input id="query-answer-known" type="button" value="I know!" class="height-50px width-100"></td>
-                              <td class="width-33"><input id="query-answer-not-sure" type="button" value="Not sure..." class="height-50px width-100"></td>
-                              <td class="width-33"><input id="query-answer-not-known" type="button" value="No idea." class="height-50px width-100"></td>
+                              <td class="width-33"><input id="query-answer-known" type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"></td>
+                              <td class="width-33"><input id="query-answer-not-sure" type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"></td>
+                              <td class="width-33"><input id="query-answer-not-known" type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"></td>
                             </tr>
                           </tbody>
                         </table>
@@ -153,33 +150,32 @@
 
     <div class="tour-element">
       <hr class="spacer-30">
-      <h2>Share your word lists</h2>
+      <h2><? echo $l['Share_your_word_lists']; ?></h2>
       <div>
         <div class="col-l">
-          <p>To share lists with other users add them by their email-address and define whether they have permissions to view or edit the list.</p>
-          <p>Keep in mind: To prevent spamming, other users can only see lists you've shared with them, if they have added you in the <span class="italic">Users</span> section.</p>
+          <? echo $l['P_Tour_share_lists']; ?>
 
         </div>
         <div class="col-r">
           <div class="box" id="word-list-sharing" style="display: block;">
             <div class="box-head">
               <img src="img/share.svg">
-              Share
+              <? echo $l['Share']; ?>
             </div>
             <div class="box-body">
-              <input id="share-list-other-user-email" type="text" placeholder="Email-address" required="true">
+              <input id="share-list-other-user-email" type="text" placeholder="<? echo $l['Email_address']; ?>" required="true">
               <select id="share-list-permissions" required="true">
-                <option value="2">Can view</option>
-                <option value="1">Can edit</option>
+                <option value="2"><? echo $l['Can_view']; ?></option>
+                <option value="1"><? echo $l['Can_edit']; ?></option>
               </select>
-              <input id="share-list-submit" type="button" value="Share">
+              <input id="share-list-submit" type="button" value="<? echo $l['Share']; ?>">
               <hr class="spacer-top-15">
               <div id="list-sharings">
                 <table class="box-table button-right-column">
                   <tbody>
-                    <tr class="bold cursor-default"><td>Name</td><td>Permissions</td><td></td></tr>
-                    <tr><td>My classmate</td><td>Can view</td><td><input type="button" class="inline" value="Stop sharing"></td></tr>
-                    <tr><td>Another guy</td><td>Can edit</td><td><input type="button" class="inline" value="Stop sharing"></td></tr>
+                    <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td></td><td></td></tr>
+                    <tr><td><? echo $l['My_classmate']; ?></td><td><? echo $l['Can_view']; ?></td><td><input type="button" class="inline" value="<? echo $l['Stop_sharing']; ?>"></td></tr>
+                    <tr><td><? echo $l['Another_guy']; ?></td><td><? echo $l['Can_edit']; ?></td><td><input type="button" class="inline" value="<? echo $l['Stop_sharing']; ?>"></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -189,25 +185,25 @@
         <br class="clear-both">
 
         <div class="col-l">
-          <p>Add other users to see lists they've shared with you.</p>
+          <p><? echo $l['P_Tour_add_other_users__']; ?></p>
         </div>
         <div class="col-r">
           <div class="box">
             <div class="box-head">
               <img src="img/users.svg">
-              People you've added
+              <? echo $l['People_youve_added']; ?>
             </div>
             <div class="box-body" data-start-state="expanded">
               <div id="user-add-message"></div>
-              <input id="user-add-email" type="email" placeholder="Email-address" required="true">
-              <input id="user-add-button" type="button" value="Add user">
+              <input id="user-add-email" type="email" placeholder="<? echo $l['Email_address']; ?>" required="true">
+              <input id="user-add-button" type="button" value="<? echo $l['Add_user']; ?>">
               <hr class="spacer-top-15">
               <div id="people-you-have-added">
                 <table class="box-table button-right-column">
                   <tbody>
-                    <tr class="bold cursor-default"><td>Name</td><td>Email-Address</td><td></td></tr>
-                    <tr><td>My classmate</td><td>bla@gmail.com</td><td><input type="button" class="inline" value="Remove"></td></tr>
-                    <tr><td>Another guy</td><td>email2@gmail.com</td><td><input type="button" class="inline" value="Remove"></td></tr>
+                    <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td><? echo $l['Email_Address']; ?></td><td></td></tr>
+                    <tr><td><? echo $l['My_classmate']; ?></td><td>bla@gmail.com</td><td><input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
+                    <tr><td><? echo $l['Another_guy']; ?></td><td>email2@gmail.com</td><td><input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
                   </tbody>
                 </table>
               </div>

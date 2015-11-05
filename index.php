@@ -6,12 +6,14 @@ require('database.class.php');
 // start session 
 session_start();
 
+// if the session has expired but a stay logged in cookie is set update the session cookie
 Database::refresh_session_if_staying_logged_in();
 
 // include language files
-require_once('lang/lang.inc.php');
+require('lang/lang.inc.php');
 
 if (isset($_GET['basic-page'])) {
+	// basic page requested
 	require('basic.inc.php');
 } else {
 	// include the files depending on the session status
