@@ -746,7 +746,9 @@ Query.checkAnswer = function(user, correct) {
     // remove spaces, returns, etc. at beginning and end of the strings
     userArray[i] = userArray[i].trim();
     correctArray[i] = correctArray[i].trim();
-
+  }
+  
+  for (var i = correctArray.length - 1; i >= 0; i--) {
     // no case sensitivity
     if (!Query.caseSensitivity) {
       userArray[i] = userArray[i].toLowerCase();

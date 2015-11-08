@@ -223,9 +223,33 @@ $l['T_Uploaded_n_of_m_answers__'] = "Uploaded {{n}}/{{m}} test answers.";
 $l['P_Thanks_for_your_approach__'] = "<p>Thanks for your approach!</p><p>Your message has been sent.</p>";
 $l['Email_not_confirmed__'] = "The email address has not been confirmed yet. A new email has been sent.";
 $l['Password_wrong__'] = "The given password is wrong.";
-$l['Email_invalid__'] = "The given email-address does not exist."
-Password "Password"
-Confirm_password "Confirm password"
-Sign_up "Sign up"
-
+$l['Email_invalid__'] = "The given email-address does not exist.";
+$l['Password'] = "Password";
+$l['Confirm_password'] = "Confirm password";
+$l['Sign_up'] = "Sign up";
+$l['Successfully_signed_up'] = "Successfully signed up";
+$l['P_Your_account_has_been_created__'] = "<p>Your account has been created. Check your emails and click on the link to confirm your email-address and activate your account.</p>";
+$l['Could_not_sign_up'] = "Could not sign up";
+$l['An_error_occured_creating_account__'] = "An error occured while creating your account.";
+$l['Failed_to_log_in'] = "Failed to log in";
+$l['An_error_occured_logging_in__'] = "An error occured while logging in.";
+$l['Email_address_confirmed'] = "Email address confirmed";
+$l['Email_now_confirmed__'] = "The email-address is now confirmed and can be used to login.";
+$l['Email_address_not_confirmed'] = "Email address not confirmed";
+$l['The_email_address_is_not_confirmed_'] = "The email address is not confirmed.";
+$l['Error_message_400__'] = 'The server cannot or will not process the request due to something that is perceived to be a client error.';
+$l['Error_message_401__'] = 'The server has refused to fulfill your request.';
+$l['Error_message_403__'] = 'The server has refused to fulfill your request.';
+$l['Error_message_404__'] = 'The document/file requested was not found on this server.';
+$l['Error_message_405__'] = 'The method specified in the Request-Line is not allowed for the specified resource.';
+$l['Error_message_408__'] = 'Your browser failed to send a request in the time allowed by the server.';
+$l['Error_message_500__'] = 'The request was unsuccessful due to an unexpected condition encountered by the server.';
+$l['Error_message_502__'] = 'The server received an invalid response from the upstream server while trying to fulfill the request.';
+$l['Error_message_504__'] = 'The upstream server failed to send a request in the time allowed by the server.';
+$l['No_first_name_given'] = "No first name given";
+$l['No_last_name_given'] = "No last name given";
+$l['Invalid_email_address'] = "Invalid email address";
+$l['Invalid_password'] = "Invalid password";
+$l['Different_passwords'] = "Different passwords";
+$l['Email_alreads_in_use'] = "Email already in use";
 ?>

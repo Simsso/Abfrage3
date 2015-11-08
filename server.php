@@ -139,7 +139,7 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
       }
     } catch (Exception $e) {
       $signup_success = FALSE;
-      $message = $e->getMessage();
+      $message = $l[$e->getMessage()];
     }
 
     if ($signup_success) {

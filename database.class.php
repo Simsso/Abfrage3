@@ -44,17 +44,17 @@ class Database {
     // registers a new user
     // if data is invalid the function throws exceptions
     if ($firstname == NULL) {
-      throw new Exception("No first name given");
+      throw new Exception('No_first_name_given');
     } else if ($lastname == NULL) {
-      throw new Exception("No last name given");
+      throw new Exception('No_last_name_given');
     } else if (!Validation::is_email($email)) {
-      throw new Exception("Invalid email address");
+      throw new Exception('Invalid_email_address');
     } else if (!Validation::is_password($password)) {
-      throw new Exception("Invalid password");
+      throw new Exception('Invalid_password');
     } else if ($password != $confirmpassword) {
-      throw new Exception("Different passwords");
+      throw new Exception('Different_passwords');
     } else if (!self::email_available($email)) {
-      throw new Exception("Email already in use");
+      throw new Exception('Email_alreads_in_use');
     } else {
       $salt = rand(0, 999999999);
       $password = sha1($salt . $password);

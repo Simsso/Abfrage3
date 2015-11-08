@@ -11,17 +11,17 @@
         </a>
         <ul class="nav left">
           <a href="#/home">
-            <li class="nav_home nav-img-li" data-text="$l:Home">
-              <img src="img/home.svg" class="nav-image" alt="$l:Home" title="$l:Home"/>
+            <li class="nav_home nav-img-li" data-text="<? echo $l['Home']; ?>">
+              <img src="img/home.svg" class="nav-image" alt="<? echo $l['Home']; ?>" title="<? echo $l['Home']; ?>"/>
             </li>
           </a>
-          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"$l:Login">$l:Login</li></a>
+          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"<? echo $l['Login']; ?>"><? echo $l['Login']; ?></li></a>
         </ul>
 
         <ul class="nav right">
-          <a href="#/about"><li class="nav_about" data-text="$l:About">$l:About</li></a>
-          <a href="#/contact"><li class="nav_contact" data-text="$l:Contact">$l:Contact</li></a>
-          <a href="#/legal-info"><li class="nav_legal-info" data-text="$l:Legal_info">$l:Legal_info</li></a>
+          <a href="#/about"><li class="nav_about" data-text="<? echo $l['About']; ?>"><? echo $l['About']; ?></li></a>
+          <a href="#/contact"><li class="nav_contact" data-text="<? echo $l['Contact']; ?>"><? echo $l['Contact']; ?></li></a>
+          <a href="#/legal-info"><li class="nav_legal-info" data-text="<? echo $l['Legal_info']; ?>"><? echo $l['Legal_info']; ?></li></a>
         </ul>
       </div>
     </nav>
@@ -51,36 +51,36 @@ $infobox_header = NULL;
 $infobox_body = NULL;
 
 // sign up
-if($_GET['signup_success'] == "true") {
-  $infobox_header = "Successfully signed up";
-  $infobox_green_red = "green";
-  $infobox_body = '<p>Hello ' . $_GET['firstname'] . '!</p><p>Your account has been created. Check your emails and click on the link to confirm your email address (' . $_GET['email'] . ') and activate your account.</p>';
-} else if ($_GET['signup_success'] == "false") {
-  $infobox_header = "Could not sign up";
-  $infobox_green_red = "red";
-  $infobox_body = '<p>An error occured while creating your account.</p><p>' . $_GET['signup_message'] . '</p>';
+if($_GET['signup_success'] == 'true') {
+  $infobox_header = $l['Successfully_signed_up']; ;
+  $infobox_green_red = 'green';
+  $infobox_body = "<p>" . $l['Hey'] . " " . $_GET['firstname'] . "!</p>" . $l['P_Your_account_has_been_created__'];
+} else if ($_GET['signup_success'] == 'false') {
+  $infobox_header = $l['Could_not_sign_up'];
+  $infobox_green_red = 'red';
+  $infobox_body = "<p>" . $l['An_error_occured_creating_account__'] . "</p><p>" . $_GET['signup_message'] . "</p>";
 }
 
 
 // login
 if($_GET['login_message']) {
-  $infobox_header = "Could not login";
-  $infobox_green_red = "red";
-  $infobox_body = '<p>An error occured while logging in.</p><p>' . $_GET['login_message'] . '</p>';
+  $infobox_header = $l['Failed_to_log_in'];
+  $infobox_green_red = 'red';
+  $infobox_body = "<p>" . $l['An_error_occured_logging_in__'] . "</p><p>" . $_GET['login_message'] . "</p>";
 }
 
 
 // email confirmation
 if($_GET['hash'] && $_GET['email']) {
   if (Database::confirm_email($_GET['email'], $_GET['hash'])) {
-    $infobox_header = "Email address confirmed";
-    $infobox_green_red = "green";
-    $infobox_body = '<p>The email address ' . $_GET['email'] . ' is now confirmed and can be used to login.</p>';
+    $infobox_header = $l['Email_address_confirmed'];
+    $infobox_green_red = 'green';
+    $infobox_body = "<p>" . $l['Email_now_confirmed__'] . " " . $_GET['email'] . "</p>";
   } else {
 
-    $infobox_header = "Email address not confirmed";
-    $infobox_green_red = "red";
-    $infobox_body = '<p>The email address ' . $_GET['email'] . ' is not confirmed.</p>';
+    $infobox_header = $l['Email_address_not_confirmed'];
+    $infobox_green_red = 'red';
+    $infobox_body = "<p>" . $l['The_email_address_is_not_confirmed_'] . " " . $_GET['email'] . "</p>";
   }
 }
 
@@ -91,7 +91,7 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
     <div class="box-body">' . $infobox_body . '</div>
     </div>';
 }
-            ?>
+?>            
 
             <?php 
               include('html-include/tour.php'); 
@@ -103,7 +103,7 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
             include('html-include/login.php');
           ?>
             <div class="box right">
-              <div class="box-head">$l:Sign_up</div>
+              <div class="box-head"><? echo $l['Sign_up']; ?></div>
               <div class="box-body">
                 <form method="post" name="signup" action="server.php?action=signup" data-submit-loading="true">
                   <!-- prevents auto fill of sign up form -->
@@ -111,27 +111,27 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                   <input type="password" class="display-none"/>
                   <table>
                     <tr>
-                      <td>$l:First_name</td>
+                      <td><? echo $l['First_name']; ?></td>
                       <td><input type="text" name="firstname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['firstname']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>$l:Last_name</td>
+                      <td><? echo $l['Last_name']; ?></td>
                       <td><input type="text" name="lastname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['lastname']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>$l:Email_address</td>
+                      <td><? echo $l['Email_address']; ?></td>
                       <td><input type="email" name="signup-email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>$l:Password</td>
+                      <td><? echo $l['Password']; ?></td>
                       <td><input type="password" name="password" placeholder="" required="required"/></td>
                     </tr>
                     <tr>
-                      <td>$l:Confirm_password</td>
+                      <td><? echo $l['Confirm_password']; ?></td>
                       <td><input type="password" name="confirmpassword" placeholder="" required="required"/></td>
                     </tr>
                     <tr>
-                      <td><input type="submit" value="$l:Sign_up"/></td>
+                      <td><input type="submit" value="<? echo $l['Sign_up']; ?>"/></td>
                       <td></td>
                     </tr>
                   </table>

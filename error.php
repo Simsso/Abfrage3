@@ -1,20 +1,23 @@
 <?php
 // error page
 
+// language file
+include('lang/lang.inc.php')
+
 // read error status code
 $status = $_SERVER['REDIRECT_STATUS'];
 
 // array which stores the description for some error codes in an array with two elements (short description, long description)
 $codes = array(
-  400 => array('400 Bad Request', 'The server cannot or will not process the request due to something that is perceived to be a client error.'),
-  401 => array('401 Unauthorized', 'An authentication is required and has failed or has not yet been provided.'),
-  403 => array('403 Forbidden', 'The server has refused to fulfill your request.'),
-  404 => array('404 Not Found', 'The document/file requested was not found on this server.'),
-  405 => array('405 Method Not Allowed', 'The method specified in the Request-Line is not allowed for the specified resource.'),
-  408 => array('408 Request Timeout', 'Your browser failed to send a request in the time allowed by the server.'),
-  500 => array('500 Internal Server Error', 'The request was unsuccessful due to an unexpected condition encountered by the server.'),
-  502 => array('502 Bad Gateway', 'The server received an invalid response from the upstream server while trying to fulfill the request.'),
-  504 => array('504 Gateway Timeout', 'The upstream server failed to send a request in the time allowed by the server.'),
+  400 => array('400 Bad Request', $l['Error_message_400__']),
+  401 => array('401 Unauthorized', $l['Error_message_401__']),
+  403 => array('403 Forbidden', $l['Error_message_403__']),
+  404 => array('404 Not Found', $l['Error_message_404__']),
+  405 => array('405 Method Not Allowed', $l['Error_message_405__']),
+  408 => array('408 Request Timeout', $l['Error_message_408__']),
+  500 => array('500 Internal Server Error', $l['Error_message_500__']),
+  502 => array('502 Bad Gateway', $l['Error_message_502__']),
+  504 => array('504 Gateway Timeout', $l['Error_message_504__']),
 );
 
 // read the data from the array to use it later in HTML

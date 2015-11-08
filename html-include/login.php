@@ -13,10 +13,10 @@
           <td><input type="password" name="password" placeholder="" required="required"/></td>
         </tr>
         <tr>
-          <td colspan="2" class="padding-v-6"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;$l:Stay_logged_in</label></td>  
+          <td colspan="2" class="padding-v-6"><label><input type="checkbox" name="stay-logged-in" value="1" class="initial-width initial-height" checked/>&nbsp;<? echo $l['Stay_logged_in']; ?></label></td>  
         </tr>
         <tr>
-          <td><input type="submit" value="$l:Login"/></td>
+          <td><input type="submit" value="<? echo $l['Login']; ?>"/></td>
           <td></td>
         </tr>
         <!--<tr>
