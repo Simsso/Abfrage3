@@ -252,4 +252,6 @@ $l['Invalid_email_address'] = "Invalid email address";
 $l['Invalid_password'] = "Invalid password";
 $l['Different_passwords'] = "Different passwords";
 $l['Email_alreads_in_use'] = "Email already in use";
+$l['Nothing_to_display_here__'] = "Nothing to display here...";
+$l['Successfully_unsubscribed_the_email_from_newsletter__'] = "Successfully unsubscribed the following email-address from the newsletter: ";
 ?>

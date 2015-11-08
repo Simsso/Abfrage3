@@ -1,7 +1,8 @@
 <?php
 require_once('database.class.php');
+require_once('lang/lang.inc.php');
 
-$message = "Nothing to display here...";
+$message = $l['Nothing_to_display_here__'];
 
 switch ($_GET['action']) {
 
@@ -23,7 +24,7 @@ switch ($_GET['action']) {
     $query = mysqli_query($con, $sql);
     // update the newsletter_enabled field to 0 (unsubscribe)
 
-    $message = "Successfully unsubscribed ".Database::id2email($id)." from the newsletter.";
+    $message = $l['Successfully_unsubscribed_the_email_from_newsletter__'] . Database::id2email($id);
     break;
   }
   break;
