@@ -94,7 +94,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/users.svg">
                 </td>
                 <td>
-                  {{info.firstname}} {{info.lastname}} <? echo $l['has_added_you']; ?>.
+                  <? echo $l['T_has_added_you__']; ?>
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -106,12 +106,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/share.svg">
                 </td>
                 <td>
-                  {{info.user.firstname}} {{info.user.lastname}} <? echo $l['gave_you_permissions_to']; ?> 
-                  {{#if info.editingPermissions}}
-                    <? echo $l['edit']; ?>
-                  {{else}}
-                    <? echo $l['view']; ?>
-                  {{/if}} <? echo $l['the_list']; ?> <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                  <? echo $l['T_gave_you_permissions_to__']; ?>
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -123,18 +118,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <img src="img/add.svg">
                 </td>
                 <td>
-                  {{info.user.firstname}} {{info.user.lastname}} <? echo $l['has_added']; ?> {{info.amountString}} <? echo $l['word']; ?>{{#unless info.exactlyOneWord}}<? echo $l['word_plural_extension']; ?>{{/unless}} 
-                  <? echo $l['to']; ?> 
-                  {{#if info.yourList}}
-                    <? echo $l['your']; ?>
-                  {{else}}
-                    {{#if info.userAddedToTheirOwnList}}
-                      <? echo $l['their']; ?>
-                    {{else}}
-                      {{info.list_creator.firstname}}&#39;s
-                    {{/if}}
-                  {{/if}} 
-                  <? echo $l['list']; ?> <a href="#/word-lists/{{info.list.id}}">{{info.list.name}}</a>.
+                  <? echo $l['T_user_has_added_words__']; ?>
                   &nbsp;<span class="feed-time">{{feedItem.timeString}}</span>
                 </td>
               </tr>
@@ -334,6 +318,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <p><? echo $l['You_can_upload_answers_to_make__']; ?></p>
                 </div>
               </div>
+
+              <script id="query-results-upload-button-template" type="x-handlebars-template"><? echo $l['T_Upload_n_answers__']; ?></script>
+
+              <script id="query-results-upload-counter-template" type="x-handlebars-template"><? echo $l['T_Uploaded_n_of_m_answers__']; ?></script>
             </div>
           </div>
 
@@ -481,9 +469,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <!-- General -->
             <div class="box" id="word-list-info">
-              <div class="box-head">
+              <div class="box-head display-none">
                 <img src="img/info.svg" />
-                <div class="inline"></div>
+                <div class="inline">General</div>
                 <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
               </div>
               <div class="box-body" data-start-state="expanded">
@@ -504,7 +492,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
                 {{! start test string}}
                 <p>
-                  <a href="#/query" onclick="Query.startTestWithList(list.id, true)">
+                  <a href="#/query" onclick="Query.startTestWithList({{list.id}}, true)">
                     <? echo $l['Start_test_with_this_list_']; ?>
                   </a>
                 </p>
@@ -605,6 +593,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   </td>
                 </tr>
               </script>
+
+
+              <script id="word-lists-label-rename-input-template" type="text/x-handlebars-template">
+                &nbsp;
+                <input type="text" form="label-rename-form-{{labelId}}" class="inline" value="{{labelName}}" required="true"/>
+              </script>
             </div>
 
 
@@ -685,6 +679,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="words-in-list">
                 </div>
               </div>
+
+              <script id="word-list-edit-word-input-template" type="text/x-handlebars-template">
+                <input type="text" class="inline-both" form="word-row-{{id}}-form" id="word-edit-input-{{name}}-{{id}}" value="{{value}}" />
+              </script>
             </div>
 
             <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['The_selected_list_doesnt_contain__']; ?></p></script>
@@ -1042,7 +1040,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         'No_idea_': "<? echo $l['No_idea_']; ?>",
         'I_knew_that_': "<? echo $l['I_knew_that_']; ?>",
         'I_didnt_know_that_': "<? echo $l['I_didnt_know_that_']; ?>",
-        'Continue_': "<? echo $l['Continue_']; ?>"
+        'Continue_': "<? echo $l['Continue_']; ?>",
+        'No_answers_yet_': "<? echo $l['No_answers_yet_']; ?>"
       };
       
       // word lists, words, answers

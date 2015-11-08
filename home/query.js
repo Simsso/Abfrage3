@@ -8,7 +8,9 @@ Query.Template = {
   listSelectionTable: Handlebars.compile($(page['query']).find('#query-list-selection-table-template').html()),
   listSelectionRow: Handlebars.compile($(page['query']).find('#query-list-selection-row-template').html()),
   labelSelectionTable: Handlebars.compile($(page['query']).find('#query-label-selection-table-template').html()),
-  labelSelectionRow: Handlebars.compile($(page['query']).find('#query-label-selection-row-template').html())
+  labelSelectionRow: Handlebars.compile($(page['query']).find('#query-label-selection-row-template').html()),
+  resultsUploadButton: Handlebars.compile($(page['query']).find('#query-results-upload-button-template').html()),
+  resultsUploadConuter: Handlebars.compile($(page['query']).find('#query-results-upload-counter-template').html())
 };
 
 $(window).on('page-query', function(event, pageName, subPageName) {
@@ -65,8 +67,8 @@ Query.Algorithm.InOrder.prototype.getNextWord = function() {
 //
 // @return Query.Algorithm.GroupWords: query algorithm object
 Query.Algorithm.GroupWords = function(words, groupSize, careAboutLastNAnswers) {
-  if (groupSize === undefined) groupSize = 8;
-  if (careAboutLastNAnswers === undefined) careAboutLastNAnswers = Query.CONSIDERNANSWERS;
+  if (typeof groupSize === 'undefined') groupSize = 10;
+  if (typeof careAboutLastNAnswers === 'undefined') careAboutLastNAnswers = Query.CONSIDERNANSWERS;
 
   this.groupSize = groupSize;
   this.careAboutLastNAnswers = careAboutLastNAnswers;
@@ -145,6 +147,7 @@ Query.AnswerStateEnum = Object.freeze({
  Query.lists = null;
  Query.selectedLabels = [];
  Query.selectedLists = [];
+
 
 // refresh query label list
 //
@@ -362,6 +365,7 @@ Query.removeLabel = function(labelId) {
 //
 // marks labels as selected which are in the selectedLabels array
 Query.updateLabelSelections = function() {
+  $(page['query']).find('#query-label-selection tr').removeClass('active').data('checked', false);
   for (var i = Query.selectedLabels.length - 1; i >= 0; i--) {
       $(page['query']).find('#query-label-selection tr[data-query-label-id=' + Query.selectedLabels[i] + ']').addClass('active').data('checked', true);
   }
@@ -771,7 +775,13 @@ Query.checkAnswer = function(user, correct) {
 // enables or disables the "Upload query results" button depending on the amount of answers which have not been uploaded yet
 Query.refreshResultsUploadButton = function() {
   var notUploadedAnswersCount = Query.answers.length - Query.nextIndexToUpload;
-  $(page['query']).find('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 'Upload ' + ((notUploadedAnswersCount > 0)? notUploadedAnswersCount + ' ' : '') + 'answer' + ((notUploadedAnswersCount == 1) ? '' : 's'));
+  $(page['query']).find('#query-results-upload-button').prop('disabled', !(notUploadedAnswersCount > 0)).attr('value', 
+    Query.Template.resultsUploadButton({
+      someAnswersNotUploaded: (notUploadedAnswersCount > 0),
+      notUploadedAnswersCount: notUploadedAnswersCount,
+      oneAnswerNotUploaded: (notUploadedAnswersCount == 1)
+    })
+  );
 };
 
 
@@ -780,7 +790,12 @@ Query.refreshResultsUploadButton = function() {
 // The upload counter is an information like "Uploaded 0/0 test answers.". 
 // The functions updates the values.
 Query.refreshResultsUploadCounter = function() {
-  $(page['query']).find('#query-results-upload-counter').html('Uploaded ' + Query.nextIndexToUpload + '/' + Query.answers.length + ' test answers.');
+  $(page['query']).find('#query-results-upload-counter').html(
+    Query.Template.resultsUploadConuter({
+      n: Query.nextIndexToUpload,
+      m: Query.answers.length
+    })
+  );
 };
 
 
@@ -865,7 +880,7 @@ Query.processCurrentAnswerState = function() {
       return;
     case Query.AnswerStateEnum.NotKnownClicked:
       Query.currentAnswerState = Query.AnswerStateEnum.WaitToContinue;
-      // no break here
+      // no break or return here
     case Query.AnswerStateEnum.NotKnown:
       $(page['query']).find('#query-answer-not-known').prop('disabled', true);
       $(page['query']).find('#query-answer-not-sure').prop('disabled', true);
@@ -950,12 +965,14 @@ Query.tryAutoUpload = function() {
     Query.refreshResultsUploadButton();
 };
 
+
 // auto upload enabled
 //
 // @return bool: returns if the user has enabled auto upload of their query answers
 Query.autoUploadEnabled = function() {
   return $(page['query']).find('#query-results-auto-upload').is(':checked');
 }
+
 
 // query auto upload checkbox event listener
 $(page['query']).find('#query-results-auto-upload').on('click', function() {
@@ -1099,7 +1116,7 @@ Query.Drawing.getSvgOfWord = function(word) {
   }
   else {
     // no answers
-    svg += '<text y="75%" text-anchor="right">No answers yet.</text>';
+    svg += '<text y="75%" text-anchor="right">' + constString['No_answers_yet_'] + '</text>';
   }
 
   // return HTML-element

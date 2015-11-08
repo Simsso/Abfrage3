@@ -36,7 +36,7 @@ class Response {
 session_start(); // start session
 require('database.class.php'); // include database class
 
-
+require('lang/lang.inc.php'); // include language files
 
 if (isset($_GET['action'])) { // check whether the user request type was passed
   
@@ -66,7 +66,7 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     $mail = new Mail(Mail::DEFAULT_SENDER_EMAIL, $mail, null, $subject, $message);
     $mail->send();
 
-    Response::send("<p>Thanks for your approach!</p><p>Your message has been sent.</p>");
+    Response::send($l['P_Thanks_for_your_approach__']);
 
     break;
     
@@ -93,13 +93,13 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
       $user = Database::get_user_by_id($id);
       $mail = Mail::get_email_confirmation_mail($user->firstname, $user->email, $user->hash);
       $mail->send();
-      header("Location: /?login_message=The email address has not been confirmed yet. A new email has been sent.&email=" . $user->email);
+      header("Location: /?login_message=" . $l['Email_not_confirmed__'] . "&email=" . $user->email);
       exit();
     } else if ($result == 0) {
-      header("Location: /?login_message=The given password is wrong.&email=" . $email);
+      header("Location: /?login_message=" . $l['Password_wrong__'] . "&email=" . $email);
       exit();
     } else if ($result == 3) {
-      header("Location: /?login_message=The given email-address does not exist.");
+      header("Location: /?login_message=" . $l['Email_invalid__']);
       exit();
     }
     break;

@@ -11,17 +11,17 @@
         </a>
         <ul class="nav left">
           <a href="#/home">
-            <li class="nav_home nav-img-li" data-text="Home">
-              <img src="img/home.svg" class="nav-image" alt="Home" title="Home"/>
+            <li class="nav_home nav-img-li" data-text="$l:Home">
+              <img src="img/home.svg" class="nav-image" alt="$l:Home" title="$l:Home"/>
             </li>
           </a>
-          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"Login">Login</li></a>
+          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"$l:Login">$l:Login</li></a>
         </ul>
 
         <ul class="nav right">
-          <a href="#/about"><li class="nav_about" data-text="About">About</li></a>
-          <a href="#/contact"><li class="nav_contact" data-text="Contact">Contact</li></a>
-          <a href="#/legal-info"><li class="nav_legal-info" data-text="Legal info">Legal info</li></a>
+          <a href="#/about"><li class="nav_about" data-text="$l:About">$l:About</li></a>
+          <a href="#/contact"><li class="nav_contact" data-text="$l:Contact">$l:Contact</li></a>
+          <a href="#/legal-info"><li class="nav_legal-info" data-text="$l:Legal_info">$l:Legal_info</li></a>
         </ul>
       </div>
     </nav>
@@ -103,7 +103,7 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
             include('html-include/login.php');
           ?>
             <div class="box right">
-              <div class="box-head">Sign up</div>
+              <div class="box-head">$l:Sign_up</div>
               <div class="box-body">
                 <form method="post" name="signup" action="server.php?action=signup" data-submit-loading="true">
                   <!-- prevents auto fill of sign up form -->
@@ -111,27 +111,27 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                   <input type="password" class="display-none"/>
                   <table>
                     <tr>
-                      <td>First name</td>
+                      <td>$l:First_name</td>
                       <td><input type="text" name="firstname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['firstname']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>Last name</td>
+                      <td>$l:Last_name</td>
                       <td><input type="text" name="lastname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['lastname']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>Email-address</td>
+                      <td>$l:Email_address</td>
                       <td><input type="email" name="signup-email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
                     </tr>
                     <tr>
-                      <td>Password</td>
+                      <td>$l:Password</td>
                       <td><input type="password" name="password" placeholder="" required="required"/></td>
                     </tr>
                     <tr>
-                      <td>Confirm password</td>
+                      <td>$l:Confirm_password</td>
                       <td><input type="password" name="confirmpassword" placeholder="" required="required"/></td>
                     </tr>
                     <tr>
-                      <td><input type="submit" value="Sign up"/></td>
+                      <td><input type="submit" value="$l:Sign_up"/></td>
                       <td></td>
                     </tr>
                   </table>

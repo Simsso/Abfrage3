@@ -8,6 +8,7 @@
 // _ at the end: meaning ends with a punctuation mark
 // __ at the end: index is a abbreviation of the meaning which ends with a punctuation mark
 // P_ at the beginning: the following string represents a whole paragraph and can contain HTML-code
+// T_ at the beginning: the following string contains templating elements (because it is necessary)
 
 $l['Home'] = "Home";
 $l['Test'] = "Test";
@@ -20,8 +21,10 @@ $l['Feed'] = "Feed";
 $l['Load_all'] = "Load all";
 $l['Loading_all'] = "Loading all";
 $l['Nothing_new_since_last_login_'] = "Nothing new since last login.";
-$l['has_added_you'] = "has added you";
-$l['gave_you_permissions_to'] = "gave you permissions to";
+$l['T_has_added_you__'] = "{{info.firstname}} {{info.lastname}} has added you.";
+$l['T_gave_you_permissions_to__'] = "{{info.user.firstname}} {{info.user.lastname}} gave you permissions to {{#if info.editingPermissions}}edit{{else}}view{{/if}} the list <a href=\"#/word-lists/{{info.list.id}}\">{{info.list.name}}</a>.";
+$l['T_user_has_added_words__'] = "{{info.user.firstname}} {{info.user.lastname}} has added {{info.amountString}} word{{#unless info.exactlyOneWord}}s{{/unless}} to {{#if info.yourList}}your{{else}}
+                    {{#if info.userAddedToTheirOwnList}}their{{else}}{{info.list_creator.firstname}}&#39;s{{/if}}{{/if}} list <a href=\"#/word-lists/{{info.list.id}}\">{{info.list.name}}</a>.";
 $l['edit'] = "edit";
 $l['view'] = "view";
 $l['the_list'] = "the list";
@@ -61,7 +64,7 @@ $l['The_words_below_average_algorithm__'] = "The \"Words below average\" algorit
 $l['In_order'] = "In order";
 $l['The_in_order_algorithm__'] = "The \"In order\" algorithm iterates through all words one after the other.";
 $l['Group_words'] = "Group words";
-$l['The_group_words_algorithm__'] = "The \"group words\" algorithm picks some words and asks them nearly randomly. If you know one word it will be = replaced by a new one.";
+$l['The_group_words_algorithm__'] = "The \"group words\" algorithm picks some words and asks them nearly randomly. If you know one word it will be replaced by a new one.";
 $l['Test_settings'] = "Test settings";
 $l['Text_box'] = "Text box";
 $l['Buttons'] = "Buttons";
@@ -211,8 +214,18 @@ $l['Created'] = "Created";
 $l['List_name'] = "List name";
 $l['Edit_languages'] = "Edit languages";
 $l['Editing_languages'] = "Edition languages";
+$l['No_answers_yet_'] = "No answers yet.";
 $l['Delete_list'] = "Delete list";
 $l['Deleting_list'] = "Deleting list";
 $l['Continue_'] = "Continue.";
+$l['T_Upload_n_answers__'] = "Upload {{#if someAnswersNotUploaded}}{{notUploadedAnswersCount}} {{/if}}answer{{#unless oneAnswerNotUploaded}}s{{/unless}}";
+$l['T_Uploaded_n_of_m_answers__'] = "Uploaded {{n}}/{{m}} test answers.";
+$l['P_Thanks_for_your_approach__'] = "<p>Thanks for your approach!</p><p>Your message has been sent.</p>";
+$l['Email_not_confirmed__'] = "The email address has not been confirmed yet. A new email has been sent.";
+$l['Password_wrong__'] = "The given password is wrong.";
+$l['Email_invalid__'] = "The given email-address does not exist."
+Password "Password"
+Confirm_password "Confirm password"
+Sign_up "Sign up"
 
 ?>

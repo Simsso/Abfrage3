@@ -20,11 +20,14 @@ WordLists.Template = {
   // list of words
   listOfWordsTable: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-template').html()),
   listOfWordsRow: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-row-template').html()),
+  listOfWordsEditInput: Handlebars.compile($(page['word-lists']).find('#word-list-edit-word-input-template').html()),
 
   // labels
   labelTable: Handlebars.compile($(page['word-lists']).find('#word-lists-label-table-template').html()),
   labelList: Handlebars.compile($(page['word-lists']).find('#word-lists-label-list-template').html()),
   labelSingleListElement: Handlebars.compile($(page['word-lists']).find('#word-lists-label-single-list-element-template').html()),
+  labelRenameInput: Handlebars.compile($(page['word-lists']).find('#word-lists-label-rename-input-template').html()),
+
 
   // share
   shareTable: Handlebars.compile($(page['word-lists']).find('#word-lists-share-table-template').html())
@@ -540,6 +543,62 @@ WordLists.getTableOfWordList = function(content, allowEdit, lang1, lang2) {
 };
 
 
+// get direct sub labels of label
+//
+// @param Label label: label object
+//
+// @return Label[]: array of labels which are sub label of the passed label
+WordLists.getDirectSubLabelsOfLabel = function(label) {
+  var labels = [];
+  for (var i = Database.labels.length - 1; i >= 0; i--) {
+    if (Database.labels[i].parent_label === label.id) {
+      labels.push(Database.labels[i]);
+    }
+  }
+  return labels;
+};
+
+
+// get lists of label
+//
+// @param Label label: label object
+//
+// @return List[]: array of lists which are have been assigned to the passed label
+WordLists.getListsOfLabel = function(label) {
+  var lists = [];
+  for (var i = Database.label_list_attachments.length - 1; i >= 0; i--) {
+    if (Database.label_list_attachments[i].label === label.id) {
+      var list = Database.getListById(Database.label_list_attachments[i].list);
+      if (list) { // list could be undefined 
+        lists.push(list);
+      }
+    }
+  }
+  return lists;
+};
+
+
+// get lists without any label attachment
+//
+// @return List[]: array of lists which are not connected to any label
+WordLists.getListsWithoutAnyLabelAttachment = function() {
+  var lists = [];
+  for (var i = Database.lists.length - 1; i >= 0; i--) {
+    var listHasLabel = false;
+    for (var j = Database.label_list_attachments.length - 1; j >= 0; j--) {
+      if (Database.label_list_attachments[j].list === Database.lists[i].id) {
+        listHasLabel = true;
+      }
+    }
+
+    if (!listHasLabel) {
+      lists.push(Database.lists[i]);
+    }
+  }
+  return lists;
+};
+
+
 // export word list
 //
 // under development
@@ -590,9 +649,9 @@ WordLists.editOrSaveWordEvent = function(event, id) {
     editSaveButton.data('action', 'save').removeClass('pencil').addClass('check');
 
     // replace the words meanings with text boxes containing the meanings as value="" to allow editing by the user
-    cell1.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language1-' + id + '" value="' + cell1.html() + '" />');
-    cell2.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-language2-' + id + '" value="' + cell2.html() + '" />');
-    cell3.html('<input type="text" class="inline-both" form="word-row-' + id + '-form" id="word-edit-input-comment-' + id + '" value="' + cell3.html() + '" />');
+    cell1.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell1.html(), name: 'language1' }));
+    cell2.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell2.html(), name: 'language2' }));
+    cell3.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell3.html(), name: 'comment' }));
   }
 
   // save button
@@ -770,7 +829,7 @@ WordLists.deleteWordList = function(id, callback) {
 
         // recently used
         Database.recentlyUsed.remove(Database.lists[i]); // delete from recently used array
-        Home.RecentlyUsed.updatedom(); // update dom
+        Home.RecentlyUsed.updateDom(); // update dom
 
         // remove list object from data base array
         Database.lists.splice(i, 1);
@@ -1231,19 +1290,19 @@ WordLists.updateDomLabelList = function() {
     // get label id from data tag of the form
     var labelId = $(this).data('label-id');
     var button = $(page['word-lists']).find('#label-rename-button-' + labelId);
-    var $firstCell = $(page['word-lists']).find('#label-rename-table-cell-' + labelId);
+    var firstCell = $(page['word-lists']).find('#label-rename-table-cell-' + labelId);
 
     // edit name
     if (button.data('action') == 'rename-edit') {
       var labelName = Database.labels[WordLists.getLabelIndexByLabelId(Database.labels, labelId)].name;
-      $firstCell.find('label span').html('');
-      $firstCell.append('&nbsp;<input type="text" form="label-rename-form-' + labelId + '" class="inline" value="' + labelName + '" required="true"/>');
+      firstCell.find('label span').html('');
+      firstCell.append(WordLists.Template.labelRenameInput({ labelName: labelName, labelId: labelId }));
       button.data('action', 'rename-save');
     }
 
     // submit edits
     else {
-      var input = $firstCell.children('input').first();
+      var input = firstCell.children('input').first();
       var newName = input.val();
 
       Button.setPending(button);
@@ -1252,8 +1311,8 @@ WordLists.updateDomLabelList = function() {
       // send new name to the server
       WordLists.renameLabel(labelId, newName, function() {
         Button.setDefault(button.data('action', 'rename-edit'));
-        $firstCell.children('input').remove();
-        $firstCell.find('label span').html('&nbsp;' + newName);
+        firstCell.children('input').remove();
+        firstCell.find('label span').html('&nbsp;' + newName);
 
         // update local label object
         Database.labels[WordLists.getLabelIndexByLabelId(Database.labels, labelId)].name = newName;

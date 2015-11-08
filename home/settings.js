@@ -204,7 +204,7 @@ $(page['settings']).find('#settings-delete-account-form').on('submit', function(
         } 
         else {
           $(page['settings']).find('#settings-delete-account-password').prop('disabled', false).val('');
-          Buutton.setDefault($(page['settings']).find('#settings-delete-account-button'));
+          Button.setDefault($(page['settings']).find('#settings-delete-account-button'));
 
           var mb = new MessageBox();
           mb.setTitle('Delete account');
