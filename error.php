@@ -2,7 +2,7 @@
 // error page
 
 // language file
-include('lang/lang.inc.php')
+include('lang/lang.inc.php');
 
 // read error status code
 $status = $_SERVER['REDIRECT_STATUS'];

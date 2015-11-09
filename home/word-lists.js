@@ -13,6 +13,7 @@ WordLists.Template = {
   listOfWordLists: Handlebars.compile($(page['word-lists']).find('#word-lists-list-of-word-lists-template').html()),
   wordListTable: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-template').html()),
   wordListTableRow: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-row-template').html()),
+  wordListsFolderView: Handlebars.compile($(page['word-lists']).find('#word-lists-folder-view-template').html()),
 
   // single list general information (owner, start test link, creation time, etc.)
   singleListGeneralInformation: Handlebars.compile($(page['word-lists']).find('#word-lists-single-list-general-information').html()),
@@ -42,8 +43,36 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
   if (hashListId === WordLists.shownId) return; // no reason to touch the DOM because the requested list hasn't changed
   
   
-  if (isNaN(hashListId)) { // no valid subPageName given via hash
-    WordLists.showNoListSelectedScreen(true);
+  if (isNaN(hashListId)) { // no list id given via hash
+
+    if (subPageName.split('/')[0] === 'l') { // hash determines label to display
+
+      // show no list selected screen so that the things appear at all
+      WordLists.showNoListSelectedScreen(false); // don't update the hash (parameter: false)
+
+      var subPageParts = subPageName.split('/');
+      var labelId = parseInt((subPageParts.length > 1) ? subPageParts[subPageParts.length - 1] : 0);
+      if (isNaN(labelId)) labelId = 0; // no label ("root" label)
+
+      var labelPath = subPageParts.slice(1); // hash part without the "l/" at the beginning
+      // label path contains only ids; replace them with label objects
+      for (var i = labelPath.length - 1; i >= 0; i--) {
+        labelPath[i] = Database.getLabelById(labelPath[i]);
+      }
+
+      $(page['word-lists']).find('#list-of-word-lists').html(WordLists.Template.wordListsFolderView({
+        list: WordLists.getListsOfLabel(labelId),
+        label: WordLists.getDirectSubLabelsOfLabel(labelId),
+        subPageName: subPageName,
+        labelPath: labelPath // array of the label path objects (e.g. labels with ids 5/31/50) 
+      }));
+
+      // update link to word lists
+      $('.link-to-show-current-word-list').attr('href', '#/word-lists/' + subPageName);
+    } 
+    else {
+      WordLists.showNoListSelectedScreen(true);
+    }
   }
   else {
     // a valid list id has been passed via url
@@ -545,13 +574,13 @@ WordLists.getTableOfWordList = function(content, allowEdit, lang1, lang2) {
 
 // get direct sub labels of label
 //
-// @param Label label: label object
+// @param unsigned int labelId: label id (can be zero: no label; root label)
 //
 // @return Label[]: array of labels which are sub label of the passed label
-WordLists.getDirectSubLabelsOfLabel = function(label) {
+WordLists.getDirectSubLabelsOfLabel = function(labelId) {
   var labels = [];
   for (var i = Database.labels.length - 1; i >= 0; i--) {
-    if (Database.labels[i].parent_label === label.id) {
+    if (Database.labels[i].parent_label === labelId) {
       labels.push(Database.labels[i]);
     }
   }
@@ -561,18 +590,23 @@ WordLists.getDirectSubLabelsOfLabel = function(label) {
 
 // get lists of label
 //
-// @param Label label: label object
+// @param unsigned int labelId: label id (can be zero: no label; root label)
 //
 // @return List[]: array of lists which are have been assigned to the passed label
-WordLists.getListsOfLabel = function(label) {
+WordLists.getListsOfLabel = function(labelId) {
   var lists = [];
   for (var i = Database.label_list_attachments.length - 1; i >= 0; i--) {
-    if (Database.label_list_attachments[i].label === label.id) {
+    if (Database.label_list_attachments[i].label === labelId) {
       var list = Database.getListById(Database.label_list_attachments[i].list);
       if (list) { // list could be undefined 
         lists.push(list);
       }
     }
+  }
+
+  // add lists without any label when the root label is requested
+  if (labelId === 0) {
+    lists.pushElements(WordLists.getListsWithoutAnyLabelAttachment());
   }
   return lists;
 };

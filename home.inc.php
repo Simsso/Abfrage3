@@ -313,7 +313,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   </p>
 
                   <h4><? echo $l['Test_answer_upload']; ?></h4>
-                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;<? echo $l['Auto_upload']; ?></label>&nbsp;<input type="button" value="Upload answers" id="query-results-upload-button" disabled="true"/></p>
+                  <p><label><input type="checkbox" id="query-results-auto-upload" checked/>&nbsp;<? echo $l['Auto_upload']; ?></label>&nbsp;<input type="button" value="<? echo $l['Upload_answers']; ?>" id="query-results-upload-button" disabled="true"/></p>
                   <p id="query-results-upload-counter">Uploaded 0/0 test answers.</p>
                   <p><? echo $l['You_can_upload_answers_to_make__']; ?></p>
                 </div>
@@ -413,7 +413,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <div class="box-body" data-start-state="expanded">
               <form id="word-list-add-form">
                 <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
-                <input id="word-list-add-button" type="submit" value="Create list" data-pending-value="<? echo $l['Creating_list']; ?>"/>
+                <input id="word-list-add-button" type="submit" value="<? echo $l['Create_list']; ?>" data-pending-value="<? echo $l['Creating_list']; ?>"/>
               </form>
               <div id="list-of-word-lists">
               </div>
@@ -424,10 +424,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             <script id="word-lists-list-of-word-lists-template" type="text/x-handlebars-template">
               <table class="box-table cursor-pointer">
                 <tr class="cursor-default">
-                  <th>Name</th>
-                  <th class="hide-mobile">Content</th>
-                  <th class="hide-mobile">Entries</th>
-                  <th class="hide-mobile">Creator</th>
+                  <th><? echo $l['Name']; ?></th>
+                  <th class="hide-mobile"><? echo $l['Content']; ?></th>
+                  <th class="hide-mobile"><? echo $l['Entries']; ?></th>
+                  <th class="hide-mobile"><? echo $l['Creator']; ?></th>
                 </tr>
                 {{#each list}}
                   <tr data-action="edit" data-list-id="{{id}}" id="list-of-word-lists-row-{{id}}">
@@ -438,6 +438,26 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   </tr>
                 {{/each}}
               </table>
+            </script>
+
+            <script id="word-lists-folder-view-template" type="text/x-handlebars-template">
+              <table class="box-table cursor-pointer word-lists-folder-view-table">
+                {{#each label}}
+                  <tr>
+                    <td><img src="img/tags.svg" /></td>
+                    <td colspan="4"><a href="#/word-lists/{{../subPageName}}/{{id}}">{{name}}</a></td>
+                  </tr>
+                {{/each}}
+
+                {{#each list}}
+                  <tr>
+                    <td></td>
+                    <td><a href="#/word-lists/{{id}}">{{name}}</a></td>
+                    <td class="hide-mobile">{{language1}} - {{language2}}</td>
+                    <td class="hide-mobile">{{words.length}}</td>
+                    <td class="hide-mobile">{{creator.firstname}} {{creator.lastname}}</td>
+                  </tr>
+                {{/each}}
             </script>
           </div>
 
@@ -487,7 +507,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
                 {{! permissions string }}
                 {{#unless allowSharing}}
-                  <p><? echo $l['You_have_permissions_to']; ?>{{#if allowEdit}}<? echo $l['edit']; ?>{{else}}<? echo $l['view']; ?>{{/if}} {{list.creator.firstname}}<? echo $l['person_plural_extension']; ?> <? echo $l['list']; ?>.</p>
+                  <p><? echo $l['You_have_permissions_to__']; ?></p>
                 {{/unless}}
 
                 {{! start test string}}
@@ -938,7 +958,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <div class="box" data-page="account">
               <div class="box-head">
-                Delete account
+                <? echo $l['Delete_account']; ?>
               </div>
               <div class="box-body">
                 <p><? echo $l['Be_careful_cant_be_undone_lists_still_visible__']; ?></p>
@@ -1092,6 +1112,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           for (var i = Database.lists.length - 1; i >= 0; i--) {
             if (Database.lists[i].id === id) {
               return Database.lists[i];
+            }
+          }
+        };
+
+        Database.getLabelById = function(id) {
+          for (var i = Database.labels.length - 1; i >= 0; i--) {
+            if (Database.labels[i].id === id) {
+              return Database.labels[i];
             }
           };
         };

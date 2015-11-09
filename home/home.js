@@ -91,7 +91,8 @@ Home.Feed.updateDom = function() {
         feedHtml += Home.Feed.Template.listShared({ feedItem: feedItem, info: info });
         break;
       case 2: // added word
-        info.amountString = info.amount.toEnglishString();
+        // info.amountString = info.amount.toEnglishString();
+        info.amountString = info.amount;
         info.exactlyOneWord = (info.amount === 1);
         info.yourList = (info.list.creator === data.user);
         info.userAddedToTheirOwnList = (info.user.id === info.list.creator);
