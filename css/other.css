@@ -65,7 +65,7 @@ a:visited {
   position: absolute;
   left: 50%;
   bottom: 0;
-  max-height: 80px;
+  max-height: 111px;
 }
 
 #footer-wrapper > div.box {
@@ -129,7 +129,7 @@ ul.social-icons li {
   margin: auto;
 }
 .main.content-width {
-  padding-bottom: 105px;
+  padding-bottom: 136px;
 }
 
 .navbar {
@@ -550,6 +550,9 @@ p:not(:last-child), ul.normal:not(:last-child) {
   cursor: pointer;
 }
 
+.language-flag {
+  height: 13px; 
+}
 
 
 #word-list-table tr.pending {
@@ -1158,7 +1161,7 @@ input[type=text]:first-child:last-child.inline-both {
   }
 
   .main.content-width {
-    padding-bottom: 90px;
+    padding-bottom: 106px;
   }
   
   .left-column, .right-column, .left-column-small, .right-column-big {
