@@ -308,7 +308,7 @@ function handleAjaxResponse(data) {
   catch (e) {
     // will be cought if server response is e.g. a PHP error
     // log it for debugging purpose
-    console.log(data);
+    console.error(data);
   }
 }
 
@@ -600,7 +600,7 @@ var Button = {
     btn
       .prop('disabled', true)
       .data('default-value', btn.attr('value'))
-      .attr('value', btn.data('pending-value'));
+      .attr('value', btn.data('pending-value') + '...');
   },
 
 

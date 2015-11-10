@@ -20,6 +20,7 @@ switch ($lang) {
   break;
  
   default:
+  $lang = 'en';
   $lang_file = 'lang.en.inc.php';
  
 }

@@ -667,8 +667,12 @@ Query.getNextWord = function() {
     case Query.AlgorithmEnum.Random:
       return Query.words.getRandomElement();
     case Query.AlgorithmEnum.UnderAverage:
-      var avg = Word.getKnownAverageOfArray(Query.words);
-      return Word.getWordKnownBelow(Query.words, avg, Query.CONSIDERNANSWERS);
+      var avg = Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS);
+      var word = Word.getWordKnownBelow(Query.words, avg, Query.CONSIDERNANSWERS);
+      if (typeof word === 'undefined') {
+        word = Query.words.getRandomElement();
+      }
+      return word;
     case Query.AlgorithmEnum.InOrder:
       return Query.inOrderAlgorithm.getNextWord();
     case Query.AlgorithmEnum.GroupWords:
@@ -813,7 +817,9 @@ Query.uploadResults = function() {
 
   Query.refreshResultsUploadButton();
 
-  $.ajax({
+  if (answersToUpload.length === 0) return;
+
+  jQuery.ajax({
     type: 'POST',
     url: 'server.php?action=upload-query-results',
     data: { 'answers': JSON.stringify(answersToUpload)},
@@ -1137,30 +1143,37 @@ Query.Drawing.storedDataOfQueryAnswers = [];
 
 // query drawing get svg of selected words (Query.words) array
 //
+// @param Word[] words: array of words to draw the graph from
+// @param QueryAnswer[] answers: array of answers to draw the graph from
+// @param bool useStoredAnswers: defines wheter the function tries not to recalculate everything by using the Query.Drawing.storedDataOfQueryAnswers array
+//
 // @return string: the <svg> element
-Query.Drawing.getSvgOfQueryAnswers = function() {
+Query.Drawing.getSvgOfAnswerArray = function(words, answers, useStoredAnswers) {
   var svg = '<svg class="selected-words-avg-graph">', numberOfPoints = 100;
-  var maxX = (Query.selectedWordsAllAnswers.length > numberOfPoints) ? numberOfPoints : Query.selectedWordsAllAnswers.length;
+  var maxX = (answers.length > numberOfPoints) ? numberOfPoints : answers.length;
   var lastX, lastY;
   for (var i = maxX - 1, j = 0; i >= 0 && maxX > 1; i--, j++) {
     var x, y;
 
     x = Math.map(i, 0, maxX - 1, 100, 0);
 
-    var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, Query.selectedWordsAllAnswers.length - 1));
-    var numberOfConsideredAnswers = Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers;
+    var numberOfIgnoredAnswers = Math.round(Math.map(i, 0, maxX - 1, 0, answers.length - 1));
+    var numberOfConsideredAnswers = answers.length - numberOfIgnoredAnswers;
     // check if the values have already been calculated
-    if (typeof Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] !== 'undefined') {
+    if (useStoredAnswers && typeof Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] !== 'undefined') {
       // the values have already been calculated
       // load them from the array
       y = Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers];
     }
     else {
       // calculate the values
-      var ignoredAnswers = Query.selectedWordsAllAnswers.slice(Query.selectedWordsAllAnswers.length - numberOfIgnoredAnswers);
-      var average = Word.getKnownAverageOfArrayOverLastNAnswers(Query.words, Query.CONSIDERNANSWERS, ignoredAnswers);
+      var ignoredAnswers = answers.slice(answers.length - numberOfIgnoredAnswers);
+      var average = Word.getKnownAverageOfArrayOverLastNAnswers(words, Query.CONSIDERNANSWERS, ignoredAnswers);
       y = Math.map(average, 0, 1, 100, 0);
-      Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] = y;
+
+      if (useStoredAnswers) {
+        Query.Drawing.storedDataOfQueryAnswers[numberOfConsideredAnswers] = y;
+      }
     }
 
     svg += '<circle cx="' + x + '%" cy="' + y + '%" r="1" />';
@@ -1172,11 +1185,11 @@ Query.Drawing.getSvgOfQueryAnswers = function() {
     lastY = y;
   }
 
-  if (Query.selectedWordsAllAnswers.length === 0) {
+  if (answers.length === 0) {
     svg += '<line x1="0%" x2="100%" y1="100%" y2="100%" />';
   }
-  else if (Query.selectedWordsAllAnswers.length === 1) {
-    var y = Math.map(Query.selectedWordsAllAnswers[0].correct, 0, 1, 100, 0);
+  else if (answers.length === 1) {
+    var y = Math.map(answers[0].correct, 0, 1, 100, 0);
     svg += '<line x1="0%" x2="100%" y1="' + y + '%" y2="' + y + '%" />';
   }
   svg += '<text y="100%" fill-opacity="0.4" x="50%" text-anchor="middle" font-size="160px">' + 
@@ -1205,7 +1218,7 @@ Query.Stats.updateWordInformation = function(word) {
 Query.Stats.updateSelectedWordsInformation = function() {
   setTimeout(function() {
     // setTimeout to make sure it donesn't block the UI
-    $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfQueryAnswers());
+    $(page['query']).find('#query-selected-words-stats').html(Query.Drawing.getSvgOfAnswerArray(Query.words, Query.selectedWordsAllAnswers, true));
   }, 5 );
 };
 

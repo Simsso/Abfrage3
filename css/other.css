@@ -120,7 +120,7 @@ ul.social-icons li {
 }
 
 .bold {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 .content-width {
@@ -552,6 +552,8 @@ p:not(:last-child), ul.normal:not(:last-child) {
 
 .language-flag {
   height: 13px; 
+  margin-bottom: -1px;
+
 }
 
 

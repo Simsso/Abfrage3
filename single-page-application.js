@@ -5,16 +5,16 @@ SPA.shownPageName = '';
 SPA.shownHashName = '';
 SPA.shownSubPageName = '';
 SPA.pageTitle = {
-  'home': 'Home',
-  'query': 'Test',
-  'word-lists': 'Word lists',
-  'user': 'User',
-  'settings': 'Settings',
-  'about': 'About',
-  'contact': 'Contact',
-  'legal-info': 'Legal info',
-  'tour': 'Tour',
-  'login': 'Login'
+  'home': constString['Home'],
+  'query': constString['Test'],
+  'word-lists': constString['Word_lists'],
+  'user': constString['Users'],
+  'settings': constString['Settings'],
+  'about': constString['About'],
+  'contact': constString['Contact'],
+  'legal-info': constString['Legal_info]'],
+  'tour': constString['Tour'],
+  'login': constString['Login']
 };
 
 var page = {}, // stores all dom elements from not rendered sites

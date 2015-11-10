@@ -184,7 +184,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <tr>
                       <td><span class="language" id="query-lang2"><? echo $l['Second_language']; ?></span>:&nbsp;</td>
                       <td id="query-answer-table-cell-text-box">
-                        <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0"/>
+                        <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0" spellcheck="false"/>
                       </td>
                       <td id="query-answer-table-cell-buttons" class="display-none">
                         <table class="width-100">
@@ -507,7 +507,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
                 {{! permissions string }}
                 {{#unless allowSharing}}
-                  <p><? echo $l['You_have_permissions_to__']; ?></p>
+                  <p><? echo $l['T_You_have_permissions_to__']; ?></p>
                 {{/unless}}
 
                 {{! start test string}}
@@ -604,7 +604,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <img class="small-menu-open-image" src="img/menu-small.svg" />
                     <div class="small-menu display-none">
                       <input type="submit" class="width-100" form="label-rename-form-{{label.id}}" id="label-rename-button-{{label.id}}" data-action="rename-edit" value="<? echo $l['Rename']; ?>" /><br>
-                      <input type="button" class="label-add-sub-label width-100" value="<? echo $l['Add']; ?> sub-label"/><br>
+                      <input type="button" class="label-add-sub-label width-100" value="<? echo $l['Add_sub_label']; ?>"/><br>
                       <form class="label-remove-form inline">
                         <input type="hidden" class="label-remove-select" value="{{label.id}}"/>
                         <input class="label-remove-button width-100" type="submit" value="<? echo $l['Remove']; ?>" />
@@ -686,9 +686,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="words-add">
                   <div id="words-add-message"></div>
                   <form id="words-add-form">
-                    <input id="words-add-language1" type="text" placeholder="<? echo $l['First_language']; ?>"/>
-                    <input id="words-add-language2" type="text" placeholder="<? echo $l['Second_language']; ?>"/>
-                    <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>"/>
+                    <input id="words-add-language1" type="text" placeholder="<? echo $l['First_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-language2" type="text" placeholder="<? echo $l['Second_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>" spellcheck="false"/>
                     <input id="words-add-button" type="submit" value="<? echo $l['Add_word']; ?>"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
                   </form>
@@ -1048,6 +1048,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
     <script type="text/javascript" src="database.js"></script>
 
     <script type="text/javascript">
+      var start = new Date().getTime();
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
 
@@ -1060,7 +1061,16 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         'No_idea_': "<? echo $l['No_idea_']; ?>",
         'I_knew_that_': "<? echo $l['I_knew_that_']; ?>",
         'I_didnt_know_that_': "<? echo $l['I_didnt_know_that_']; ?>",
-        'Continue_': "<? echo $l['Continue_']; ?>",
+        'Home': "<? echo $l['Home']; ?>",
+        'Test': "<? echo $l['Test']; ?>",
+        'Word_lists': "<? echo $l['Word_lists']; ?>",
+        'Users': "<? echo $l['Users']; ?>",
+        'Settings': "<? echo $l['Settings']; ?>",
+        'About': "<? echo $l['About']; ?>",
+        'Contact': "<? echo $l['Contact']; ?>",
+        'Legal_info': "<? echo $l['Legal_info']; ?>",
+        'Tour': "<? echo $l['Tour']; ?>",
+        'Login': "<? echo $l['Login']; ?>",
         'No_answers_yet_': "<? echo $l['No_answers_yet_']; ?>"
       };
       
@@ -1129,6 +1139,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           Database.recentlyUsed[i] = Database.getListById(Database.recentlyUsed[i]);
         }
       })();
+
+      var end = new Date().getTime();
+      var time = end - start;
+      console.info('Execution time for client-side data base init: ' + time + ' ms');
     </script>
 
     <!-- add scripts to the DOM -->
