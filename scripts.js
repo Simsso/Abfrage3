@@ -296,7 +296,7 @@ function handleAjaxResponse(data) {
     }
     else if (obj.status === "error") {
       if (obj.data === "no session") {
-        $('#main-wrapper').after(getLoadingFullscreenWithMessage("Your session has expired."));
+        $('#main-wrapper').after(getLoadingFullscreenWithMessage("Your session has expired.")); // TODO: move into lang file
         $('.sk-three-bounce.fullscreen').css('opacity', '1');
 
         setTimeout(function () {

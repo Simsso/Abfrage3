@@ -4,14 +4,14 @@
       <table class="width-100 headline spacer-15">
         <tr>
           <td><h2><? echo $l['Welcome_to']; ?>&nbsp;</h2></td>
-          <td><img class="height-46px" src="img/logo-white.svg"/></td>
+          <td><img class="height-46px" src="img/logo-white.svg" alt="Abfrage3"/></td>
         </tr>
       </table>
       <p>
         <? echo $l['Abfrage3_is_an_online__']; ?>
       </p>
       <p>
-        <img src="/img/mockup-image.jpg" class="full-width">
+        <img src="/img/mockup-image.jpg" class="full-width" alt="Abfrage3">
       </p>
       <p class="italic"><? echo $l['Here_is_how_it_works']; ?>:</p>
     </div>
@@ -27,7 +27,7 @@
         <div class="col-r">
           <div class="box">
             <div class="box-head">
-              <img src="img/server.svg">
+              <img src="img/server.svg" alt="">
               <? echo $l['Your_word_lists']; ?>
             </div>
             <div class="box-body">
@@ -47,7 +47,7 @@
         <div class="col-r">
           <div class="box">
             <div class="box-head">
-              <img src="img/grid.svg">
+              <img src="img/grid.svg" alt="">
               <? echo $l['Words']; ?>
             </div>
             <div class="box-body">
@@ -82,9 +82,9 @@
           <? echo $l['P_Tour_learn_words__']; ?>
         </div>
         <div class="col-r">
-          <div class="box" id="query-box">
+          <div class="box">
             <div class="box-head">
-              <img src="img/question.svg">
+              <img src="img/question.svg" alt="">
               <? echo $l['Test']; ?>
             </div>
             <div class="box-body">
@@ -93,12 +93,12 @@
                   <tbody>
                     <tr>
                       <td class="width-150px"><span class="language"><? echo $l['English']; ?></span>:&nbsp;</td>
-                      <td id="query-question">swift</td>
+                      <td>swift</td>
                     </tr>
                     <tr>
                       <td class="width-150px"><span class="language"><? echo $l['German']; ?></span>:&nbsp;</td>
                       <td>
-                        <input type="text" id="query-answer" class="unremarkable width-100">
+                        <input type="text" class="unremarkable width-100">
                       </td>
                     </tr>
                   </tbody>
@@ -113,28 +113,28 @@
           <? echo $l['P_Tour_learn_by_typing__']; ?>
         </div>
         <div class="col-r">
-          <div class="box" id="query-box">
+          <div class="box">
             <div class="box-body">
-              <div id="query-div">
-                <table class="width-100" id="query-content-table">
+              <div>
+                <table class="width-100">
                   <tbody>
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang1"><? echo $l['English']; ?></span>:&nbsp;</td>
-                      <td id="query-question">leverage</td>
+                      <td class="width-150px"><span class="language"><? echo $l['English']; ?></span>:&nbsp;</td>
+                      <td>leverage</td>
                     </tr>
                     <tr>
-                      <td class="width-150px"><span class="language" id="query-lang2"><? echo $l['German']; ?></span>:&nbsp;</td>
-                      <td id="query-answer-table-cell-buttons" class="display-none" style="display: table-cell;">
+                      <td class="width-150px"><span class="language"><? echo $l['German']; ?></span>:&nbsp;</td>
+                      <td class="display-none" style="display: table-cell;">
                         <table class="width-100">
                           <tbody>
                             <tr>
-                              <td class="width-33"><input id="query-answer-known" type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"></td>
-                              <td class="width-33"><input id="query-answer-not-sure" type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"></td>
-                              <td class="width-33"><input id="query-answer-not-known" type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"></td>
+                              <td class="width-33"><input type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"></td>
+                              <td class="width-33"><input type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"></td>
+                              <td class="width-33"><input type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"></td>
                             </tr>
                           </tbody>
                         </table>
-                        <div id="query-answer-buttons" style="display: none;"></div>
+                        <div style="display: none;"></div>
                       </td>
                     </tr>
                   </tbody>
@@ -157,20 +157,20 @@
 
         </div>
         <div class="col-r">
-          <div class="box" id="word-list-sharing" style="display: block;">
+          <div class="box" style="display: block;">
             <div class="box-head">
-              <img src="img/share.svg">
+              <img src="img/share.svg" alt="">
               <? echo $l['Share']; ?>
             </div>
             <div class="box-body">
-              <input id="share-list-other-user-email" type="text" placeholder="<? echo $l['Email_address']; ?>" required="true">
-              <select id="share-list-permissions" required="true">
+              <input type="text" placeholder="<? echo $l['Email_address']; ?>" required>
+              <select required>
                 <option value="2"><? echo $l['Can_view']; ?></option>
                 <option value="1"><? echo $l['Can_edit']; ?></option>
               </select>
-              <input id="share-list-submit" type="button" value="<? echo $l['Share']; ?>">
+              <input type="button" value="<? echo $l['Share']; ?>">
               <hr class="spacer-top-15">
-              <div id="list-sharings">
+              <div>
                 <table class="box-table button-right-column">
                   <tbody>
                     <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td></td><td></td></tr>
@@ -190,15 +190,15 @@
         <div class="col-r">
           <div class="box">
             <div class="box-head">
-              <img src="img/users.svg">
+              <img src="img/users.svg" alt="">
               <? echo $l['People_youve_added']; ?>
             </div>
             <div class="box-body" data-start-state="expanded">
-              <div id="user-add-message"></div>
-              <input id="user-add-email" type="email" placeholder="<? echo $l['Email_address']; ?>" required="true">
-              <input id="user-add-button" type="button" value="<? echo $l['Add_user']; ?>">
+              <div></div>
+              <input type="email" placeholder="<? echo $l['Email_address']; ?>" required>
+              <input type="button" value="<? echo $l['Add_user']; ?>">
               <hr class="spacer-top-15">
-              <div id="people-you-have-added">
+              <div>
                 <table class="box-table button-right-column">
                   <tbody>
                     <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td><? echo $l['Email_Address']; ?></td><td></td></tr>

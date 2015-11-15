@@ -1052,27 +1052,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
 
-      // constant strings
-      var constString = {
-        'First_language': "<? echo $l['First_language']; ?>",
-        'Second_language': "<? echo $l['Second_language']; ?>",
-        'I_know_': "<? echo $l['I_know_']; ?>",
-        'Not_sure_': "<? echo $l['Not_sure']; ?>",
-        'No_idea_': "<? echo $l['No_idea_']; ?>",
-        'I_knew_that_': "<? echo $l['I_knew_that_']; ?>",
-        'I_didnt_know_that_': "<? echo $l['I_didnt_know_that_']; ?>",
-        'Home': "<? echo $l['Home']; ?>",
-        'Test': "<? echo $l['Test']; ?>",
-        'Word_lists': "<? echo $l['Word_lists']; ?>",
-        'Users': "<? echo $l['Users']; ?>",
-        'Settings': "<? echo $l['Settings']; ?>",
-        'About': "<? echo $l['About']; ?>",
-        'Contact': "<? echo $l['Contact']; ?>",
-        'Legal_info': "<? echo $l['Legal_info']; ?>",
-        'Tour': "<? echo $l['Tour']; ?>",
-        'Login': "<? echo $l['Login']; ?>",
-        'No_answers_yet_': "<? echo $l['No_answers_yet_']; ?>"
-      };
+      var constString = JSON.parse('<? echo str_replace("'", "\\'", str_replace('"', '\\"', json_encode($l))); ?>');
       
       // word lists, words, answers
       var Database = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_query_data($_SESSION['id']))); ?>');

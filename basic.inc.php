@@ -81,6 +81,11 @@ include('html-include/contact.php');
       ?>
     </div>
 
+    <script type="text/javascript">
+      // constant strings
+      var constString = JSON.parse('<? echo str_replace("'", "\\'", str_replace('"', '\\"', json_encode($l))); ?>');
+    </script>
+
     <!-- add scripts to the DOM -->
     <script type="text/javascript">
       document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');

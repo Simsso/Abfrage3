@@ -15,7 +15,7 @@
               <img src="img/home.svg" class="nav-image" alt="<? echo $l['Home']; ?>" title="<? echo $l['Home']; ?>"/>
             </li>
           </a>
-          <a href="#/login" class="show-mobile"><li class="nav_login" data-text"<? echo $l['Login']; ?>"><? echo $l['Login']; ?></li></a>
+          <a href="#/login" class="show-mobile"><li class="nav_login" data-text="<? echo $l['Login']; ?>"><? echo $l['Login']; ?></li></a>
         </ul>
 
         <ul class="nav right">
@@ -163,6 +163,11 @@ include('html-include/contact.php');
         include('html-include/footer.php');
       ?>
     </div>
+
+    <script type="text/javascript">
+      // constant strings
+      var constString = JSON.parse('<? echo str_replace("'", "\\'", str_replace('"', '\\"', json_encode($l))); ?>');
+    </script>
 
     <!-- add scripts to the DOM -->
     <script type="text/javascript">
