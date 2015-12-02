@@ -72,7 +72,7 @@ $error_message = $codes[$status][1];
   <body>
     <div>
       <div>
-        <p><a href="/"><img class="center-logo" src="/img/logo-white.svg"/></a></p>
+        <p><a href="/"><img class="center-logo" src="/img/logo.svg"/></a></p>
         <p><span id="error-code"><? echo $error_code; ?>.&nbsp;</span>That's an error.</p>
         <p id="error-message"><? echo $error_message; ?></p>
       </div>

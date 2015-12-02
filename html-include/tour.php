@@ -4,7 +4,7 @@
       <table class="width-100 headline spacer-15">
         <tr>
           <td><h2><? echo $l['Welcome_to']; ?>&nbsp;</h2></td>
-          <td><img class="height-46px" src="img/logo-white.svg" alt="Abfrage3"/></td>
+          <td><img class="height-46px" src="img/logo.svg" alt="Abfrage3"/></td>
         </tr>
       </table>
       <p>
