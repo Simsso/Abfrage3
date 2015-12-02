@@ -12,6 +12,9 @@ Database::refresh_session_if_staying_logged_in();
 // include language files
 require('lang/lang.inc.php');
 
+// logo file
+include('logo.inc.php');
+
 if (isset($_GET['basic-page'])) {
 	// basic page requested
 	require('basic.inc.php');
