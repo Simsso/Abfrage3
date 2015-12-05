@@ -1095,6 +1095,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         return listObjectArray;
       }
 
+      function listIdArrayToListObjectArray(array) {
+        for (var i = array.length - 1; i >= 0; i--) {
+          array[i] = Database.getListById(array[i]);
+        }
+      }
+
       (function() {
         Database.lists = getListArrayByServerData(Database.lists);
         Database.userId = <? echo $user->id; ?>;
@@ -1115,9 +1121,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         };
 
         // link ids in recently used array to respective objects
-        for (var i = Database.recentlyUsed.length - 1; i >= 0; i--) {
-          Database.recentlyUsed[i] = Database.getListById(Database.recentlyUsed[i]);
-        }
+        listIdArrayToListObjectArray(Database.recentlyUsed);
       })();
 
       var end = new Date().getTime();

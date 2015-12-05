@@ -54,7 +54,6 @@ class Mail {
     $id = Database::email2id($this->to); // can be NULL
     $sql = "INSERT INTO `sent_email` (`user`, `email`, `ip`, `time`, `subject`) VALUES (".(($id === NULL) ? "NULL" : $id).", '".$this->to."', '".$_SERVER['REMOTE_ADDR']."', ".time().", '".$this->subject."');";
     $query = mysqli_query($con, $sql);
-    echo Database::email2id($this->to);
     return mysqli_insert_id($con);
   }
 

@@ -162,6 +162,9 @@ Home.RecentlyUsed.download = function(showLoadingInformation, callback) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
+    // link ids in recently used array to respective objects
+    listIdArrayToListObjectArray(data);
+
     Database.recentlyUsed = data;
 
     Home.RecentlyUsed.updateDom();
