@@ -1,5 +1,7 @@
 <?php
 
+$start_time = microtime(true); // measure execution time
+
 // include database class
 require('database.class.php');
 
@@ -26,4 +28,7 @@ if (isset($_GET['basic-page'])) {
 	  require('login.inc.php');
 	}
 }
+
+// echo serverside execution time
+echo "<!-- serverside execution time: " . (microtime(true) - $start_time) * 1000 . " ms -->";
 ?>

@@ -415,6 +415,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
                 <input id="word-list-add-button" type="submit" value="<? echo $l['Create_list']; ?>" data-pending-value="<? echo $l['Creating_list']; ?>"/>
               </form>
+              <div class="big-search-field-wrapper">
+                <img src="img/search.svg" />
+                <input id="word-lists-search" type="text" placeholder="<? echo $l['Search']; ?>" />
+              </div>
               <div id="list-of-word-lists">
               </div>
             </div>

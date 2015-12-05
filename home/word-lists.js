@@ -45,33 +45,45 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
   
   if (isNaN(hashListId)) { // no list id given via hash
 
-    if (subPageName.split('/')[0] === 'l') { // hash determines label to display
+    switch(subPageName.split('/')[0]) {
+      case 'l': // hash determines label to display
+        // show no list selected screen so that the things appear at all
+        WordLists.showNoListSelectedScreen(false); // don't update the hash (parameter: false)
 
-      // show no list selected screen so that the things appear at all
-      WordLists.showNoListSelectedScreen(false); // don't update the hash (parameter: false)
+        var subPageParts = subPageName.split('/');
+        var labelId = parseInt((subPageParts.length > 1) ? subPageParts[subPageParts.length - 1] : 0);
+        if (isNaN(labelId)) labelId = 0; // no label ("root" label)
 
-      var subPageParts = subPageName.split('/');
-      var labelId = parseInt((subPageParts.length > 1) ? subPageParts[subPageParts.length - 1] : 0);
-      if (isNaN(labelId)) labelId = 0; // no label ("root" label)
+        var labelPath = subPageParts.slice(1); // hash part without the "l/" at the beginning
+        // label path contains only ids; replace them with label objects
+        for (var i = labelPath.length - 1; i >= 0; i--) {
+          labelPath[i] = Database.getLabelById(labelPath[i]);
+        }
 
-      var labelPath = subPageParts.slice(1); // hash part without the "l/" at the beginning
-      // label path contains only ids; replace them with label objects
-      for (var i = labelPath.length - 1; i >= 0; i--) {
-        labelPath[i] = Database.getLabelById(labelPath[i]);
-      }
+        $(page['word-lists']).find('#list-of-word-lists').html(WordLists.Template.wordListsFolderView({
+          list: WordLists.getListsOfLabel(labelId),
+          label: WordLists.getDirectSubLabelsOfLabel(labelId),
+          subPageName: subPageName,
+          labelPath: labelPath // array of the label path objects (e.g. labels with ids 5/31/50) 
+        }));
 
-      $(page['word-lists']).find('#list-of-word-lists').html(WordLists.Template.wordListsFolderView({
-        list: WordLists.getListsOfLabel(labelId),
-        label: WordLists.getDirectSubLabelsOfLabel(labelId),
-        subPageName: subPageName,
-        labelPath: labelPath // array of the label path objects (e.g. labels with ids 5/31/50) 
-      }));
+        // update link to word lists
+        $('.link-to-show-current-word-list').attr('href', '#/word-lists/' + subPageName);
+        break;
 
-      // update link to word lists
-      $('.link-to-show-current-word-list').attr('href', '#/word-lists/' + subPageName);
-    } 
-    else {
-      WordLists.showNoListSelectedScreen(true);
+      case 's': // search
+        // show no list selected screen so that the things appear at all
+        WordLists.showNoListSelectedScreen(false); // don't update the hash (parameter: false)
+        var subPageParts = subPageName.split('/');
+        var searchString = "";
+        if (subPageParts.length > 1) {
+          searchString = subPageParts[1];
+        }
+        break;
+
+      default: 
+        WordLists.showNoListSelectedScreen(true);
+        break;
     }
   }
   else {
@@ -87,6 +99,14 @@ WordLists.shown = null; // stores the data (words, creation date, etc.) of the w
 WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand them after refreshing the label HTML element
 
 
+
+
+// word lists search
+//
+// @param string searchString: string to search word lists
+WordLists.search = function(searchString) {
+  
+};
 
 
 // adds a new word list to the data base
@@ -209,6 +229,19 @@ WordLists.updateListOfWordLists = function() {
     window.location.hash = '#/word-lists/' + $(this).data('list-id');
   });
 };
+
+// word lists search input field change event listener
+$(page['word-lists']).find('#word-lists-search').on('change keyup paste', function() {
+  // update hash
+  var searchValue = $(this).val();
+
+  if (searchValue) {
+    window.location.hash = '#/word-lists/s/' + escape(searchValue);
+  } 
+  else {
+    window.location.hash = '#/word-lists';
+  }
+});
 
 
 // show the information that no list is selected and update the vars

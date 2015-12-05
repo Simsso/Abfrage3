@@ -174,6 +174,7 @@ $l['Rename'] = "Umbenennen";
 $l['Renaming'] = "Wird umbenannt";
 $l['Romanian'] = "Rumänisch";
 $l['Russian'] = "Russisch";
+$l['Search'] = "Suchen";
 $l['Second_language'] = "Zweite Sprache";
 $l['Secret_service_clause'] = "Geheimdienst-Klausel";
 $l['Select_labels_and_word_lists'] = "Wählen Sie Labels und Vokabellisten aus";

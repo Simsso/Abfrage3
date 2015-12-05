@@ -174,6 +174,7 @@ $l['Rename'] = "Rename";
 $l['Renaming'] = "Renaming";
 $l['Romanian'] = "Romanian";
 $l['Russian'] = "Russian";
+$l['Search'] = "Search";
 $l['Second_language'] = "Second language";
 $l['Secret_service_clause'] = "Secret service clause";
 $l['Select_labels_and_word_lists'] = "Select labels and word lists";
