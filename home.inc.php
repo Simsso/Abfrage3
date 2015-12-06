@@ -415,10 +415,16 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
                 <input id="word-list-add-button" type="submit" value="<? echo $l['Create_list']; ?>" data-pending-value="<? echo $l['Creating_list']; ?>"/>
               </form>
+
+              <hr class="full-width">
+
               <div class="big-search-field-wrapper">
                 <img src="img/search.svg" />
                 <input id="word-lists-search" type="text" placeholder="<? echo $l['Search']; ?>" />
               </div>
+
+              <hr class="full-width">
+
               <div id="list-of-word-lists">
               </div>
             </div>
@@ -539,12 +545,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   </form>
                 {{/if}}
 
-                <hr class="spacer-15">
+                <hr class="full-width">
 
                 {{! import words string }}
                 {{#if allowEdit}}
                   <input type="button" value="<? echo $l['Import_words']; ?>..." onclick="WordLists.Import.showDialog()" />
-                  <hr class="spacer-15">
+                  <hr class="full-width">
                 {{/if}}
 
 
@@ -700,6 +706,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <?php include('html-include/special-chars.php'); ?>
                   </div>
                 </div>
+
+                <hr class="full-width">
+
                 <div id="words-in-list">
                 </div>
               </div>

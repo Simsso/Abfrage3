@@ -429,6 +429,13 @@ tr:hover .table-icon {
   display: none;
 }
 
+.box .box-body hr.full-width {
+  height: 0;
+  border-top: 1px solid #ECEFF1;
+  margin: 15px -15px;
+  width: auto;
+}
+
 /* box-table */
 .box .box-table {
   width: 100%;
@@ -568,10 +575,6 @@ p:not(:last-child), ul.normal:not(:last-child) {
   display: none;
 }
 
-
-.big-search-field-wrapper {
-  padding: 10px 0 0;
-}
 
 .big-search-field-wrapper > img {
   height: 24px;
