@@ -130,7 +130,6 @@ WordLists.search = function(searchString) {
       i--;
     }
   }
-  tmp = data;
 
   var output;
   if (data.length === 0) {
