@@ -5,6 +5,7 @@ var WordLists = {};
 WordLists.Template = {
   // const strings
   noList: Handlebars.compile($(page['word-lists']).find('#word-lists-no-list-template').html()),
+  noListSearch: Handlebars.compile($(page['word-lists']).find('#word-lists-no-list-search-template').html()),
   noWords: Handlebars.compile($(page['word-lists']).find('#word-lists-no-words-template').html()),
   noWordsNoEditingPermissions: Handlebars.compile($(page['word-lists']).find('#word-lists-no-words-no-editing-permissions-template').html()),
   noLabels: Handlebars.compile($(page['word-lists']).find('#word-lists-no-labels-template').html()),
@@ -73,11 +74,14 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
 
       case 's': // search
         // show no list selected screen so that the things appear at all
-        WordLists.showNoListSelectedScreen(false); // don't update the hash (parameter: false)
+        // parameters: don't update the hash, don't update the list of word lists and don't select the search input fields content
+        WordLists.showNoListSelectedScreen(false, false, true); 
+        
         var subPageParts = subPageName.split('/');
         var searchString = "";
         if (subPageParts.length > 1) {
-          searchString = subPageParts[1];
+          searchString = unescape(subPageParts[1]);
+          WordLists.search(searchString);
         }
         break;
 
@@ -90,6 +94,10 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
     // a valid list id has been passed via url
     WordLists.show(parseInt(subPageName));
   }
+}).on('page-word-lists-loaded', function(event, pageName, subPageName) {
+  // finished loading event
+  // focus search field
+  $(page['word-lists']).find('#word-lists-search').select();
 });
 
 
@@ -100,12 +108,43 @@ WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand
 
 
 
-
 // word lists search
 //
 // @param string searchString: string to search word lists
 WordLists.search = function(searchString) {
-  // TODO: 
+  // update search field value in case it isn't
+  var searchField = $(page['word-lists']).find('#word-lists-search')
+  if (searchField.val() != searchString) {
+    searchField.val(searchString);
+  }
+
+
+  searchString = searchString.toLowerCase().trim();
+  var data = Database.lists.sort(List.compareListsByName).slice();
+
+  for (var i = 0; i < data.length; i++) {
+    var name = data[i].name.toLowerCase().trim();
+    if (name.length == name.replace(searchString).length) {
+      // list name doesn't contain search string
+      data.splice(i, 1);
+      i--;
+    }
+  }
+  tmp = data;
+
+  var output;
+  if (data.length === 0) {
+    // no lists
+    output = WordLists.Template.noListSearch();
+  }
+  else {
+    // multiple lists: get HTML
+    output = WordLists.Template.listOfWordLists({ list: data });
+  }
+
+  $(page['word-lists']).find('#list-of-word-lists').html(output); // update DOM with list of word lists
+
+  WordLists.listOfWordListsAddEventListeners();
 };
 
 
@@ -224,14 +263,20 @@ WordLists.updateListOfWordLists = function() {
 
   $(page['word-lists']).find('#list-of-word-lists').html(output); // update DOM with list of word lists
 
+  WordLists.listOfWordListsAddEventListeners();
+};
+
+// add event listeners to list of word lists
+WordLists.listOfWordListsAddEventListeners = function() {
+
   // add event listeners for rows which have just been added
-  $(page['word-lists']).find('#list-of-word-lists tr').on('click', function() {
+  $(page['word-lists']).find('#list-of-word-lists tr:not(:first-child)').on('click', function() {
     window.location.hash = '#/word-lists/' + $(this).data('list-id');
   });
 };
 
 // word lists search input field change event listener
-$(page['word-lists']).find('#word-lists-search').on('change keyup paste', function() {
+$(page['word-lists']).find('#word-lists-search').on('change keyup paste', function(e) {
   // update hash
   var searchValue = $(this).val();
 
@@ -241,6 +286,13 @@ $(page['word-lists']).find('#word-lists-search').on('change keyup paste', functi
   else {
     window.location.hash = '#/word-lists';
   }
+
+  // enter
+  if (e.keyCode === 13) {
+    // open first list
+    $(page['word-lists']).find('#list-of-word-lists tr').eq(1).trigger('click');
+    $(page['word-lists']).find('#word-lists-search').val('');
+  }
 });
 
 
@@ -248,9 +300,10 @@ $(page['word-lists']).find('#word-lists-search').on('change keyup paste', functi
 //
 // @param bool updateHash: if set to true the hash will be updated to "#/word-lists"
 // @param bool | undefined updateListOfWordLists: by default set to true; defines whether the function will be called
-WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists) {
-  if (typeof updateListOfWordLists === 'undefined')
-    updateListOfWordLists = true;
+// @param bool | undefined dontFocusSearchField: defines whether the word lists search field will be focused or not (default false)
+WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists, dontFocusSearchField) {
+  if (typeof updateListOfWordLists === 'undefined') updateListOfWordLists = true;
+  if (typeof dontFocusSearchField === 'undefined') dontFocusSearchField = false;
 
   WordLists.shownId = -1;
   WordLists.shown = null;
@@ -266,7 +319,11 @@ WordLists.showNoListSelectedScreen = function(updateHash, updateListOfWordLists)
 
   $(page['word-lists']).find('#word-list-info, #word-list-info-words, #word-list-title, #word-list-sharing, #word-list-label, #word-list-loading').hide();
   Scrolling.toTop();
-  $(page['word-lists']).find('#list-of-word-lists-wrapper').show()
+  $(page['word-lists']).find('#list-of-word-lists-wrapper').show();
+        
+  // focus search field
+  if (!dontFocusSearchField)
+    $(page['word-lists']).find('#word-lists-search').select();
 };
 
 
@@ -1940,7 +1997,6 @@ WordLists.Import.preview = function() {
   }
   WordLists.Import.loadedWords = WordLists.Import.loadWordArrayFromString($('#word-import-input').val(), wordSeparator, languagesSeparator, WordLists.shownId);
 
-  console.log(WordLists.Import.loadedWords);
 
   var tableContentHtml = '';
   for (var i = 0; i < WordLists.Import.loadedWords.word.length; i++) {

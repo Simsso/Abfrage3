@@ -144,6 +144,7 @@ $l['No_first_name_given'] = "Kein Vorname angegeben";
 $l['No_idea_'] = "Keine Ahnung.";
 $l['No_last_name_given'] = "Kein Nachname angegeben";
 $l['No_recently_used_lists_found_'] = "Keine zuletzt verwendeten Listen gefunden.";
+$l['No_search_results'] = "Keine Suchergebnisse";
 $l['No_users_have_added_you_yet'] = "Sie wurden bisher von keinen anderen Nutzern hinzugefügt.";
 $l['Not_sure_'] = "Nicht sicher...";
 $l['Nothing_new_since_last_login_'] = "Nichts Neues seit dem letzten Login.";

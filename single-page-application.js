@@ -86,6 +86,9 @@ SPA.updatePageContent = function (firstCall) {
   window.scrollTo(0, 0); // scroll to the top
   
   $('#footer-wrapper, #cookie-header').show();
+
+  // tell sub pages that the DOM has been loaded
+  $(window).trigger('page-' + pageName + '-loaded', [pageName, subPageName]);
 };
 
 $(document).ready(function() {

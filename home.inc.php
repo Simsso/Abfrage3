@@ -431,6 +431,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
 
+            <script id="word-lists-no-list-search-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['No_search_results']; ?></p></script>
+
             <script id="word-lists-list-of-word-lists-template" type="text/x-handlebars-template">
               <table class="box-table cursor-pointer">
                 <tr class="cursor-default">
