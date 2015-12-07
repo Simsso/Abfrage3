@@ -124,7 +124,7 @@ WordLists.search = function(searchString) {
 
   for (var i = 0; i < data.length; i++) {
     var name = data[i].name.toLowerCase().trim();
-    if (name.length == name.replace(searchString).length) {
+    if (name.length == name.replace(searchString, "").length) {
       // list name doesn't contain search string
       data.splice(i, 1);
       i--;
