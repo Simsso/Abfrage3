@@ -331,43 +331,47 @@ $(document).keyup(function(e) {
 
 
 
-// set cookie
-//
-// @param string cname: name
-// @param string cvalue: cooke value
-// @param int exdays: expiration days
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + expires;
-}
+// cookie functions
+var Cookie = {
+
+  // set cookie
+  //
+  // @param string cname: name
+  // @param string cvalue: cooke value
+  // @param int exdays: expiration days
+  set: function(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+  },
 
 
-// read cookie
-//
-// @param string key: name of the cookie
-//
-// @return string: cookie value
-function readCookie(key)
-{
-  var result;
-  return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
-}
-
-(function(){
-  if (readCookie('accepted_cookies') != 'true') {
-    // show cookie message
-    $('#main').append('<footer id="cookie-header" class="cookie-header box display-none"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
-
-    $('#cookie-got-it-button').on('click', function() {
-      $(this).prop('disabled', true);
-      setCookie('accepted_cookies', 'true', 10000);
-      $('#cookie-header').css('opacity', 0);
-      setTimeout(function() { $('#cookie-header').remove(); }, 500);
-    });
+  // read cookie
+  //
+  // @param string key: name of the cookie
+  //
+  // @return string: cookie value
+  read: function(key)
+  {
+    var result;
+    return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
   }
-})();
+
+}
+
+
+if (Cookie.read('accepted_cookies') != 'true') {
+  // show cookie message
+  $('#main').append('<footer id="cookie-header" class="cookie-header box display-none"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
+
+  $('#cookie-got-it-button').on('click', function() {
+    $(this).prop('disabled', true);
+    Cookie.set('accepted_cookies', 'true', 10000);
+    $('#cookie-header').css('opacity', 0);
+    setTimeout(function() { $('#cookie-header').remove(); }, 500);
+  });
+}
 
 // contact form submit event lsitener
 $('#contact-form').on('submit', function(e) {
@@ -615,6 +619,14 @@ var Button = {
       .attr('value', btn.data('default-value'));
   }
 };
+
+
+// switch language link click event
+$('.switch-lang-button').on('click', function(e) {
+  e.preventDefault(); // don't do link action
+  Cookie.set('lang', $(this).data('lang'), 365); // set language cookie
+  location.reload(); // reload the page to update the language strings
+});
 
 
 // save text as file

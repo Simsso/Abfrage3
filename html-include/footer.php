@@ -6,11 +6,11 @@
       <a href="#/contact"><? echo $l['Contact']; ?></a> &middot; 
       <a href="#/legal-info"><? echo $l['Legal_info']; ?></a>
       <br><br>
-      <a href="?lang=en"<? if ($lang === 'en') echo ' class="bold"'; ?>>
+      <a class="switch-lang-button<? if ($lang === 'en') echo ' bold'; ?>" data-lang="en" href="?lang=en">
       	<img src="img/flag-of-the-united-states.svg" class="language-flag" alt="" />
       	English
       </a> &middot; 
-      <a href="?lang=de"<? if ($lang === 'de') echo ' class="bold"'; ?>>
+      <a class="switch-lang-button<? if ($lang === 'de') echo ' bold'; ?>" data-lang="de" href="?lang=de">
       	<img src="img/flag-of-germany.svg" class="language-flag" alt="" />
       	Deutsch
       </a>
