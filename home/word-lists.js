@@ -16,6 +16,7 @@ WordLists.Template = {
   wordListTableRow: Handlebars.compile($(page['word-lists']).find('#word-lists-words-table-row-template').html()),
   wordListsFolderView: Handlebars.compile($(page['word-lists']).find('#word-lists-folder-view-template').html()),
 
+  listName: Handlebars.compile($(page['word-lists']).find('#word-lists-list-title-name-template').html()),
   // single list general information (owner, start test link, creation time, etc.)
   singleListGeneralInformation: Handlebars.compile($(page['word-lists']).find('#word-lists-single-list-general-information').html()),
 
@@ -455,7 +456,7 @@ WordLists.show = function(id, addUsage) {
   if (!WordLists.shown.language2) WordLists.shown.language2 = constString['Second_language'];
 
   // update list name box
-  $(page['word-lists']).find('#word-list-title-name').html(WordLists.shown.name);
+  $(page['word-lists']).find('#word-list-title-name').html(WordLists.Template.listName({ name: WordLists.shown.name }));
 
   // info box body
   // add content depending on the users permissions (sharing and editing)

@@ -13,7 +13,7 @@ class BasicWordList {
 
   public function __construct($id, $name, $creator, $comment, $language1, $language2, $creation_time) {
     $this->id = intval($id);
-    $this->name = $name;
+    $this->name = htmlspecialchars_decode($name);
 
     // creator can be SimpleUser or Integer
     if ($creator instanceof SimpleUser)
@@ -21,9 +21,9 @@ class BasicWordList {
     else 
       $this->creator = intval($creator);
 
-    $this->comment = $comment;
-    $this->language1 = $language1;
-    $this->language2 = $language2;
+    $this->comment = htmlspecialchars_decode($comment);
+    $this->language1 = htmlspecialchars_decode($language1);
+    $this->language2 = htmlspecialchars_decode($language2);
     $this->creation_time = intval($creation_time);
 
     if ($this->language1 == null) $this->language1 = "First language";

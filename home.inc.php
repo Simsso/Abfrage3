@@ -496,6 +496,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head active"> 
                 <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
                 <div id="word-list-title-name"></div>
+                <script id="word-lists-list-title-name-template" type="x-handlebars-template">
+                  {{ name }}
+                </script>
               </div>
             </div>
 
@@ -1067,22 +1070,22 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       // PHP-defined global variables
       var adsEnabled = <? echo $user_settings->ads_enabled ? 'true' : 'false'; ?>;
 
-      var constString = JSON.parse('<? echo str_replace("'", "\\'", str_replace('"', '\\"', json_encode($l))); ?>');
+      var constString = <? echo json_encode($l)?>;
       
       // word lists, words, answers
-      var Database = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_query_data($_SESSION['id']))); ?>');
+      var Database = <? echo json_encode(Database::get_query_data($_SESSION['id'])); ?>;
 
       // users who have added you
-      Database.listOfUsersWhoHaveAddedYou = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id']))); ?>');
+      Database.listOfUsersWhoHaveAddedYou = <? echo json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id'])); ?>;
 
       // users you have added
-      Database.listOfAddedUsers = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_list_of_added_users_of_user($_SESSION['id']))); ?>');
+      Database.listOfAddedUsers = <? echo json_encode(Database::get_list_of_added_users_of_user($_SESSION['id'])); ?>;
 
       // feed data
-      Database.feed = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_feed($_SESSION['id'], -1))); ?>');
+      Database.feed = <? echo json_encode(Database::get_feed($_SESSION['id'], -1)); ?>;
 
       // recently used lists
-      Database.recentlyUsed = JSON.parse('<? echo str_replace("'", "\\'", json_encode(Database::get_last_used_n_lists_of_user($_SESSION['id'], 8))); ?>');
+      Database.recentlyUsed = <? echo json_encode(Database::get_last_used_n_lists_of_user($_SESSION['id'], 8)); ?>;
 
 
       function getListObjectByServerData(data) {

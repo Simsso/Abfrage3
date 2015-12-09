@@ -11,9 +11,9 @@ class Word {
   public function __construct($id, $list, $language1, $language2, $comment) {
     $this->id = intval($id);
     $this->list = intval($list);
-    $this->language1 = $language1;
-    $this->language2 = $language2;
-    $this->comment = $comment;
+    $this->language1 = htmlspecialchars_decode($language1);
+    $this->language2 = htmlspecialchars_decode($language2);
+    $this->comment = htmlspecialchars_decode($comment);
   }
 
   // load answers

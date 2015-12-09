@@ -8,9 +8,9 @@ class SimpleUser {
 
   public function __construct($id, $firstname, $lastname, $email) {
     $this->id =intval($id);
-    $this->firstname = $firstname;
-    $this->lastname = $lastname;
-    $this->email = $email;
+    $this->firstname = htmlspecialchars_decode($firstname);
+    $this->lastname = htmlspecialchars_decode($lastname);
+    $this->email = htmlspecialchars_decode($email);
   }
 
   // second constructor (by id)
@@ -53,9 +53,9 @@ class User extends SimpleUser {
     $query = mysqli_query($con, $sql);
     while ($row = mysqli_fetch_assoc($query)) {
       $this->id = intval($id);
-      $this->firstname = $row['firstname'];
-      $this->lastname = $row['lastname'];
-      $this->email = $row['email'];
+      $this->firstname = htmlspecialchars_decode($row['firstname']);
+      $this->lastname = htmlspecialchars_decode($row['lastname']);
+      $this->email = htmlspecialchars_decode($row['email']);
       $this->password = $row['password'];
       $this->salt = $row['salt'];
       $this->reg_time = intval($row['reg_time']);

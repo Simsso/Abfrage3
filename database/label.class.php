@@ -24,7 +24,7 @@ class Label {
 
   public function __construct($id, $name, $user, $parent_label, $active) {
     $this->id = intval($id);
-    $this->name = $name;
+    $this->name = htmlspecialchars_decode($name);
     $this->user = intval($user);
     $this->parent_label = intval($parent_label);
     $this->active = intval($active);
