@@ -676,7 +676,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                             <? echo $l['Can_view']; ?>
                           {{/if}}
                         </td>
-                        <td><input type="button" class="inline" value="<? echo $l['Stop_sharing']; ?>" data-pending-value="<? echo $l['Stopping_sharing']; ?>" data-action="delete-sharing" data-sharing-id="{{id}}"/></td>
+                        <td><input type="button" class="icon close table-icon" data-action="delete-sharing" data-sharing-id="{{id}}" title="<? echo $l['Stop_sharing']; ?>"/></td>
                       </tr>
                     {{/each}}
                 {{else}}
@@ -813,7 +813,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <td>{{firstname}} {{lastname}}</td>
                     <td>{{email}}</td>
                     <td>
-                      <input id="added-users-remove-{{id}}" type="button" class="inline" value="<? echo $l['Remove']; ?>" data-pending-value="<? echo $l['Removing']; ?>" onclick="User.remove({{id}})"/>
+                      <input id="added-users-remove-{{id}}" type="button" class="icon close table-icon" title="<? echo $l['Remove']; ?>" onclick="User.remove({{id}})"/>
                     </td>
                   </tr>
                 {{/each}}
@@ -982,7 +982,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <p><? echo $l['Be_careful_cant_be_undone_lists_still_visible__']; ?></p>
                 <form id="settings-delete-account-form">
                   <input type="password" required="true" placeholder="<? echo $l['Password']; ?>" id="settings-delete-account-password" />&nbsp;
-                  <input type="button" value="<? echo $l['Delete_account']; ?>" data-pending-id="<? echo $l['Deleting_account']; ?>" id="settings-delete-account-button" />
+                  <input type="submit" value="<? echo $l['Delete_account']; ?>" data-pending-id="<? echo $l['Deleting_account']; ?>" id="settings-delete-account-button" />
                 </form>
               </div>
             </div>

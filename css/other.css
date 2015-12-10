@@ -335,8 +335,12 @@ body > .main {
 #word-list-menu-back:hover {
   opacity: 1;
 }
+
 .icon.pencil {
   background-image: url('/img/pencil.svg');
+}
+.icon.close {
+  background-image: url('/img/close.svg');
 }
 .icon.check {
   background-image: url('/img/check.svg');

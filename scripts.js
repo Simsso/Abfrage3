@@ -601,10 +601,11 @@ var Button = {
   // 
   // @param object btn: jQuery element object of a button
   setPending: function(btn) {
-    btn
-      .prop('disabled', true)
-      .data('default-value', btn.attr('value'))
-      .attr('value', btn.data('pending-value') + '...');
+    btn.prop('disabled', true);
+    if (btn.data('default-value')) {
+      btn.data('default-value', btn.attr('value'))
+        .attr('value', btn.data('pending-value') + '...');
+    }
   },
 
 
@@ -614,9 +615,11 @@ var Button = {
   // 
   // @param object btn: jQuery element object of a button
   setDefault: function(btn) {
-    btn
-      .prop('disabled', false)
-      .attr('value', btn.data('default-value'));
+    btn.prop('disabled', false);
+
+    if (btn.data('default-value')) {
+      btn.attr('value', btn.data('default-value'));
+    }
   }
 };
 
