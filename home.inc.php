@@ -1073,7 +1073,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       var constString = <? echo json_encode($l)?>;
       
       // word lists, words, answers
-      var Database = <? echo json_encode(Database::get_query_data($_SESSION['id'])); ?>;
+      <?
+      // read latest stored answer id to make sure only those answers are downloaded which are not stored locally
+      $latest_stored_answer_id = 0;
+      if (isset($_COOKIE['LatestStoredAnswerId'])) {
+        $latest_stored_answer_id = $_COOKIE['LatestStoredAnswerId'];
+      }
+      ?>
+      var Database = <? echo json_encode(Database::get_query_data($_SESSION['id'], $latest_stored_answer_id)); ?>;
 
       // users who have added you
       Database.listOfUsersWhoHaveAddedYou = <? echo json_encode(Database::get_list_of_users_who_have_added_user($_SESSION['id'])); ?>;

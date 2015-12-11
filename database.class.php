@@ -1294,12 +1294,13 @@ class Database {
   // get query data
   //
   // @param unsigned int id: id of the user
+  // @param unsigned int smalles_answer_id: smalles id of answers to get
   // 
   // @return object: object of query data
   // @return Label[] object->labels: labels of the user
   // @return LabelAttachment[] object->label_list_attachments: label list attachments of the user
   // @return List[] object->lists: lists of the user including words and answers given
-  static function get_query_data($id) {
+  static function get_query_data($id, $smalles_answer_id) {
     $result = new stdClass();
     $result->labels = Database::get_labels_of_user($id);
     $result->label_list_attachments = Database::get_label_list_attachments_of_user($id);

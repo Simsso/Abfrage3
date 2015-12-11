@@ -345,6 +345,11 @@ if (isset($_GET['action'])) { // check whether the user request type was passed
     // get query data
     case 'get-query-data':
     session_required();
+      // read latest stored answer id to make sure only those answers are downloaded which are not stored locally
+      $latest_stored_answer_id = 0;
+      if (isset($_COOKIE['LatestStoredAnswerId'])) {
+        $latest_stored_answer_id = $_COOKIE['LatestStoredAnswerId'];
+      }
     Response::send(Database::get_query_data($_SESSION['id']));
     break;
 
