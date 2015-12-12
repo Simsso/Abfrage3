@@ -62,7 +62,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
             </div>
             
-            <div class="box">
+            <div class="box" id="feed-wrapper-box">
               <div class="box-head">
                 <img src="img/feed.svg" />
                 <? echo $l['Feed']; ?>
@@ -127,7 +127,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           </div>
 
           <div class="right-column">
-            <div class="box">
+            <div class="box" id="recently-used-wrapper-box">
               <div class="box-head">
                 <img src="img/history.svg"/>
                 <? echo $l['Recently_used']; ?>
@@ -327,7 +327,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
           <div class="right-column">
-            <div class="box">
+            <div class="box" id="test-algorithm-wrapper-box">
               <div class="box-head">
                 <img src="img/algorithm.svg" />
                 <? echo $l['Test_algorithm']; ?>
@@ -370,7 +370,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 </table>
               </div>
             </div>
-            <div class="box">
+            <div class="box" id="test-settings-wrapper-box">
               <div class="box-head">
                 <img src="img/settings.svg" />
                 <? echo $l['Test_settings']; ?>
@@ -383,7 +383,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 </table>
               </div>
             </div>
-            <div class="box">
+            <div class="box" id="test-direction-wrapper-box">
               <div class="box-head">
                 <img src="img/swap.svg" />
                 <? echo $l['Test_direction']; ?>
@@ -773,7 +773,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         <!-- Users -->
         <div id="content-user" data-page="users">
           <div class="left-column width-50">
-            <div class="box">
+            <div class="box" id="users-people-youve-added-wrapper-box">
               <div class="box-head">
                 <img src="img/users.svg" />
                 <? echo $l['People_youve_added']; ?>
@@ -823,7 +823,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
 
           <div class="right-column width-50">
-            <div class="box">
+            <div class="box" id="users-people-who-have-added-you-wrapper-box">
               <div class="box-head">
                 <img src="img/users.svg" />
                 <? echo $l['People_who_have_added_you']; ?>

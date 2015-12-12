@@ -90,7 +90,7 @@ var BoxExpansion = {
   },
 
   set: function(id, expanded) {
-    if (id === 'undefined') return;
+    if (typeof id === 'undefined') return;
 
     var expansions = this.getAll();
     expansions[id] = expanded;
