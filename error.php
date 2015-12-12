@@ -53,7 +53,7 @@ $error_message = $codes[$status][1];
 
       body > div > div {
         margin-left: calc(50% - 150px);
-        width: 300px;
+        max-width: 450px;
       }
 
       #error-code {
@@ -67,13 +67,17 @@ $error_message = $codes[$status][1];
       .center-logo {
         height: 58px;
       }
+
+      .color-gray {
+        color: #777;
+      }
     </style>
   </head>
   <body>
     <div>
       <div>
         <p><a href="/"><img class="center-logo" src="/img/logo.svg"/></a></p>
-        <p><span id="error-code"><? echo $error_code; ?>.&nbsp;</span>That's an error.</p>
+        <p><span id="error-code"><? echo $error_code; ?>.&nbsp;</span><span class="color-gray">That's an error.</span></p>
         <p id="error-message"><? echo $error_message; ?></p>
       </div>
     </div>

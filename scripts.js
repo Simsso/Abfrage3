@@ -11,10 +11,12 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   switch($(this).data('action')) {
     case 'expand': // expand
       $(this).data('action', 'collapse').attr('src', 'img/collapse.svg').parent().next().show();
+      BoxExpansion.set($(this).parent().parent().attr('id'), true);
       break;
 
     case 'collapse': // collapse
       $(this).data('action', 'expand').attr('src', 'img/expand.svg').parent().next().hide();
+      BoxExpansion.set($(this).parent().parent().attr('id'), false);
 
       // stop fullscreen if it is in fullscreen
       var imgs = $(this).parent().find('img');
@@ -61,6 +63,7 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
   event.stopPropagation();
 }).show();
 
+
 // allow expanding by clicking on the box head
 $('.box .box-head').on('click', function(e) {
   $(this).find('img.box-head-right-icon').last().trigger('expand');
@@ -75,6 +78,44 @@ $('.box .box-head img.box-head-right-icon').on('expand', function() {
 $('.box .box-head img.box-head-right-icon').on('collapse', function() {
   $(this).data('action', 'collapse').trigger('click');
 });
+
+
+// box expansion
+// manages the storage of div.box expansion
+var BoxExpansion = {
+  BOX_EXPANSION_KEY: "BoxExpansion",
+
+  removeAll: function() {
+    window.localStorage.removeItem(this.BOX_EXPANSION_KEY);
+  },
+
+  set: function(id, expanded) {
+    if (id === 'undefined') return;
+
+    var expansions = this.getAll();
+    expansions[id] = expanded;
+    window.localStorage.setItem(this.BOX_EXPANSION_KEY, JSON.stringify(expansions));
+  },
+
+  getAll: function() {
+    var storage = JSON.parse(window.localStorage.getItem(this.BOX_EXPANSION_KEY));
+
+    if (storage === null) {
+      storage = {};
+    }
+
+    return storage;
+  },
+
+  refreshDom: function() {
+    var expansions = this.getAll();
+    for(var key in expansions) {
+      console.log(key + ' ' + expansions[key]);
+      console.log($('#' + key).find('.box-head img.box-head-right-icon').last().trigger((expansions[key]) ? 'expand' : 'collapse'));
+    }
+  }
+};
+BoxExpansion.refreshDom();
 
 
 // box shadow blinking
