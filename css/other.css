@@ -166,7 +166,7 @@ ul.social-icons li {
   
   transition-duration: 0s;
 }
-.navbar .navbar-inner li:hover, .navbar .navbar-inner li:hover .nav-image:hover  {
+.navbar .navbar-inner li:hover, .navbar .navbar-inner li:hover .nav-image  {
   opacity: 1;
 }
 .navbar .navbar-inner li:hover {

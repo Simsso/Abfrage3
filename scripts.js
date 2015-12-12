@@ -643,7 +643,7 @@ var Button = {
   // @param object btn: jQuery element object of a button
   setPending: function(btn) {
     btn.prop('disabled', true);
-    if (btn.data('default-value')) {
+    if (btn.data('pending-value')) {
       btn.data('default-value', btn.attr('value'))
         .attr('value', btn.data('pending-value') + '...');
     }

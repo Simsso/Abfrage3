@@ -117,10 +117,23 @@ Home.Feed.updateDom = function() {
 
 // button load whole feed event listener
 $(page['home']).find('#feed-load-all').on('click', function() {
-  Button.setPending($(page['home']).find('#feed-load-all'));
-  Home.Feed.since = 0;
+  var btn = $(page['home']).find('#feed-load-all');
+  Button.setPending(btn);
+  var btnValue = '', btnPendingValue = '';
+  if (Home.Feed.since === -1) {
+    Home.Feed.since = 0;
+    btnValue = constString['Show_less'];
+    btnPendingValue = constString['Showing_less'];
+  }
+  else {
+    Home.Feed.since = -1;
+    btnValue = constString['Load_all'];
+    btnPendingValue = constString['Loading_all'];
+  }
+
   Home.Feed.download(false, function() {
-    $(page['home']).find('#feed-load-all').hide();
+    Button.setDefault(btn);
+    btn.attr('value', btnValue).data('pending-value', btnPendingValue);
   });
 });
 
