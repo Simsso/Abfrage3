@@ -97,8 +97,15 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
   }
 }).on('page-word-lists-loaded', function(event, pageName, subPageName) {
   // finished loading event
-  // focus search field
-  $(page['word-lists']).find('#word-lists-search').select();
+
+  // to focus input fields there is no code like
+  // $(page['word-lists']).find('#input...')
+  // because an input can only be focused when it is in the DOM and not in the RAM only
+  // and therefore above line doesn't make sense
+
+  // focus input fields
+  // search list input, add new word input
+  $('#word-lists-search, #words-add-language1').select();
 });
 
 
@@ -623,7 +630,18 @@ WordLists.show = function(id, addUsage) {
   // update label list
   WordLists.updateDomLabelList();
   $(page['word-lists']).find('#word-list-label').show();
+
+
+  // focus new word input field
+  focusNewWordInput();
 };
+
+
+// focus new word input
+// focuses the first input field to allow swift adding of new words
+function focusNewWordInput() {
+  $(page['word-lists']).find('#words-add-language1').focus();
+}
 
 
 // get table row of word
