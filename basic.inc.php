@@ -39,7 +39,7 @@ switch ($_GET['action']) {
     <!-- navigation -->
     <nav id="head-nav" class="navbar">
       <div class="navbar-inner content-width">
-        <a href="http://abfrage3.simsso.de">
+        <a href="#">
           <img class="logo" src="img/logo.svg" alt="Abfrage3" />
         </a>
       </div>
@@ -66,17 +66,21 @@ switch ($_GET['action']) {
           </div>
         </div>
 
+
         <?php
-// include legal info, about and contact html code
-include('html-include/legal-info.php');
-include('html-include/about.php');
-include('html-include/contact.php');
+          // include legal info, about, contact, tour and advertisement HTML code
+          include('html-include/legal-info.php');
+          include('html-include/about.php');
+          include('html-include/contact.php');
+          include('html-include/tour.php');
         ?>
         <br class="clear-both">
 
       </div>
 
       <?php
+        $show_footer_nav = false;
+        $show_footer_tour_link = false;
         include('html-include/footer.php');
       ?>
     </div>

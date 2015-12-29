@@ -1004,6 +1004,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       </div>
 
       <?php
+        $show_footer_nav = true;
+        $show_footer_tour_link = true;
         include('html-include/footer.php');
       ?>
       <div id="scroll-top-button">

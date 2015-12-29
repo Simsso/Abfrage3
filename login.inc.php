@@ -160,6 +160,8 @@ include('html-include/contact.php');
       </div>
 
       <?php
+        $show_footer_nav = true;
+        $show_footer_tour_link = false;
         include('html-include/footer.php');
       ?>
     </div>
