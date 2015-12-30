@@ -113,35 +113,46 @@ class HTML_Mail extends Mail {
 class Default_Client_HTML_Mail extends HTML_Mail {
   public function __construct($to, $subject, $name, $text, $unsubscribe = NULL) {
     $body ='
-		<html>
-		<body style="font-family: arial; background-color: #ECEFF1; margin: 0; padding: 0;">
-		<div style="width: 100%;
-		padding: 20px;
-		background-color: #8892BF;
-		border-style: solid;
-		border-width: 0 0 6px 0;
-		border-color: #4F5B93;">
-		<div><a href="http://abfrage3.simsso.de"><img src="http://abfrage3.simsso.de/img/logo-46.png" alt="Abfrage3" style="margin: 0 30px;"></a></div>
-		</div>
-		<div style="padding: 20px 50px;">
-		<h4>' . $subject . '</h4>
-		<h3>Hey ' . $name . '!</h3>
-		<p>' . $text . '</p>
-		<p>Best regards, <br>Your Abfrage3-Team</p>
-		<hr style="margin-top: 30px; background-color: #777777; height: 1px; border: 0; "/>
-    ' . (($unsubscribe !== NULL) ? 
-      '<p style="font-size: 80%; text-align: center"><a href="' . $unsubscribe . '" style="text-decoration: none; ">Unsubscribe</a></p>' : 
-      ''
-    ). '
-		<p style="font-size: 80%; text-align: center">
-    <a href="http://abfrage3.simsso.de" style="text-decoration: none; ">Website</a> &middot;
-    <a href="http://abfrage3.simsso.de/#/about" style="text-decoration: none; ">About</a> &middot;
-		<a href="http://abfrage3.simsso.de/#/contact" style="text-decoration: none; ">Contact</a> &middot;
-    <a href="http://abfrage3.simsso.de/#/legal-info" style="text-decoration: none; ">Legal info</a>
-		</p>
-		</div>
-		</body>
-		</html>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body style="font-family: Helvetica, Arial, sans-serif; outline: none; word-wrap: break-word; margin: 0; padding: 0; ">
+        <div style="height: 56px; width: 100%; padding: 0; background-color: #8892BF; border-style: solid; border-width: 0; border-color: #4F5B93; box-shadow: 0 1px 8px rgba(0,0,0,.3); ">
+            <div style="padding: 0 25px; ">
+                <a href="/">
+                    <img style="height: 40px; margin: 8px 30px 5px 0; " src="http://abfrage3.simsso.de/img/logo-40.png" alt="Abfrage3">
+                </a>
+            </div>
+        </div>
+        <div style="position: relative; margin: 25px 25px 0; text-align: left; color: #263238; ">
+            <div style="line-height: 18px; font-weight: bold; padding: 15px 0; background-color: #FFFFFF; border-bottom: 1px solid #ECEFF1; ">' . $subject . '</div>
+            <div style="padding: 15px 0; background-color: #FFFFFF; ">
+                <p style="margin-bottom: 10px; ">Hey ' . $name . '!</p>
+                <p style="margin-bottom: 10px; ">' . str_replace('\n', '<br>', $text) . '</p><br>
+                <p>Best regards, <br><br>Your Abfrage3-Team</p>
+            </div></div>
+
+
+        <div style="position: relative; margin: 25px 25px 0; text-align: left; color: #263238; ">
+            <div style="padding: 15px 0; background-color: #FFFFFF; ">
+                ' . (($unsubscribe !== NULL) ? 
+                '<p style="font-size: 80%; text-align: center; margin-bottom: 10px; "><a href="' . $unsubscribe . '" style="text-decoration: none; ">Unsubscribe</a></p>' : 
+                ''
+                ). '
+                <p style="font-size: 80%; text-align: center">
+                    <a href="http://abfrage3.simsso.de" style="text-decoration: none; ">Website</a> &middot;
+                    <a href="http://abfrage3.simsso.de/#/about" style="text-decoration: none; ">About</a> &middot;
+                    <a href="http://abfrage3.simsso.de/#/tour" style="text-decoration: none; ">Tour</a> &middot;
+                    <a href="http://abfrage3.simsso.de/#/contact" style="text-decoration: none; ">Contact</a> &middot;
+                    <a href="http://abfrage3.simsso.de/#/legal-info" style="text-decoration: none; ">Legal info</a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
 		';
     parent::__construct($to, self::DEFAULT_SENDER_EMAIL, null, $subject, $body);
   }

@@ -39,7 +39,7 @@ switch ($_GET['action']) {
     <!-- navigation -->
     <nav id="head-nav" class="navbar">
       <div class="navbar-inner content-width">
-        <a href="#">
+        <a href="/">
           <img class="logo" src="img/logo.svg" alt="Abfrage3" />
         </a>
       </div>
