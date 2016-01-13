@@ -675,11 +675,12 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                       <tr id="list-shared-with-row-{{id}}">
                         <td>{{user.firstname}} {{user.lastname}}</td>
                         <td>
-                          {{#if permissions}}
+                          {{#equal permissions 1}}
                             <? echo $l['Can_edit']; ?>
-                          {{else}}
+                          {{/equal}}
+                          {{#equal permissions 2}}
                             <? echo $l['Can_view']; ?>
-                          {{/if}}
+                          {{/equal}}
                         </td>
                         <td><input type="button" class="icon close table-icon" data-action="delete-sharing" data-sharing-id="{{id}}" title="<? echo $l['Stop_sharing']; ?>"/></td>
                       </tr>

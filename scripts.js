@@ -708,3 +708,15 @@ window.visitorsOnlineChanged = function(count) {
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-37082212-1', 'auto');
 ga('send', 'pageview');
+
+
+// Handlebars
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if(lvalue != rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
