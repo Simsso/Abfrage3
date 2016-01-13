@@ -719,11 +719,6 @@ div.right-column-img-wrapper {
   background-color: #EEE;
 }
 
-#query-show-special-chars {
-  float: right;
-}
-
-
 .word-import-box-inner-wrapper {
   margin: 100px;
   max-height: calc(100% - 200px);

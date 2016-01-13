@@ -138,7 +138,8 @@ Query.AnswerStateEnum = Object.freeze({
   Known: 2,
   NotKnown: 3,
   WaitToContinue: 4,
-  NotKnownClicked: 5
+  NotKnownClicked: 5,
+  AnswerAccepted: 6
 });
 
 
@@ -620,6 +621,7 @@ Query.nextWord = function() {
   $(page['query']).find('#query-answer-not-known').attr('value', constString['No_idea_']);
   $(page['query']).find('#query-answer-buttons').hide();
   $(page['query']).find('#correct-answer').hide();
+  $(page['query']).find('#query-i-was-right, #query-accept-answer').addClass('display-none');
   $(page['query']).find('#query-answer-not-sure').prop('disabled', false);
 
   
@@ -877,6 +879,8 @@ Query.processCurrentAnswerState = function() {
     case Query.AnswerStateEnum.Known:
       $(page['query']).find('#query-box').trigger('shadow-blink-green');
       Query.addAnswer(Query.currentWord, 1);
+      // no break or return here
+    case Query.AnswerStateEnum.AnswerAccepted:
       Query.tryAutoUpload();
       Query.nextWord();
       return;
@@ -896,7 +900,9 @@ Query.processCurrentAnswerState = function() {
 
       Query.showSolution();
       Query.addAnswer(Query.currentWord, 0);
-      Query.tryAutoUpload();
+
+      // upload later because the user might click the button "Accept answer" or "I was right"
+      //Query.tryAutoUpload();
 
       Query.Stats.updateWordInformation(Query.currentWord);
       Query.Stats.updateSelectedWordsInformation();
@@ -912,7 +918,33 @@ Query.showSolution = function() {
   $(page['query']).find('#query-answer-buttons').show().html(Query.correctAnswer);
   $(page['query']).find('#correct-answer').show().html(Query.correctAnswer);
   $(page['query']).find('#query-answer').select();
+  $(page['query']).find('#query-i-was-right, #query-accept-answer').removeClass('display-none');
 };
+
+
+
+// i was right button click event listener
+// the saved answer of a word might have a typo and by clicking this button the user wants to
+// - accept their answer
+// - update the database (if permissions granted)
+$(page['query']).find('#query-i-was-right').on('click', function() {
+  alert('coming soon...');
+});
+
+
+
+// accept answer button click event listener
+// the user answer might have a type and the user wants to accept it nevertheless
+$(page['query']).find('#query-accept-answer').on('click', function() {
+  if (Query.answers.length === 0) {
+    return;
+  }
+
+  Query.answers[Query.answers.length - 1].correct = 1;
+
+  Query.currentAnswerState = Query.AnswerStateEnum.AnswerAccepted;
+  Query.processCurrentAnswerState();
+});
 
 
 
