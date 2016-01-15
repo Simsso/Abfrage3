@@ -144,20 +144,20 @@ $(page['settings']).find('#settings-password').on('submit', function(e) {
     var message;
     switch (data) {
       case 1:
-        message = Settings.Template.changeName.serverResponse.success();
+        message = Settings.Template.changePassword.serverResponse.success();
         break;
       case 2:
-        message = Settings.Template.changeName.serverResponse.notEqual();
+        message = Settings.Template.changePassword.serverResponse.notEqual();
         break;
       case 3:
-        message = Settings.Template.changeName.serverResponse.wrongOld();
+        message = Settings.Template.changePassword.serverResponse.wrongOld();
         break;
       case 5:
-        message = Settings.Template.changeName.serverResponse.invalid();
+        message = Settings.Template.changePassword.serverResponse.invalid();
         break;
         
       default:
-        message = Settings.Template.changeName.serverResponse.unknown();
+        message = Settings.Template.changePassword.serverResponse.unknown();
         break;
     }
     var mb = new MessageBox();
