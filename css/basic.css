@@ -139,6 +139,9 @@ div.center { margin: auto; }
 
 .overflow-hidden { overflow: hidden; }
 
+.opacity-0_5 { opacity: 0.5; }
+.opacity-0_75 { opacity: 0.75; }
+
 
 /* loading animation */
 

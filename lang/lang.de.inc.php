@@ -229,6 +229,7 @@ $l['The_two_new_passwords_are_not_equal_'] = "Die zwei neuen Passwörter sind ni
 $l['The_words_below_average_algorithm__'] = "Der \"Unter-Durchschnittlich\"-Algorithmus fragt Vokabeln ab, die Sie häufig nicht wussten (vergleichen mit den anderen Vokabeln in der Liste).";
 $l['their'] = "seine/ihre";
 $l['This_is_just_a_little_joke_'] = "Das ist nur ein kleiner Witz.";
+$l['This_word_is_out_of_the_list__'] = "Dieses Wort stammt aus der Liste <a id=\"query-word-list-link\"></a>.";
 $l['to'] = "zu";
 $l['To_start_a_test__'] = "Um die Abfrage zu beginnen, wählen Sie Labels oder Vokabellisten aus und klicken Sie den \"Abfrage starten\" Button.";
 $l['Tour'] = "Tour";

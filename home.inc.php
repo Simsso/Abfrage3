@@ -177,6 +177,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   </div>
                    
                   <table class="width-100 display-none" id="query-content-table">
+                    <tr><td colspan="2" class="opacity-0_75 italic"><? echo $l['This_word_is_out_of_the_list__']; ?></td></tr>
                     <tr>
                       <td><span class="language" id="query-lang1"><? echo $l['First_language']; ?></span>:&nbsp;</td>
                       <td class="width-100" id="query-question">&nbsp;</td>
@@ -208,7 +209,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                         <div id="correct-answer" class="display-none unselectable" unselectable="on" style="display: inline; "></div>
                         <div class="float-right">
                           <input type="button" value="<? echo $l['Accept_answer']; ?>" class="display-none" id="query-accept-answer" /> 
-                          <input type="button" value="<? echo $l['I_was_right']; ?>" class="display-none" id="query-i-was-right" /> 
+                          <!--<input type="button" value="<? echo $l['I_was_right']; ?>" class="display-none" id="query-i-was-right" /> -->
                           <input type="button" value="&#35805;" class="show-special-chars" id="query-show-special-chars" /> 
                         </div>
                       </td>

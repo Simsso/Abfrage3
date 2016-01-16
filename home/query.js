@@ -651,6 +651,9 @@ Query.nextWord = function() {
 
   // show word's comment
   $(page['query']).find('#query-comment').html(Query.currentWord.comment);
+
+  // show word's list
+  $(page['query']).find('#query-word-list-link').attr('href', '#/word-lists/' + Query.currentWord.list).html(Database.getListById(Query.currentWord.list).name);
   
   $(page['query']).find('#query-answer').val('').focus();
 
