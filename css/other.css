@@ -41,6 +41,11 @@ body {
   transition-duration: 0.2s;
 }
 
+#main > div {
+    float: left;
+    width: 100%;
+}
+
 a {
   text-decoration: none;
   color: rgb(0, 0, 180);
@@ -975,6 +980,10 @@ body.mobile-menu-shown #main-wrapper {
   float: right; 
 }
 
+#correct-answer {
+  font-size: 18pt;
+}
+
 .small-menu {
   position: absolute;
   right: 20px;
@@ -1188,7 +1197,7 @@ input[type=text]:first-child:last-child.inline-both {
   }
 
   .main.content-width {
-    padding-bottom: 106px;
+    padding-bottom: 121px;
   }
   
   .left-column, .right-column, .left-column-small, .right-column-big {
