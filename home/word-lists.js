@@ -573,6 +573,9 @@ WordLists.show = function(id, addUsage) {
       $(page['word-lists']).find('#word-list-title-name').html(newListName); // on top of the page
       $(page['word-lists']).find('#list-of-word-lists-row-' + WordLists.shownId).children().first().html(newListName); // inside the list of word lists
     });
+
+    // focus new word input
+    $(page['word-lists']).find('#words-add-language1').val('').focus();
   });
 
   // change language form event listener
@@ -608,6 +611,9 @@ WordLists.show = function(id, addUsage) {
       $(page['word-lists']).find('#word-list-table').find('td').eq(0).html(lang1);
       $(page['word-lists']).find('#word-list-table').find('td').eq(1).html(lang2);
     });
+
+    // focus new word input
+    $(page['word-lists']).find('#words-add-language1').val('').focus();
   });
 
   
@@ -814,6 +820,10 @@ WordLists.editOrSaveWordEvent = function(event, id) {
       cell2.html(lang2Input.val());
       cell3.html(commentInput.val());
     });
+
+
+    // focus new word input
+    $(page['word-lists']).find('#words-add-language1').val('').focus();
   }
 };
 
@@ -1050,7 +1060,8 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   // check for a word with the same meaning in lang1 or lang2
   var messageBox = null, word = null;
   for (var i = 0; i < list.words.length; i++) {
-    if (list.words[i].language1 == lang1 || list.words[i].language2 == lang2) {
+    // make sure that empty meanings don't trigger a message box
+    if (list.words[i].language1 == lang1 && lang1 || list.words[i].language2 == lang2 && lang2) {
       messageBox = new MessageBox();
       word = list.words[i];
     }
@@ -1109,9 +1120,9 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
   else {
     // inform the user that the list contains a similar word
     messageBox.setTitle('Similar word found');
-    messageBox.setContent('This word list already contains the word:<br><br><i>' + word.language1 + ' - ' + word.language2 + '</i><br><br>Do you want to add the word (<i>' + lang1 + ' - ' + lang2 + '</i>) nevertheless?');
+    messageBox.setContent('This word list already contains the word:<br><br><i>' + word.language1 + ' - ' + word.language2 + '</i><br><br>Do you want to add the word (<i>' + lang1 + ' - ' + lang2 + '</i>) though?');
     messageBox.setButtons(MessageBox.ButtonType.YesNoCancel);
-    messageBox.setFocusedButton('No');
+    messageBox.setFocusedButton('Yes');
     messageBox.setCallback(function(button) {
       switch(button) {
         case 'Yes':
