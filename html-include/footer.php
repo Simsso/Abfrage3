@@ -19,7 +19,7 @@
       	<img src="img/flag-of-germany.svg" class="language-flag" alt="" />
       	Deutsch
       </a>
-      <hr>&copy; Timo Denk
+      <hr>&copy; <a href="http://timodenk.com" target="_blank">Timo Denk</a>
     </div>
   </div>
 </footer>

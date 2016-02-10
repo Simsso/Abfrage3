@@ -717,9 +717,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <div id="word-lists-special-chars" class="special-chars display-none box">
                     <?php include('html-include/special-chars.php'); ?>
                   </div>
-                </div>
 
-                <hr class="full-width">
+                  <hr class="full-width">
+                </div>
 
                 <div id="words-in-list">
                 </div>

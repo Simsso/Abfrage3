@@ -1218,7 +1218,7 @@ $(page['word-lists']).find('#share-list-form').on('submit', function(e) {
   Button.setPending($(page['word-lists']).find('#share-list-submit'));
 
   // send message to server
-  var email = $(page['word-lists']).find('#share-list-other-user-email').val();
+  var email = $(page['word-lists']).find('#share-list-other-user-email').val().trim();
   WordLists.setSharingPermissions(
     WordLists.shownId, // list id
     email, // email of the user to share the list with
