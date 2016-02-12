@@ -944,6 +944,10 @@ $(page['query']).find('#query-accept-answer').on('click', function() {
   }
 
   Query.answers[Query.answers.length - 1].correct = 1;
+    
+  // clear last drawing cache by removing the last element of the cache array
+  Query.Drawing.storedDataOfQueryAnswers.splice(Query.Drawing.storedDataOfQueryAnswers.length - 1,1);
+
 
   Query.currentAnswerState = Query.AnswerStateEnum.AnswerAccepted;
   Query.processCurrentAnswerState();
