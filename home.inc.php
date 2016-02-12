@@ -499,13 +499,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
           <div id="word-lists-left-column" class="left-column-small">
             <div class="box" id="word-list-title">
-              <div class="box-head active"> 
-                <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
-                <div id="word-list-title-name"></div>
-                <script id="word-lists-list-title-name-template" type="x-handlebars-template">
-                  {{ name }}
-                </script>
-              </div>
+              <script id="word-lists-list-title-name-template" type="x-handlebars-template">
+                <div class="box-head active"> 
+                  <a href="#/word-lists"><img src="img/menu-back.svg" id="word-list-menu-back"/></a>
+                  <div id="word-list-title-name" {{#if allowSharing}}contenteditable="true"{{/if}}>
+                    {{ name }}
+                  </div>
+                </div>
+              </script>
             </div>
 
             <!-- General -->
@@ -541,14 +542,6 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 {{! creation time string}}
                 <p><? echo $l['Created']; ?>: {{creationTime}}</p>
 
-                {{! rename list string}}
-                {{#if allowSharing}}
-                  <form id="rename-list-form">
-                    <input type="text" id="rename-list-name" required="true" placeholder="<? echo $l['List_name']; ?>" value="{{list.name}}"/>&nbsp;<input type="submit" value="<? echo $l['Rename']; ?>" data-pending-value="<? echo $l['Renaming']; ?>" id="rename-list-button"/>
-                  </form>
-                  <p></p>
-                {{/if}}
-
                 {{! edit languages string}}
                 {{#if allowEdit}}
                   <form id="change-language-form">
@@ -560,8 +553,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
                 {{! import words string }}
                 {{#if allowEdit}}
-                  <input type="button" value="<? echo $l['Import_words']; ?>..." onclick="WordLists.Import.showDialog()" />
-                  <hr class="full-width">
+                  <!--<input type="button" value="<? echo $l['Import_words']; ?>..." onclick="WordLists.Import.showDialog()" />
+                  <hr class="full-width">-->
                 {{/if}}
 
 

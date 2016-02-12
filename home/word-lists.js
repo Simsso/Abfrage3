@@ -463,7 +463,7 @@ WordLists.show = function(id, addUsage) {
   if (!WordLists.shown.language2) WordLists.shown.language2 = constString['Second_language'];
 
   // update list name box
-  $(page['word-lists']).find('#word-list-title-name').html(WordLists.Template.listName({ name: WordLists.shown.name }));
+  $(page['word-lists']).find('#word-list-title').html(WordLists.Template.listName({ name: WordLists.shown.name, allowSharing: allowSharing }));
 
   // info box body
   // add content depending on the users permissions (sharing and editing)
@@ -551,26 +551,18 @@ WordLists.show = function(id, addUsage) {
   });
 
   // rename form
-  $(page['word-lists']).find('#rename-list-form').on('submit', function(e) {
+  $(page['word-lists']).find('#word-list-title-name').on('keydown', function(e) {
+    if (e.keyCode !== 13) return; // listen for enter key
+
     e.preventDefault();
 
-    // disable button and inputs
-    var nameInput = $(page['word-lists']).find('#rename-list-name'), submitButton = $(page['word-lists']).find('#rename-list-button');
-    nameInput.prop('disabled', true);
-    Button.setPending(submitButton);
-
-    var newListName = nameInput.val();
+    var newListName = $(this).text().trim();
     // send information to the server
     WordLists.renameList(WordLists.shownId, newListName, function(data) {
-      // re-enable button and inputs
-      nameInput.prop('disabled', false);
-      Button.setDefault(submitButton);
-
       // update local list object
       WordLists.shown.name = newListName;
 
       // update the information where the list name was shown
-      $(page['word-lists']).find('#word-list-title-name').html(newListName); // on top of the page
       $(page['word-lists']).find('#list-of-word-lists-row-' + WordLists.shownId).children().first().html(newListName); // inside the list of word lists
     });
 
