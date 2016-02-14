@@ -992,6 +992,12 @@ body.mobile-menu-shown #main-wrapper {
   width: auto;
 }
 
+p.nothing-info {
+  margin: 45px 0;
+  color: #555;
+  text-align: center;
+}
+
 
 
 

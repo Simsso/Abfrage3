@@ -66,7 +66,7 @@ $('.box .box-head img.box-head-right-icon').on('click', function(event) {
 
 // allow expanding by clicking on the box head
 $('.box .box-head').on('click', function(e) {
-  $(this).find('img.box-head-right-icon').last().trigger('expand');
+  $(this).find('img.box-head-right-icon[data-action-type="collapse-expand"]').last().trigger('expand');
 });
 
 // expand can be triggered (custom jQuery event)
@@ -110,8 +110,7 @@ var BoxExpansion = {
   refreshDom: function() {
     var expansions = this.getAll();
     for(var key in expansions) {
-      console.log(key + ' ' + expansions[key]);
-      console.log($('#' + key).find('.box-head img.box-head-right-icon').last().trigger((expansions[key]) ? 'expand' : 'collapse'));
+      $('#' + key).find('.box-head img.box-head-right-icon[data-action-type="collapse-expand"]').last().trigger((expansions[key]) ? 'expand' : 'collapse');
     }
   }
 };

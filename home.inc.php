@@ -67,7 +67,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/feed.svg" />
                 <? echo $l['Feed']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshFeed" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="feed"></div>
@@ -85,7 +85,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             </script>
 
             <script id="feed-no-content-template" type="text/x-handlebars-template">
-              <p><? echo $l['Nothing_new_since_last_login_']; ?></p>
+              <p class="nothing-info"><? echo $l['Nothing_new_since_last_login_']; ?></p>
             </script>
 
             <script id="feed-user-added-element-template" type="text/x-handlebars-template">
@@ -132,14 +132,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/history.svg"/>
                 <? echo $l['Recently_used']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshRecentlyUsed" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded" id="recently-used">
               </div>
             </div>
 
             <script id="recently-used-no-content-template" type="text/x-handlebars-template">
-              <p><? echo $l['No_recently_used_lists_found_']; ?></p>
+              <p class="nothing-info"><? echo $l['No_recently_used_lists_found_']; ?></p>
             </script>
 
             <script id="recently-used-table-template" type="text/x-handlebars-template">
@@ -168,7 +168,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/question.svg" />
                 <? echo $l['Test']; ?>
                 <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-div">
@@ -237,7 +237,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/tags.svg" />
                 <? echo $l['Select_labels_and_word_lists']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshQueryLabelList" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="query-selection"></div>
@@ -303,7 +303,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head">
                 <img src="img/settings.svg" />
                 <? echo $l['Advanced_settings']; ?>
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div>
@@ -337,7 +337,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head">
                 <img src="img/algorithm.svg" />
                 <? echo $l['Test_algorithm']; ?>
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-algorithm">
@@ -380,7 +380,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head">
                 <img src="img/settings.svg" />
                 <? echo $l['Test_settings']; ?>
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-type">
@@ -393,7 +393,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head">
                 <img src="img/swap.svg" />
                 <? echo $l['Test_direction']; ?>
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <table class="box-table cursor-pointer" id="query-direction">
@@ -410,16 +410,15 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         <!-- Word lists -->
         <div id="content-word-lists" data-page="word-lists">
           <div class="box" id="list-of-word-lists-wrapper">
-            <div class="box-head">
-              <img src="img/server.svg" />
-              <? echo $l['Word_lists']; ?>
+            <div class="box-head padding-0">
               <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfWordLists" />
-              <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
             </div>
             <div class="box-body" data-start-state="expanded">
               <form id="word-list-add-form">
-                <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
-                <input id="word-list-add-button" type="submit" value="<? echo $l['Create_list']; ?>" data-pending-value="<? echo $l['Creating_list']; ?>"/>
+                <div class="big-search-field-wrapper">
+                  <img src="img/add.svg" />
+                  <input id="word-list-add-name" type="text" placeholder="<? echo $l['Word_list_name']; ?>" required="true"/>
+                </div>
               </form>
 
               <hr class="full-width">
@@ -435,7 +434,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
             </div>
 
-            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
+            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="nothing-info padding-top-15px"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
 
             <script id="word-lists-no-list-search-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['No_search_results']; ?></p></script>
 
@@ -514,7 +513,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               <div class="box-head display-none">
                 <img src="img/info.svg" />
                 <div class="inline">General</div>
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
               </div>
@@ -572,7 +571,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/tags.svg" />
                 <? echo $l['Labels']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="getLabelList" />
-                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
+                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="collapsed">
                 <div id="list-labels-list">
@@ -641,7 +640,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/share.svg" />
                 <? echo $l['Share']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListSharings" />
-                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" />
+                <img src="img/expand.svg" class="box-head-right-icon" data-action="expand" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="collapsed">
                 <form id="share-list-form">
@@ -695,7 +694,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/grid.svg" />
                 <? echo $l['Words']; ?> (<span id="shown-word-list-words-count">0</span>)
                 <img src="img/fullscreen.svg" class="box-head-right-icon" data-action="fullscreen" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="words-add">
@@ -778,7 +777,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/users.svg" />
                 <? echo $l['People_youve_added']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfAddedUsers" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="user-add-message"></div>
@@ -786,6 +785,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                   <input id="user-add-email" type="email" placeholder="<? echo $l['Email_address']; ?>" required="true"/>
                   <input id="user-add-button" type="submit" value="<? echo $l['Add_user']; ?>" data-pending-value="<? echo $l['Adding_user']; ?>"/>
                 </form>
+
+                <hr class="full-width">
+
                 <div id="people-you-have-added">
                 </div>
               </div>
@@ -793,7 +795,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <!-- user people you've added templates -->
             <script id="user-none-added-template" type="text/x-handlebars-template">
-              <p class="spacer-top-15"><? echo $l['You_havent_added_other_users_yet_']; ?></p>
+              <p class="nothing-info padding-top-15px"><? echo $l['You_havent_added_other_users_yet_']; ?></p>
             </script>
 
             <script id="user-add-server-response-wrong-email-template" type="text/x-handlebars-template"><? echo $l['Email_address_does_not_exist_']; ?></script>
@@ -803,11 +805,6 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <script id="user-list-of-added-users-template" type="text/x-handlebars-template">
               <table class="box-table button-right-column">
-                <tr class="bold cursor-default">
-                  <td><? echo $l['Name']; ?></td>
-                  <td><? echo $l['Email_address']; ?></td>
-                  <td></td>
-                </tr>
                 {{#each user}}
                   <tr id="added-users-row-{{id}}">
                     <td>{{firstname}} {{lastname}}</td>
@@ -828,7 +825,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <img src="img/users.svg" />
                 <? echo $l['People_who_have_added_you']; ?>
                 <img src="img/refresh.svg" class="box-head-right-icon" data-action="refresh" data-function-name="refreshListOfUsersWhoHaveAddedYou" />
-                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" />
+                <img src="img/collapse.svg" class="box-head-right-icon" data-action="collapse" data-action-type="collapse-expand" />
               </div>
               <div class="box-body" data-start-state="expanded">
                 <div id="people-who-have-added-you">
@@ -838,16 +835,11 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
             <!-- user who have added you templates -->
             <script id="user-none-have-added-you-template" type="text/x-handlebars-template">
-              <p class="spacer-top-15"><? echo $l['No_users_have_added_you_yet']; ?></p>
+              <p class="nothing-info"><? echo $l['No_users_have_added_you_yet']; ?></p>
             </script>
 
             <script id="user-list-of-users-who-have-added-you-template" type="text/x-handlebars-template">
               <table class="box-table button-right-column">
-                <tr class="bold cursor-default">
-                  <td><? echo $l['Name']; ?></td>
-                  <td><? echo $l['Email_address']; ?></td>
-                  <td></td>
-                </tr>
                 {{#each user}}
                   <tr>
                     <td>{{firstname}} {{lastname}}</td>

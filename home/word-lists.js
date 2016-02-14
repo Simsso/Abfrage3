@@ -104,8 +104,12 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
   // and therefore above line doesn't make sense
 
   // focus input fields
-  // search list input, add new word input
-  $('#word-lists-search, #words-add-language1').select();
+  if (Database.lists.length) {
+    // search list input, add new word input
+    $('#word-lists-search, #words-add-language1').select();
+  } else {
+    $('#word-list-add-name').select();
+  }
 });
 
 
@@ -199,16 +203,14 @@ $(page['word-lists']).find('#word-list-add-form').on('submit', function(e) {
   // dont visit action="..." page
   e.preventDefault();
 
-  // disable button and text box to prevent resubmission
+  // disable text box to prevent resubmission
   $(page['word-lists']).find('#word-list-add-name').prop('disabled', true);
-  Button.setPending($(page['word-lists']).find('#word-list-add-button'));
 
   // call the server contacting function
   WordLists.addNew($(page['word-lists']).find('#word-list-add-name').val(), function(data) {
     // finished callback
-    // re-enable the button and the text box
+    // re-enable and the text box
     $(page['word-lists']).find('#word-list-add-name').prop('disabled', false).val('');
-    Button.setDefault($(page['word-lists']).find('#word-list-add-button'));
 
     // load the word list which has just been added
     WordLists.show(data.id);

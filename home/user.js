@@ -21,6 +21,10 @@ User.Template = {
 $(window).on('page-user', function(event, pageName, subPageName) {
   // sub page user called
   //
+
+  // load methods
+  User.updateDomListOfAddedUsers();
+  User.updateDomListOfUsersWhoHaveAddedYou();
 });
 
 
@@ -206,9 +210,3 @@ User.updateDomListOfUsersWhoHaveAddedYou = function() {
     });
   });
 };
-
-
-
-// load methods
-User.updateDomListOfAddedUsers();
-User.updateDomListOfUsersWhoHaveAddedYou();
