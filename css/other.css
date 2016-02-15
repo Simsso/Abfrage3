@@ -676,9 +676,8 @@ div.right-column-img-wrapper {
 
 .small-menu-open-image {
   cursor: pointer;
-  height: 25px;
-  margin-top: -7px;
-  margin-bottom: -7px;
+  height: 16px;
+  margin-bottom: -2px;
 }
 
 .feed-table td:first-child, .word-lists-folder-view-table td:first-child {
