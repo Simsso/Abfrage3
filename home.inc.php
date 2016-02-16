@@ -955,6 +955,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <? echo $l['Email_notifications']; ?>
               </div>
               <div class="box-body">
+                <p><? echo $user->email; ?></p>
                 <label><input type="checkbox" id="enable-newsletter-checkbox" <? echo ($user_settings->newsletter_enabled ? 'checked' : ''); ?>/>&nbsp;<? echo $l['Newsletter']; ?></label>
               </div>
             </div>
