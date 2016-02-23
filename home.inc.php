@@ -434,9 +434,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
             </div>
 
-            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="nothing-info padding-top-15px"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
+            <script id="word-lists-no-list-template" type="text/x-handlebars-template"><p class="padding-top-15px nothing-info"><? echo $l['You_havent_created_any_word_lists_yet_']; ?></p></script>
 
-            <script id="word-lists-no-list-search-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['No_search_results']; ?></p></script>
+            <script id="word-lists-no-list-search-template" type="text/x-handlebars-template"><p class="spacer-top-15 nothing-info"><? echo $l['No_search_results']; ?></p></script>
 
             <script id="word-lists-list-of-word-lists-template" type="text/x-handlebars-template">
               <table class="box-table cursor-pointer">
@@ -544,7 +544,9 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 {{! edit languages string}}
                 {{#if allowEdit}}
                   <form id="change-language-form">
-                    <input id="word-list-language1" required="true" type="text" placeholder="<? echo $l['First_language']; ?>" value="{{list.language1}}" class="width-60px" />&nbsp;<input id="word-list-language2" required="true" type="text" placeholder="<? echo $l['Second_language']; ?>" value="{{list.language2}}" class="width-60px" />&nbsp;<input type="submit" id="word-list-languages-button" value="<? echo $l['Edit_languages']; ?>" data-pending-value="<? echo $l['Editing_languages']; ?>" />
+                    <input id="word-list-language1" required="true" type="text" placeholder="<? echo $l['First_language']; ?>" value="{{list.language1}}" class="width-60px" />&nbsp;
+                    <input id="word-list-language2" required="true" type="text" placeholder="<? echo $l['Second_language']; ?>" value="{{list.language2}}" class="width-60px" />&nbsp;
+                    <input type="submit" id="word-list-languages-button" value="<? echo $l['Edit_languages']; ?>" data-pending-value="<? echo $l['Editing_languages']; ?>" />
                   </form>
                 {{/if}}
 
