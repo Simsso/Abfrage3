@@ -23,7 +23,7 @@
   <div class="box">
     <div class="box-head">Security</div>
     <div class="box-body">
-      <p>Entering your data on my website is at your own risk. I can't guarantee for the security of the entered information. Your account's password is not being stored in plain text. Before it is being safed to the database the <a href="http://php.net/manual/de/function.sha1.php" target="_blank">SHA1-hash</a> is applied to it together with a randomly generated salt.</p>
+      <p>Entering your data on my website is at your own risk. I can't guarantee for the security of the entered information. Your account's password is not being stored in plain text. Before it is being safed to the database the <a href="http://php.net/manual/de/function.sha1.php" target="_blank">SHA1-hash</a> is applied to it together with a randomly generated salt. A <a href="http://tools.timodenk.com/?p=hash-function" target="_blank">hash function</a> is any function that can be used to map data of arbitrary size to data of fixed size.</p>
     </div>
   </div>
 

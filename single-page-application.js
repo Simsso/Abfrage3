@@ -12,7 +12,7 @@ SPA.pageTitle = {
   'settings': constString['Settings'],
   'about': constString['About'],
   'contact': constString['Contact'],
-  'legal-info': constString['Legal_info]'],
+  'legal-info': constString['Legal_info'],
   'tour': constString['Tour'],
   'login': constString['Login']
 };
