@@ -793,7 +793,7 @@ class Database {
     $result = array();
     while ($row = mysqli_fetch_assoc($query)) {
       $list = self::get_word_list($id, $row['list_id'], false);
-      $list->sharing_id = $row['share_id'];
+      $list->sharing_id = intval($row['share_id']);
       array_push($result, $list);
     }
     return $result;

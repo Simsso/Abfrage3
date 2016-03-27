@@ -1095,7 +1095,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
           data.language2, 
           data.creation_time, 
           data.words, 
-          data.sharings);
+          data.sharings, 
+          data.sharing_id);
         list.allowEdit = data.allowEdit;
         list.allowSharing = data.allowSharing;
         list.labels = data.labels;
@@ -1126,6 +1127,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
             }
           }
         };
+
+        Database.removeListById = function(id) {
+          for (var i = Database.lists.length - 1; i >= 0; i--) {
+            if (Database.lists[i].id === id) {
+              return Database.lists.splice(i, 1);
+            }
+          }
+        }
 
         Database.getLabelById = function(id) {
           for (var i = Database.labels.length - 1; i >= 0; i--) {

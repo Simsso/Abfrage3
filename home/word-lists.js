@@ -541,7 +541,7 @@ WordLists.show = function(id, addUsage) {
     messageBox.setCallback(function(button) {
       if (button === 'Yes') {
         Button.setPending($(this)); // disable button
-        var sharingId = $(page['word-lists']).find('tr[data-list-id=' + WordLists.shownId + ']').data('sharing-id');
+        var sharingId = WordLists.shown.sharingId;
         // send server request to hide the shared list
         WordLists.setSharingPermissionsBySharingId(sharingId, 0, function() {
           // because the shown list has just been removed update the screen to show the appropriate message
@@ -1258,6 +1258,7 @@ $(page['word-lists']).find('#share-list-form').on('submit', function(e) {
 // @param byte permissions: new permissions (can edit or view)
 // @param function callback: called with the server response data after sending the Ajax-request
 WordLists.setSharingPermissionsBySharingId = function(sharingId, permissions, callback) {
+  var listId = WordLists.shownId;
   jQuery.ajax('server.php', {
     data: {
       action: 'set-sharing-permissions-by-sharing-id',
@@ -1270,6 +1271,8 @@ WordLists.setSharingPermissionsBySharingId = function(sharingId, permissions, ca
     }
   }).done(function(data) {    
     data = handleAjaxResponse(data);
+
+    Database.removeListById(listId);
 
     // update the box which shows recently used word lists
     // it could be the case that the function call removed one list for the user and therefore a list entry of the recently used lists has to be removed as well

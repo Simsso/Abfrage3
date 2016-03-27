@@ -212,6 +212,7 @@ Home.RecentlyUsed.updateDom = function() {
 Home.RecentlyUsed.addWordListUsage = function(listId) {
   // check if the recently used lists array contains the list
   for (var i = Database.recentlyUsed.length - 1; i >= 0; i--) {
+    if (!Database.recentlyUsed[i]) continue;
     if (Database.recentlyUsed[i].id === listId) {
       Database.recentlyUsed.splice(i, 1);
       break;
