@@ -69,6 +69,17 @@ Array.prototype.getRandomElement = function() {
   return this[Math.round(Math.random() * (this.length - 1))];
 };
 
+
+// removes all elements which are undefined
+Array.prototype.removeUndefined = function() {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] === undefined) {
+      this.splice(i, 1);
+      i--;
+    }
+  }
+}
+
 // converts a number to an English string
 Number.prototype.toEnglishString = function() {
   if (this.valueOf() > 12) {

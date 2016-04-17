@@ -1060,8 +1060,14 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       </div>
     </div>
 
-    <script type="text/javascript" src="database.js"></script>
+    <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="handlebars-v4.0.4.js" type="text/javascript"></script>
+    <script src="messagebox.js" type="text/javascript"></script>
 
+    <script src="extensions.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="database.js"></script>
     <script type="text/javascript">
       var start = new Date().getTime();
       // PHP-defined global variables
@@ -1146,32 +1152,21 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
         // link ids in recently used array to respective objects
         listIdArrayToListObjectArray(Database.recentlyUsed);
+        Database.recentlyUsed.removeUndefined(); // some lists might not be available anymore
       })();
 
       var end = new Date().getTime();
       var time = end - start;
       console.info('Execution time for client-side data base init: ' + time + ' ms');
     </script>
-
-    <!-- add scripts to the DOM -->
-    <script type="text/javascript">
-      document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="handlebars-v4.0.4.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
-
-      document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="scripts.js" type="text/javascript">\x3C/script>');
+    <script src="scripts.js" type="text/javascript"></script>
     
-      // single page appcliation script
-      document.write('\x3Cscript src="single-page-application.js" type="text/javascript">\x3C/script>');
+    <script src="single-page-application.js" type="text/javascript"></script>
 
-      // include scripts for every single page
-      document.write('\x3Cscript src="home/home.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="home/word-lists.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="home/query.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="home/user.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="home/settings.js" type="text/javascript">\x3C/script>');
-    </script>
-    
+    <script src="home/home.js" type="text/javascript"></script>
+    <script src="home/word-lists.js" type="text/javascript"></script>
+    <script src="home/query.js" type="text/javascript"></script>
+    <script src="home/user.js" type="text/javascript"></script>
+    <script src="home/settings.js" type="text/javascript"></script>
   </body>
 </html>

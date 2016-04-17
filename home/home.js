@@ -175,6 +175,8 @@ Home.RecentlyUsed.download = function(showLoadingInformation, callback) {
   }).done(function(data) {
     data = handleAjaxResponse(data);
 
+    data.removeUndefined();
+
     // link ids in recently used array to respective objects
     listIdArrayToListObjectArray(data);
 
