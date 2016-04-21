@@ -724,7 +724,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </script>
             </div>
 
-            <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['The_selected_list_doesnt_contain__']; ?></p></script>
+            <script id="word-lists-no-words-template" type="text/x-handlebars-template"><p class="padding-top-15px nothing-info"><? echo $l['The_selected_list_doesnt_contain__']; ?></p></script>
             <script id="word-lists-no-words-no-editing-permissions-template" type="text/x-handlebars-template"><p class="spacer-top-15"><? echo $l['The_selected_list_doesnt_contain__']; ?> <? echo $l['You_dont_have_permissions_to_add_new_words_']; ?></p></script>
 
             <script id="word-lists-words-table-template" type="text/x-handlebars-template">
