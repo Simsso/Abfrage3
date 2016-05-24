@@ -622,10 +622,12 @@ WordLists.show = function(id, addUsage) {
   // show divs which have been updated above
   $(page['word-lists']).find('#word-list-info, #word-list-title, #word-list-info-words').show();
 
-  if (allowEdit)
+  if (allowEdit) {
     $(page['word-lists']).find('#words-add').show();
-  else
+  }
+  else {
     $(page['word-lists']).find('#words-add').hide();
+  }
 
   // update label list
   WordLists.updateDomLabelList();
@@ -1033,6 +1035,9 @@ $(page['word-lists']).find('#words-add-form').on('submit', function(e) {
   $(page['word-lists']).find('#words-add-language1').val('').focus();
   $(page['word-lists']).find('#words-add-language2').val('');
   $(page['word-lists']).find('#words-add-comment').val('');
+
+  // leave comfortable mode (resize input fields to normal size)
+  $(page['word-lists']).find('#words-add-form').removeClass('comfortable');
 
   // send word to the server
   WordLists.addWordToShownList(lang1, lang2, comment, true);
