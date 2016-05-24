@@ -329,6 +329,8 @@ body > .main {
 
 #word-list-menu-back {
   left: 12.5px !important; 
+  top: 50%;
+  transform: translate(0, -50%);
   display: block;
   opacity: .8;
 }
