@@ -23,6 +23,7 @@ var page = {}, // stores all dom elements from not rendered sites
 
 // siaf
 (function() {
+  // find page elements
   var jQueryPageElement = $('#main').children('div');
   for (var i = 0;  i < jQueryPageElement.length; i++) {
     var id = jQueryPageElement.eq(i).attr('id');
@@ -61,7 +62,7 @@ SPA.updatePageContent = function (firstCall) {
   
   
   // update document title
-  document.title = SPA.pageTitle[pageName] + ' - Abfrage3 (dev)';
+  document.title = SPA.pageTitle[pageName] + ' - Abfrage3';
 
   // if the hash hasn't changed at all do nothing
   if (!firstCall && SPA.shownHashName === hash) return;

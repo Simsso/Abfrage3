@@ -173,8 +173,8 @@ include('html-include/contact.php');
 
     <!-- add scripts to the DOM -->
     <script type="text/javascript">
-      document.write('\x3Cscript src="jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
-      document.write('\x3Cscript src="handlebars-v4.0.4.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="vendor/jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="vendor/handlebars-v4.0.4.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
 
       document.write('\x3Cscript src="extensions.js" type="text/javascript">\x3C/script>');

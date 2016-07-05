@@ -1060,8 +1060,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       </div>
     </div>
 
-    <script src="jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="handlebars-v4.0.4.js" type="text/javascript"></script>
+    <script src="vendor/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="vendor/handlebars-v4.0.4.js" type="text/javascript"></script>
     <script src="messagebox.js" type="text/javascript"></script>
 
     <script src="extensions.js" type="text/javascript"></script>

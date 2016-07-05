@@ -1171,7 +1171,6 @@ input[type=text]:first-child:last-child.inline-both {
 
 
   .box .box-head img.box-head-right-icon, #word-list-menu-back {
-    top: 14.5px;
     height: 20px;
     width: 20px;
   }
