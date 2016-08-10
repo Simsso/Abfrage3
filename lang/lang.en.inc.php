@@ -110,6 +110,7 @@ $l['Hey'] = "Hey";
 $l['Hide_list'] = "Hide list";
 $l['Hiding_list'] = "Hiding list";
 $l['Home'] = "Home";
+$l['Hotkey'] = "Hotkey";
 $l['I_didnt_know_that_'] = "I didn't know that.";
 $l['I_knew_that_'] = "I knew that.";
 $l['I_know_'] = "I know!";

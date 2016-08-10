@@ -190,9 +190,18 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                       <td id="query-answer-table-cell-buttons" class="display-none">
                         <table class="width-100">
                           <tr>
-                            <td class="width-33"><input id="query-answer-known" type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"/></td>
-                            <td class="width-33"><input id="query-answer-not-sure" type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"/></td>
-                            <td class="width-33"><input id="query-answer-not-known" type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"/></td>
+                            <td class="width-33">
+                             <span class="tooltip"><? echo $l['Hotkey']; ?>: "J"</span>
+                             <input id="query-answer-known" type="button" value="<? echo $l['I_know_']; ?>" class="height-50px width-100"/>
+                            </td>
+                            <td class="width-33">
+                             <span class="tooltip"><? echo $l['Hotkey']; ?>: "K"</span>
+                             <input id="query-answer-not-sure" type="button" value="<? echo $l['Not_sure_']; ?>" class="height-50px width-100"/>
+                            </td>
+                            <td class="width-33">
+                             <span class="tooltip"><? echo $l['Hotkey']; ?>: "L"</span>
+                             <input id="query-answer-not-known" type="button" value="<? echo $l['No_idea_']; ?>" class="height-50px width-100"/>
+                            </td>
                           </tr>
                         </table>
                         <div id="query-answer-buttons"></div>

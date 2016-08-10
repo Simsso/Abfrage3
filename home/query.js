@@ -843,6 +843,32 @@ Query.uploadResults = function() {
 };
 
 
+// query answer buttons hotkeys
+// allow user to use keys in order to click the buttons "Known", "Not sure", ...
+$(window).on('keypress', function(e) {
+  if (Query.chosenType === Query.TypeEnum.Buttons && Query.running) {
+    var button = null;
+    switch (e.key) {
+      // note that query occurs without $(page['query']).find('#query-answer-not-known') because the keys should only work when the buttons are visible
+      case 'j':
+        button = $('#query-answer-known');
+        break;
+      case 'k':
+        button = $('#query-answer-not-sure');
+        break;
+      case 'l':
+        button = $('#query-answer-not-known');
+        break;
+    }
+    if (button !== null) {
+      if (!button.prop('disabled')) {
+        button.trigger('click'); // trigger function calls that would have been called in case of a click event
+      }
+    }
+  }
+});
+
+
 
 // upload query results button click event listener
 $(page['query']).find('#query-results-upload-button').on('click', Query.uploadResults);
