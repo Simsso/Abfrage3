@@ -185,7 +185,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <tr>
                       <td><span class="language" id="query-lang2"><? echo $l['Second_language']; ?></span>:&nbsp;</td>
                       <td id="query-answer-table-cell-text-box">
-                        <input type="text" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0" spellcheck="false"/>
+                        <input type="text" autocomplete="off" id="query-answer" class="unremarkable width-100" data-last-cursor-position="0" spellcheck="false"/>
                       </td>
                       <td id="query-answer-table-cell-buttons" class="display-none">
                         <table class="width-100">
@@ -711,8 +711,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="words-add">
                   <div id="words-add-message"></div>
                   <form id="words-add-form">
-                    <input id="words-add-language1" type="text" placeholder="<? echo $l['First_language']; ?>" spellcheck="false"/>
-                    <input id="words-add-language2" type="text" placeholder="<? echo $l['Second_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-language1" type="text" autocomplete="off"> placeholder="<? echo $l['First_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-language2" type="text" autocomplete="off"> placeholder="<? echo $l['Second_language']; ?>" spellcheck="false"/>
                     <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>" spellcheck="false"/>
                     <input id="words-add-button" type="submit" value="<? echo $l['Add_word']; ?>"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
@@ -729,7 +729,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
 
               <script id="word-list-edit-word-input-template" type="text/x-handlebars-template">
-                <input type="text" class="inline-both" form="word-row-{{id}}-form" id="word-edit-input-{{name}}-{{id}}" value="{{value}}" />
+                <input type="text" autocomplete="off" class="inline-both" form="word-row-{{id}}-form" id="word-edit-input-{{name}}-{{id}}" value="{{value}}" />
               </script>
             </div>
 
