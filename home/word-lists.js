@@ -1127,6 +1127,7 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
         case 'Yes':
           // user wants to add the word nevertheless
           sendServerRequest();
+          focusNewWordInput();
           break;
         default:
           break;
