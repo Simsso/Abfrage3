@@ -203,6 +203,8 @@ $l['Stopping_sharing'] = "Stopping sharing";
 $l['Subject'] = "Subject";
 $l['Successfully_signed_up'] = "Successfully signed up";
 $l['Successfully_unsubscribed_the_email_from_newsletter__'] = "Successfully unsubscribed the following email-address from the newsletter: ";
+$l['Switch_to_label_view'] = "Switch to label view";
+$l['Switch_to_normal_view'] = "Switch to normal view";
 $l['T_gave_you_permissions_to__'] = "{{info.user.firstname}} {{info.user.lastname}} gave you permissions to {{#if info.editingPermissions}}edit{{else}}view{{/if}} the list <a href=\"#/word-lists/{{info.list.id}}\">{{info.list.name}}</a>.";
 $l['T_has_added_you__'] = "{{info.firstname}} {{info.lastname}} has added you.";
 $l['T_Upload_n_answers__'] = "Upload {{#if someAnswersNotUploaded}}{{notUploadedAnswersCount}} {{/if}}answer{{#unless oneAnswerNotUploaded}}s{{/unless}}";

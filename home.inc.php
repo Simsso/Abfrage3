@@ -438,6 +438,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
               </div>
 
               <hr class="full-width">
+              <div class="padding-left-10px">
+                <a href="#/word-lists/l" class="switch-to-label-view"><i><? echo $l['Switch_to_label_view']; ?></i></a>
+                <a href="#/word-lists" class="switch-to-normal-view display-none"><i><? echo $l['Switch_to_normal_view']; ?></i></a>
+              </div>
 
               <div id="list-of-word-lists">
               </div>
@@ -711,8 +715,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 <div id="words-add">
                   <div id="words-add-message"></div>
                   <form id="words-add-form">
-                    <input id="words-add-language1" type="text" autocomplete="off"> placeholder="<? echo $l['First_language']; ?>" spellcheck="false"/>
-                    <input id="words-add-language2" type="text" autocomplete="off"> placeholder="<? echo $l['Second_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-language1" type="text" autocomplete="off" placeholder="<? echo $l['First_language']; ?>" spellcheck="false"/>
+                    <input id="words-add-language2" type="text" autocomplete="off" placeholder="<? echo $l['Second_language']; ?>" spellcheck="false"/>
                     <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>" spellcheck="false"/>
                     <input id="words-add-button" type="submit" value="<? echo $l['Add_word']; ?>"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />

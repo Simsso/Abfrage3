@@ -203,6 +203,8 @@ $l['Stopping_sharing'] = "Wird nicht mehr geteilt";
 $l['Subject'] = "Betreff";
 $l['Successfully_signed_up'] = "Erfolgreich registriert";
 $l['Successfully_unsubscribed_the_email_from_newsletter__'] = "Die folgende Email-Adresse wurde erfolgreich vom Newsletter abgemeldet:";
+$l['Switch_to_label_view'] = "Wechsel zur Label-Ansicht";
+$l['Switch_to_normal_view'] = "Wechsel zur normalen Listen-Ansicht";
 $l['T_gave_you_permissions_to__'] = "{{info.user.firstname}} {{info.user.lastname}} hat Ihnen die Berechtigungen erteilt, die Liste <a href=\"#/word-lists/{{info.list.id}}\">{{info.list.name}}</a> {{#if info.editingPermissions}}zu bearbeiten{{else}}anzuschauen{{/if}}.";
 $l['T_has_added_you__'] = "{{info.firstname}} {{info.lastname}} hat Sie hinzugefügt.";
 $l['T_Upload_n_answers__'] = "{{#if someAnswersNotUploaded}}{{notUploadedAnswersCount}} {{/if}}Antwort{{#unless oneAnswerNotUploaded}}en{{/unless}} hochladen";

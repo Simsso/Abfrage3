@@ -135,6 +135,7 @@ div.center { margin: auto; }
 .inline { display: inline; }
 
 .padding-0 { padding: 0 !important; }
+.padding-left-10px { padding-left: 10px !important; }
 .margin-0 { margin: 0 !important; }
 
 .padding-top-15px { padding-top: 15px; }

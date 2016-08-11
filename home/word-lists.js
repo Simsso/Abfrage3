@@ -71,6 +71,11 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
 
         // update link to word lists
         $('.link-to-show-current-word-list').attr('href', '#/word-lists/' + subPageName);
+
+        // hide switch to label view links and show switch to normal view
+        $(page['word-lists']).find('.switch-to-label-view').addClass('display-none');
+        $(page['word-lists']).find('.switch-to-normal-view').removeClass('display-none');
+
         break;
 
       case 's': // search
@@ -84,10 +89,18 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
           searchString = unescape(subPageParts[1]);
           WordLists.search(searchString);
         }
+
+        // show switch to label view links and hide switch to normal view
+        $(page['word-lists']).find('.switch-to-label-view').removeClass('display-none');
+        $(page['word-lists']).find('.switch-to-normal-view').addClass('display-none');
         break;
 
       default: 
         WordLists.showNoListSelectedScreen(true);
+
+        // show switch to label view links and hide switch to normal view
+        $(page['word-lists']).find('.switch-to-label-view').removeClass('display-none');
+        $(page['word-lists']).find('.switch-to-normal-view').addClass('display-none');
         break;
     }
   }
