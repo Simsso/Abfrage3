@@ -107,6 +107,7 @@ $(window).on('page-word-lists', function(event, pageName, subPageName) {
   else {
     // a valid list id has been passed via url
     WordLists.show(parseInt(subPageName));
+    updateMathJaxEquations();
   }
 }).on('page-word-lists-loaded', function(event, pageName, subPageName) {
   // finished loading event
@@ -842,8 +843,8 @@ WordLists.editOrSaveWordEvent = function(event, id) {
     });
 
 
-    // focus new word input
-    $(page['word-lists']).find('#words-add-language1').val('').focus();
+    // focus new word input (currently disabled)
+    //focusNewWordInput();
   }
 };
 
