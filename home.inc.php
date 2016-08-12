@@ -720,9 +720,13 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     <input id="words-add-comment" type="text" placeholder="<? echo $l['Comment']; ?>" spellcheck="false"/>
                     <input id="words-add-button" type="submit" value="<? echo $l['Add_word']; ?>"/>
                     <input type="button" value="&#35805;" class="show-special-chars" id="word-lists-show-special-chars" />
+                    <input type="button" value="&#960;" id="word-lists-render-equations-info" />
                   </form>
                   <div id="word-lists-special-chars" class="special-chars display-none box">
                     <?php include('html-include/special-chars.php'); ?>
+                  </div>
+                  <div id="word-lists-math-tutorial" class="display-none box">
+                    <? echo $l['P_Math_tutorial__']; ?>
                   </div>
 
                   <hr class="full-width">
@@ -1075,6 +1079,21 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
 
     <script src="vendor/jquery-1.11.3.min.js" type="text/javascript"></script>
     <script src="vendor/handlebars-v4.0.4.js" type="text/javascript"></script>
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          //inlineMath: [["$","$"],["\\(","\\)"]],
+          //displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          displayMath: [["$","$"],["\\(","\\)"]]
+        },
+        displayAlign: "left"
+      });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+
     <script src="messagebox.js" type="text/javascript"></script>
 
     <script src="extensions.js" type="text/javascript"></script>
@@ -1167,6 +1186,11 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         listIdArrayToListObjectArray(Database.recentlyUsed);
         Database.recentlyUsed.removeUndefined(); // some lists might not be available anymore
       })();
+
+
+      function updateMathJaxEquations() {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]); // formats every e.g. $sin(x)$ to look nice
+      }
 
       var end = new Date().getTime();
       var time = end - start;

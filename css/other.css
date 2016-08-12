@@ -1120,6 +1120,11 @@ input[type=text]:first-child:last-child.inline-both {
   }
 }*/
 
+#word-lists-math-tutorial {
+  padding: 15px;
+  margin-top: 0;
+}
+
 
 
 

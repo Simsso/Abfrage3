@@ -145,6 +145,10 @@ div.center { margin: auto; }
 .opacity-0_5 { opacity: 0.5; }
 .opacity-0_75 { opacity: 0.75; }
 
+code {
+  font-family: monospace;
+}
+
 
 /* loading animation */
 

@@ -521,6 +521,8 @@ WordLists.show = function(id, addUsage) {
     $(page['word-lists']).find('#words-in-list').html(wordListHTML);
   }
 
+  updateMathJaxEquations(); // render newly added words
+
   // events
   // delete word list
   $(page['word-lists']).find('#delete-shown-word-list').on('click', function() {
@@ -805,10 +807,16 @@ WordLists.editOrSaveWordEvent = function(event, id) {
     // update the buttons value
     editSaveButton.data('action', 'save').removeClass('pencil').addClass('check');
 
+    // check if cell content is a rendered equation
+    // if so extract the original equation (non-HTML)
+    var cell1Content = (cell1.children().length === 0) ? cell1.html() : '$' + cell1.children('script').last().html() + '$';
+    var cell2Content = (cell2.children().length === 0) ? cell2.html() : '$' + cell2.children('script').last().html() + '$';
+    var cell3Content = (cell3.children().length === 0) ? cell3.html() : '$' + cell3.children('script').last().html() + '$';
+
     // replace the words meanings with text boxes containing the meanings as value="" to allow editing by the user
-    cell1.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell1.html(), name: 'language1' }));
-    cell2.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell2.html(), name: 'language2' }));
-    cell3.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell3.html(), name: 'comment' }));
+    cell1.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell1Content, name: 'language1' }));
+    cell2.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell2Content, name: 'language2' }));
+    cell3.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell3Content, name: 'comment' }));
   }
 
   // save button
@@ -828,6 +836,9 @@ WordLists.editOrSaveWordEvent = function(event, id) {
       cell1.html(lang1Input.val());
       cell2.html(lang2Input.val());
       cell3.html(commentInput.val());
+
+      // render equations
+      updateMathJaxEquations();
     });
 
 
@@ -1090,7 +1101,12 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
 
     // add word row to the list of words
     var tmpId = getLocalId();
+
+    // add to the DOM
     $(page['word-lists']).find('#word-list-table tr:nth-child(1)').after(WordLists.getTableRowOfWord('pending-' + tmpId, lang1, lang2, comment, allowEdit, true));
+
+    updateMathJaxEquations(); // update the added word
+
 
     jQuery.ajax('server.php', {
       data: {
@@ -2077,6 +2093,15 @@ WordLists.Import.escClose = function(e) {
     WordLists.Import.hideDialog();
   }
 };
+
+
+
+// render equations
+// user clicks on "pi" button to see additional information about how to render math equations in Abfrage3
+$(page['word-lists']).find('#word-lists-render-equations-info').on('click', function() {
+  // toggle information (visible / hidden)
+  $(page['word-lists']).find('#word-lists-math-tutorial').toggleClass('display-none'); 
+});
 
 
 

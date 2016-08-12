@@ -652,6 +652,9 @@ Query.nextWord = function() {
   // show word's comment
   $(page['query']).find('#query-comment').html(Query.currentWord.comment);
 
+
+  updateMathJaxEquations(); // render questions and comment
+
   // show word's list
   $(page['query']).find('#query-word-list-link').attr('href', '#/word-lists/' + Query.currentWord.list).html(Database.getListById(Query.currentWord.list).name);
   
@@ -948,6 +951,8 @@ Query.showSolution = function() {
   $(page['query']).find('#correct-answer').show().html(Query.correctAnswer);
   $(page['query']).find('#query-answer').select();
   $(page['query']).find('#query-i-was-right, #query-accept-answer').removeClass('display-none');
+
+  updateMathJaxEquations(); // render solution
 };
 
 
