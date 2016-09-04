@@ -168,7 +168,7 @@ include('html-include/contact.php');
 
     <script type="text/javascript">
       // constant strings
-      var constString = JSON.parse('<? echo str_replace("'", "\\'", str_replace('"', '\\"', json_encode($l))); ?>');
+      var constString = <?php echo json_encode($l); ?>;
     </script>
 
     <!-- add scripts to the DOM -->

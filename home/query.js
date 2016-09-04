@@ -16,6 +16,7 @@ Query.Template = {
 $(window).on('page-query', function(event, pageName, subPageName) {
   // sub page query called
   Query.updateDom(); // update the dom (e.g. a new list might have been added)
+  updateMathJaxEquations();
 });
 
 // default value of how man answers to consider when determining how well a word is known
