@@ -653,6 +653,17 @@ Query.nextWord = function() {
   // show word's comment
   $(page['query']).find('#query-comment').html(Query.currentWord.comment);
 
+  // show when the word has been asked the last time
+  var lastAskedString;
+  if (Query.currentWord.answers.length === 0) {
+    lastAskedString = constString['First_time_asked'];
+  }
+  else {
+    var lastAsked = Query.currentWord.answers[Query.currentWord.answers.length - 1].time;
+    var lastAskedString = constString['Date_difference_' + Date.differenceToStringKey(Date.now() / 1000, lastAsked)];
+  }
+  $(page['query']).find('#query-word-last-tested').html(lastAskedString);
+
 
   updateMathJaxEquations(); // render questions and comment
 

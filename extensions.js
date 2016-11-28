@@ -172,3 +172,13 @@ Date.millis = function () {
 Date.seconds = function () {
   return Math.round(Date.millis() / 1000 - 0.5, 0);
 };
+
+Date.differenceToStringKey = function(fromUnix, tillUnix) {
+  var delta = Math.abs(fromUnix - tillUnix);
+  if (delta < 5) return "just_now";
+  if (delta < 60) return "less_than_a_minute_ago";
+  if (delta < 60*2) return "a_minute_ago";
+  if (delta < 60*10) return "a_few_minutes_ago";
+  if (delta < 60*60) return "less_than_an_hour_ago";
+  return "more_than_an_hour_ago";
+};

@@ -211,6 +211,10 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                       <td><? echo $l['Comment']; ?>:&nbsp;</td>
                       <td id="query-comment"></td>
                     </tr>
+                    <tr>
+                      <td><? echo $l['Last_tested']; ?>:&nbsp;</td>
+                      <td id="query-word-last-tested"></td>
+                    </tr>
                     <tr class="query-special-chars-wrapper">
                       <td>
                       </td>
