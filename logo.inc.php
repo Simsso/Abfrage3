@@ -8,6 +8,12 @@ if (date("n") == 12 && date("j") <= 26) {
 	$logo_suffix = "christmas";
 }
 
+// easter
+if (abs(easter_date(date("Y")) - time()) <= 3600 * 24 * 7) {
+	// seven days around the easter date
+	$logo_suffix = "easter";
+}
+
 
 
 // build path
