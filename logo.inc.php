@@ -14,6 +14,12 @@ if (abs(easter_date(date("Y")) - time()) <= 3600 * 24 * 7) {
 	$logo_suffix = "easter";
 }
 
+// new year's eve
+if (true || abs(mktime(0, 0, 0, 13, 0, date("Y")) - time()) <= 3600 * 24 * 2) {
+	// two days around new year's eve
+	$logo_suffix = "new-years-eve";
+}
+
 
 
 // build path
