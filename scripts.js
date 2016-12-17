@@ -403,7 +403,7 @@ var Cookie = {
 
 if (Cookie.read('accepted_cookies') != 'true') {
   // show cookie message
-  $('#main').append('<footer id="cookie-header" class="cookie-header box display-none"><div class="content-width"><table><tr><td>This website uses cookies to ensure you get the best experience. <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">Learn more.</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
+  $('#main').append('<footer id="cookie-header" class="cookie-header box display-none"><div class="content-width"><table><tr><td>' + constString['This_website_uses_cookies__'] + ' <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">' + constString['Learn_more'] + '</a></td><td><input id="cookie-got-it-button" type="button" class="width-110 no-box-shadow" value="Got it!"/></td></tr></table></div></footer>');
 
   $('#cookie-got-it-button').on('click', function() {
     $(this).prop('disabled', true);

@@ -131,6 +131,7 @@ $l['Label_name'] = "Label name";
 $l['Labels'] = "Labels";
 $l['Last_name'] = "Last name";
 $l['Last_tested'] = "Last tested";
+$l['Learn_more'] = "Learn more";
 $l['Learn_words'] = "Learn words";
 $l['Legal_info'] = "Legal info";
 $l['list'] = "list";
@@ -240,6 +241,7 @@ $l['The_two_new_passwords_are_not_equal_'] = "The two new passwords are not equa
 $l['The_words_below_average_algorithm__'] = "The \"Words below average\" algorithm asks words you haven't known often compared to the others.";
 $l['their'] = "their";
 $l['This_is_just_a_little_joke_'] = "This is just a little joke.";
+$l['This_website_uses_cookies__'] = "This website uses cookies to ensure you get the best experience.";
 $l['This_word_is_out_of_the_list__'] = "This word is out of the list <a id=\"query-word-list-link\"></a>.";
 $l['to'] = "to";
 $l['To_start_a_test__'] = "To start a test select labels and lists below and click the button \"Start test\".";
