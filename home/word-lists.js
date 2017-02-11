@@ -132,6 +132,10 @@ WordLists.shown = null; // stores the data (words, creation date, etc.) of the w
 
 WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand them after refreshing the label HTML element
 
+// escapes backslashes
+WordLists.processStringBeforeUpload = function(input) {
+  return input.replace(new RegExp(/\\/, 'g'), '\\\\')
+};
 
 
 // word lists search
@@ -810,9 +814,9 @@ WordLists.editOrSaveWordEvent = function(event, id) {
 
     // check if cell content is a rendered equation
     // if so extract the original equation (non-HTML)
-    var cell1Content = (cell1.children().length === 0) ? cell1.html() : '$' + cell1.children('script').last().html() + '$';
-    var cell2Content = (cell2.children().length === 0) ? cell2.html() : '$' + cell2.children('script').last().html() + '$';
-    var cell3Content = (cell3.children().length === 0) ? cell3.html() : '$' + cell3.children('script').last().html() + '$';
+    var cell1Content = WordLists.getWordFromDOMElement(cell1);
+    var cell2Content = WordLists.getWordFromDOMElement(cell2);
+    var cell3Content = WordLists.getWordFromDOMElement(cell3);
 
     // replace the words meanings with text boxes containing the meanings as value="" to allow editing by the user
     cell1.html(WordLists.Template.listOfWordsEditInput({ id: id, value: cell1Content, name: 'language1' }));
@@ -849,6 +853,22 @@ WordLists.editOrSaveWordEvent = function(event, id) {
 };
 
 
+// mathjax is being rendered and for the edit operation it is required to convert the HTML back to the original word string
+WordLists.getWordFromDOMElement = function(cell) {
+  var scripts = cell.children('script');
+  if (cell.children().length === 0) {
+    return cell.html();
+  }
+  else {
+    var out = "";
+    for (var i = 0; i < scripts.length; i++) {
+      out += "$" + scripts.eq(i).html() + "$";
+    }
+    return out;
+  }
+};
+
+
 // update word
 //
 // saves changed made to a word into the database online and the local Database object
@@ -863,9 +883,9 @@ WordLists.updateWord = function(id, lang1, lang2, comment, callback) {
     data: {
       action: 'update-word',
       word_id: id,
-      lang1: lang1,
-      lang2: lang2,
-      comment: comment
+      lang1: WordLists.processStringBeforeUpload(lang1),
+      lang2: WordLists.processStringBeforeUpload(lang2),
+      comment: WordLists.processStringBeforeUpload(comment)
     },
     type: 'GET',
     error: function(jqXHR, textStatus, errorThrown) {
@@ -1113,9 +1133,9 @@ WordLists.addWordToShownList = function(lang1, lang2, comment, allowEdit) {
       data: {
         action: 'add-word',
         word_list_id: listId,
-        lang1: lang1,
-        lang2: lang2,
-        comment: comment
+        lang1: WordLists.processStringBeforeUpload(lang1),
+        lang2: WordLists.processStringBeforeUpload(lang2),
+        comment: WordLists.processStringBeforeUpload(comment)
       },
       type: 'GET',
       error: function(jqXHR, textStatus, errorThrown) {
