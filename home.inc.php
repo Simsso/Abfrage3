@@ -1088,9 +1088,8 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {
-          //inlineMath: [["$","$"],["\\(","\\)"]],
-          //displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          displayMath: [["$","$"],["\\(","\\)"]]
+          inlineMath: [["$","$"],["\\(","\\)"]],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
         },
         displayAlign: "left"
       });
