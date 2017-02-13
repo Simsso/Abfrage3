@@ -134,7 +134,7 @@ WordLists.expandedLabelsIds = []; // stores which labels were expanded to expand
 
 // escapes backslashes
 WordLists.processStringBeforeUpload = function(input) {
-  return input.replace(new RegExp(/\\/, 'g'), '\\\\')
+  return input.replace(new RegExp(/\\/gm), '\\\\')
 };
 
 
