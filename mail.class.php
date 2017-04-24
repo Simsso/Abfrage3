@@ -60,7 +60,7 @@ class Mail {
 
   static function get_email_confirmation_mail($name, $email, $key) {
     $text = 'You have created an Abfrage3 account. Confirm your email address by clicking the following link:<br>
-		<a href="http://abfrage3.simsso.de/?email=' . $email . '&hash=' . $key . '">http://abfrage3.simsso.de/?email=' . $email . '&hash=' . $key . '</a></p>
+		<a href="https://abfrage3.timodenk.com/?email=' . $email . '&hash=' . $key . '">https://abfrage3.timodenk.com/?email=' . $email . '&hash=' . $key . '</a></p>
 		<p>If you have not created an account simply ignore this email.';
     return new Default_Client_HTML_Mail($email, "Abfrage3 email confirmation", $name, $text);
   }
@@ -84,7 +84,7 @@ class Mail {
     $query = mysqli_query($con, $sql);
     $count = 0;
     while ($row = mysqli_fetch_assoc($query)) {
-      $unsubscribe_link = 'http://abfrage3.simsso.de/?basic-page=&action=unsubscribe&medium=newsletter&id='.$row['id'].'&hash=' . $row['hash'];
+      $unsubscribe_link = 'https://abfrage3.timodenk.com/?basic-page=&action=unsubscribe&medium=newsletter&id='.$row['id'].'&hash=' . $row['hash'];
       $mail = new Default_Client_HTML_Mail($row['email'], $subject, $row['firstname'], $text, $unsubscribe_link);
       $mail->send();
       $count++;
@@ -123,7 +123,7 @@ class Default_Client_HTML_Mail extends HTML_Mail {
         <div style="height: 56px; width: 100%; padding: 0; background-color: #8892BF; border-style: solid; border-width: 0; border-color: #4F5B93; box-shadow: 0 1px 8px rgba(0,0,0,.3); ">
             <div style="padding: 0 25px; ">
                 <a href="/">
-                    <img style="height: 40px; margin: 8px 30px 5px 0; " src="http://abfrage3.simsso.de/img/logo-40.png" alt="Abfrage3">
+                    <img style="height: 40px; margin: 8px 30px 5px 0; " src="https://abfrage3.timodenk.com/img/logo-40.png" alt="Abfrage3">
                 </a>
             </div>
         </div>
@@ -143,11 +143,11 @@ class Default_Client_HTML_Mail extends HTML_Mail {
                 ''
                 ). '
                 <p style="font-size: 80%; text-align: center">
-                    <a href="http://abfrage3.simsso.de" style="text-decoration: none; ">Website</a> &middot;
-                    <a href="http://abfrage3.simsso.de/#/about" style="text-decoration: none; ">About</a> &middot;
-                    <a href="http://abfrage3.simsso.de/#/tour" style="text-decoration: none; ">Tour</a> &middot;
-                    <a href="http://abfrage3.simsso.de/#/contact" style="text-decoration: none; ">Contact</a> &middot;
-                    <a href="http://abfrage3.simsso.de/#/legal-info" style="text-decoration: none; ">Legal info</a>
+                    <a href="https://abfrage3.timodenk.com" style="text-decoration: none; ">Website</a> &middot;
+                    <a href="https://abfrage3.timodenk.com/#/about" style="text-decoration: none; ">About</a> &middot;
+                    <a href="https://abfrage3.timodenk.com/#/tour" style="text-decoration: none; ">Tour</a> &middot;
+                    <a href="https://abfrage3.timodenk.com/#/contact" style="text-decoration: none; ">Contact</a> &middot;
+                    <a href="https://abfrage3.timodenk.com/#/legal-info" style="text-decoration: none; ">Legal info</a>
                 </p>
             </div>
         </div>

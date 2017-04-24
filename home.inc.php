@@ -1094,7 +1094,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         displayAlign: "left"
       });
     </script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
 
     <script src="messagebox.js" type="text/javascript"></script>

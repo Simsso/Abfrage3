@@ -46,7 +46,7 @@
             </a>
           </li>
           <li>
-            <a href="http://www.youtube.com/user/Simssos" target="_blank">
+            <a href="https://www.youtube.com/user/Simssos" target="_blank">
               <img src="img/youtube.png" alt="<? echo $l['Youtube']; ?>" class="width-100px">
             </a>
           </li>

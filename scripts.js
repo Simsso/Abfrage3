@@ -696,7 +696,7 @@ function getLocalId() {
 
 // visitors online
 document.write('\x3Cscript src="https://cdn.socket.io/socket.io-1.3.7.js" type="text/javascript">\x3C/script>');
-document.write('\x3Cscript src="http://const.timodenk.com/visitors-online/client.js" type="text/javascript">\x3C/script>');    
+document.write('\x3Cscript src="//const.timodenk.com/visitors-online/client.js" type="text/javascript">\x3C/script>');    
 // number of visitors has changed
 window.visitorsOnlineChanged = function(count) {
   console.log(count);
