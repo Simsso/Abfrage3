@@ -5,10 +5,11 @@
 include('lang/lang.inc.php');
 
 // read error status code
-$status = $_SERVER['REDIRECT_STATUS'];
+$status = isset($_GET["code"]) ? $_GET["code"] : 0;
 
 // array which stores the description for some error codes in an array with two elements (short description, long description)
 $codes = array(
+  0 => array('Unknown', "An unknown error occurred."),
   400 => array('400 Bad Request', $l['Error_message_400__']),
   401 => array('401 Unauthorized', $l['Error_message_401__']),
   403 => array('403 Forbidden', $l['Error_message_403__']),
