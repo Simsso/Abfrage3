@@ -6,7 +6,7 @@
       <table>
         <tr>
           <td><? echo $l['Email_address']; ?></td>
-          <td><input type="email" name="email" placeholder="" required="required" value="<? if(!$_GET['signup_success'] == "false") echo($_GET['email']); ?>"/></td>
+          <td><input type="email" name="email" placeholder="" required="required" value="<? if(isset($_GET['signup_success']) && !$_GET['signup_success'] == "false") echo(isset($_GET['email']) ? $_GET['email'] : ""); ?>"/></td>
         </tr>
         <tr>
           <td><? echo $l['Password']; ?></td>

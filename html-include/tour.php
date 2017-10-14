@@ -42,7 +42,7 @@
 
         <div class="col-l">
           <p><? echo $l['Add_words_to__']; ?></p>
-          <p><? echo $l['If_you_already_have__p']; ?></p>
+          <p><? echo $l['If_you_already_have__']; ?></p>
         </div>
         <div class="col-r">
           <div class="box">
@@ -201,7 +201,7 @@
               <div>
                 <table class="box-table button-right-column">
                   <tbody>
-                    <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td><? echo $l['Email_Address']; ?></td><td></td></tr>
+                    <tr class="bold cursor-default"><td><? echo $l['Name']; ?></td><td><? echo $l['Email_address']; ?></td><td></td></tr>
                     <tr><td><? echo $l['My_classmate']; ?></td><td>bla@gmail.com</td><td><input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
                     <tr><td><? echo $l['Another_guy']; ?></td><td>email2@gmail.com</td><td><input type="button" class="inline" value="<? echo $l['Remove']; ?>"></td></tr>
                   </tbody>

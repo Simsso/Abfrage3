@@ -51,11 +51,11 @@ $infobox_header = NULL;
 $infobox_body = NULL;
 
 // sign up
-if($_GET['signup_success'] == 'true') {
+if(isset($_GET['signup_success']) && $_GET['signup_success'] == 'true') {
   $infobox_header = $l['Successfully_signed_up']; ;
   $infobox_green_red = 'green';
   $infobox_body = "<p>" . $l['Hey'] . " " . $_GET['firstname'] . "!</p>" . $l['P_Your_account_has_been_created__'];
-} else if ($_GET['signup_success'] == 'false') {
+} else if (isset($_GET['signup_success']) && $_GET['signup_success'] == 'false') {
   $infobox_header = $l['Could_not_sign_up'];
   $infobox_green_red = 'red';
   $infobox_body = "<p>" . $l['An_error_occured_creating_account__'] . "</p><p>" . $_GET['signup_message'] . "</p>";
@@ -63,7 +63,7 @@ if($_GET['signup_success'] == 'true') {
 
 
 // login
-if($_GET['login_message']) {
+if(isset($_GET['login_message']) && $_GET['login_message']) {
   $infobox_header = $l['Failed_to_log_in'];
   $infobox_green_red = 'red';
   $infobox_body = "<p>" . $l['An_error_occured_logging_in__'] . "</p><p>" . $_GET['login_message'] . "</p>";
@@ -71,7 +71,7 @@ if($_GET['login_message']) {
 
 
 // email confirmation
-if($_GET['hash'] && $_GET['email']) {
+if(isset($_GET['hash']) && $_GET['hash'] && isset($_GET['email']) && $_GET['email']) {
   if (Database::confirm_email($_GET['email'], $_GET['hash'])) {
     $infobox_header = $l['Email_address_confirmed'];
     $infobox_green_red = 'green';
@@ -112,15 +112,15 @@ if (!is_null($infobox_body) && !is_null($infobox_green_red) && !is_null($infobox
                   <table>
                     <tr>
                       <td><? echo $l['First_name']; ?></td>
-                      <td><input type="text" name="firstname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['firstname']; ?>"/></td>
+                      <td><input type="text" name="firstname" placeholder="" required="required" value="<? if(!isset($_GET['signup_success']) || $_GET['signup_success'] == "false") echo (isset($_GET['firstname']) ? $_GET['firstname'] : ""); ?>"/></td>
                     </tr>
                     <tr>
                       <td><? echo $l['Last_name']; ?></td>
-                      <td><input type="text" name="lastname" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['lastname']; ?>"/></td>
+                      <td><input type="text" name="lastname" placeholder="" required="required" value="<? if(!isset($_GET['signup_success']) || $_GET['signup_success'] == "false") echo (isset($_GET['lastname']) ? $_GET['lastname'] : ""); ?>"/></td>
                     </tr>
                     <tr>
                       <td><? echo $l['Email_address']; ?></td>
-                      <td><input type="email" name="signup-email" placeholder="" required="required" value="<? if($_GET['signup_success'] == "false") echo $_GET['email']; ?>"/></td>
+                      <td><input type="email" name="signup-email" placeholder="" required="required" value="<? if(!isset($_GET['signup_success']) || $_GET['signup_success'] == "false") echo (isset($_GET['email']) ? $_GET['email'] : ""); ?>"/></td>
                     </tr>
                     <tr>
                       <td><? echo $l['Password']; ?></td>
@@ -173,7 +173,7 @@ include('html-include/contact.php');
 
     <!-- add scripts to the DOM -->
     <script type="text/javascript">
-      document.write('\x3Cscript src="vendor/jquery-1.11.3.min.js" type="text/javascript">\x3C/script>');
+      document.write('\x3Cscript src="vendor/jquery-3.2.1.min.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="vendor/handlebars-v4.0.4.js" type="text/javascript">\x3C/script>');
       document.write('\x3Cscript src="messagebox.js" type="text/javascript">\x3C/script>');
 

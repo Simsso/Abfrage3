@@ -295,7 +295,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                     {{content}}
                   </table>
                 {{else}}
-                  <p><? echo $l['You_dont_have_any_labels__']; ?></p>
+                  <p><? echo $l['You_dont_have_any_labels_']; ?></p>
                 {{/if}}
               </script>
 
@@ -597,7 +597,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
                 </div>
               </div>
 
-              <script id="word-lists-no-labels-template" type="text/x-handlebars-template"><p><? echo $l['You_dont_have_any_labels__']; ?></p></script>
+              <script id="word-lists-no-labels-template" type="text/x-handlebars-template"><p><? echo $l['You_dont_have_any_labels_']; ?></p></script>
 
               <script id="word-lists-label-table-template" type="text/x-handlebars-template">
                 <table class="box-table button-right-column no-flex">{{content}}</table
@@ -1081,7 +1081,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
       </div>
     </div>
 
-    <script src="vendor/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
     <script src="vendor/handlebars-v4.0.4.js" type="text/javascript"></script>
 
     <!-- MathJax -->
@@ -1094,8 +1094,7 @@ $next_to_last_login = Database::get_next_to_last_login_of_user($_SESSION['id']);
         displayAlign: "left"
       });
     </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
-    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_SVG"></script>
 
     <script src="messagebox.js" type="text/javascript"></script>
 
