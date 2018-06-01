@@ -13,7 +13,7 @@
 
 
 $l['Abfrage3'] = "Abfrage3";
-$l['Abfrage3_is_an_online__'] = "Abfrage3 is an online vocabulary trainer with functionality to create, share and organize word lists. Its purpose is to make learning vocabulary of a foreign language more efficient. The website is still under heavy development so some features might not work as expected.";
+$l['Abfrage3_is_an_online__'] = "Abfrage3 is an online vocabulary trainer with functionality to create, share and organize word lists. Its purpose is to make learning vocabulary of a foreign language more efficient. The website is not being actively developed anymore. Some features might not work as expected.";
 $l['About'] = "About";
 $l['About_abfrage3'] = "About Abfrage3";
 $l['About_me'] = "About me";

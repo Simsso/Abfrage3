@@ -13,7 +13,7 @@
 
 
 $l['Abfrage3'] = "Abfrage3";
-$l['Abfrage3_is_an_online__'] = "Abfrage3 is an online Vokabeltrainer mit Funktionen zum Erstellen, Teilen und Organisieren von Vokabellisten. Die Ambition ist es, das Lernen von Vokabeln einer fremden Sprache effizienter zu gestalten. Da sich die Website aktuell noch in der Entwicklung befindet, könnte es sein, dass einige Funktionen sich nicht wie erwartet verhalten.";
+$l['Abfrage3_is_an_online__'] = "Abfrage3 ist ein Online-Vokabeltrainer mit Funktionen zum Erstellen, Teilen und Organisieren von Vokabellisten. Das Ziel ist es, das Lernen von Vokabeln einer fremden Sprache effizienter zu gestalten. Die Website wird nicht mehr aktive entwickelt und befindet sich noch im Beta-Status. Es könnte daher sein, dass sich einige Funktionen nicht wie erwartet verhalten.";
 $l['About'] = "Über";
 $l['About_abfrage3'] = "Über Abfrage3";
 $l['About_me'] = "Über mich";
