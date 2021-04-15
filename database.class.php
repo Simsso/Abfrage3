@@ -42,6 +42,10 @@ class Database {
   // @return bool: TRUE if everything worked out
   static function register_user($firstname, $lastname, $email, $password, $confirmpassword) {
     // registers a new user
+    if (true) {
+      // registering new users is currently disabled
+      throw new Exception('Not_available');
+    }
     // if data is invalid the function throws exceptions
     if ($firstname == NULL) {
       throw new Exception('No_first_name_given');
